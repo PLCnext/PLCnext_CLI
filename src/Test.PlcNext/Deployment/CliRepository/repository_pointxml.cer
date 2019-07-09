@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<RSA-Signature xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.phoenixcontact.com/schema/rsa-signature">
+  <RawSignature>mLyumZOYZB89K5cvDzIwFT97bPLyH/R9GkcODwcbtVIGylMO0NzFsVaDuhSQ/xgpfmlToYwhQ/JS99MFaD2vwCweBoB/ldFgDSPC18/5+06RrpOSs7ZINt+owrcu340evxY4ftGjwXds0cj8dqRSWIOIZ+gHj3y71SiguDvdmhdAEVev3kkywKsOW79rn7q0UvY/SLNqlXgLJC5gXbSIjRSTzevCu45bdDdFRDXuxGGaTcJE4pmFrXrPPa8xmwOAhwsqTnImN31wUDY9nXBwqN/JOpmWF7E0aNNP6dmZHvDbl26NObMpDf85YZeAKFl1OtCfjLKhgbBXtes4cdm8mUJ2tjcygmPG86a1Oz5YUlBIre1DSTzlkCSWvZKJqOnylzeVvLVHMNc1xQj2GPzWCuSZTHg7v0R0adhMi8acowAWyW7TATopjwOQPsJIEaaTDycEGGcjkofybPyBUkpf4A/AEuGD8AsnbWzWpMw1RNY/ddO4vL7ztvKecG1+XKwURt/snOezEL+hTvIVRkDUh60KjSIz4HgfU5+OLVi+Yc8Sr/FDJy77JxChBaESDNW/cAfwQCfairApxKbqZRnDQIZEjUPXnrgxs3d0W+u3HVvZaj2Owz2PqExe42pR8Exjf/dW4nclXsfqh49CcOINMSMqQ1bKlb4XOhXk3/e79rg=</RawSignature>
+  <HashAlgorithm>SHA1</HashAlgorithm>
+  <RsaPadding>Pkcs1</RsaPadding>
+</RSA-Signature>

@@ -1,0 +1,19 @@
+{
+  "command": "get sdks",
+  "parsedCommand": {
+    "command": "get sdks",
+    "arguments": {
+      "verbose": "False"
+    }
+  },
+  "inReplyTo": "command",
+  "reply": {
+    "sdks": [
+      {
+        "path": "C:\\MySdk"
+      }
+    ]
+  },
+  "success": true,
+  "type": "reply"
+}

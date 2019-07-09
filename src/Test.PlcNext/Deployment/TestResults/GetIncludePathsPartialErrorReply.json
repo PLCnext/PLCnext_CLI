@@ -1,0 +1,20 @@
+{
+  "command": "get include-paths",
+  "parsedCommand": {
+    "command": "get include-paths",
+    "arguments": {
+      "path": "",
+      "verbose": "False"
+    }
+  },
+  "inReplyTo": "command",
+  "reply": {
+    "includePaths": [
+      {
+        "path": "C:\\keep\\plcnext\\SDKs\\AXCF2152\\sysroots\\cortexa9t2hf-neon-pxc-linux-gnueabi\\usr\\include\\plcnext"
+      }
+    ]
+  },
+  "success": false,
+  "type": "reply"
+}

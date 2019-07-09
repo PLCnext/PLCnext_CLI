@@ -1,0 +1,346 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FileExists" xml:space="preserve">
+    <value>The file '{0}' of the {2} could not be created, because it exists already.{1}Use '--force' to override.</value>
+  </data>
+  <data name="NoSdkForTarget" xml:space="preserve">
+    <value>No SDK was found for target {0}.</value>
+  </data>
+  <data name="ProjectMissing" xml:space="preserve">
+    <value>No project was found inside the directory {0}.</value>
+  </data>
+  <data name="SdkCapabilitiesNotFound" xml:space="preserve">
+    <value>The capabilities of the SDK '{0}' was not found.</value>
+  </data>
+  <data name="SdkNotFound" xml:space="preserve">
+    <value>The SDK '{0}' was not found.</value>
+  </data>
+  <data name="SettingIsNoCollection" xml:space="preserve">
+    <value>Setting '{0}' is no collection setting (add and remove is not possible).</value>
+  </data>
+  <data name="SettingNotFound" xml:space="preserve">
+    <value>The setting '{0}' does not exist. Do you mean '{1}'?</value>
+  </data>
+  <data name="SettingsKeyIsNotSet" xml:space="preserve">
+    <value>A setting key must be provided.</value>
+  </data>
+  <data name="SettingsValueIsNotSet" xml:space="preserve">
+    <value>A value must be provided for the chosen setting.</value>
+  </data>
+  <data name="SettingValueNotFound" xml:space="preserve">
+    <value>The value '{0}' does not exist. Do you mean '{1}'?</value>
+  </data>
+  <data name="TargetArchitectureNotFound" xml:space="preserve">
+    <value>Could not find the architecture '{1}' of the target '{0}'. Available architectures are:{2}.</value>
+  </data>
+  <data name="TargetNameNotFound" xml:space="preserve">
+    <value>Could not find the target '{0}', because no targets with that name are available.</value>
+  </data>
+  <data name="TargetNameNotFoundClosestMatch" xml:space="preserve">
+    <value>Could not find the target '{0}'. Do you mean '{1}'?</value>
+  </data>
+  <data name="TargetVersionNotFound" xml:space="preserve">
+    <value>Could not find the version '{1}' of the target '{0}'. Available versions are:{2}.</value>
+  </data>
+  <data name="PublicKeyFileMissing" xml:space="preserve">
+    <value>The public key file for the cli update repository is missing. Without it the repository cannot be verified.</value>
+  </data>
+  <data name="DownloadFileUnreachable" xml:space="preserve">
+    <value>The file '{0}' is not reachable.</value>
+  </data>
+  <data name="SignatureValidationFailure" xml:space="preserve">
+    <value>The signature of the file '{0}' does not match with the file. The file is corrupt.</value>
+  </data>
+  <data name="HashValidationFailure" xml:space="preserve">
+    <value>The hash of the file '{0}' does not match with the file. The file is corrupt.</value>
+  </data>
+  <data name="UnkownVersion" xml:space="preserve">
+    <value>The version {0} is not available.</value>
+  </data>
+  <data name="UnsupportedSystem" xml:space="preserve">
+    <value>The system {0} - {1} is not supported by this version.</value>
+  </data>
+  <data name="UnsupportedArchiveFormat" xml:space="preserve">
+    <value>The format of the file '{0}' is not supported. Please proceed manually.</value>
+  </data>
+  <data name="SettingsMigrationProcessError" xml:space="preserve">
+    <value>While migrating the settings the process '{0}' threw the error: {1}</value>
+  </data>
+  <data name="NoAssignedTargets" xml:space="preserve">
+    <value>Project {0} has no assigned targets.{1}Please specify a target to execute the build.</value>
+  </data>
+  <data name="EntityNotFound" xml:space="preserve">
+    <value>{0} not found inside project {1}.{2}Existing items are:{2}{3}</value>
+  </data>
+  <data name="ComponentAmbiguous" xml:space="preserve">
+    <value>The specified component is ambiguous for this project.</value>
+  </data>
+  <data name="ComponentNotFound" xml:space="preserve">
+    <value>Cannot find parent component {0} for program {1}.</value>
+  </data>
+  <data name="CMakeFileNotFound" xml:space="preserve">
+    <value>No CMake file was found.</value>
+  </data>
+  <data name="MetaLibraryNotFound" xml:space="preserve">
+    <value>No '.libmeta' file was found in the directory '{0}'.</value>
+  </data>
+  <data name="LibraryBuilderNotFound" xml:space="preserve">
+    <value>The library builder could not be found.</value>
+  </data>
+  <data name="LibraryNotFound" xml:space="preserve">
+    <value>No library file was found in the path '{0}'.</value>
+  </data>
+  <data name="LibraryIdMalformatted" xml:space="preserve">
+    <value>The id {0} is no valid GUID for the library.</value>
+    <comment>Id</comment>
+  </data>
+  <data name="ArgumentRestriction" xml:space="preserve">
+    <value>The restriction for the argument '{0}' does not allow the value '{1}'. {2}</value>
+  </data>
+  <data name="TargetNotSettableForProject" xml:space="preserve">
+    <value>A target can only be set for projects with a plcnext.proj file, which is located in the project root directory.</value>
+  </data>
+  <data name="SetTargetsOptionMissing" xml:space="preserve">
+    <value>Please specify, if you want to add or remove the target.</value>
+  </data>
+  <data name="TargetNameAmbiguous" xml:space="preserve">
+    <value>The target {0} is ambiguous. Make clear which target you mean by specifying the version. Possible targets are:{1}</value>
+  </data>
+  <data name="TargetVersionMissing" xml:space="preserve">
+    <value>Sdk manifest contains target definition without version. </value>
+  </data>
+  <data name="TargetAlreadySupported" xml:space="preserve">
+    <value>The target {0} is already supported by the project.</value>
+  </data>
+  <data name="InvalidRelativUriFormat" xml:space="preserve">
+    <value>The relative uri '{0}' is no valid uri format.</value>
+  </data>
+  <data name="InvalidUriFormat" xml:space="preserve">
+    <value>The uri '{0}' is no valid uri format.</value>
+  </data>
+  <data name="CannotResolveContent" xml:space="preserve">
+    <value>There is no '{0}' available for the element '{1}'.</value>
+  </data>
+  <data name="RootTemplateNotFound" xml:space="preserve">
+    <value>Could find no template which is marked as a root template in the related templates of '{0}'.</value>
+  </data>
+  <data name="TemplateIdentifierNotFound" xml:space="preserve">
+    <value>The identifier '{0}' configured for the template '{1}' is not available.</value>
+  </data>
+  <data name="FormatTargetMismatch" xml:space="preserve">
+    <value>The format template '{0}' was applied to '{1}', but accepts only '{2}' as a target.</value>
+  </data>
+  <data name="ContentProviderCycle" xml:space="preserve">
+    <value>resolving the value of an entity</value>
+  </data>
+  <data name="AmbiguousRelationshipType" xml:space="preserve">
+    <value>The specified {0} '{1}' is ambiguous for the types:{2}</value>
+  </data>
+  <data name="RelationshipTypeNotFound" xml:space="preserve">
+    <value>The specified {0} '{1}' was not found. Available types are:{2}</value>
+  </data>
+  <data name="ControlSequenceEndTagNotFound" xml:space="preserve">
+    <value>There is a control sequence '{0}' without the matching end tag 'end-{0}'.</value>
+  </data>
+  <data name="UnrecognizedControlSequence" xml:space="preserve">
+    <value>The control sequence '{0}' is not available.</value>
+  </data>
+  <data name="WildControlSequence" xml:space="preserve">
+    <value>There is a wild control sequence '{0}'.</value>
+  </data>
+  <data name="ForeachSequenceParameterMismatch" xml:space="preserve">
+    <value>The foreach control sequence must be in the form $([foreach]&lt;element-name&gt;[in]&lt;collection&gt;[of-type]&lt;element-type&gt;) where the [of-type] part is optional. The form '$([foreach]{0})' is not allowed.</value>
+  </data>
+  <data name="IfSequenceParameterMismatch" xml:space="preserve">
+    <value>The if-xxx control sequence must be in the form $([if-xxx]&lt;content-name&gt;). An empty content-name is not allowed.</value>
+  </data>
+  <data name="Cycle" xml:space="preserve">
+    <value>The following cycle was detected while {0}:{1}</value>
+  </data>
+  <data name="TemplateReferenceNotDefined" xml:space="preserve">
+    <value>There is a template reference to the template '{0}' defined, but there is no template with the name '{0}'.</value>
+  </data>
+  <data name="TemplateRelationshipCycle" xml:space="preserve">
+    <value>resolving the order of template relationships</value>
+  </data>
+  <data name="TemplateRelationshipNotFound" xml:space="preserve">
+    <value>The template '{0}' does not contain a relationship with the name '{1}'.</value>
+  </data>
+  <data name="FieldAttributeRestriction" xml:space="preserve">
+    <value>The restriction for the values of the attribute '{0}' does not allow the value '{1}'. {2}</value>
+  </data>
+  <data name="MissingEnumDataType" xml:space="preserve">
+    <value>The base data type of the enum '{0}' is missing. For ports and port structures only known data types can be used as base types.</value>
+  </data>
+  <data name="UnkownDataType" xml:space="preserve">
+    <value>The data type '{0}' is not known. For ports and port structures only known data types can be used.</value>
+  </data>
+  <data name="UnkownEnumDataType" xml:space="preserve">
+    <value>The base data type '{0}' of the enum '{1}' is not known. For ports and port structures only known data types can be used as base types.</value>
+  </data>
+  <data name="WildEntity" xml:space="preserve">
+    <value>The type '{0}' has the template '{1}' which needs the relationships '{2}'. At least one of the relationship is not specified or was not found.</value>
+  </data>
+  <data name="SettingNotWritable" xml:space="preserve">
+    <value>The settings are read-only. Please execute the command with administrator rights.</value>
+  </data>
+  <data name="CMakeExploration" xml:space="preserve">
+    <value>While exploring the SDK '{0}' an error occured.</value>
+  </data>
+  <data name="MetaFileNotFound" xml:space="preserve">
+    <value>Metafile {1} not found in directory '{0}'.</value>
+  </data>
+  <data name="BoolSettingsValueFormat" xml:space="preserve">
+    <value>The setting '{0}' is a boolean setting. The value '{1}' is not allowed. Please use either 'true' or 'false'.</value>
+  </data>
+  <data name="FilesExistingInsideDirectory" xml:space="preserve">
+    <value>There are files in the destination directory '{0}'.{1}Use '--force' to override.</value>
+  </data>
+  <data name="RelationshipMultiplicityMismatch" xml:space="preserve">
+    <value>The related {0} can only be defined once but is not defined or defined multiple times for {1}.</value>
+  </data>
+  <data name="ArgumentNotFound" xml:space="preserve">
+    <value>The argument '{0}' used in an example is not defined in the template '{1}'.</value>
+  </data>
+  <data name="RelationshipNotFound" xml:space="preserve">
+    <value>The relationship '{0}' used in an example is not defined in the template '{1}'.</value>
+  </data>
+  <data name="NoDublicateLinesParameterMismatch" xml:space="preserve">
+    <value>The no-dublicate-lines control sequence must be in the form $([no-dublicate-lines]). Additional parameter inside the braces are not allowed.</value>
+  </data>
+  <data name="MalformedExternalLibrariesOption" xml:space="preserve">
+    <value>{0} is neither an existing file nor a valid {1}: {2}</value>
+  </data>
+  <data name="WrongCombinedExternalLibraries" xml:space="preserve">
+    <value>You cannot combine external libraries for a specific target and external libraries without target.</value>
+  </data>
+  <data name="CMakeBuildSystemNotFound" xml:space="preserve">
+    <value>Could not find cmake build system in {0}. No external libraries will be added to library. Libraries can be added manually via option --externallibraries</value>
+  </data>
+  <data name="SdkPathNotExisting" xml:space="preserve">
+    <value>Could not find the SDK '{0}'. This SDK cannot be used, please remove the SDK from the settings.</value>
+  </data>
+  <data name="MultipleRootNamespaces" xml:space="preserve">
+    <value>The following possible namespaces were found for the project. Only one namespace is allowed.{0}</value>
+  </data>
+  <data name="TargetInstalledTwice" xml:space="preserve">
+    <value>The target {0} is installed more than once. Please check your installed targets.</value>
+  </data>
+</root>

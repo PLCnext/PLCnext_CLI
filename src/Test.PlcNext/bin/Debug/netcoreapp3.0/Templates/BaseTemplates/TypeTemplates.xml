@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TypeTemplates xmlns="http://www.phoenixcontact.com/schema/clitemplates">
+	<TypeTemplate name="attributes" has-value="true" multiplicity="OneOrMore" split="|" default-value="None">
+		<ValueRestriction ignore-case="true">
+			<Enumeration>Input</Enumeration>
+			<Enumeration>Output</Enumeration>
+			<Enumeration>ReadOnly</Enumeration>
+			<Enumeration>Retain</Enumeration>
+			<Enumeration>Opc</Enumeration>
+			<Enumeration>Ehmi</Enumeration>
+			<Enumeration>ProfiCloud</Enumeration>
+			<Enumeration>Archive</Enumeration>
+		  <Enumeration>None</Enumeration>
+      <Enumeration>Hidden</Enumeration>
+		</ValueRestriction>
+	</TypeTemplate>
+</TypeTemplates>

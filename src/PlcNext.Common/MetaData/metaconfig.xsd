@@ -1,0 +1,828 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This schema file describes the structure of the meta configuration document 
+	use to specify types (e.g. structs, enumerations), programs, components, and 
+	libraries. -->
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/metaconfig"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	id="metaconfig" targetNamespace="http://www.phoenixcontact.com/schema/metaconfig"
+	version="1.0">
+
+	<xs:element name="MetaConfigurationDocument">
+		<xs:complexType>
+			<xs:annotation>
+				<xs:documentation>Root element for the meta configuration document.
+					The document can contain
+					only
+					one definition of a Program, Component,
+					Library, or further include statements. To include
+					Programs of a
+					component, a component specific element is used.
+				</xs:documentation>
+			</xs:annotation>
+			<xs:choice>
+				<xs:element maxOccurs="1" minOccurs="1" name="Includes"
+					type="IncludeListDefinition">
+					<xs:annotation>
+						<xs:documentation>A list of include statements to further load
+							configuration files.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="1" name="Library"
+					type="LibraryDefinition">
+					<xs:annotation>
+						<xs:documentation>Single element to specify a library meta
+							document. A library contains
+							typemeta includes as well as
+							contained components.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="1" name="Component"
+					type="ComponentDefinition">
+					<xs:annotation>
+						<xs:documentation>Single element to specify a component meta
+							document.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="1" name="Program"
+					type="ProgramDefinition">
+					<xs:annotation>
+						<xs:documentation>Single element to specify a program meta
+							document.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="1" name="Types"
+					type="TypesDefinition">
+					<xs:annotation>
+						<xs:documentation>Single element to specify a types. It is used to
+							declare additional data
+							types
+							like structs or enumerations.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:attribute name="schemaVersion" type="VersionDefinition"
+				use="required" fixed="2.0" />
+
+		</xs:complexType>
+
+	</xs:element>
+
+
+
+
+	<!-- Common elements -->
+
+	<xs:complexType name="FileDefinition">
+		<xs:annotation>
+			<xs:documentation>Used to specify details of the library that is
+				defined in this meta file.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="path" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Path to the shared library file.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="checksum" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Checksum of the shared library file.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:simpleType name="VersionDefinition">
+		<xs:annotation>
+			<xs:documentation>Simple type used to specify version numbers and
+				restrict their structure.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9]+)(.[0-9]+(.[0-9]+(.[0-9]+)?)?)?" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="DimensionDefinition">
+		<xs:annotation>
+			<xs:documentation>Simple type used to specify the dimension of a
+				variable declaration. If this attribute is not set, a single variable is specified. Otherwise an array is created with a given dimension. Examples are '12' for an array with 12 elements and '10;3' for an array with 10 elements,
+				each with 3 more contained elements.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([1-9]+[0-9]*)(;[1-9]+[0-9]*)?" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="NamespaceDefinition">
+		<xs:annotation>
+			<xs:documentation>Simple type used to specify a namespace and
+				restrict its structure.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([a-zA-Z]*)(.[a-zA-Z0-9]+)*" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="RestrictedPortName">
+		<xs:annotation>
+			<xs:documentation>A
+				type to restrict a name of a port. 
+			 <![CDATA[
+			 <ul>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 <li>Can not start or end with '.'</li>
+			 </ul>
+			 ]]>
+			</xs:documentation>
+		</xs:annotation>
+
+		<xs:restriction base="xs:string">
+			<xs:pattern
+				value="([_a-zA-Z0-9\+\-:#/=]+)([0-9a-zA-Z\[\]_\+\-.:#=/&amp;/&gt;/&lt;]*)([0-9a-zA-Z\[\]_/&gt;/&lt;]+)" />
+			<xs:whiteSpace value="collapse" />
+			<xs:minLength value="2" />
+			<xs:maxLength value="128" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:simpleType name="RestrictedName">
+		<xs:annotation>
+			<xs:documentation>A
+				type to restrict a name (e.g. of a component or program). 
+			 <![CDATA[
+			 <ul>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 <li>Can not start or end with '.'</li>
+			 </ul>
+			 ]]>
+			</xs:documentation>
+		</xs:annotation>
+
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([a-zA-Z]+)([0-9a-zA-Z\-_]*)([0-9a-zA-Z]+)" />
+			<xs:whiteSpace value="collapse" />
+			<xs:minLength value="2" />
+			<xs:maxLength value="128" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="PortListDefinition">
+		<xs:annotation>
+			<xs:documentation>A list of ports that are provided by the component
+				or program.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="Port"
+				type="PortDefinition">
+				<xs:annotation>
+					<xs:documentation>A port is used to publish data. Ports can be
+						connected to each other or read/written/subscribed via GDS APIs.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:simpleType final="restriction" name="ApplicationDomainEnumeration">
+		<xs:annotation>
+			<xs:documentation>Enumeration to set the kind of application (e.g.
+				MATLAB, C++, or IEC61131-3).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CPLUSPLUS" />
+			<xs:enumeration value="IEC61131_3" />
+			<xs:enumeration value="MATLAB" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+
+	<!-- Library -->
+	<xs:complexType name="LibraryDefinition">
+		<xs:annotation>
+			<xs:documentation>Element to specify the properties of a Library. A
+				Library contains a list of
+				Components, Programs and Types.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="File"
+				type="FileDefinition">
+				<xs:annotation>
+					<xs:documentation>Optional element used to specify the path to the
+						shared lib of this library.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="TypeIncludes"
+				type="IncludeListDefinition">
+				<xs:annotation>
+					<xs:documentation>List of further include statements.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="ComponentIncludes"
+				type="IncludeListDefinition">
+				<xs:annotation>
+					<xs:documentation>A list of components that are specified by this
+						library.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+
+
+
+
+		<xs:attribute name="name" type="NamespaceDefinition"
+			use="required">
+			<xs:annotation>
+				<xs:documentation>This attribute sets the name for the library
+					and all child elements
+					(component, program, types). If not provided
+					the library will be used in a global namespace.
+					This can lead to
+					name clashes and should be avoided.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+
+		<xs:attribute name="applicationDomain" type="ApplicationDomainEnumeration"
+			use="optional">
+			<xs:annotation>
+				<xs:documentation>This attribute sets the application domain of this
+					element. It allows external
+					tools to distinguish between the
+					different domains like IEC61131-3, MATLAB, or C++.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+
+
+
+	<!-- Definition of meta/acf includes -->
+	<xs:complexType name="IncludeListDefinition">
+		<xs:annotation>
+			<xs:documentation>Simple list to hold all Include statements
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="Include"
+				type="IncludeDefinition">
+				<xs:annotation>
+					<xs:documentation>This element is used to specify additional meta
+						files that will be included.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="IncludeDefinition">
+		<xs:annotation>
+			<xs:documentation>This type is used to specify additional meta files
+				that will be included.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="path" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Path to an additional meta files to include.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+
+
+
+
+
+
+	<!-- /////////////////// Components (.compmeta) /////////////////// -->
+	<xs:complexType name="ComponentDefinition">
+		<xs:annotation>
+			<xs:documentation>A description of the component that is embedded in
+				a Library. The component
+				must at least provide a name and a type.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element maxOccurs="1" minOccurs="0" name="ProgramIncludes"
+				type="IncludeListDefinition">
+				<xs:annotation>
+					<xs:documentation>A list of programs that are contained in this
+						component.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="Ports"
+				type="PortListDefinition">
+				<xs:annotation>
+					<xs:documentation>A list of ports that are specified by this
+						component.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+
+
+		<xs:attribute name="type" use="required" type="RestrictedName">
+			<xs:annotation>
+				<xs:documentation>Name
+					of the component.
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+
+		</xs:attribute>
+	</xs:complexType>
+
+
+	<!-- Programs -->
+	<xs:complexType name="ProgramDefinition">
+		<xs:annotation>
+			<xs:documentation>A description of the Program that is embedded in a
+				Library. The Program must at
+				least provide a name.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element maxOccurs="1" minOccurs="0" name="Ports"
+				type="PortListDefinition">
+				<xs:annotation>
+					<xs:documentation>A list of ports this program is providing or
+						requiring.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+
+		<xs:attribute name="type" use="required" type="RestrictedName">
+			<xs:annotation>
+				<xs:documentation>Name
+					of the program. Must be unique in the namespace of the parent
+					component.
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+
+		</xs:attribute>
+	</xs:complexType>
+
+
+
+
+	<xs:complexType name="PortDefinition" >
+		<xs:annotation>
+			<xs:documentation>A port is used to specify incoming or outgoing
+				data. A source port will be
+				connected to a target port by a Connector
+				(specified in the GDS configuration).
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:attribute name="name" type="RestrictedPortName" use="required">
+			<xs:annotation>
+				<xs:documentation>The
+					name of the port. Must be unique in the current scope.  <![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]></xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="type" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>The
+					type of the port. Can be a primitive type of the current base type
+					or self defined complex
+					types.  <![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		
+		<xs:attribute name="attributes" type="AttributeListDefinition" use="required">
+			<xs:annotation>
+				<xs:documentation>The
+					type of the port. Can be a primitive type of the current base type
+					or self defined complex
+					types.  <![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+
+		<xs:attribute name="dimensions" type="DimensionDefinition"
+			use="optional" >
+			<xs:annotation>
+				<xs:documentation>Simple type used to specify the dimension of a
+				variable declaration. If this attribute is not set, a single variable is specified. Otherwise an array is created with a given dimension. Examples are '12' for an array with 12 elements and '10;3' for an array with 10 elements,
+				each with 3 more contained elements.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+
+	</xs:complexType>
+
+
+
+
+
+
+	<xs:simpleType final="restriction" name="AttributeListDefinition">
+		<xs:annotation>
+			<xs:documentation>List of attributes 
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern
+				value="([a-zA-Z]+)([0-9a-zA-Z\-_]*)(\|([a-zA-Z]+)([0-9a-zA-Z\-_]*))*" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+
+
+
+
+
+	<!-- Typemeta -->
+	<xs:complexType name="TypesDefinition">
+		<xs:annotation>
+			<xs:documentation>This type is the root of the TypeDomainDocument. It
+				is used to define existing
+				primitives and new user defined complex
+				types (e.g. structs)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="Primitive"
+				type="PrimitiveTypeDefinition">
+				<xs:annotation>
+					<xs:documentation>Used to specifiy a new primitive type. Can be
+						compared to C++ typedef
+						definitions. Require a basetype to extend.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="Struct"
+				type="StructTypeDefinition">
+				<xs:annotation>
+					<xs:documentation>Specify a struct.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="Enumeration"
+				type="EnumerationTypeDefinition">
+				<xs:annotation>
+					<xs:documentation>Specify an enumeration with at least one symbol.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+
+
+
+	<!-- Definition of the basic types and their instances -->
+	<xs:complexType name="PrimitiveTypeDefinition">
+		<xs:attribute name="name" use="required">
+			<xs:annotation>
+				<xs:documentation>Name
+					of the primitive. 
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([a-zA-Z]+)([0-9a-zA-Z\-]*)([0-9a-zA-Z]+)" />
+					<xs:whiteSpace value="collapse" />
+					<xs:minLength value="2" />
+					<xs:maxLength value="128" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+
+
+		<xs:attribute name="baseType" use="required">
+			<xs:annotation>
+				<xs:documentation>The
+					name of the base type which is extended by this primitive type.
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([a-zA-Z]+)([0-9a-zA-Z]*)([0-9a-zA-Z]+)" />
+					<xs:whiteSpace value="collapse" />
+					<xs:minLength value="2" />
+					<xs:maxLength value="128" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+
+
+
+	</xs:complexType>
+
+
+
+
+
+	<!-- Struct elements -->
+	<xs:complexType name="StructTypeDefinition">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="Fields"
+				type="FieldListDefinition">
+				<xs:annotation>
+					<xs:documentation>A list of fields for this struct. At least one
+						field must be specified.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="type" use="required">
+			<xs:annotation>
+				<xs:documentation>Defines
+					the type name of the struct.
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([a-zA-Z]+)([0-9a-zA-Z\-]*)([0-9a-zA-Z]+)" />
+					<xs:whiteSpace value="collapse" />
+					<xs:minLength value="2" />
+					<xs:maxLength value="128" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="FieldListDefinition">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="Field" type="FieldDefinition">
+				<xs:annotation>
+					<xs:documentation>A single field of a struct. Contains at least a
+						name and type.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+	<xs:complexType name="FieldDefinition">
+		<xs:attribute name="name" use="required">
+			<xs:annotation>
+				<xs:documentation>>Name
+					of the field. Must be unique in the context of the struct.
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([a-zA-Z]+)([0-9a-zA-Z\-]*)([0-9a-zA-Z]+)" />
+					<xs:whiteSpace value="collapse" />
+					<xs:minLength value="2" />
+					<xs:maxLength value="128" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		
+		<xs:attribute name="type" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>The name of the type used for this field. Can be a
+					PLCnext base type or
+					complex type.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		
+			<xs:attribute name="attributes" type="AttributeListDefinition" use="optional">
+			<xs:annotation>
+				<xs:documentation>List of attributes. 
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		
+		<xs:attribute name="dimensions" type="DimensionDefinition"
+			use="optional">
+			<xs:annotation>
+				<xs:documentation>Used to specify the dimension of a variable
+					declaration. Examples are '1' for a simple value, '12' for an array
+					with 12 elements and '10;3' for an array with 10 elements, each
+					with 3 more contained elements
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+
+
+
+
+	<!-- Enumerations -->
+	<xs:complexType name="EnumerationTypeDefinition">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="Symbols"
+				type="SymbolListDefinition">
+				<xs:annotation>
+					<xs:documentation>List of symbols definied by this enumeration.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="type" use="required">
+			<xs:annotation>
+				<xs:documentation>Name
+					of the enumeration. 
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([a-zA-Z]+)([0-9a-zA-Z\-]*)([0-9a-zA-Z]+)" />
+					<xs:whiteSpace value="collapse" />
+					<xs:minLength value="2" />
+					<xs:maxLength value="128" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="baseType" use="required">
+			<xs:annotation>
+				<xs:documentation>Base
+					type of the enumeration (e.g. int16)
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([a-zA-Z]+)([0-9a-zA-Z\-]*)([0-9a-zA-Z]+)" />
+					<xs:whiteSpace value="collapse" />
+					<xs:minLength value="2" />
+					<xs:maxLength value="128" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+
+
+
+	</xs:complexType>
+
+	<xs:complexType name="SymbolListDefinition">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="Symbol" type="EnumTypeElement">
+				<xs:annotation>
+					<xs:documentation>The symbols of this enumeration. In case a value
+						is specified, the value 0 is
+						used as the default value. If no
+						values are provided, the first symbol in the list is set as
+						default.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="EnumTypeElement">
+		<xs:attribute name="name" use="required" type="RestrictedName">
+			<xs:annotation>
+				<xs:documentation>Name
+					of the literal.
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute type="xs:int" name="value" use="optional">
+			<xs:annotation>
+				<xs:documentation>Integer value of this literal.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+</xs:schema>

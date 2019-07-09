@@ -1,0 +1,15 @@
+{
+  "projects": [
+    {
+      "name": "{$name}",
+      "targets": 
+      [
+        {
+          "name": "{$name}",
+          "sysroot": "{$root}/sysroots",
+          "linkLibraries": "-Wl,-rpath,\"{$searchPaths}/usr/lib\"{$externalLibs} -lArp.System.Acf -lArp.System.Commons \"{$root}/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/lib/libArp.System.Core.a\" -lArp.Plc.Commons \"{$root}/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/lib/libboost_regex-mt.so\" -lArp.System.Rsc -lpthread -lcppformat -lArp.System.Rsc -lpthread -lcppformat -lArp.System.Nm \"{$root}/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/lib/libArp.System.NmPayload.a\" -lArp.System.Security -lArp.System.Security.Services -lArp.System.Um -lArp.System.Ve -lArp.Plc.Domain -lArp.Plc.Gds -lArp.Plc.Meta -lArp.Device.Interface -lArp.Io.Axioline -lArp.Io.Interbus -lArp.Io.ProfinetStack -lArp.Services.NotificationLogger -lArp.Services.OpcUAServer -lArp.Services.TraceController"
+        }
+      ]
+    }
+  ]
+}

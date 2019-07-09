@@ -1,0 +1,67 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.CppParser\\PlcNext.CppParser.csproj",
+    "projectName": "PlcNext.CppParser",
+    "projectPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.CppParser\\PlcNext.CppParser.csproj",
+    "outputPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.CppParser\\obj\\",
+    "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+    ],
+    "originalTargetFrameworks": [
+      "netstandard2.0"
+    ],
+    "sources": {
+      "http://nts-sw-repo01.europe.phoenixcontact.com:8081/repository/nuget.org-mirror/": {}
+    },
+    "frameworks": {
+      "netstandard2.0": {
+        "projectReferences": {
+          "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.Common\\PlcNext.Common.csproj": {
+            "projectPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.Common\\PlcNext.Common.csproj"
+          }
+        }
+      }
+    },
+    "warningProperties": {
+      "allWarningsAsErrors": true
+    }
+  },
+  "frameworks": {
+    "netstandard2.0": {
+      "dependencies": {
+        "Autofac": {
+          "target": "Package",
+          "version": "[4.9.2, )"
+        },
+        "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+          "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.9.4, )"
+        },
+        "NETStandard.Library": {
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.0.3, )",
+          "autoReferenced": true
+        },
+        "Newtonsoft.Json": {
+          "target": "Package",
+          "version": "[12.0.2, )"
+        }
+      },
+      "imports": [
+        "net461",
+        "net462",
+        "net47",
+        "net471",
+        "net472",
+        "net48"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
+    }
+  }
+}

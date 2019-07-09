@@ -1,0 +1,19 @@
+{
+  "command": "get setting AttributePrefix",
+  "parsedCommand": {
+    "command": "get setting",
+    "arguments": {
+      "all": "False",
+      "verbose": "False",
+      "0": "AttributePrefix"
+    }
+  },
+  "inReplyTo": "command",
+  "reply": {
+    "setting": {
+      "AttributePrefix": "#"
+    }
+  },
+  "success": true,
+  "type": "reply"
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TemplateDescription name="codeTemplate" isHidden="true" xmlns="http://www.phoenixcontact.com/schema/clitemplates" basedOn="template" supportedFirmwareVersions="0" requiredCliVersion="19.0.0.660" version="1.1">
+	<Arguments>
+		<Argument name="namespace" short-name="s" has-value="true" help="The namespace for the new $(template.name)."/>
+		<Argument name="output" default="" format="srcBasePath" help="Absolute path or relative path, that is relative to the source directory."/>
+    <Argument name="name">
+      <ValueRestriction min-length="2" max-length="128">
+        <Pattern>^[A-Z](?!.*__)[a-zA-Z0-9_]*$</Pattern>
+      </ValueRestriction>
+    </Argument>
+	</Arguments>
+</TemplateDescription>

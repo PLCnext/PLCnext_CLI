@@ -1,0 +1,99 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.Common\\PlcNext.Common.csproj",
+    "projectName": "PlcNext.Common",
+    "projectPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.Common\\PlcNext.Common.csproj",
+    "outputPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.Common\\obj\\",
+    "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+    ],
+    "originalTargetFrameworks": [
+      "netstandard2.0"
+    ],
+    "sources": {
+      "http://nts-sw-repo01.europe.phoenixcontact.com:8081/repository/nuget.org-mirror/": {}
+    },
+    "frameworks": {
+      "netstandard2.0": {
+        "projectReferences": {}
+      }
+    },
+    "warningProperties": {
+      "allWarningsAsErrors": true
+    }
+  },
+  "frameworks": {
+    "netstandard2.0": {
+      "dependencies": {
+        "Autofac": {
+          "target": "Package",
+          "version": "[4.9.2, )"
+        },
+        "CommandLineParser": {
+          "target": "Package",
+          "version": "[2.4.3, )"
+        },
+        "Microsoft.CodeAnalysis.FxCopAnalyzers": {
+          "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.9.4, )"
+        },
+        "Mono.Posix.NETStandard": {
+          "target": "Package",
+          "version": "[1.0.0, )"
+        },
+        "NETStandard.Library": {
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.0.3, )",
+          "autoReferenced": true
+        },
+        "Newtonsoft.Json": {
+          "target": "Package",
+          "version": "[12.0.2, )"
+        },
+        "Nito.AsyncEx": {
+          "target": "Package",
+          "version": "[5.0.0, )"
+        },
+        "SharpCompress": {
+          "target": "Package",
+          "version": "[0.23.0, )"
+        },
+        "SharpZipLib": {
+          "target": "Package",
+          "version": "[1.1.0, )"
+        },
+        "ShellProgressBar": {
+          "target": "Package",
+          "version": "[4.2.0, )"
+        },
+        "System.Management": {
+          "target": "Package",
+          "version": "[4.5.0, )"
+        },
+        "System.Reflection.Emit": {
+          "target": "Package",
+          "version": "[4.3.0, )"
+        },
+        "System.Runtime.Extensions": {
+          "target": "Package",
+          "version": "[4.3.1, )"
+        }
+      },
+      "imports": [
+        "net461",
+        "net462",
+        "net47",
+        "net471",
+        "net472",
+        "net48"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
+    }
+  }
+}

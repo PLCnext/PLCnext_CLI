@@ -1,0 +1,406 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This schema file describes the structure of the root templates file. -->
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/clitemplates"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           id="templateDescription" targetNamespace="http://www.phoenixcontact.com/schema/clitemplates"
+           version="1.0">
+
+  <xs:include schemaLocation="TemplateBaseSchema.xsd"/>
+
+  <xs:element name="TemplateDescription">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+          Root element for the template description file.
+          It contains all necessary informations for the template.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Arguments" type="templateArgumentDefinitions"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Relationship" type="templateRelationship"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="AddTemplate" type="templateReference"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="File" type="templateFile"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="GeneratedFile" type="templateGeneratedFile"/>
+        <xs:element minOccurs="0" name="Description" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              Description of the template. This description will be shown as the help for the command line.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Example" type="templateExample"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="templateName" use="required">
+        <xs:annotation>
+          <xs:documentation>
+            Name of the template. Use to intantiate the template as well as referencing it.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="supportedFirmwareVersions" type="versionRange" use="required">
+        <xs:annotation>
+          <xs:documentation>
+            Firmware version range which is supported by the template.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="requiredCliVersion" type="version" use="required">
+        <xs:annotation>
+          <xs:documentation>
+            Minimum required cli version.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="version" type="version" use="required">
+        <xs:annotation>
+          <xs:documentation>
+            Version of the template.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="isRoot" type="xs:boolean" use="optional" default="false">
+        <xs:annotation>
+          <xs:documentation>
+            Marks the template as root template. Root templates do not need relationships.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="isHidden" type="xs:boolean" use="optional" default="false">
+        <xs:annotation>
+          <xs:documentation>
+            Marks the template as hiiden. Hidden templates can not be initiated, only used as base templates.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="basedOn" type="templateName" use="optional">
+        <xs:annotation>
+          <xs:documentation>
+            Defines the template this template is based on. All elements of the base template are used in this temaplte.
+            Base element can be overriden by using their name.<!--TODO make base templateElement with required name attribute.-->
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="identifier" type="xs:string" use="optional" default="CodeAttributeIdentifier">
+        <xs:annotation>
+          <xs:documentation>
+            Defines the identifier type to use to identify the element in an existing system.
+            The identifier is a unique key which the identifier provides.
+            The default identifier is the CodeAttributeIdentifier.
+            The CodeAttributeIdentifier load all code files recursively and checks for attributes to
+            identify the template. E.g. if the identifier name is 'component' and the language is C++
+            the identifier looks for a comment in the form '//#component' above the type defintion.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="isRelevantForProjectNamespace" type="xs:boolean" use="optional" default="false">
+        <xs:annotation>
+          <xs:documentation>
+            Marks the template to be considered when computing the namespace of the project.
+            When the template is marked as such, all instances of the template must shared a common
+            namespace with each other and with other templated marked as such.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="templateExample">
+    <xs:annotation>
+      <xs:documentation>
+        Definition of an example how to use this template.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Arguments" type="templateArgumentInstances"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Relationship" type="templateRelationshipInstance"/>
+      <xs:element minOccurs="0" name="Description" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Description of the example. This should be a short sentance or title.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="templateRelationshipBase">
+    <xs:annotation>
+      <xs:documentation>
+        Base definiton of a relationship to another template.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The name of the relationship. It can be accessed with $([name]).
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="templateRelationship">
+    <xs:annotation>
+      <xs:documentation>
+        Defines a relationship to a different template.
+        The relationship automatically adds arguments to define the related template.
+        Relationships need to be marked in the code in order to find them.
+        The template the relationship references can access all related templates with the following generator expressions:
+        $(related) - access all directly related templates
+        $(hierarchy) - access the whole relation hierarchy
+        Related templates can be filtered like so:
+        $([foreach]program[in]related[of-type]program)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="templateRelationshipBase">
+        <xs:attribute name="type" type="templateName" use="required">
+          <xs:annotation>
+            <xs:documentation>
+              The name the related template.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="multiplicity" type="multiplicity" use="optional" default="One">
+          <xs:annotation>
+            <xs:documentation>
+              Set the multiplicity of the relationship. If OneOrMore is used, related elements can be accessed via $([name]s).
+              Default is One.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="templateRelationshipInstance">
+    <xs:annotation>
+      <xs:documentation>
+        A single relationship instance. It contains the name of the referenced item.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="templateRelationshipBase">
+        <xs:attribute name="value" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>
+              The name, full name or partial full name of the referenced item. 
+              It can contain generator expressions.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="templateGeneratedFile">
+    <xs:annotation>
+      <xs:documentation>
+        Defines a file which will be generated with the "generate" command.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="templateFile">
+        <xs:attribute name="generator" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>
+              <!--TODO Restriction for directory names-->
+              Defines the generator for the file. This will be used to sort the files in the generated directory.
+              Will also be used to define a custom generator for this file.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="aggregated" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>
+              <!--TODO Restriction for file names-->
+              Defines the file name where this file is aggregated into.
+              The normal file name and path are still necessary as they are saved as a comment in the aggregated file.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="templateArgumentDefinitions">
+    <xs:annotation>
+      <xs:documentation>
+        Arguments for the template. Arguments are either overriden from their based on templates or add additionally.
+        Overriden arguments only need to specify the name to identify the argument and the changed attributes.
+        All no specified attributes remain the same as defined in the base template.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="Argument" type="templateArgumentDefinition"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="templateArgumentBase">
+    <xs:annotation>
+      <xs:documentation>
+        Base type for template arguments. Conatins only the name of the argument
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          <!--TODO: restrictions for long names-->
+          The name of the argument. This is used as the long name when referencing it on the command line as well as an identifier to reference the arguemnt.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="templateArgumentDefinition">
+    <xs:annotation>
+      <xs:documentation>
+        A single argument defintion for the template. It contains informations about the name, short name and help as well as the default value.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="templateArgumentBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ValueRestriction" type="valueRestriction"/>
+        </xs:sequence>
+        <xs:attribute name="short-name" type="character" use="optional">
+          <xs:annotation>
+            <xs:documentation>
+              <!--TODO: restrictions only letters-->
+              The short name of the argument. This is used as the short name when referencing it on the command line.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="help" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>
+              The help which will be displayed in the command line.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="default" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>
+              The default value which will be use if no value is provided via the command line.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="format" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>
+              The format template which will be used to format the value (even if it is the default value).
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="has-value" type="xs:boolean" use="optional" default="false">
+          <xs:annotation>
+            <xs:documentation>
+              The attribute shows whether the atrribute has a value or not.
+              Default is false.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="multiplicity" type="multiplicity" use="optional" default="One">
+          <xs:annotation>
+            <xs:documentation>
+              If set to OneOrMore the value is interpreted as being multiple values.
+              If has-value is false, this attribute is ignored.
+              Default is One.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="templateArgumentInstance">
+    <xs:annotation>
+      <xs:documentation>
+        A single argument instance of the template. It contains the value which should be used.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="templateArgumentBase">
+        <xs:attribute name="value" type="xs:string" use="optional" default="true">
+          <xs:annotation>
+            <xs:documentation>
+              Value to be used as the arguments value. 
+              If the argument requires multiple values, the values need to be seperated by a '|'.
+              If the argument does not has a value, do not specify this attribute.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="templateFile">
+    <xs:annotation>
+      <xs:documentation>
+        File which will be created when the template is initiated.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          <!--TODO: restriction for filenames with generator expressions-->
+          The name when the file is created. Generator expressions can be used here.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="template" type="filePath" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The path to the template file which will be used as source.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="path" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          The path where the file will be stored.
+          Relative paths are relative to the root template path.
+          Default is the root template path.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="key" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          The key used to reference this file in generator expressions with "template.files.key".
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="templateReference">
+    <xs:annotation>
+      <xs:documentation>
+        References another template. Arguments can be set.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Arguments" type="templateArgumentInstances"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Relationship" type="templateRelationshipInstance"/>
+    </xs:sequence>
+    <xs:attribute name="template" type="templateName" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The name of the template which will be referenced.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="templateArgumentInstances">
+    <xs:annotation>
+      <xs:documentation>
+        Arguments for the template. Each argument is referenced with the argument name and assigned a value.
+        Not assigned arguments will use the defined default value.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="Argument" type="templateArgumentInstance"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,108 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\Test.PlcNext\\Test.PlcNext.csproj",
+    "projectName": "Test.PlcNext",
+    "projectPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\Test.PlcNext\\Test.PlcNext.csproj",
+    "outputPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\Test.PlcNext\\obj\\",
+    "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+    ],
+    "originalTargetFrameworks": [
+      "netcoreapp3.0"
+    ],
+    "sources": {
+      "http://nts-sw-repo01.europe.phoenixcontact.com:8081/repository/nuget.org-mirror/": {}
+    },
+    "frameworks": {
+      "netcoreapp3.0": {
+        "projectReferences": {
+          "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.Common\\PlcNext.Common.csproj": {
+            "projectPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.Common\\PlcNext.Common.csproj"
+          },
+          "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.CppParser\\PlcNext.CppParser.csproj": {
+            "projectPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.CppParser\\PlcNext.CppParser.csproj"
+          },
+          "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.NamedPipeServer\\PlcNext.NamedPipeServer.csproj": {
+            "projectPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext.NamedPipeServer\\PlcNext.NamedPipeServer.csproj"
+          },
+          "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext\\PlcNext.csproj": {
+            "projectPath": "C:\\temp\\plcnexttoolchain\\P\\PlcNextCli\\PlcNext\\PlcNext.csproj"
+          }
+        }
+      }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
+    }
+  },
+  "frameworks": {
+    "netcoreapp3.0": {
+      "dependencies": {
+        "Autofac": {
+          "target": "Package",
+          "version": "[4.9.2, )"
+        },
+        "CommandLineParser": {
+          "target": "Package",
+          "version": "[2.4.3, )"
+        },
+        "FluentAssertions": {
+          "target": "Package",
+          "version": "[5.6.0, )"
+        },
+        "JetBrains.Annotations": {
+          "target": "Package",
+          "version": "[2019.1.1, )"
+        },
+        "LightBDD.XUnit2": {
+          "target": "Package",
+          "version": "[3.0.1, )"
+        },
+        "Microsoft.NET.Test.Sdk": {
+          "target": "Package",
+          "version": "[16.0.1, )"
+        },
+        "Mono.Cecil": {
+          "target": "Package",
+          "version": "[0.10.3, )"
+        },
+        "NSubstitute": {
+          "target": "Package",
+          "version": "[4.0.0, )"
+        },
+        "Newtonsoft.Json": {
+          "target": "Package",
+          "version": "[12.0.2, )"
+        },
+        "XunitXml.TestLogger": {
+          "target": "Package",
+          "version": "[2.1.26, )"
+        },
+        "xunit": {
+          "target": "Package",
+          "version": "[2.4.1, )"
+        },
+        "xunit.runner.visualstudio": {
+          "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.4.1, )"
+        }
+      },
+      "imports": [
+        "net461",
+        "net462",
+        "net47",
+        "net471",
+        "net472",
+        "net48"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
+    }
+  }
+}

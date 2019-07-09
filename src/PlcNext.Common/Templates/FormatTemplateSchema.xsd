@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This schema file describes the structure of the format templates file. -->
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/clitemplates"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           id="formatTemplates" targetNamespace="http://www.phoenixcontact.com/schema/clitemplates"
+           version="1.0">
+
+  <xs:include schemaLocation="TemplateBaseSchema.xsd"/>
+
+  <xs:element name="FormatTemplates">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+          Root element for the format templates file.
+          It contains a list of format templates.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="FormatTemplate" type="formatTemplate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="formatTemplate">
+    <xs:annotation>
+      <xs:documentation>
+        Defines a format template. A format template can be accessed via a generator expression on any element.
+        The value returned by the generator expression is the formatted value.
+        Format templates can be chained and will be applied in order from left to right.
+        If multiple conversions are defined, they will be check in the following order until one conversion matches:
+        ConditionalConversion -> RegexConversion -> TemplateConversion
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ConditionalConversion" type="conditionalConversionFormat"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RegexConversion" type="regexConversionFormat"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TemplateConversion" type="templateConversionFormat"/>
+      <xs:element minOccurs="0" maxOccurs="2" name="Prefix" type="prefixSuffixFormat"/>
+      <xs:element minOccurs="0" maxOccurs="2" name="Suffix" type="prefixSuffixFormat"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Split" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            These elements is used to split a single value into multiple parts.
+            If multiplicity is One this attribute will be ignored.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="templateName" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The name to access the template. The generator expression looks like $([element].format.[name])
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="multiplicity" type="multiplicity" use="optional" default="One">
+      <xs:annotation>
+        <xs:documentation>
+          If set to OneOrMore either the value consists of multiple values or is splitted with the split attribute.
+          In case of OneOrMore each value in the enumeration gets converted with the template.
+          Default is One.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="seperator" type="xs:string" use="optional" default="">
+      <xs:annotation>
+        <xs:documentation>
+          The seperator which is used to aggregate the values if the multiplicity is OneOrMore.
+          The aggregated value will look like [value1][seperator][value2][seperator][value3].
+          If multiplicity is One this attribute will be ignored.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="target" type="xs:string" use="optional" default="">
+      <xs:annotation>
+        <xs:documentation>
+          This attribute describes the target of the format template. The format template can only be used on these targets.
+          Example: When target="namespace", "$(namespace.format.[name]) is valid. "$(file.format.[name])" would report an error.
+          Even if format templates are cascaded the target is the last element before the first format template.
+          In the case "$(root.format.format1.format.format2)" the target for format2 is still root.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="prefixSuffixFormat">
+    <xs:annotation>
+      <xs:documentation>
+        This format describes either a prefix or a suffix. A prefix/suffix will always be applied regardless if other
+        conversions were already applied. They will be applied last after other conversions.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="only-aggregated" type="xs:boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>
+          If this value is true, the prefix/suffix will only be applied once to the aggregated value.
+          If the format is no aggregated the prefix/suffix will still be applied after the prefix/suffix without this flag.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="value" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The value of the prefix/suffix. Only constant generator expressions such as $(newLine) will be used.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="regexConversionFormat">
+    <xs:annotation>
+      <xs:documentation>
+        This format converts a concrete value to another concrete value.
+        If the value matches other than prefix and suffix formats, no other formats will be used.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="ignore-case" type="xs:boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>
+          If this value is true, the value will be matched ignoring any different casing. Default is false.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="pattern" type="xs:string" use="optional" default=".*">
+      <xs:annotation>
+        <xs:documentation>
+          This attribute describes the value which will be converted as a regex pattern.
+          It can capture groups with "(?&lt;name&gt;pattern)". These groups can be used in the converted value.
+          The pattern must always match the whole value. This means that the pattern will be surrounded by ^...$ if it is not.
+          Default is ".*".
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="converted" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          This attribute describes the converted value which will be used instead of the value.
+          To access captured groups generator expressions can be used as follows:
+          Named groups: pattern="(?&lt;name&gt;.*)" converted="My$(name)"
+          Numbered groups: pattern="(.*)" converted="My$(1)"
+          Additionally the following control sequences are recognized:
+          \u will print the next character as an uppercase character
+          \l will print the next character as an lowercase character
+          This can be combined with generator expressions.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="templateConversionFormat">
+    <xs:annotation>
+      <xs:documentation>
+        This format replaces a value with a described value which can use generator expressions.
+        If the value matches other than prefix and suffix formats, no other formats will be used.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="ignore-case" type="xs:boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>
+          If this value is true, the value will be matched ignoring any different casing. Default is false.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="pattern" type="xs:string" use="optional" default=".*">
+      <xs:annotation>
+        <xs:documentation>
+          This attribute describes the value which will be converted as a regex pattern.
+          The pattern must always match the whole value. This means that the pattern will be surrounded by ^...$ if it is not.
+          Default is ".*".
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="template" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          This attribute describes the value which will be used instead of the given value.
+          It can use generator expressions which will be applied to the formatted value.
+          Example: The value "$(dataType.format.templateConversion)" with the template "CTN&lt;$(fullName)&gt;()"
+          will be translated into the value "CTN&lt;$(dataType.fullName)&gt;()".
+          The generator expressions can even contain format templates, although it is possible to create loops with that.
+          To access the original value the generator expression $(value) can be used.
+          Additionally the following control sequences are recognized:
+          \u will print the next character as an uppercase character
+          \l will print the next character as an lowercase character
+          This can be combined with generator expressions.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  
+  <xs:complexType name="conditionalConversionFormat">
+    <xs:annotation>
+      <xs:documentation>
+        This format defines a condition with which the converted value will be chosen.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="condition" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          This attribute describes the condition by which the template will be chosen.
+          Generator expressions can be used.
+          The resolved value will be parsed to a boolean value. Therefore it should be either 'true' or 'false'.
+          All other values will be interpreted as 'false'.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="template" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          This attribute describes the value which will be used instead of the given value.
+          It can use generator expressions which will be applied to the formatted value.
+          Example: The value "$(dataType.format.templateConversion)" with the template "CTN&lt;$(fullName)&gt;()"
+          will be translated into the value "CTN&lt;$(dataType.fullName)&gt;()".
+          The generator expressions can even contain format templates, although it is possible to create loops with that.
+          To access the original value the generator expression $(value) can be used.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This schema file describes the structure all template description files such as the template
+description itself. -->
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/clitemplates"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           id="base" targetNamespace="http://www.phoenixcontact.com/schema/clitemplates"
+           version="1.0">
+
+  <xs:complexType name="valueRestriction">
+    <xs:annotation>
+      <xs:documentation>
+        Restricts the values. The restriction is applied to each value seperately if there are more than one value.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice>
+      <xs:element name="Pattern" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Restricts with a regex pattern.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Enumeration" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            Restricts with concrete values. If ignore-case is used, the values will be formatted in the way they are defined here.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+    <xs:attribute name="ignore-case" type="xs:boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>
+          If this value is true, the restrictions will be matched ignoring the casing. Default is false.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="min-length" type="xs:nonNegativeInteger" use="optional" default="0">
+      <xs:annotation>
+        <xs:documentation>
+          Attribute which restricts the minimal value length.
+          Default is 0, which means unrestricted.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="max-length" type="nonNegativeIntegerWithDefault" use="optional" default="-1">
+      <xs:annotation>
+        <xs:documentation>
+          Attribute which restricts the maximum value length.
+          Default is -1, which means unrestricted.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="length" type="nonNegativeIntegerWithDefault" use="optional" default="-1">
+      <xs:annotation>
+        <xs:documentation>
+          Attribute which restricts the value length to a fixed value.
+          min-length and max-length are ignored, when this attribute is used.
+          Default is -1, which means unrestricted.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="whitespace" type="whitespace" use="optional" default="Preserve">
+      <xs:annotation>
+        <xs:documentation>
+          Attribute which converts whitespaces before applying any restrictions.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:simpleType name="filePath">
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="templateName">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^(?!\d|[A-Z])[a-zA-Z0-9_]+$"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="character">
+    <xs:restriction base="xs:string">
+      <xs:length fixed="true" value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="version">
+    <xs:annotation>
+      <xs:documentation>
+        Simple type used to specify version numbers and
+        restrict their structure.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^(\d+)(.\d+)?(.\d+)?(.\d+)?$" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="versionRange">
+    <xs:annotation>
+      <xs:documentation>
+        Simple type used to specify version number ranges.
+        Definition of ranges according to nuget standard: https://docs.microsoft.com/en-us/nuget/reference/package-versioning
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^(((\d+)(.\d+)?(.\d+)?(.\d+)?)|(((\[(?!,))|(\((?=.*,)))(?(?=.*\))(?=.*,))(?=.*\d)((\d+)(.\d+)?(.\d+)?(.\d+)?)?,?((?&lt;=,)(\d+)(.\d+)?(.\d+)?(.\d+)?)?(((?&lt;!,)\])|\))))$" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="multiplicity">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="One"/>
+      <xs:enumeration value="OneOrMore"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="whitespace">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Preserve">
+        <xs:annotation>
+          <xs:documentation>
+            Preserves whitespaces as they are.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Replace">
+        <xs:annotation>
+          <xs:documentation>
+            Will replace all white space characters (line feeds, tabs, spaces, and carriage returns) with spaces.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Collapse">
+        <xs:annotation>
+          <xs:documentation>
+            Will remove all white space characters (line feeds, tabs, spaces, and carriage returns).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="nonNegativeIntegerWithDefault">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="-1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

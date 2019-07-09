@@ -1,0 +1,31 @@
+{
+  "command": "get setting -a",
+  "parsedCommand": {
+    "command": "get setting",
+    "arguments": {
+      "all": "True",
+      "verbose": "False",
+      "0": ""
+    }
+  },
+  "inReplyTo": "command",
+  "reply": {
+    "setting": {
+      "SdkPaths": [
+        "C:/MySdk"
+      ],
+      "TemplateLocations": [
+        "./Templates/Templates.xml"
+      ],
+      "AttributePrefix": "#",
+      "CliRepositoryRoot": "http://localhost/cli",
+      "CliRepositoryFileName": "repository.xml",
+      "CliRepositorySignatureFileName": "repository.xml.cer",
+      "HttpProxy": "",
+      "LogFilePath": "{ApplicationData}/{ApplicationName}/log.txt",
+      "UseSystemCommands": false
+    }
+  },
+  "success": true,
+  "type": "reply"
+}

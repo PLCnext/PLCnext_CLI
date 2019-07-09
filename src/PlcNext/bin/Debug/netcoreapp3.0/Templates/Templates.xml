@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Templates xmlns="http://www.phoenixcontact.com/schema/clitemplates">
+	<Include type="Template">ProjectTemplate/TemplateDescription.xml</Include>
+	<Include type="Template">ProgramTemplate/TemplateDescription.xml</Include>
+	<Include type="Template">ComponentTemplate/TemplateDescription.xml</Include>
+	<Include type="Template">BaseTemplates/BaseTemplateDescription.xml</Include>
+	<Include type="Template">BaseTemplates/CodeTemplateDescription.xml</Include>
+	<Include type="Fields">BaseTemplates/FieldTemplates.xml</Include>
+	<Include type="Types">BaseTemplates/TypeTemplates.xml</Include>
+	<Include type="Format">BaseTemplates/FormatTemplates.xml</Include>
+	<Include type="Template">AcfProjectTemplate/TemplateDescription.xml</Include>
+	<Include type="Template">BaseProjectTemplate/TemplateDescription.xml</Include>
+	<Include type="Template">AcfComponentTemplate/TemplateDescription.xml</Include>
+	<Include type="Template">BaseComponentTemplate/TemplateDescription.xml</Include>
+</Templates>

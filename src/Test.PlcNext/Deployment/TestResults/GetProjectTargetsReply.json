@@ -1,0 +1,32 @@
+{
+  "command": "get project-targets",
+  "parsedCommand": {
+    "command": "get project-targets",
+    "arguments": {
+      "path": "",
+      "short": "False",
+      "verbose": "False"
+    }
+  },
+  "inReplyTo": "command",
+  "reply": {
+    "targets": [
+      {
+        "name": "AXCF2152",
+        "version": "1.0.0.12345",
+        "longVersion": "1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)",
+        "shortVersion": "1.0.0",
+        "available": true
+      },
+      {
+        "name": "AXCF2153",
+        "version": "1.0.0.12345",
+        "longVersion": "1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)",
+        "shortVersion": "1.0.0",
+        "available": false
+      }
+    ]
+  },
+  "success": true,
+  "type": "reply"
+}

@@ -1,0 +1,2 @@
+ C:\temp\fciv.exe -add .\ -r -md5 -xml c:\temp\hashes.xml
+ dotnet "C:\keep\Sign\Sign\bin\Release\netcoreapp2.0\sign.dll" sign .\repository.xml "C:\keep\PlcNextToolchainDevelop\P\PlcNextCli\PlcNext\full_cli_repository_key.xml" SHA1

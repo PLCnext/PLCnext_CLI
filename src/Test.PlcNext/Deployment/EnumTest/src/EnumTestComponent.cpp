@@ -1,0 +1,36 @@
+﻿#include "EnumTestComponent.hpp"
+#include "Arp/Plc/Commons/Esm/ProgramComponentBase.hpp"
+
+namespace EnumTest
+{
+
+void EnumTestComponent::Initialize()
+{
+    // never remove next line
+    ProgramComponentBase::Initialize();
+
+    // subscribe events from the event system (Nm) here
+}
+
+void EnumTestComponent::LoadConfig()
+{
+    // load project config here
+}
+
+void EnumTestComponent::SetupConfig()
+{
+    // never remove next line
+    ProgramComponentBase::SetupConfig();
+
+    // setup project config here
+}
+
+void EnumTestComponent::ResetConfig()
+{
+    // never remove next line
+    ProgramComponentBase::ResetConfig();
+
+    // implement this inverse to SetupConfig() and LoadConfig()
+}
+
+} // end of namespace EnumTest

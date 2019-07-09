@@ -1,0 +1,6 @@
+﻿+ Copy everything from the target output folder to the target to /opt/plcnext/projects/<UniqueFolderName>
+	+ The UniqueFolderName can be anything, it is needed in the next step
++ Edit the file /opt/plcnext/projects/Default/Default.acf.config in the following way:
+	+ Under includes add a new entry in the format:
+	  <Include path="$ARP_PROJECTS_DIR$/<UniqueFolderName>/*.acf.config" />
++ Restart the device

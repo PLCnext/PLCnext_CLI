@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This schema file describes the structure of the meta configuration document 
+	use to specify - Datatypes (e.g. structs, enumerations) - Programs - Components 
+	- Libraries These definitions must be made in different files like typemeta, 
+	progmeta, compmeta, or libmeta. -->
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/clirepository"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	id="repository" targetNamespace="http://www.phoenixcontact.com/schema/clirepository"
+	version="1.0">
+
+	<xs:element name="Repository">
+		<xs:complexType>
+			<xs:annotation>
+				<xs:documentation>
+					Root element for the repository document.
+					It contains all available versions of the cli with their repesctive links.
+				</xs:documentation>
+			</xs:annotation>
+			<xs:sequence>
+				<xs:element minOccurs="1" maxOccurs="unbounded" name="Version" type="CliVersionDefinition">
+					<xs:annotation>
+						<xs:documentation>
+							A version of the CLI.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="schemaVersion" type="VersionDefinition"
+					  use="required" fixed="1.0" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="CliVersionDefinition">
+		<xs:annotation>
+			<xs:documentation>
+				Used to specify details of a specific version.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="unbounded" name="File" type="FileDefinition">
+				<xs:annotation>
+					<xs:documentation>
+						A file associated with the specific version.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" type="VersionDefinition" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					The version of the tool.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	  <xs:attribute name="informal-version" type="xs:string" use="optional">
+	    <xs:annotation>
+	      <xs:documentation>
+	        The informal / shown version of the tool.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="FileDefinition">
+		<xs:annotation>
+			<xs:documentation>
+				Used to specify details of a downloadable file.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="Fingerprint" type="FingerprintDefinition">
+				<xs:annotation>
+					<xs:documentation>
+						The finderprint of the file.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="OS" type="OSDefinition">
+				<xs:annotation>
+					<xs:documentation>
+						The operation system this file is meant for.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="Architecture" type="ArchitectureDefinition">
+				<xs:annotation>
+					<xs:documentation>
+						The processor architecture this file is meant for.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					The file name including the file extension.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="relPath" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					The relative url path from the root of the repository (where this file is found).
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="FingerprintDefinition">
+		<xs:annotation>
+			<xs:documentation>
+				Specifies the fingerprint of the file to check the integrity.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="hash" type="xs:base64Binary" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					The actual fingerprint.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="algorithm" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					The used algorithm to calculate the hash.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:simpleType name="VersionDefinition">
+		<xs:annotation>
+			<xs:documentation>
+				Simple type used to specify version numbers and
+				restrict their structure.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9]+)(.[0-9]+(.[0-9]+(.[0-9]+)?)?)?" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="OSDefinition">
+		<xs:annotation>
+			<xs:documentation>
+				Simple type used to specify a certain OS and
+				restrict their values.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		    <xs:enumeration value="unbound" />
+			<xs:enumeration value="linux" />
+			<xs:enumeration value="osx" />
+			<xs:enumeration value="windows" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ArchitectureDefinition">
+		<xs:annotation>
+			<xs:documentation>
+				Simple type used to specify processor architectures and
+				restrict their values.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="x86" />
+			<xs:enumeration value="x64" />
+			<xs:enumeration value="arm" />
+			<xs:enumeration value="arm64" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

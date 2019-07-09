@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName Condition="'$(PlcNextToolName)' != ''">$(PlcNextToolName).Common</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Installation\copy_version.bat" />
+    <None Remove="Tools\SDK\SampleProject\a.cxx" />
+    <None Remove="Tools\SDK\SampleProject\CMakeLists.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\CMakeLists.txt" Link="Project\templates\ProjectTemplates\CMakeLists.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Installation\copy_version.bat" />
+    <EmbeddedResource Include="Tools\SDK\SampleProject\a.cxx" />
+    <EmbeddedResource Include="Tools\SDK\SampleProject\CMakeLists.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.2" />
+    <PackageReference Include="CommandLineParser" Version="2.4.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Nito.AsyncEx" Version="5.0.0" />
+    <PackageReference Include="SharpCompress" Version="0.23.0" />
+    <PackageReference Include="SharpZipLib" Version="1.1.0" />
+    <PackageReference Include="ShellProgressBar" Version="4.2.0" />
+    <PackageReference Include="System.Management" Version="4.5.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="CodeErrors.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CodeErrors.resx</DependentUpon>
+    </Compile>
+    <Compile Update="ExceptionTexts.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionTexts.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="CodeErrors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CodeErrors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ExceptionTexts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionTexts.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Project\templates\ProjectTemplates\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\bin\Debug\netstandard2.0\PlcNext.Common.deps.json
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\bin\Debug\netstandard2.0\PlcNext.Common.dll
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\bin\Debug\netstandard2.0\PlcNext.Common.pdb
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\obj\Debug\netstandard2.0\PlcNext.Common.csprojAssemblyReference.cache
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\obj\Debug\netstandard2.0\PlcNext.Common.CodeErrors.resources
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\obj\Debug\netstandard2.0\PlcNext.Common.ExceptionTexts.resources
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\obj\Debug\netstandard2.0\PlcNext.Common.csproj.GenerateResource.cache
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\obj\Debug\netstandard2.0\PlcNext.Common.AssemblyInfoInputs.cache
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\obj\Debug\netstandard2.0\PlcNext.Common.AssemblyInfo.cs
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\obj\Debug\netstandard2.0\PlcNext.Common.csproj.CoreCompileInputs.cache
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\obj\Debug\netstandard2.0\PlcNext.Common.dll
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.Common\obj\Debug\netstandard2.0\PlcNext.Common.pdb

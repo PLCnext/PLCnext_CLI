@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/sdkproperties"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           id="sdkproperties" targetNamespace="http://www.phoenixcontact.com/schema/sdkproperties"
+           version="1.1">
+
+  <xs:element name="Properties">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SDK" type="SdkSchema" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="SdkSchema">
+    <xs:sequence>
+      <xs:element name="Target" minOccurs="0" maxOccurs="unbounded" type="TargetSchema"/>
+      <xs:element name="IncludePath" minOccurs="0" maxOccurs="unbounded" type="filePath">
+        <xs:annotation>
+          <xs:documentation>
+            Include paths added by the SDK toolchain files.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CompilerSpec" minOccurs="1" maxOccurs="1" type="CompilerSpecification"/>
+    </xs:sequence>
+    <xs:attribute name="path" type="filePath" use="required"/>
+    <xs:attribute name="make-path" type="filePath" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="CompilerSpecification">
+    <xs:annotation>
+      <xs:documentation>
+        Specifications for the compiler of the SDK.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IncludePath" minOccurs="0" maxOccurs="unbounded" type="filePath">
+        <xs:annotation>
+          <xs:documentation>
+            Default compiler include paths.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CompilerMacro" minOccurs="0" maxOccurs="unbounded" type="MakroDefinition"/>
+    </xs:sequence>
+    <xs:attribute name="compilerPath" type="filePath" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          Path to the compiler executable.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="compilerSysroot" type="filePath" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          Sysroot for the compiler.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="compilerFlags" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          Basic compiler flags.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="MakroDefinition">
+    <xs:annotation>
+      <xs:documentation>
+        Used to specify a compiler macro definition.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The name of the macro.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="value" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The value for the macro.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="TargetSchema">
+    <xs:annotation>
+      <xs:documentation>
+        Used to specify details of the target which is supported by this SDK.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The name of the target. E.g. 'AXC2152'
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="version" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          Version of the supported target. If multiple versions of the same target is supported multiple TargetDefinitions must be made.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:simpleType name="filePath">
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+</xs:schema>

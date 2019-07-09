@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This schema file describes the structure of the meta configuration document 
+	use to specify - Datatypes (e.g. structs, enumerations) - Programs - Components 
+	- Libraries These definitions must be made in different files like typemeta, 
+	progmeta, compmeta, or libmeta. -->
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/sdkmanifest"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	id="sdkmanifest" targetNamespace="http://www.phoenixcontact.com/schema/sdkmanifest"
+	version="1.0">
+
+  <xs:element name="SdkManifest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+          Root element for the SDK manifest document.
+          The document contains all targets which it supports.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="Targets" type="TargetsDefinition" maxOccurs="1" minOccurs="1">
+          <xs:annotation>
+            <xs:documentation>
+              All targets specified by the SDK.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name ="MakeExecutable" type="MakeExecutableDefinition" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Path to make executable, if shipped with the SDK.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="schemaVersion" type="VersionDefinition"
+				use="required" fixed="1.0" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="TargetsDefinition">
+    <xs:annotation>
+      <xs:documentation>
+        Used to specify all targets which are supported by this SDK.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="Target" type="TargetDefinition">
+        <xs:annotation>
+          <xs:documentation>
+            A target which th SDK is able to build.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TargetDefinition">
+    <xs:annotation>
+      <xs:documentation>
+        Used to specify details of the target which is supported by this SDK.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The name of the target. E.g. 'AXC2152'
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="version" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          Version of the supported target. If multiple versions of the same target is supported multiple TargetDefinitions must be made.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:simpleType name="VersionDefinition">
+    <xs:annotation>
+      <xs:documentation>Simple type used to specify version numbers and
+        restrict their structure.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="([0-9]+)(.[0-9]+(.[0-9]+(.[0-9]+)?)?)?" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="MakeExecutableDefinition">
+    <xs:annotation>
+      <xs:documentation>
+        Path to the make executable, if shipped with the SDK.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="path" type="xs:string" use="required">
+    </xs:attribute>
+  </xs:complexType>
+
+</xs:schema>

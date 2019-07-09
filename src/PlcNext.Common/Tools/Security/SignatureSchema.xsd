@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This schema file describes the structure of the meta configuration document 
+	use to specify - Datatypes (e.g. structs, enumerations) - Programs - Components 
+	- Libraries These definitions must be made in different files like typemeta, 
+	progmeta, compmeta, or libmeta. -->
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/rsa-signature"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           id="rsa-signature" targetNamespace="http://www.phoenixcontact.com/schema/rsa-signature"
+           version="1.0">
+
+  <xs:element name="RSA-Signature">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+          Root element for the signature defintion.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" name="RawSignature" type="xs:base64Binary">
+          <xs:annotation>
+            <xs:documentation>
+              The actual signature.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="1" maxOccurs="1" name="HashAlgorithm" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              The used hash algorithm.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="1" maxOccurs="1" name="RsaPadding" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              The rsa padding algorithm.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

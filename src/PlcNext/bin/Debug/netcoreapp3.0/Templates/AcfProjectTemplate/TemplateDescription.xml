@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TemplateDescription name="acfproject" isRoot="true" basedOn="baseproject" supportedFirmwareVersions="19.0.0.16199" requiredCliVersion="19.0.0.660" version="1.0" 
+                     xmlns="http://www.phoenixcontact.com/schema/clitemplates" identifier="ProjectSettingsIdentifier">
+  <Arguments>
+    <Argument name="component" has-value="true" short-name="c" help="The name of the component which will be automatically created." default="$(name.format.lastNamespacePart)Component">
+      <ValueRestriction>
+        <Pattern>^[A-Z](?!.*__)[a-zA-Z0-9_]*$</Pattern>
+      </ValueRestriction>
+    </Argument>
+    <Argument name="namespace" help="The root namespace for the acfproject. It is used to resolve the initial component namespace." />
+  </Arguments>
+  <AddTemplate template="acfcomponent">
+    <Arguments>
+      <Argument name="name" value="$(component)"/>
+      <Argument name="namespace" value="$(namespace)"/>
+    </Arguments>
+  </AddTemplate>
+  <File name="plcnext.proj" template=".proj"/>
+  <File name="How_to_deploy.txt" template="How_to_deploy.txt" deployPath="."/>
+  <File name="$(name.format.lastNamespacePart.format.escapeProjectName)Library.acf.config" deployPath="." template="acf.config" path="src"/>
+  <GeneratedFile name="$(name.format.lastNamespacePart.format.escapeProjectName)Library.cpp" template="Library.cpp"
+				   generator="code" aggregated="generated.cpp"/>
+  <GeneratedFile name="$(name.format.lastNamespacePart.format.escapeProjectName)Library.hpp" template="Library.hpp"
+				   generator="code" aggregated="generated.hpp"
+				   key="library"/>
+  <GeneratedFile name="$(name.format.lastNamespacePart.format.escapeProjectName)Library.meta.cpp" template="Library.meta.cpp"
+				   generator="code" aggregated="generated.cpp"/>
+  <Description>Create a new acfproject.The acfproject is a template for component based platform development. The resulting component will be managed by the ACF (Application Component Framework). For more information visit the Help Center in the PLCnext Community.</Description>
+  <Example>
+    <Arguments>
+      <Argument name="name" value="ProjectName"/>
+    </Arguments>
+    <Description>creates a new acfproject in the directory 'ProjectName' with the component 'ProjectNameComponent' in the namespace 'ProjectName'</Description>
+  </Example>
+  <Example>
+    <Arguments>
+      <Argument name="name" value="ProjectName"/>
+      <Argument name="component" value="SomeComponent"/>
+      <Argument name="namespace" value="SomeNamespace"/>
+    </Arguments>
+    <Description>creates a new acfproject in the directory 'ProjectName' with the component 'SomeComponent' in the namespace 'SomeNamespace'</Description>
+  </Example>
+</TemplateDescription>

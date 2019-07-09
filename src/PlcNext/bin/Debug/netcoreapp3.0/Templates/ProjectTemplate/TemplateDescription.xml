@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TemplateDescription name="project" isRoot="true" basedOn="baseproject" supportedFirmwareVersions="19.0.0.16199" requiredCliVersion="19.0.0.660" version="1.0" 
+                     xmlns="http://www.phoenixcontact.com/schema/clitemplates" identifier="ProjectSettingsIdentifier">
+	<Arguments>
+	  <Argument name="component" has-value="true" short-name="c" help="The name of the component which will be automatically created." default="$(name.format.lastNamespacePart)Component">
+	    <ValueRestriction>
+	      <Pattern>^[A-Z](?!.*__)[a-zA-Z0-9_]*$</Pattern>
+	    </ValueRestriction>
+	  </Argument>
+	  <Argument name="program" has-value="true" short-name="p" help="The name of the program which will be automatically created." default="$(name.format.lastNamespacePart)Program">
+	    <ValueRestriction>
+	      <Pattern>^[A-Z](?!.*__)[a-zA-Z0-9_]*$</Pattern>
+	    </ValueRestriction>
+	  </Argument>
+    <Argument name="namespace" help="The root namespace for the $(template.name). It is used to resolve the initial component and program namespace." />
+	</Arguments>
+	<AddTemplate template="component">
+		<Arguments>
+			<Argument name="name" value="$(component)"/>
+		  <Argument name="namespace" value="$(namespace)"/>
+		</Arguments>
+	</AddTemplate>
+	<AddTemplate template="program">
+		<Arguments>
+			<Argument name="name" value="$(program)"/>
+		  <Argument name="namespace" value="$(namespace)"/>
+		</Arguments>
+    <Relationship name="component" value="$(component)"/>
+	</AddTemplate>
+  <File name="plcnext.proj" template=".proj"/>
+  <GeneratedFile name="$(name.format.lastNamespacePart.format.escapeProjectName)Library.cpp" template="Library.cpp"
+				   generator="code" aggregated="generated.cpp"/>
+  <GeneratedFile name="$(name.format.lastNamespacePart.format.escapeProjectName)Library.hpp" template="Library.hpp"
+				   generator="code" aggregated="generated.hpp"
+				   key="library"/>
+	<GeneratedFile name="$(name.format.lastNamespacePart.format.escapeProjectName)Library.meta.cpp" template="Library.meta.cpp" 
+				   generator="Code" aggregated="generated.cpp"/>
+	<GeneratedFile name="$(namespace).libmeta" template="Library.libmeta"
+				   generator="Config" deployPath="."/>
+	<GeneratedFile name="$(namespace).typemeta" template="Library.typemeta"
+				   generator="Config" deployPath="."/>
+  <Description>Create a new project. The project is a template for user programs. They are managed by the PLM (Program Library Manager). For more information visit the Help Center in the PLCnext Community.</Description>
+  <Example>
+    <Arguments>
+      <Argument name="name" value="ProjectName"/>
+    </Arguments>
+    <Description>creates a new project in the directory 'ProjectName' with the component 'ProjectNameComponent', the program 'ProjectNameProgram' both in the namespace 'ProjectName'</Description>
+  </Example>
+  <Example>
+    <Arguments>
+      <Argument name="name" value="ProjectName"/>
+      <Argument name="component" value="SomeComponent"/>
+      <Argument name="program" value="SomeProgram"/>
+      <Argument name="namespace" value="SomeNamespace"/>
+    </Arguments>
+    <Description>creates a new project in the directory 'ProjectName' with the component 'SomeComponent', the program 'SomeProgram' both in the namespace 'SomeNamespace'</Description>
+  </Example>
+  <DeployPostStep identifier="LibraryBuilderDeployStep">
+    <Arguments>
+      <Argument name="id" has-value="true" short-name="i" help="The GUID for the library. If this option is not used, the id stored in the project settings file will be used instead."/>
+      <Argument name ="output" has-value="true" short-name="o" help="The path where the files will be deployed in. Default is the 'bin' directory. Relative paths are relative to the directory defined with the '--path' option. Make sure your binaries were built into output directory or use files option to copy binaries to output directory."/>
+      <Argument name="target" has-value="true" short-name="t" multiplicity="OneOrMore" separator=" " help="List of targets for which files are deployed. Targets are separated by ' '. Targets need to be defined in the following format: targetname(,targetversion). The version is optional and is only needed if there are multiple versions of a target in the registered SDKs. If used, this option overrides the targets defined in the project. Please consider, that the actual binaries are deployed in the build step. Therefore if they are not built for a specific target, neither are they built here."/>
+      <Argument name="sources" has-value="true" short-name="s" multiplicity="OneOrMore" separator="," help="The path of the source directories separated by ','. Default is the 'src' directory if such a directory exists. If not, the directory defined with the '--path' option is used. Relative paths are relative to the directory defined with the '--path' option. If any path contains a ' ' quotation marks should be used around all paths, e.g. &quot;path1,path With Space,path2&quot;."/>
+    </Arguments>
+    <Example>
+      <Arguments>
+        <Argument name="path" value="PlmProject"/>
+      </Arguments>
+      <Description>Deploy a .pcwlx library for 'PlmProject'</Description>
+    </Example>
+    <Example>
+      <Arguments>
+        <Argument name="path" value="PlmProject"/>
+        <Argument name="files" value="lib/libPlmProject.so|."/>
+      </Arguments>
+      <Description>Deploy 'PlmProject' with the custom library path 'lib/libPlmProject.so'</Description>
+    </Example>
+    <!--<Example>
+      <Arguments>
+        <Argument name="path" value="PlmProject"/>
+        <Argument name="files" value="extern/libA.so|. extern/libB.so|."/>
+      </Arguments>
+      <Description>Deploy 'PlmProject' with the external libraries 'libA.so' and 'libB.so'. Automatic external library detection is disabled with that</Description>
+    </Example>-->
+    <Example>
+      <Arguments>
+        <Argument name="path" value="PlmProject"/>
+        <Argument name="files" value="meta/device/*|."/>
+      </Arguments>
+      <Description>Deploy 'PlmProject' with the custom metadata path 'meta/device'</Description>
+    </Example>
+    <Example>
+      <Arguments>
+        <Argument name="path" value="PlmProject"/>
+        <Argument name="output" value="out"/>
+        <Argument name="files" value="bin/AXCF2152_19.6.0.21013/Release/*|."/>
+      </Arguments>
+      <Description>Deploy 'PlmProject' into folder 'out' where binaries were built into standard folder 'bin/AXCF2152_19.6.0.21013/Release'</Description>
+    </Example>
+  </DeployPostStep>
+</TemplateDescription>

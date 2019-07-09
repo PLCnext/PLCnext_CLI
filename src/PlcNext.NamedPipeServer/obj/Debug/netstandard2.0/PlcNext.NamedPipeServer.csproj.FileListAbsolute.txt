@@ -1,0 +1,14 @@
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\bin\Debug\netstandard2.0\PlcNext.NamedPipeServer.deps.json
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\bin\Debug\netstandard2.0\PlcNext.NamedPipeServer.dll
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\bin\Debug\netstandard2.0\PlcNext.NamedPipeServer.pdb
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\bin\Debug\netstandard2.0\PlcNext.Common.dll
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\bin\Debug\netstandard2.0\PlcNext.Common.pdb
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\obj\Debug\netstandard2.0\PlcNext.NamedPipeServer.csprojAssemblyReference.cache
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\obj\Debug\netstandard2.0\PlcNext.NamedPipeServer.ExceptionTexts.resources
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\obj\Debug\netstandard2.0\PlcNext.NamedPipeServer.csproj.GenerateResource.cache
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\obj\Debug\netstandard2.0\PlcNext.NamedPipeServer.AssemblyInfoInputs.cache
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\obj\Debug\netstandard2.0\PlcNext.NamedPipeServer.AssemblyInfo.cs
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\obj\Debug\netstandard2.0\PlcNext.NamedPipeServer.csproj.CoreCompileInputs.cache
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\obj\Debug\netstandard2.0\PlcNext.NamedPipeServer.csproj.CopyComplete
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\obj\Debug\netstandard2.0\PlcNext.NamedPipeServer.dll
+C:\temp\plcnexttoolchain\P\PlcNextCli\PlcNext.NamedPipeServer\obj\Debug\netstandard2.0\PlcNext.NamedPipeServer.pdb

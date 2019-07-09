@@ -1,0 +1,747 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="TestResults\**" />
+    <EmbeddedResource Remove="TestResults\**" />
+    <None Remove="TestResults\**" />
+    <None Remove="Deployment\StandardAppProject\CMakeLists.txt" />
+    <None Remove="Deployment\StandardAppProject\src\StandardAppProjectComponent.cpp" />
+    <None Remove="Deployment\StandardAppProject\src\StandardAppProjectComponent.hpp" />
+    <None Remove="Deployment\TestResults\GetAppcomponentsReply.json" />
+    <None Remove="Deployment\TestResults\GetComponentsReply.json" />
+    <None Remove="Deployment\TestResults\GetNamespaceReply.json" />
+    <EmbeddedResource Include="Deployment\StandardAppProject\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\StandardAppProject\src\StandardAppProjectComponent.cpp" />
+    <EmbeddedResource Include="Deployment\StandardAppProject\src\StandardAppProjectComponent.hpp" />
+    <EmbeddedResource Include="Deployment\StandardWithMissingTarget\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\GetAllSettingsReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetAppcomponentsReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetCompilerSpecsPartialErrorReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetComponentsReply.json" />
+    <None Remove="Deployment\TestResults\GetProgramsReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetIncludePathsPartialErrorReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetNameReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetNamespaceReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetProgramsReply.json" />
+    <None Remove="Deployment\TestResults\GetIncludePathsReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetIncludePathsReply.json" />
+    <None Remove="Deployment\TestResults\GetSdksReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetProjectTargetsReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetSdksPartialErrorReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetSdksReply.json" />
+    <None Remove="Deployment\TestResults\GetTargetsReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetTargetsReply.json" />
+    <None Remove="Deployment\TestResults\GetCompilerSpecsReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetCompilerSpecsReply.json" />
+    <None Remove="Deployment\TestResults\GetSingleSettingReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetSingleSettingReply.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Deployment\AlmostAmbiguous\CMakeLists.txt" />
+    <None Remove="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComp.cpp" />
+    <None Remove="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComp.hpp" />
+    <None Remove="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComponent.cpp" />
+    <None Remove="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComponent.hpp" />
+    <None Remove="Deployment\AlmostAmbiguous\src\AlmostAmbiguousProgram.cpp" />
+    <None Remove="Deployment\AlmostAmbiguous\src\AlmostAmbiguousProgram.hpp" />
+    <None Remove="Deployment\AlmostAmbiguous\src\OtherProgram.cpp" />
+    <None Remove="Deployment\AlmostAmbiguous\src\OtherProgram.hpp" />
+    <None Remove="Deployment\AppProject\src\AppProjectComponent.cpp" />
+    <None Remove="Deployment\AppProject\src\AppProjectComponent.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm2\src\src\Code\EsmData.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm2\src\src\Code\EsmInfo.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm2\src\src\Code\MyProgram.cpp" />
+    <None Remove="Deployment\Arp.Plc.Esm2\src\src\Code\MyProgram.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm2\src\src\Code\TaskInfo.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm2\src\src\MyComponent.cpp" />
+    <None Remove="Deployment\Arp.Plc.Esm2\src\src\MyComponent.hpp" />
+    <None Remove="Deployment\CliRepository\repository_pointxml.cer" />
+    <None Remove="Deployment\CliRepository\_remove0_point0_point0\linux\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove0_point0_point0\osx\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove0_point0_point0\windows\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove0_point0_point0\windows\x86\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove95_point0_point0\linux\x64\plcncli.fooba" />
+    <None Remove="Deployment\CliRepository\_remove95_point0_point0\osx\x64\plcncli.fooba" />
+    <None Remove="Deployment\CliRepository\_remove95_point0_point0\windows\x64\plcncli.fooba" />
+    <None Remove="Deployment\CliRepository\_remove95_point0_point0\windows\x86\plcncli.fooba" />
+    <None Remove="Deployment\CliRepository\_remove97_point0_point0\linux\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove97_point0_point0\osx\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove97_point0_point0\windows\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove97_point0_point0\windows\x86\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove98_point0_point0\linux\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove98_point0_point0\osx\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove98_point0_point0\windows\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove98_point0_point0\windows\x86\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove99_point99_point99\linux\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove99_point99_point99\osx\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove99_point99_point99\windows\x64\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\_remove99_point99_point99\windows\x86\plcncli.zip" />
+    <None Remove="Deployment\CliRepository\repository.xml" />
+    <None Remove="Deployment\CodeFilesWithError\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\CodeFilesWithError\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\CodeFilesWithError\src\MyProgram1Impl.cpp" />
+    <None Remove="Deployment\CodeFilesWithError\src\MyProgram1Impl.hpp" />
+    <None Remove="Deployment\CodeFilesWithError\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\CodeFilesWithError\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\ComponentInSourceFolder\src\Component.cpp" />
+    <None Remove="Deployment\ComponentInSourceFolder\src\Component.hpp" />
+    <None Remove="Deployment\ComponentInSourceFolder\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\ComponentInSourceFolder\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\ComponentsInMultipleSources\CMakeLists.txt" />
+    <None Remove="Deployment\ComponentsInMultipleSources\extern\CircuitControl.cpp" />
+    <None Remove="Deployment\ComponentsInMultipleSources\extern\CircuitControl.hpp" />
+    <None Remove="Deployment\ComponentsInMultipleSources\extern\MultipleNamespacesComponent.cpp" />
+    <None Remove="Deployment\ComponentsInMultipleSources\extern\MultipleNamespacesComponent.hpp" />
+    <None Remove="Deployment\ComponentsInMultipleSources\src\ComponentsInMultipleNamespacesComponent.cpp" />
+    <None Remove="Deployment\ComponentsInMultipleSources\src\ComponentsInMultipleNamespacesComponent.hpp" />
+    <None Remove="Deployment\ComponentsInMultipleSources\src\ComponentsInMultipleNamespacesProgram.cpp" />
+    <None Remove="Deployment\ComponentsInMultipleSources\src\ComponentsInMultipleNamespacesProgram.hpp" />
+    <None Remove="Deployment\ComponentsInMultipleNamespaces\CMakeLists.txt" />
+    <None Remove="Deployment\ComponentsInMultipleNamespaces\extern\CircuitControl.cpp" />
+    <None Remove="Deployment\ComponentsInMultipleNamespaces\extern\CircuitControl.hpp" />
+    <None Remove="Deployment\ComponentsInMultipleNamespaces\extern\MultipleNamespacesComponent.cpp" />
+    <None Remove="Deployment\ComponentsInMultipleNamespaces\extern\MultipleNamespacesComponent.hpp" />
+    <None Remove="Deployment\ComponentsInMultipleNamespaces\src\ComponentsInMultipleNamespacesComponent.cpp" />
+    <None Remove="Deployment\ComponentsInMultipleNamespaces\src\ComponentsInMultipleNamespacesComponent.hpp" />
+    <None Remove="Deployment\ComponentsInMultipleNamespaces\src\ComponentsInMultipleNamespacesProgram.cpp" />
+    <None Remove="Deployment\ComponentsInMultipleNamespaces\src\ComponentsInMultipleNamespacesProgram.hpp" />
+    <None Remove="Deployment\ComponentsWithSameName\c1\MyComponent.cpp" />
+    <None Remove="Deployment\ComponentsWithSameName\c1\MyComponent.hpp" />
+    <None Remove="Deployment\ComponentsWithSameName\c2\MyComponent.cpp" />
+    <None Remove="Deployment\ComponentsWithSameName\c2\MyComponent.hpp" />
+    <None Remove="Deployment\DemoCodeModel.json" />
+    <None Remove="Deployment\DemoLibraryCommandArgs.txt" />
+    <None Remove="Deployment\DemoLibraryCommandArgsWithSpecificId.txt" />
+    <None Remove="Deployment\DemoLibraryDifferentPathsCommandArgs.txt" />
+    <None Remove="Deployment\DemoLibraryWithExternalLibs.txt" />
+    <None Remove="Deployment\DemoLibraryWithExternalLibsMultibinary.txt" />
+    <None Remove="Deployment\DemoWithDifferentPaths\foo\AXCF2152_1.0.0.12345\Release\libDemo.so" />
+    <None Remove="Deployment\DemoWithDifferentPaths\foo\libDemo.so" />
+    <None Remove="Deployment\DemoWithDifferentPaths\CMakeLists.txt" />
+    <None Remove="Deployment\DemoWithDifferentPaths\ba\Meta\Demo.libmeta" />
+    <None Remove="Deployment\DemoWithDifferentPaths\ba\Meta\Demo.typemeta" />
+    <None Remove="Deployment\DemoWithDifferentPaths\ba\Meta\MyComponent\MyComponent.compmeta" />
+    <None Remove="Deployment\DemoWithDifferentPaths\ba\Meta\MyComponent\MyProgram\MyProgram.progmeta" />
+    <None Remove="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent.cpp" />
+    <None Remove="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent.hpp" />
+    <None Remove="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent\MyProgram.cpp" />
+    <None Remove="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent\MyProgram.hpp" />
+    <None Remove="Deployment\DemoWithMultibinaryLibraryCommandArgs.txt" />
+    <None Remove="Deployment\DemoWithMultibinary\bin\AXCF2152_1.0.0.12345\Release\lib\libDemo.so" />
+    <None Remove="Deployment\DemoWithMultibinary\bin\AXCF2152_2.0.0.12345\Release\lib\libDemo.so" />
+    <None Remove="Deployment\DemoWithMultibinary\CMakeLists.txt" />
+    <None Remove="Deployment\DemoWithMultibinary\intermediate\config\Demo.libmeta" />
+    <None Remove="Deployment\DemoWithMultibinary\intermediate\config\Demo.typemeta" />
+    <None Remove="Deployment\DemoWithMultibinary\intermediate\config\MyComponent\MyComponent.compmeta" />
+    <None Remove="Deployment\DemoWithMultibinary\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <None Remove="Deployment\DemoWithMultibinary\src\Demo\MyComponent.cpp" />
+    <None Remove="Deployment\DemoWithMultibinary\src\Demo\MyComponent.hpp" />
+    <None Remove="Deployment\DemoWithMultibinary\src\Demo\MyComponent\MyProgram.cpp" />
+    <None Remove="Deployment\DemoWithMultibinary\src\Demo\MyComponent\MyProgram.hpp" />
+    <None Remove="Deployment\DemoWithoutCompmeta\bin\libDemo.so" />
+    <None Remove="Deployment\DemoWithoutCompmeta\CMakeLists.txt" />
+    <None Remove="Deployment\DemoWithoutCompmeta\intermediate\config\Demo.libmeta" />
+    <None Remove="Deployment\DemoWithoutCompmeta\intermediate\config\Demo.typemeta" />
+    <None Remove="Deployment\DemoWithoutCompmeta\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <None Remove="Deployment\DemoWithoutCompmeta\src\Demo\MyComponent.cpp" />
+    <None Remove="Deployment\DemoWithoutCompmeta\src\Demo\MyComponent.hpp" />
+    <None Remove="Deployment\DemoWithoutCompmeta\src\Demo\MyComponent\MyProgram.cpp" />
+    <None Remove="Deployment\DemoWithoutCompmeta\src\Demo\MyComponent\MyProgram.hpp" />
+    <None Remove="Deployment\DemoWithoutMeta\bin\libDemo.so" />
+    <None Remove="Deployment\DemoWithoutMeta\CMakeLists.txt" />
+    <None Remove="Deployment\DemoWithoutMeta\intermediate\config\Demo.typemeta" />
+    <None Remove="Deployment\DemoWithoutMeta\intermediate\config\MyComponent\MyComponent.compmeta" />
+    <None Remove="Deployment\DemoWithoutMeta\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <None Remove="Deployment\DemoWithoutMeta\src\Demo\MyComponent.cpp" />
+    <None Remove="Deployment\DemoWithoutMeta\src\Demo\MyComponent.hpp" />
+    <None Remove="Deployment\DemoWithoutMeta\src\Demo\MyComponent\MyProgram.cpp" />
+    <None Remove="Deployment\DemoWithoutMeta\src\Demo\MyComponent\MyProgram.hpp" />
+    <None Remove="Deployment\DemoWithoutLibrary\CMakeLists.txt" />
+    <None Remove="Deployment\DemoWithoutLibrary\intermediate\config\Demo.libmeta" />
+    <None Remove="Deployment\DemoWithoutLibrary\intermediate\config\Demo.typemeta" />
+    <None Remove="Deployment\DemoWithoutLibrary\intermediate\config\MyComponent\MyComponent.compmeta" />
+    <None Remove="Deployment\DemoWithoutLibrary\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <None Remove="Deployment\DemoWithoutLibrary\src\Demo\MyComponent.cpp" />
+    <None Remove="Deployment\DemoWithoutLibrary\src\Demo\MyComponent.hpp" />
+    <None Remove="Deployment\DemoWithoutLibrary\src\Demo\MyComponent\MyProgram.cpp" />
+    <None Remove="Deployment\DemoWithoutLibrary\src\Demo\MyComponent\MyProgram.hpp" />
+    <None Remove="Deployment\Demo\bin\AXCF2152_19.0.0.12345\libDemo.so" />
+    <None Remove="Deployment\Demo\bin\libDemo.so" />
+    <None Remove="Deployment\Demo\CMakeLists.txt" />
+    <None Remove="Deployment\Demo\intermediate\config\Demo.libmeta" />
+    <None Remove="Deployment\Demo\intermediate\config\Demo.typemeta" />
+    <None Remove="Deployment\Demo\intermediate\config\MyComponent\MyComponent.compmeta" />
+    <None Remove="Deployment\Demo\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <None Remove="Deployment\Demo\src\Demo\MyComponent.cpp" />
+    <None Remove="Deployment\Demo\src\Demo\MyComponent.hpp" />
+    <None Remove="Deployment\Demo\src\Demo\MyComponent\MyProgram.cpp" />
+    <None Remove="Deployment\Demo\src\Demo\MyComponent\MyProgram.hpp" />
+    <None Remove="Deployment\DoublePortDeclaration\CMakeLists.txt" />
+    <None Remove="Deployment\DoublePortDeclaration\src\DoublePortDeclarationComponent.cpp" />
+    <None Remove="Deployment\DoublePortDeclaration\src\DoublePortDeclarationComponent.hpp" />
+    <None Remove="Deployment\DoublePortDeclaration\src\DoublePortDeclarationProgram.cpp" />
+    <None Remove="Deployment\DoublePortDeclaration\src\DoublePortDeclarationProgram.hpp" />
+    <None Remove="Deployment\Dummy_AXCF2152_Sdk.tar.xz" />
+    <None Remove="Deployment\EmptyWithLibmeta\intermediate\config\EmptyWithLibmeta.libmeta" />
+    <None Remove="Deployment\EmptyWithLibmeta\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\EmptyWithLibmeta\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\EmptyWithLibmeta\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\EmptyWithLibmeta\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm\src\EsmData.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm\src\EsmInfo.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\Arp.Plc.Esm\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\Arp.Plc.Esm\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\Arp.Plc.Esm\src\TaskInfo.hpp" />
+    <None Remove="Deployment\EnumTest\CMakeLists.txt" />
+    <None Remove="Deployment\EnumTest\src\EnumTestComponent.cpp" />
+    <None Remove="Deployment\EnumTest\src\EnumTestComponent.hpp" />
+    <None Remove="Deployment\EnumTest\src\EnumTestProgram.cpp" />
+    <None Remove="Deployment\EnumTest\src\EnumTestProgram.hpp" />
+    <None Remove="Deployment\EnumTest\src\PortTypes.hpp" />
+    <None Remove="Deployment\MultipleNamespaces\CMakeLists.txt" />
+    <None Remove="Deployment\MultipleNamespaces\extern\CircuitControl.cpp" />
+    <None Remove="Deployment\MultipleNamespaces\extern\CircuitControl.hpp" />
+    <None Remove="Deployment\MultipleNamespaces\src\MultipleNamespacesComponent.cpp" />
+    <None Remove="Deployment\MultipleNamespaces\src\MultipleNamespacesComponent.hpp" />
+    <None Remove="Deployment\MultipleNamespaces\src\MultipleNamespacesProgram.cpp" />
+    <None Remove="Deployment\MultipleNamespaces\src\MultipleNamespacesProgram.hpp" />
+    <None Remove="Deployment\NoEntities\CMakeLists.txt" />
+    <None Remove="Deployment\NoEntities\src\CircuitControl.cpp" />
+    <None Remove="Deployment\NoEntities\src\CircuitControl.hpp" />
+    <None Remove="Deployment\OnlyOlderRepository.xml" />
+    <None Remove="Deployment\OnlyOlderRepository.xml.cer" />
+    <None Remove="Deployment\plcncli_linux_x64_98_0_0.zip" />
+    <None Remove="Deployment\PortNameError\CMakeLists.txt" />
+    <None Remove="Deployment\PortNameError\src\PortNameErrorComponent.cpp" />
+    <None Remove="Deployment\PortNameError\src\PortNameErrorComponent.hpp" />
+    <None Remove="Deployment\PortNameError\src\PortNameErrorProgram.cpp" />
+    <None Remove="Deployment\PortNameError\src\PortNameErrorProgram.hpp" />
+    <None Remove="Deployment\ProgramWithAmbiguousComment\ns3\MyComponent.cpp" />
+    <None Remove="Deployment\ProgramWithAmbiguousComment\ns3\MyComponent.hpp" />
+    <None Remove="Deployment\ProgramWithArrayInitializedPort\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\ProgramWithArrayInitializedPort\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\ProgramWithArrayInitializedPort\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\ProgramWithArrayInitializedPort\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\ProgramWithWrongPortAttributes\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\ProgramWithWrongPortAttributes\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\ProgramWithWrongPortAttributes\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\ProgramWithWrongPortAttributes\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\ProgramWithNestedAndStructInStruct\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\ProgramWithNestedAndStructInStruct\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\ProgramWithNestedAndStructInStruct\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\ProgramWithNestedAndStructInStruct\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\ProgramWithDifferentPorts\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\ProgramWithDifferentPorts\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\ProgramWithDifferentPorts\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\ProgramWithDifferentPorts\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\ProgramWithOneAttributedStructPort\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\ProgramWithOneAttributedStructPort\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\ProgramWithOneAttributedStructPort\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\ProgramWithOneAttributedStructPort\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\ProgramWithOneStructPort\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\ProgramWithOneStructPort\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\ProgramWithOneStructPort\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\ProgramWithOneStructPort\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\ProjectWithComponent\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\ProjectWithComponent\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\ProjectWithComponent\src\ProjectWithComponent\MyComponent.cpp" />
+    <None Remove="Deployment\ProjectWithComponent\src\ProjectWithComponent\MyComponent.hpp" />
+    <None Remove="Deployment\ProjectWithComponent\src\ProjectWithComponent\OtherComponent.cpp" />
+    <None Remove="Deployment\ProjectWithComponent\src\ProjectWithComponent\OtherComponent.hpp" />
+    <None Remove="Deployment\PseudoAmbiguousComponents\CMakeLists.txt" />
+    <None Remove="Deployment\PseudoAmbiguousComponents\src\MyComp.cpp" />
+    <None Remove="Deployment\PseudoAmbiguousComponents\src\MyComp.hpp" />
+    <None Remove="Deployment\PseudoAmbiguousComponents\src\MyComponent.cpp" />
+    <None Remove="Deployment\PseudoAmbiguousComponents\src\MyComponent.hpp" />
+    <None Remove="Deployment\PseudoAmbiguousComponents\src\PseudoAmbiguousComponentsProgram.cpp" />
+    <None Remove="Deployment\PseudoAmbiguousComponents\src\PseudoAmbiguousComponentsProgram.hpp" />
+    <None Remove="Deployment\StandardFileNames.xml" />
+    <None Remove="Deployment\StandardPublicCliRepositoryKey.xml" />
+    <None Remove="Deployment\StandardSdkProperties.xml" />
+    <None Remove="Deployment\StandardSettings.xml" />
+    <None Remove="Deployment\StandardWithBuildArtifacts\intermediate\build\MyComponentImpl.o" />
+    <None Remove="Deployment\StandardWithBuildArtifacts\intermediate\build\MyProgramImpl.o" />
+    <None Remove="Deployment\StandardWithBuildArtifacts\intermediate\build\StandardWithBuildArtifacts.so" />
+    <None Remove="Deployment\StandardWithBuildArtifacts\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\StandardWithBuildArtifacts\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\StandardWithBuildArtifacts\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\StandardWithBuildArtifacts\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\StandardWithMetadata\intermediate\Config\StandardWithMetadata.typemeta" />
+    <None Remove="Deployment\StandardWithMetadata\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\StandardWithMetadata\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\StandardWithMetadata\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\StandardWithMetadata\src\MyProgramImpl.hpp" />
+    <None Remove="Deployment\Standard\src\Standard\MyComponent.cpp" />
+    <None Remove="Deployment\Standard\src\Standard\MyComponent.hpp" />
+    <None Remove="Deployment\Standard\src\Standard\MyComponent\MyProgram.cpp" />
+    <None Remove="Deployment\Standard\src\Standard\MyComponent\MyProgram.hpp" />
+    <None Remove="Deployment\TestResults\EnumTestLibrary.meta.cpp" />
+    <None Remove="Deployment\TestResults\EsmLibrary.meta.cpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\CMakeLists.txt" />
+    <None Remove="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponent._meta.cpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponentProgramProvider.cpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponentProgramProvider.hpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesComponent._meta.cpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesComponentProgramProvider.cpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesComponentProgramProvider.hpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesLibrary.cpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesLibrary.hpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesLibrary._meta.cpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\src\TooManyGeneratedFilesComponent.cpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\src\TooManyGeneratedFilesComponent.hpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\src\TooManyGeneratedFilesProgram.cpp" />
+    <None Remove="Deployment\TooManyGeneratedFiles\src\TooManyGeneratedFilesProgram.hpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyComponent.cpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyComponent.hpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyOtherComponent.cpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyOtherComponent.hpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyOtherProgram.cpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyOtherProgram.hpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyProgram.cpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyProgram.hpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyProgram2.cpp" />
+    <None Remove="Deployment\TwoComponentsAndPrograms\src\MyProgram2.hpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\ComponentTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AppComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\AppComponentTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProgramTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\BaseTemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\BaseTemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\CMakeLists.txt" Link="Deployment\Templates\ProjectTemplate\CMakeLists.txt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\CodeTemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\CodeTemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FieldTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FieldTemplates.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FormatTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FormatTemplates.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\AppProjectTemplate\TemplateDescription.xml" />
+	<EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\BaseTemplateDescription.xml" Link="Deployment\Templates\AppProjectTemplate\BaseTemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\CMakeLists.txt" Link="Deployment\Templates\AppProjectTemplate\CMakeLists.txt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\Templates.xml" Link="Deployment\Templates\Templates.xml" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComp.cpp" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComp.hpp" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComponent.cpp" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComponent.hpp" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\AlmostAmbiguousProgram.cpp" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\AlmostAmbiguousProgram.hpp" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\OtherProgram.cpp" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\OtherProgram.hpp" />
+    <EmbeddedResource Include="Deployment\AppProject\src\AppProjectComponent.cpp" />
+    <EmbeddedResource Include="Deployment\AppProject\src\AppProjectComponent.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\Code\EsmData.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\Code\EsmInfo.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\Code\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\Code\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\Code\TaskInfo.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\MyComponent.hpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Deployment\CliRepository\_remove0_point0_point0\linux\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove0_point0_point0\osx\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove0_point0_point0\windows\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove0_point0_point0\windows\x86\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove95_point0_point0\linux\x64\plcncli.fooba" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove95_point0_point0\osx\x64\plcncli.fooba" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove95_point0_point0\windows\x64\plcncli.fooba" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove95_point0_point0\windows\x86\plcncli.fooba" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove97_point0_point0\linux\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove97_point0_point0\osx\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove97_point0_point0\windows\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove97_point0_point0\windows\x86\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove98_point0_point0\linux\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove98_point0_point0\osx\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove98_point0_point0\windows\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove98_point0_point0\windows\x86\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove99_point99_point99\linux\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove99_point99_point99\osx\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove99_point99_point99\windows\x64\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\_remove99_point99_point99\windows\x86\plcncli.zip" />
+    <EmbeddedResource Include="Deployment\CliRepository\repository.xml" />
+    <EmbeddedResource Include="Deployment\CliRepository\repository_pointxml.cer" />
+    <EmbeddedResource Include="Deployment\CodeFilesWithError\src\MyComponentImpl.cpp" />
+    <EmbeddedResource Include="Deployment\CodeFilesWithError\src\MyComponentImpl.hpp" />
+    <EmbeddedResource Include="Deployment\CodeFilesWithError\src\MyProgram1Impl.cpp" />
+    <EmbeddedResource Include="Deployment\CodeFilesWithError\src\MyProgram1Impl.hpp" />
+    <EmbeddedResource Include="Deployment\CodeFilesWithError\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\CodeFilesWithError\src\MyProgramImpl.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentInSourceFolder\src\Component.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentInSourceFolder\src\Component.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\extern\CircuitControl.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\extern\CircuitControl.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\extern\MultipleNamespacesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\extern\MultipleNamespacesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\src\ComponentsInMultipleNamespacesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\src\ComponentsInMultipleNamespacesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\src\ComponentsInMultipleNamespacesProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleSources\src\ComponentsInMultipleNamespacesProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\extern\CircuitControl.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\extern\CircuitControl.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\extern\MultipleNamespacesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\extern\MultipleNamespacesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\src\ComponentsInMultipleNamespacesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\src\ComponentsInMultipleNamespacesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\src\ComponentsInMultipleNamespacesProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\src\ComponentsInMultipleNamespacesProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsWithSameName\c1\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsWithSameName\c1\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ComponentsWithSameName\c2\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ComponentsWithSameName\c2\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\DemoCodeModel.json" />
+    <EmbeddedResource Include="Deployment\DemoLibraryCommandArgsWithSpecificId.txt" />
+    <EmbeddedResource Include="Deployment\DemoLibraryCommandArgs.txt" />
+    <EmbeddedResource Include="Deployment\DemoLibraryDifferentPathsCommandArgs.txt" />
+    <EmbeddedResource Include="Deployment\DemoLibraryWithExternalLibs.txt" />
+    <EmbeddedResource Include="Deployment\DemoLibraryWithExternalLibsMultibinary.txt" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\ba\Meta\Demo.libmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\ba\Meta\Demo.typemeta" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\ba\Meta\MyComponent\MyComponent.compmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\ba\Meta\MyComponent\MyProgram\MyProgram.progmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\foo\AXCF2152_1.0.0.12345\Release\libDemo.so" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinaryLibraryCommandArgs.txt" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\bin\AXCF2152_1.0.0.12345\Release\lib\libDemo.so" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\bin\AXCF2152_2.0.0.12345\Release\lib\libDemo.so" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\intermediate\config\Demo.libmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\intermediate\config\Demo.typemeta" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\intermediate\config\MyComponent\MyComponent.compmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\src\Demo\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\src\Demo\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\src\Demo\MyComponent\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithMultibinary\src\Demo\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\bin\libDemo.so" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\intermediate\config\Demo.libmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\intermediate\config\Demo.typemeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\src\Demo\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\src\Demo\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\src\Demo\MyComponent\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutCompmeta\src\Demo\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\bin\libDemo.so" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\intermediate\config\Demo.typemeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\intermediate\config\MyComponent\MyComponent.compmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\src\Demo\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\src\Demo\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\src\Demo\MyComponent\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutMeta\src\Demo\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\intermediate\config\Demo.libmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\intermediate\config\Demo.typemeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\intermediate\config\MyComponent\MyComponent.compmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\src\Demo\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\src\Demo\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\src\Demo\MyComponent\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\DemoWithoutLibrary\src\Demo\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\Demo\bin\AXCF2152_19.0.0.12345\Debug\libDemo.so" />
+    <EmbeddedResource Include="Deployment\Demo\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\Demo\intermediate\config\Demo.libmeta" />
+    <EmbeddedResource Include="Deployment\Demo\intermediate\config\Demo.typemeta" />
+    <EmbeddedResource Include="Deployment\Demo\intermediate\config\MyComponent\MyComponent.compmeta" />
+    <EmbeddedResource Include="Deployment\Demo\intermediate\config\MyComponent\MyProgram\MyProgram.progmeta" />
+    <EmbeddedResource Include="Deployment\Demo\src\Demo\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\Demo\src\Demo\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\Demo\src\Demo\MyComponent\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\Demo\src\Demo\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\DoublePortDeclaration\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\DoublePortDeclaration\src\DoublePortDeclarationComponent.cpp" />
+    <EmbeddedResource Include="Deployment\DoublePortDeclaration\src\DoublePortDeclarationComponent.hpp" />
+    <EmbeddedResource Include="Deployment\DoublePortDeclaration\src\DoublePortDeclarationProgram.cpp" />
+    <EmbeddedResource Include="Deployment\DoublePortDeclaration\src\DoublePortDeclarationProgram.hpp" />
+    <EmbeddedResource Include="Deployment\Dummy_AXCF2152_Sdk.tar.xz" />
+    <EmbeddedResource Include="Deployment\EmptyWithLibmeta\intermediate\config\EmptyWithLibmeta.libmeta" />
+    <EmbeddedResource Include="Deployment\EmptyWithLibmeta\src\MyComponentImpl.cpp" />
+    <EmbeddedResource Include="Deployment\EmptyWithLibmeta\src\MyComponentImpl.hpp" />
+    <EmbeddedResource Include="Deployment\EmptyWithLibmeta\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\EmptyWithLibmeta\src\MyProgramImpl.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm\src\src\Code\EsmData.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm\src\src\Code\EsmInfo.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm\src\src\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm\src\src\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm\src\src\Code\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm\src\src\Code\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm\src\src\Code\TaskInfo.hpp" />
+    <EmbeddedResource Include="Deployment\EnumTest\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\EnumTest\src\EnumTestComponent.cpp" />
+    <EmbeddedResource Include="Deployment\EnumTest\src\EnumTestComponent.hpp" />
+    <EmbeddedResource Include="Deployment\EnumTest\src\EnumTestProgram.cpp" />
+    <EmbeddedResource Include="Deployment\EnumTest\src\EnumTestProgram.hpp" />
+    <EmbeddedResource Include="Deployment\EnumTest\src\PortTypes.hpp" />
+    <EmbeddedResource Include="Deployment\ManipulatedRepository.xml" />
+    <EmbeddedResource Include="Deployment\MultipleNamespaces\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\MultipleNamespaces\extern\CircuitControl.cpp" />
+    <EmbeddedResource Include="Deployment\MultipleNamespaces\extern\CircuitControl.hpp" />
+    <EmbeddedResource Include="Deployment\MultipleNamespaces\src\MultipleNamespacesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\MultipleNamespaces\src\MultipleNamespacesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\MultipleNamespaces\src\MultipleNamespacesProgram.cpp" />
+    <EmbeddedResource Include="Deployment\MultipleNamespaces\src\MultipleNamespacesProgram.hpp" />
+    <EmbeddedResource Include="Deployment\NoEntities\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\NoEntities\src\CircuitControl.cpp" />
+    <EmbeddedResource Include="Deployment\NoEntities\src\CircuitControl.hpp" />
+    <EmbeddedResource Include="Deployment\OnlyOlderRepository.xml" />
+    <EmbeddedResource Include="Deployment\OnlyOlderRepository.xml.cer" />
+    <EmbeddedResource Include="Deployment\plcncli_linux_x64_98_0_0.zip" />
+    <EmbeddedResource Include="Deployment\PortNameError\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\PortNameError\src\PortNameErrorComponent.cpp" />
+    <EmbeddedResource Include="Deployment\PortNameError\src\PortNameErrorComponent.hpp" />
+    <EmbeddedResource Include="Deployment\PortNameError\src\PortNameErrorProgram.cpp" />
+    <EmbeddedResource Include="Deployment\PortNameError\src\PortNameErrorProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithAmbiguousComment\ns3\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithAmbiguousComment\ns3\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithArrayInitializedPort\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProgramWithArrayInitializedPort\src\MyComponentImpl.cpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithArrayInitializedPort\src\MyComponentImpl.hpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithArrayInitializedPort\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithArrayInitializedPort\src\MyProgramImpl.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithWrongPortAttributes\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProgramWithWrongPortAttributes\src\MyComponentImpl.cpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithWrongPortAttributes\src\MyComponentImpl.hpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithWrongPortAttributes\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithWrongPortAttributes\src\MyProgramImpl.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithNestedAndStructInStruct\src\MyComponentImpl.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithNestedAndStructInStruct\src\MyComponentImpl.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithNestedAndStructInStruct\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithNestedAndStructInStruct\src\MyProgramImpl.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPorts\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPorts\src\MyComponentImpl.cpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPorts\src\MyComponentImpl.hpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPorts\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPorts\src\MyProgramImpl.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithOneAttributedStructPort\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProgramWithOneAttributedStructPort\src\MyComponentImpl.cpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithOneAttributedStructPort\src\MyComponentImpl.hpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithOneAttributedStructPort\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithOneAttributedStructPort\src\MyProgramImpl.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithOneStructPort\src\MyComponentImpl.cpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithOneStructPort\src\MyComponentImpl.hpp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\ProgramWithOneStructPort\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithOneStructPort\src\MyProgramImpl.hpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Deployment\ProgramWithOneStructPort\plcnext.proj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Deployment\EmptyWithLibmeta\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProgramsWithCorrectComments\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramsWithCorrectComments\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramsWithCorrectComments\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramsWithCorrectComments\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramsWithCorrectComments\MyProgram2.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramsWithCorrectComments\MyProgram2.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramsWithCorrectComments\MyProgram3.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramsWithCorrectComments\MyProgram3.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithAmbiguousComment\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithAmbiguousComment\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithAmbiguousComment\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithAmbiguousComment\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithWrongComment\OtherProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithWrongComment\OtherProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ProjectWithComponent\src\ProjectWithComponent\OtherComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ProjectWithComponent\src\ProjectWithComponent\OtherComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ProjectWithComponent\src\ProjectWithComponent\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ProjectWithComponent\src\ProjectWithComponent\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\PseudoAmbiguousComponents\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\PseudoAmbiguousComponents\src\MyComp.cpp" />
+    <EmbeddedResource Include="Deployment\PseudoAmbiguousComponents\src\MyComp.hpp" />
+    <EmbeddedResource Include="Deployment\PseudoAmbiguousComponents\src\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\PseudoAmbiguousComponents\src\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\PseudoAmbiguousComponents\src\PseudoAmbiguousComponentsProgram.cpp" />
+    <EmbeddedResource Include="Deployment\PseudoAmbiguousComponents\src\PseudoAmbiguousComponentsProgram.hpp" />
+    <EmbeddedResource Include="Deployment\StandardFileNames.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Deployment\StandardNew\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\StandardNew\src\StandardComponent.cpp" />
+    <EmbeddedResource Include="Deployment\StandardNew\src\StandardComponent.hpp" />
+    <EmbeddedResource Include="Deployment\StandardNew\src\StandardNewProgram.cpp" />
+    <EmbeddedResource Include="Deployment\StandardNew\src\StandardNewProgram.hpp" />
+    <EmbeddedResource Include="Deployment\StandardPublicCliRepositoryKey.xml" />
+    <EmbeddedResource Include="Deployment\StandardSdkProperties.xml" />
+    <EmbeddedResource Include="Deployment\StandardSettings.xml" />
+    <EmbeddedResource Include="Deployment\StandardWithBuildArtifacts\intermediate\build\MyComponentImpl.o" />
+    <EmbeddedResource Include="Deployment\StandardWithBuildArtifacts\intermediate\build\MyProgramImpl.o" />
+    <EmbeddedResource Include="Deployment\StandardWithBuildArtifacts\intermediate\build\StandardWithBuildArtifacts.so" />
+    <EmbeddedResource Include="Deployment\StandardWithBuildArtifacts\src\MyComponentImpl.cpp" />
+    <EmbeddedResource Include="Deployment\StandardWithBuildArtifacts\src\MyComponentImpl.hpp" />
+    <EmbeddedResource Include="Deployment\StandardWithBuildArtifacts\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\StandardWithBuildArtifacts\src\MyProgramImpl.hpp" />
+    <EmbeddedResource Include="Deployment\StandardWithMetadata\intermediate\Config\StandardWithMetadata.typemeta" />
+    <EmbeddedResource Include="Deployment\StandardWithMetadata\src\MyComponentImpl.cpp" />
+    <EmbeddedResource Include="Deployment\StandardWithMetadata\src\MyComponentImpl.hpp" />
+    <EmbeddedResource Include="Deployment\StandardWithMetadata\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\StandardWithMetadata\src\MyProgramImpl.hpp" />
+    <EmbeddedResource Include="Deployment\Standard\src\Standard\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\Standard\src\Standard\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\Standard\src\Standard\MyComponent\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\Standard\src\Standard\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\EnumTestLibrary.meta.cpp" />
+    <EmbeddedResource Include="Deployment\TestResults\EsmLibrary.meta.cpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponent._meta.cpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponentProgramProvider.cpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponentProgramProvider.hpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesComponent._meta.cpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesComponentProgramProvider.cpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesComponentProgramProvider.hpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesLibrary.cpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesLibrary.hpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\TooManyGeneratedFilesLibrary._meta.cpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\src\TooManyGeneratedFilesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\src\TooManyGeneratedFilesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\src\TooManyGeneratedFilesProgram.cpp" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\src\TooManyGeneratedFilesProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyOtherComponent.cpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyOtherComponent.hpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyOtherProgram.cpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyOtherProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyProgram2.cpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyProgram2.hpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\src\MyProgram.hpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.compmeta" Link="Deployment\Templates\ComponentTemplate\Component.compmeta" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.cpp" Link="Deployment\Templates\ComponentTemplate\Component.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.hpp" Link="Deployment\Templates\ComponentTemplate\Component.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\ComponentTemplate\Component.meta.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\ComponentProgramProvider.cpp" Link="Deployment\Templates\ComponentTemplate\ComponentProgramProvider.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\ComponentProgramProvider.hpp" Link="Deployment\Templates\ComponentTemplate\ComponentProgramProvider.hpp" />
+	<EmbeddedResource Include="..\PlcNext\Templates\AppComponentTemplate\Component.cpp" Link="Deployment\Templates\AppComponentTemplate\Component.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AppComponentTemplate\Component.hpp" Link="Deployment\Templates\AppComponentTemplate\Component.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AppComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\AppComponentTemplate\Component.meta.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.cpp" Link="Deployment\Templates\ProgramTemplate\Program.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.hpp" Link="Deployment\Templates\ProgramTemplate\Program.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.progmeta" Link="Deployment\Templates\ProgramTemplate\Program.progmeta" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\.proj" Link="Deployment\Templates\ProjectTemplate\.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.cpp" Link="Deployment\Templates\ProjectTemplate\Library.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.hpp" Link="Deployment\Templates\ProjectTemplate\Library.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.libmeta" Link="Deployment\Templates\ProjectTemplate\Library.libmeta" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
+	<EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\.proj" Link="Deployment\Templates\AppProjectTemplate\.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\Library.cpp" Link="Deployment\Templates\AppProjectTemplate\Library.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\Library.hpp" Link="Deployment\Templates\AppProjectTemplate\Library.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AppProjectTemplate\Library.meta.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\acf.config" Link="Deployment\Templates\AppProjectTemplate\acf.config" />
+    <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
+    <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\DoublePortDeclaration\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\EnumTest\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\PortNameError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ComponentsInMultipleNamespaces\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\MultipleNamespaces\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\NoEntities\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\PseudoAmbiguousComponents\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\Demo\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\Arp.Plc.Esm\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\TwoComponentsAndPrograms\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProjectWithComponent\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\StandardWithBuildArtifacts\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\StandardWithMetadata\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\Standard\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProgramWithNestedAndStructInStruct\plcnext.proj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.2" />
+    <PackageReference Include="CommandLineParser" Version="2.4.3" />
+    <PackageReference Include="FluentAssertions" Version="5.6.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
+    <PackageReference Include="LightBDD.XUnit2" Version="3.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Mono.Cecil" Version="0.10.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="NSubstitute" Version="4.0.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="XunitXml.TestLogger" Version="2.1.26" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PlcNext.Common\PlcNext.Common.csproj" />
+    <ProjectReference Include="..\PlcNext.CppParser\PlcNext.CppParser.csproj" />
+    <ProjectReference Include="..\PlcNext.NamedPipeServer\PlcNext.NamedPipeServer.csproj" />
+    <ProjectReference Include="..\PlcNext\PlcNext.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DynamicProxyGenAssembly2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Deployment\DemoWithoutLibrary\bin\" />
+    <Folder Include="Deployment\Templates\ComponentTemplate\" />
+    <Folder Include="Deployment\Templates\AppComponentTemplate\" />
+    <Folder Include="Deployment\Templates\ProjectTemplate\" />
+    <Folder Include="Deployment\Templates\ProgramTemplate\" />
+    <Folder Include="Deployment\Templates\AppProjectTemplate\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="JUnit.TestLogger">
+      <HintPath>..\Tools\JUnitLogger\JUnit.TestLogger.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

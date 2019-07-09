@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FieldTemplates xmlns="http://www.phoenixcontact.com/schema/clitemplates">
+	<FieldTemplate name="port"/>
+	<FieldTemplate name="name" has-value="true" default-value="$(fieldName)">
+		<ValueRestriction min-length="2" max-length="128">
+			<Pattern>(?!((?i)^((SAFE)?(BOOL|BYTE|((D|L)?WORD)|(U?(S|D|L)?INT)|(L?(REAL|TIME|T|DATE|D|DATE_AND_TIME|DT|TIME_OF_DAY|TOD))|(W?(STRING|CHAR))|ANALOG))$))(_|==?|-+|\+\+?|##?|:|&amp;|\/|\*)?([0-9a-zA-Z]+(_|&lt;|&gt;|==?|-+|\+\+?|##?|:|&amp;|\/|\*)?)+</Pattern>
+		</ValueRestriction>
+	</FieldTemplate>
+	<FieldTemplate name="attributes" has-value="true" multiplicity="OneOrMore" split="|" default-value="None">
+		<ValueRestriction ignore-case="true">
+			<Enumeration>Input</Enumeration>
+			<Enumeration>Output</Enumeration>
+			<Enumeration>ReadOnly</Enumeration>
+			<Enumeration>Retain</Enumeration>
+			<Enumeration>Opc</Enumeration>
+			<Enumeration>Ehmi</Enumeration>
+			<Enumeration>ProfiCloud</Enumeration>
+			<Enumeration>Archive</Enumeration>
+		  <Enumeration>None</Enumeration>
+		  <Enumeration>Hidden</Enumeration>
+		</ValueRestriction>
+	</FieldTemplate>
+</FieldTemplates>

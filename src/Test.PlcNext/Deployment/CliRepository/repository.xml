@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Repository schemaVersion="1.0" xmlns="http://www.phoenixcontact.com/schema/clirepository">
+  <Version version="0.0.0">
+    <File name="plcncli.zip" relPath="0.0.0/linux/x64/plcncli.zip">
+      <Fingerprint hash="tPjej49g0CKTvtMs85PQJw==" algorithm="MD5" />
+      <OS>linux</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="0.0.0/osx/x64/plcncli.zip">
+      <Fingerprint hash="4vbw7FSjvaMrAsmjGfrYzQ==" algorithm="MD5" />
+      <OS>osx</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="0.0.0/windows/x64/plcncli.zip">
+      <Fingerprint hash="977i0KcUqaRrU26tg88QXA==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="0.0.0/windows/x86/plcncli.zip">
+      <Fingerprint hash="15+2AJpO5/3RdE++bctiow==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x86</Architecture>
+    </File>
+  </Version>
+  <Version version="95.0.0">
+    <File name="plcncli.fooba" relPath="95.0.0/linux/x64/plcncli.fooba">
+      <Fingerprint hash="wMyqEikF3Zb/h5tBQlyyhg==" algorithm="MD5" />
+      <OS>linux</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.fooba" relPath="95.0.0/osx/x64/plcncli.fooba">
+      <Fingerprint hash="WM0p7Ro9zbqvuH+7cQ3rRQ==" algorithm="MD5" />
+      <OS>osx</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.fooba" relPath="95.0.0/windows/x64/plcncli.fooba">
+      <Fingerprint hash="MoRSM1adzmXTfTs0v1hTNQ==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.fooba" relPath="95.0.0/windows/x86/plcncli.fooba">
+      <Fingerprint hash="HwR+5mrRbgFBU9+MYWt+aw==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x86</Architecture>
+    </File>
+  </Version>
+  <Version version="96.0.0">
+    <File name="plcncli.zip" relPath="96.0.0/linux/x64/plcncli.zip">
+      <Fingerprint hash="ncKvHwSgfZPqAPDGeX3F+A==" algorithm="MD5" />
+      <OS>linux</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="96.0.0/osx/x64/plcncli.zip">
+      <Fingerprint hash="kJUSzyaUQfT3VWOJljhstA==" algorithm="MD5" />
+      <OS>osx</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="96.0.0/windows/x64/plcncli.zip">
+      <Fingerprint hash="863DxRTCo5igOP53ArtCdw==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="96.0.0/windows/x86/plcncli.zip">
+      <Fingerprint hash="IY9m+Kh77fV1hC+Ssh7Xcg==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x86</Architecture>
+    </File>
+  </Version>
+  <Version version="97.0.0">
+    <File name="plcncli.zip" relPath="97.0.0/linux/x64/plcncli.zip">
+      <Fingerprint hash="ncKvHwSgfZPqAPDGeX3F+A==" algorithm="MD5" />
+      <OS>linux</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="97.0.0/osx/x64/plcncli.zip">
+      <Fingerprint hash="kJUSzyaUQfT3VWOJljhstA==" algorithm="MD5" />
+      <OS>osx</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="97.0.0/windows/x64/plcncli.zip">
+      <Fingerprint hash="863DxRTCo5igOP53ArtCdw==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="97.0.0/windows/x86/plcncli.zip">
+      <Fingerprint hash="IY9m+Kh77fV1hC+Ssh7Xcg==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x86</Architecture>
+    </File>
+  </Version>
+  <Version version="98.0.0">
+    <File name="plcncli.zip" relPath="98.0.0/linux/x64/plcncli.zip">
+      <Fingerprint hash="gBUZfVXHCLvWm1Eu2IzBZw==" algorithm="MD5" />
+      <OS>linux</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="98.0.0/osx/x64/plcncli.zip">
+      <Fingerprint hash="e+Z0gjieqY8i611jwmFd6A==" algorithm="MD5" />
+      <OS>osx</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="98.0.0/windows/x64/plcncli.zip">
+      <Fingerprint hash="lzFh2lNEpiOBBtayS0519A==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="98.0.0/windows/x86/plcncli.zip">
+      <Fingerprint hash="na9WqFoR/436y5hqjF+8fw==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x86</Architecture>
+    </File>
+  </Version>
+  <Version version="99.99.99">
+    <File name="plcncli.zip" relPath="99.99.99/linux/x64/plcncli.zip">
+      <Fingerprint hash="A552Xvx37kI3mSBxlOOhdQ==" algorithm="MD5" />
+      <OS>linux</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="99.99.99/osx/x64/plcncli.zip">
+      <Fingerprint hash="F6Qe9hchQEoer5Z17TP3Aw==" algorithm="MD5" />
+      <OS>osx</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="99.99.99/windows/x64/plcncli.zip">
+      <Fingerprint hash="OBEgEf199T2JsJsgW1Nn1Q+P6T++TA==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="99.99.99/windows/x86/plcncli.zip">
+      <Fingerprint hash="7rgR/xWcuDIdSBe34S9TAg==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x86</Architecture>
+    </File>
+  </Version>
+</Repository>

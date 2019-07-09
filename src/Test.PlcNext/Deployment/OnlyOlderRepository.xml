@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Repository schemaVersion="1.0" xmlns="http://www.phoenixcontact.com/schema/clirepository">
+  <Version version="0.0.0">
+    <File name="plcncli.zip" relPath="0.0.0/linux/x64/plcncli.zip">
+      <Fingerprint hash="ncKvHwSgfZPqAPDGeX3F+A==" algorithm="MD5" />
+      <OS>linux</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="0.0.0/osx/x64/plcncli.zip">
+      <Fingerprint hash="kJUSzyaUQfT3VWOJljhstA==" algorithm="MD5" />
+      <OS>osx</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="0.0.0/windows/x64/plcncli.zip">
+      <Fingerprint hash="863DxRTCo5igOP53ArtCdw==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x64</Architecture>
+    </File>
+    <File name="plcncli.zip" relPath="0.0.0/windows/x86/plcncli.zip">
+      <Fingerprint hash="IY9m+Kh77fV1hC+Ssh7Xcg==" algorithm="MD5" />
+      <OS>windows</OS>
+      <Architecture>x86</Architecture>
+    </File>
+  </Version>
+</Repository>

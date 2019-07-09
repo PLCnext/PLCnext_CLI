@@ -1,0 +1,1681 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\temp\plcnexttoolchain\P\PlcNextCli" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="PlcNext" t="IncludeRecursive">
+        <e p="AssemblyInfo.cs" t="Include" />
+        <e p="BaseUpdateDiModule.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ChangeLog.txt" t="Include" />
+        <e p="CliNamedPipeMediator" t="Include">
+          <e p="UpdateMessagesMediator.cs" t="Include" />
+        </e>
+        <e p="CommandLine" t="Include">
+          <e p="BuildVerb.cs" t="Include" />
+          <e p="CollectiveDynamicVerbsFactory.cs" t="Include" />
+          <e p="CommandLineConstants.cs" t="Include" />
+          <e p="CommandLineParser.cs" t="Include" />
+          <e p="DeprecatedVerbAttribute.cs" t="Include" />
+          <e p="DynamicVerb.cs" t="Include" />
+          <e p="GenerateLibraryVerb.cs" t="Include" />
+          <e p="GenerateVerb.cs" t="Include" />
+          <e p="GetCompilerSpecificationsVerb.cs" t="Include" />
+          <e p="GetComponentsVerb.cs" t="Include" />
+          <e p="GetIncludePathsVerb.cs" t="Include" />
+          <e p="GetProgramsVerb.cs" t="Include" />
+          <e p="GetProjectInformationVerb.cs" t="Include" />
+          <e p="GetProjectSdksVerb.cs" t="Include" />
+          <e p="GetProjectTargetsVerb.cs" t="Include" />
+          <e p="GetSdksVerb.cs" t="Include" />
+          <e p="GetSettingVerb.cs" t="Include" />
+          <e p="GetTargetsVerb.cs" t="Include" />
+          <e p="GetUpdateVersionsVerb.cs" t="Include" />
+          <e p="GetVerb.cs" t="Include" />
+          <e p="InstallSdkVerb.cs" t="Include" />
+          <e p="InstallVerb.cs" t="Include" />
+          <e p="MigrateCliVerb.cs" t="Include" />
+          <e p="ParserExtensions.cs" t="Include" />
+          <e p="ScanSdksVerb.cs" t="Include" />
+          <e p="SetSettingsVerb.cs" t="Include" />
+          <e p="SetTargetsVerb.cs" t="Include" />
+          <e p="SetVerb.cs" t="Include" />
+          <e p="ShowLogVerb.cs" t="Include" />
+          <e p="StartClientVerb.cs" t="Include" />
+          <e p="StartServerVerb.cs" t="Include" />
+          <e p="UpdateCliVerb.cs" t="Include" />
+          <e p="UpdateProjectTargetsVerb.cs" t="Include" />
+          <e p="UpdateVerb.cs" t="Include" />
+          <e p="UsageExample.cs" t="Include" />
+          <e p="VerbBase.cs" t="Include" />
+          <e p="VerbTypeFactory.cs" t="Include" />
+        </e>
+        <e p="CommandLineDiModule.cs" t="Include" />
+        <e p="DiModule.cs" t="Include" />
+        <e p="file-names.xml" t="Include" />
+        <e p="full_cli_repository_key.xml" t="Include" />
+        <e p="GlobalSuppressions.cs" t="Include" />
+        <e p="License.html" t="Include" />
+        <e p="LogHelper.cs" t="Include" />
+        <e p="MessageResources.Designer.cs" t="Include" />
+        <e p="MessageResources.resx" t="Include" />
+        <e p="Migration" t="Include">
+          <e p="ConversionFrom190.cs" t="Include" />
+          <e p="IConversionStep.cs" t="Include" />
+          <e p="MigrationChain.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.0" t="Include">
+              <e p="PlcNext.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="PlcNext.csproj" t="IncludeRecursive" />
+        <e p="Program.cs" t="Include" />
+        <e p="public_cli_repository_key.xml" t="Include" />
+        <e p="README.txt" t="Include" />
+        <e p="System.Globalization.Invariant" t="Include" />
+        <e p="Templates" t="Include">
+          <e p="AcfComponentTemplate" t="Include">
+            <e p="Component.cpp" t="Include" />
+            <e p="Component.hpp" t="Include" />
+            <e p="TemplateDescription.xml" t="Include" />
+          </e>
+          <e p="AcfProjectTemplate" t="Include">
+            <e p=".proj" t="Include" />
+            <e p="acf.config" t="Include" />
+            <e p="How_to_deploy.txt" t="Include" />
+            <e p="Library.cpp" t="Include" />
+            <e p="Library.hpp" t="Include" />
+            <e p="Library.meta.cpp" t="Include" />
+            <e p="TemplateDescription.xml" t="Include" />
+          </e>
+          <e p="BaseComponentTemplate" t="Include">
+            <e p="Component.meta.cpp" t="Include" />
+            <e p="TemplateDescription.xml" t="Include" />
+          </e>
+          <e p="BaseProjectTemplate" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="TemplateDescription.xml" t="Include" />
+          </e>
+          <e p="BaseTemplates" t="Include">
+            <e p="BaseTemplateDescription.xml" t="Include" />
+            <e p="CodeTemplateDescription.xml" t="Include" />
+            <e p="FieldTemplates.xml" t="Include" />
+            <e p="FormatTemplates.xml" t="Include" />
+            <e p="TypeTemplates.xml" t="Include" />
+          </e>
+          <e p="ComponentTemplate" t="Include">
+            <e p="Component.compmeta" t="Include" />
+            <e p="Component.cpp" t="Include" />
+            <e p="Component.hpp" t="Include" />
+            <e p="ComponentProgramProvider.cpp" t="Include" />
+            <e p="ComponentProgramProvider.hpp" t="Include" />
+            <e p="TemplateDescription.xml" t="Include" />
+          </e>
+          <e p="ProgramTemplate" t="Include">
+            <e p="Program.cpp" t="Include" />
+            <e p="Program.hpp" t="Include" />
+            <e p="Program.progmeta" t="Include" />
+            <e p="TemplateDescription.xml" t="Include" />
+          </e>
+          <e p="ProjectTemplate" t="Include">
+            <e p=".proj" t="Include" />
+            <e p="Library.cpp" t="Include" />
+            <e p="Library.hpp" t="Include" />
+            <e p="Library.libmeta" t="Include" />
+            <e p="Library.meta.cpp" t="Include" />
+            <e p="Library.typemeta" t="Include" />
+            <e p="TemplateDescription.xml" t="Include" />
+          </e>
+          <e p="Templates.xml" t="Include" />
+        </e>
+        <e p="UpdateDiModule.cs" t="Include" />
+      </e>
+      <e p="PlcNext.Common" t="IncludeRecursive">
+        <e p="AssemblyInfo.cs" t="Include" />
+        <e p="BaseDiModule.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Build" t="Include">
+          <e p="BuildEntity.cs" t="Include" />
+          <e p="Builder.cs" t="Include" />
+          <e p="BuildInformation.cs" t="Include" />
+          <e p="BuildSystemProperties.cs" t="Include" />
+          <e p="CMakeBuildContentProvider.cs" t="Include" />
+          <e p="CmakeBuildInformationService.cs" t="Include" />
+          <e p="CMakeBuildSystemNotFoundException.cs" t="Include" />
+          <e p="CmakeExecuter.cs" t="Include" />
+          <e p="CMakeFileNotFoundException.cs" t="Include" />
+          <e p="CodeModelExtensions.cs" t="Include" />
+          <e p="EngineeringLibraryBuilderExecuter.cs" t="Include" />
+          <e p="ExternalLibrariesParser.cs" t="Include" />
+          <e p="IBuilder.cs" t="Include" />
+          <e p="IBuildExecuter.cs" t="Include" />
+          <e p="IBuildInformationService.cs" t="Include" />
+          <e p="ILibraryBuilderExecuter.cs" t="Include" />
+          <e p="LibraryBuilderNotFoundException.cs" t="Include" />
+          <e p="LibraryIdMalformattedException.cs" t="Include" />
+          <e p="LibraryNotFoundException.cs" t="Include" />
+          <e p="MalformedExternalLibrariesOptionException.cs" t="Include" />
+          <e p="MetaFileNotFoundException.cs" t="Include" />
+          <e p="MetaLibraryNotFoundException.cs" t="Include" />
+          <e p="NoAssignedTargetsException.cs" t="Include" />
+          <e p="WrongCombinedExternalLibrariesException.cs" t="Include" />
+        </e>
+        <e p="CodeErrors.Designer.cs" t="Include" />
+        <e p="CodeErrors.resx" t="Include" />
+        <e p="CodeModel" t="Include">
+          <e p="CodeEntity.cs" t="Include" />
+          <e p="CodeModelContentProvider.cs" t="Include" />
+          <e p="CodeModelExtensions.cs" t="Include" />
+          <e p="CodePosition.cs" t="Include" />
+          <e p="CodeSpecificException.cs" t="Include" />
+          <e p="Cpp" t="Include">
+            <e p="CppContentProvider.cs" t="Include" />
+          </e>
+          <e p="FieldAttributeRestrictionException.cs" t="Include" />
+          <e p="IAttribute.cs" t="Include" />
+          <e p="IClass.cs" t="Include" />
+          <e p="ICodeEntity.cs" t="Include" />
+          <e p="ICodeLanguage.cs" t="Include" />
+          <e p="ICodeModel.cs" t="Include" />
+          <e p="IComment.cs" t="Include" />
+          <e p="IDataType.cs" t="Include" />
+          <e p="IEnum.cs" t="Include" />
+          <e p="IField.cs" t="Include" />
+          <e p="IParser.cs" t="Include" />
+          <e p="IStructure.cs" t="Include" />
+          <e p="ISymbol.cs" t="Include" />
+          <e p="IType.cs" t="Include" />
+          <e p="MissingEnumDataTypeException.cs" t="Include" />
+          <e p="UnknownDataTypeException.cs" t="Include" />
+          <e p="UnkownEnumDataTypeException.cs" t="Include" />
+        </e>
+        <e p="CommandLine" t="Include">
+          <e p="ICommandLineParser.cs" t="Include" />
+          <e p="IDynamicVerbFactory.cs" t="Include" />
+          <e p="UseChildVerbsAsCategoryAttribute.cs" t="Include" />
+        </e>
+        <e p="Commands" t="Include">
+          <e p="AsyncCommand.cs" t="Include" />
+          <e p="BuildCommand.cs" t="Include" />
+          <e p="BuildCommandArgs.cs" t="Include" />
+          <e p="Command.cs" t="Include" />
+          <e p="CommandArgs.cs" t="Include" />
+          <e p="CommandDefinitionContentProvider.cs" t="Include" />
+          <e p="CommandEntity.cs" t="Include" />
+          <e p="CommandManager.cs" t="Include" />
+          <e p="CommandResult.cs" t="Include" />
+          <e p="CommandResults" t="Include">
+            <e p="CompilerSpecificationCommandResult.cs" t="Include" />
+            <e p="ComponentsCommandResult.cs" t="Include" />
+            <e p="IncludePathsCommandResult.cs" t="Include" />
+            <e p="NameCommandResult.cs" t="Include" />
+            <e p="Path.cs" t="Include" />
+            <e p="ProgramsCommandResult.cs" t="Include" />
+            <e p="ProjectInformationCommandResult.cs" t="Include" />
+            <e p="ProjectNamespaceCommandResult.cs" t="Include" />
+            <e p="SdksCommandResult.cs" t="Include" />
+            <e p="SettingCommandResult.cs" t="Include" />
+            <e p="TargetsCommandResult.cs" t="Include" />
+          </e>
+          <e p="DynamicCommand.cs" t="Include" />
+          <e p="DynamicCommandArgs.cs" t="Include" />
+          <e p="EntityExtensions.cs" t="Include" />
+          <e p="GenerateLibraryCommand.cs" t="Include" />
+          <e p="GenerateLibraryCommandArgs.cs" t="Include" />
+          <e p="GetCompilerSpecificationsCommand.cs" t="Include" />
+          <e p="GetCompilerSpecificationsCommandArgs.cs" t="Include" />
+          <e p="GetComponentsCommand.cs" t="Include" />
+          <e p="GetComponentsCommandArgs.cs" t="Include" />
+          <e p="GetIncludePathsCommand.cs" t="Include" />
+          <e p="GetIncludePathsCommandArgs.cs" t="Include" />
+          <e p="GetProgramsCommand.cs" t="Include" />
+          <e p="GetProgramsCommandArgs.cs" t="Include" />
+          <e p="GetProjectInformationCommand.cs" t="Include" />
+          <e p="GetProjectInformationCommandArgs.cs" t="Include" />
+          <e p="GetSdksCommand.cs" t="Include" />
+          <e p="GetSdksCommandArgs.cs" t="Include" />
+          <e p="GetSettingsCommand.cs" t="Include" />
+          <e p="GetSettingsCommandArgs.cs" t="Include" />
+          <e p="GetTargetsCommand.cs" t="Include" />
+          <e p="GetTargetsCommandArgs.cs" t="Include" />
+          <e p="GetUpdateVersionsCommand.cs" t="Include" />
+          <e p="GetUpdateVersionsCommandArgs.cs" t="Include" />
+          <e p="ICommand.cs" t="Include" />
+          <e p="ICommandManager.cs" t="Include" />
+          <e p="InstallSdkCommand.cs" t="Include" />
+          <e p="InstallSdkCommandArgs.cs" t="Include" />
+          <e p="ScanSdksCommand.cs" t="Include" />
+          <e p="ScanSdksCommandArgs.cs" t="Include" />
+          <e p="SetSettingsCommand.cs" t="Include" />
+          <e p="SetSettingsCommandArgs.cs" t="Include" />
+          <e p="SetTargetsCommand.cs" t="Include" />
+          <e p="SetTargetsCommandArgs.cs" t="Include" />
+          <e p="SetTargetsOptionMissingException.cs" t="Include" />
+          <e p="SyncCommand.cs" t="Include" />
+          <e p="UpdateCliCommand.cs" t="Include" />
+          <e p="UpdateCliCommandArgs.cs" t="Include" />
+          <e p="UpdateTargetsCommand.cs" t="Include" />
+          <e p="UpdateTargetsCommandArgs.cs" t="Include" />
+        </e>
+        <e p="DataModel" t="Include">
+          <e p="CollectiveEntityContentProvider.cs" t="Include" />
+          <e p="ConstantContentProvider.cs" t="Include" />
+          <e p="ContentProviderException.cs" t="Include" />
+          <e p="DataModelExtensions.cs" t="Include" />
+          <e p="Entity.cs" t="Include" />
+          <e p="EntityBaseDecorator.cs" t="Include" />
+          <e p="EntityFactory.cs" t="Include" />
+          <e p="IDecoratableEntity.cs" t="Include" />
+          <e p="IEntityBase.cs" t="Include" />
+          <e p="IEntityContentProvider.cs" t="Include" />
+          <e p="IEntityFactory.cs" t="Include" />
+          <e p="PriorityContentProvider.cs" t="Include" />
+        </e>
+        <e p="Deploy" t="Include">
+          <e p="DeployCommandContentProvider.cs" t="Include" />
+          <e p="DeployEntity.cs" t="Include" />
+          <e p="DeployFileNotFoundException.cs" t="Include" />
+          <e p="DeployService.cs" t="Include" />
+          <e p="EngineeringLibraryBuilderDeployStep.cs" t="Include" />
+          <e p="IDeployService.cs" t="Include" />
+          <e p="IDeployStep.cs" t="Include" />
+          <e p="NoTargetSpecifiedException.cs" t="Include" />
+        </e>
+        <e p="DiModule.cs" t="Include" />
+        <e p="ExceptionTexts.Designer.cs" t="Include" />
+        <e p="ExceptionTexts.resx" t="Include" />
+        <e p="GlobalSuppressions.cs" t="Include" />
+        <e p="Installation" t="Include">
+          <e p="CliRepository.Extensions.cs" t="Include" />
+          <e p="CliRepositorySchema.cs" t="Include" />
+          <e p="CliRepositorySchema.xsd" t="Include" />
+          <e p="copy_version.bat" t="Include" />
+          <e p="HttpCliUpdater.cs" t="Include" />
+          <e p="ICliUpdater.cs" t="Include" />
+          <e p="IInstallationStep.cs" t="Include" />
+          <e p="InvalidUriFormatException.cs" t="Include" />
+          <e p="PublicKeyFileNotFoundException.cs" t="Include" />
+          <e p="SDK" t="Include">
+            <e p="ISdkInstaller.cs" t="Include" />
+            <e p="SdkFileNotFoundException.cs" t="Include" />
+            <e p="SdkInstaller.cs" t="Include" />
+          </e>
+          <e p="UnkownVersionException.cs" t="Include" />
+          <e p="UnsupportedSystemException.cs" t="Include" />
+        </e>
+        <e p="MetaData" t="Include">
+          <e p="AttributeView.cs" t="Include" />
+          <e p="IAttributeView.cs" t="Include" />
+          <e p="IDatatypeConversion.cs" t="Include" />
+          <e p="metaconfig.cs" t="Include" />
+          <e p="metaconfig.xsd" t="Include" />
+          <e p="Port.cs" t="Include" />
+          <e p="StaticDatatypeConversion.cs" t="Include" />
+        </e>
+        <e p="MetaExtensions.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="PlcNext.Common.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="PlcNext.Common.csproj" t="IncludeRecursive" />
+        <e p="Project" t="Include">
+          <e p="FileExistsException.cs" t="Include" />
+          <e p="ITargetParser.cs" t="Include" />
+          <e p="MutableProjectSettings.cs" t="Include" />
+          <e p="NoHigherTargetAvailableException.cs" t="Include" />
+          <e p="Persistence" t="Include">
+            <e p="CMakeFileGenerator.cs" t="Include" />
+          </e>
+          <e p="ProjectEntity.cs" t="Include" />
+          <e p="ProjectPropertiesProvider.cs" t="Include" />
+          <e p="ProjectSettingChange.cs" t="Include" />
+          <e p="ProjectSettingsProvider.cs" t="Include" />
+          <e p="ProjectSettingsSchema.cs" t="Include" />
+          <e p="ProjectSettingsSchema.xsd" t="Include" />
+          <e p="ProjectTarget.cs" t="Include" />
+          <e p="RootEntityContentProvider.cs" t="Include" />
+          <e p="RootTemplateNotFoundException.cs" t="Include" />
+          <e p="TargetAlreadySupportedException.cs" t="Include" />
+          <e p="TargetEntity.cs" t="Include" />
+          <e p="TargetFormatMismatchException.cs" t="Include" />
+          <e p="TargetInstalledTwiceException.cs" t="Include" />
+          <e p="TargetNameAmbiguousException.cs" t="Include" />
+          <e p="TargetNameNotFoundException.cs" t="Include" />
+          <e p="TargetNotSettableForProjectException.cs" t="Include" />
+          <e p="TargetParser.cs" t="Include" />
+          <e p="TargetsResult.cs" t="Include" />
+          <e p="TargetVersionNotFoundException.cs" t="Include" />
+          <e p="Templates" t="Include">
+            <e p="ProjectTemplates" t="Include" />
+          </e>
+          <e p="Update.bat" t="Include" />
+        </e>
+        <e p="Templates" t="Include">
+          <e p="AmbiguousRelationshipTypeException.cs" t="Include" />
+          <e p="ArgumentNotFoundException.cs" t="Include" />
+          <e p="CollectiveTemplateIdentifierRepository.cs" t="Include" />
+          <e p="ControlSequenceEndTagNotFoundException.cs" t="Include" />
+          <e p="EntityExtensions.cs" t="Include" />
+          <e p="FieldTemplateSchema.cs" t="Include" />
+          <e p="FieldTemplateSchema.xsd" t="Include" />
+          <e p="ForeachItemContainer.cs" t="Include" />
+          <e p="ForeachSequenceParameterMismatchException.cs" t="Include" />
+          <e p="FormatTargetMismatchException.cs" t="Include" />
+          <e p="FormatTemplateContentProvider.cs" t="Include" />
+          <e p="FormatTemplateSchema.cs" t="Include" />
+          <e p="FormatTemplateSchema.xsd" t="Include" />
+          <e p="IdentifierNotFoundException.cs" t="Include" />
+          <e p="IfSequenceParameterMismatchException.cs" t="Include" />
+          <e p="ITemplateCommandBuilder.cs" t="Include" />
+          <e p="ITemplateFileGenerator.cs" t="Include" />
+          <e p="ITemplateIdentifier.cs" t="Include" />
+          <e p="ITemplateIdentifierRepository.cs" t="Include" />
+          <e p="ITemplateLoader.cs" t="Include" />
+          <e p="ITemplateRepository.cs" t="Include" />
+          <e p="ITemplateResolver.cs" t="Include" />
+          <e p="MultipleRootNamespacesException.cs" t="Include" />
+          <e p="NoDuplicateLinesParameterMismatchException.cs" t="Include" />
+          <e p="RelationshipMultiplicityMismatchException.cs" t="Include" />
+          <e p="RelationshipNotFoundException.cs" t="Include" />
+          <e p="RelationshipTypeNotFoundException.cs" t="Include" />
+          <e p="SettingsBasedTemplateLoader.cs" t="Include" />
+          <e p="TemplateBaseSchema.xsd" t="Include" />
+          <e p="TemplateCommandBuilder.cs" t="Include" />
+          <e p="TemplateCommandProvider.cs" t="Include" />
+          <e p="TemplateContentProvider.cs" t="Include" />
+          <e p="TemplateDescriptionSchema.cs" t="Include" />
+          <e p="TemplateDescriptionSchema.Merge.cs" t="Include" />
+          <e p="TemplateDescriptionSchema.xsd" t="Include" />
+          <e p="TemplateEntity.cs" t="Include" />
+          <e p="TemplateExtensions.cs" t="Include" />
+          <e p="TemplateFileGenerator.cs" t="Include" />
+          <e p="TemplateReferenceNotDefinedException.cs" t="Include" />
+          <e p="TemplateRelationshipNotFoundException.cs" t="Include" />
+          <e p="TemplateRepository.cs" t="Include" />
+          <e p="TemplateResolver.cs" t="Include" />
+          <e p="TemplatesSchema.cs" t="Include" />
+          <e p="TemplatesSchema.xsd" t="Include" />
+          <e p="TypeTemplateSchema.cs" t="Include" />
+          <e p="TypeTemplateSchema.xsd" t="Include" />
+          <e p="UnrecognizedControlSequenceException.cs" t="Include" />
+          <e p="Update.bat" t="Include" />
+          <e p="WildControlSequenceException.cs" t="Include" />
+          <e p="WildEntityException.cs" t="Include" />
+        </e>
+        <e p="Tools" t="Include">
+          <e p="AutomaticRollbackTransactionFactory.cs" t="Include" />
+          <e p="Constants.cs" t="Include" />
+          <e p="CycleChecker.cs" t="Include" />
+          <e p="CycleException.cs" t="Include" />
+          <e p="DisposeAction.cs" t="Include" />
+          <e p="DynamicCommands" t="Include">
+            <e p="Argument.cs" t="Include" />
+            <e p="ArgumentBuilder.cs" t="Include" />
+            <e p="ArgumentCollection.cs" t="Include" />
+            <e p="ArgumentRestrictionException.cs" t="Include" />
+            <e p="ArgumentTypeMismatchException.cs" t="Include" />
+            <e p="BoolArgument.cs" t="Include" />
+            <e p="CommandDefinition.cs" t="Include" />
+            <e p="CommandDefinitionBuilder.cs" t="Include" />
+            <e p="CommandExample.cs" t="Include" />
+            <e p="IDynamicCommandProvider.cs" t="Include" />
+            <e p="MultipleValueArgument.cs" t="Include" />
+            <e p="SingleValueArgument.cs" t="Include" />
+          </e>
+          <e p="EntityKeys.cs" t="Include" />
+          <e p="Events" t="Include">
+            <e p="Change.cs" t="Include" />
+            <e p="ChangeObservable.cs" t="Include" />
+          </e>
+          <e p="ExecutionContext.cs" t="Include" />
+          <e p="Extensions.cs" t="Include" />
+          <e p="FileBasedBinariesLocator.cs" t="Include" />
+          <e p="FileSystem" t="Include">
+            <e p="DirectoryInfoContentResolver.cs" t="Include" />
+            <e p="FileBaseFileSystem.cs" t="Include" />
+            <e p="FileEntity.cs" t="Include" />
+            <e p="FileInfoContentResolver.cs" t="Include" />
+            <e p="FileSystemExtensions.cs" t="Include" />
+            <e p="FileSystemInfoContentResolver.cs" t="Include" />
+            <e p="FormattableIoException.cs" t="Include" />
+            <e p="IDirectoryContentResolver.cs" t="Include" />
+            <e p="IEntryContentResolver.cs" t="Include" />
+            <e p="IFileContentResolver.cs" t="Include" />
+            <e p="IFileSystem.cs" t="Include" />
+            <e p="VirtualDirectory.cs" t="Include" />
+            <e p="VirtualEntry.cs" t="Include" />
+            <e p="VirtualFile.cs" t="Include" />
+          </e>
+          <e p="FormattableException.cs" t="Include" />
+          <e p="FormattableExceptionHandler.cs" t="Include" />
+          <e p="GuidFactory.cs" t="Include" />
+          <e p="IBinariesLocator.cs" t="Include" />
+          <e p="IEnvironmentPathNames.cs" t="Include" />
+          <e p="IEnvironmentService.cs" t="Include" />
+          <e p="IExceptionHandler.cs" t="Include" />
+          <e p="IGuidFactory.cs" t="Include" />
+          <e p="IO" t="Include">
+            <e p="Block.cs" t="Include" />
+            <e p="BuddyAllocator.cs" t="Include" />
+            <e p="ConcurrentPage.cs" t="Include" />
+            <e p="ConcurrentPageBuffer.cs" t="Include" />
+            <e p="ConcurrentStream.cs" t="Include" />
+            <e p="IFileUnpackService.cs" t="Include" />
+            <e p="IPage.cs" t="Include" />
+            <e p="IPageBuffer.cs" t="Include" />
+            <e p="MemoryStreamEvents.cs" t="Include" />
+            <e p="Page.cs" t="Include" />
+            <e p="PageBuffer.cs" t="Include" />
+            <e p="PageBufferOptions.cs" t="Include" />
+            <e p="PageBufferType.cs" t="Include" />
+            <e p="PageStream.cs" t="Include" />
+            <e p="PageStreamFactory.cs" t="Include" />
+            <e p="RecyclableMemoryStream.cs" t="Include" />
+            <e p="RecyclableMemoryStreamManager.cs" t="Include" />
+            <e p="SharpZipFileUnpackService.cs" t="Include" />
+            <e p="StreamExtensions.cs" t="Include" />
+            <e p="StreamFactory.cs" t="Include" />
+            <e p="UnsupportedArchiveFormatException.cs" t="Include" />
+          </e>
+          <e p="ITransactionFactory.cs" t="Include" />
+          <e p="LevenshteinDistance.cs" t="Include" />
+          <e p="MultiDictionary.cs" t="Include" />
+          <e p="Priority" t="Include">
+            <e p="IPriorityMaster.cs" t="Include" />
+            <e p="IPrioritySubject.cs" t="Include" />
+            <e p="PriorityHell.cs" t="Include" />
+            <e p="SubjectIdentifier.cs" t="Include" />
+            <e p="ThisSubjectIdentifier.cs" t="Include" />
+          </e>
+          <e p="Process" t="Include">
+            <e p="IProcess.cs" t="Include" />
+            <e p="IProcessInformationService.cs" t="Include" />
+            <e p="IProcessManager.cs" t="Include" />
+            <e p="ProcessManager.cs" t="Include" />
+          </e>
+          <e p="RealEnvironmentService.cs" t="Include" />
+          <e p="SDK" t="Include">
+            <e p="CMakeExplorationException.cs" t="Include" />
+            <e p="CMakeSdkExplorer.cs" t="Include" />
+            <e p="CMakeServerConversation.cs" t="Include" />
+            <e p="CMakeServerFormatter.cs" t="Include" />
+            <e p="CompilerInformation.cs" t="Include" />
+            <e p="ICMakeConversation.cs" t="Include" />
+            <e p="ISdkContainer.cs" t="Include" />
+            <e p="ISdkExplorer.cs" t="Include" />
+            <e p="ISdkRepository.cs" t="Include" />
+            <e p="NoSdkForTargetException.cs" t="Include" />
+            <e p="PropertiesFileSdkContainer.cs" t="Include" />
+            <e p="SampleProject" t="Include">
+              <e p="a.cxx" t="Include" />
+              <e p="CMakeLists.txt" t="Include" />
+            </e>
+            <e p="SdkInformation.cs" t="Include" />
+            <e p="SdkManifest.cs" t="Include" />
+            <e p="SdkManifest.xsd" t="Include" />
+            <e p="SdkPathNotExistingException.cs" t="Include" />
+            <e p="SdkPropertiesSchema.cs" t="Include" />
+            <e p="SdkPropertiesSchema.xsd" t="Include" />
+            <e p="SdkSettingObserver.cs" t="Include" />
+            <e p="SettingsBasedSdkRepository.cs" t="Include" />
+            <e p="Target.cs" t="Include" />
+            <e p="Update.bat" t="Include" />
+          </e>
+          <e p="Security" t="Include">
+            <e p="HashValidationException.cs" t="Include" />
+            <e p="ISecurityValidator.cs" t="Include" />
+            <e p="RsaSecurityValidator.cs" t="Include" />
+            <e p="SignatureSchema.cs" t="Include" />
+            <e p="SignatureSchema.xsd" t="Include" />
+            <e p="SignatureValidationException.cs" t="Include" />
+          </e>
+          <e p="SettingPathCleaner.cs" t="Include" />
+          <e p="Settings" t="Include">
+            <e p="BoolSettingsValueFormatException.cs" t="Include" />
+            <e p="FileBasedSettingsProvider.cs" t="Include" />
+            <e p="IEditableSettings.cs" t="Include" />
+            <e p="ISettingsObserver.cs" t="Include" />
+            <e p="ISettingsProvider.cs" t="Include" />
+            <e p="ProcessBasedSettingsMigrationInstallationStep.cs" t="Include" />
+            <e p="SettingIsNotCollectionException.cs" t="Include" />
+            <e p="SettingKeyIsEmptyException.cs" t="Include" />
+            <e p="SettingNotFoundException.cs" t="Include" />
+            <e p="Settings.cs" t="Include" />
+            <e p="SettingsContentProvider.cs" t="Include" />
+            <e p="SettingsMigrationException.cs" t="Include" />
+            <e p="SettingsObserverEventArgs.cs" t="Include" />
+            <e p="SettingsParser.cs" t="Include" />
+            <e p="SettingsReadOnlyException.cs" t="Include" />
+            <e p="SettingValueIsEmptyException.cs" t="Include" />
+            <e p="SettingValueNotFoundException.cs" t="Include" />
+          </e>
+          <e p="UI" t="Include">
+            <e p="ConsoleUserInterface.cs" t="Include" />
+            <e p="CustomFormatDataStructureAttribute.cs" t="Include" />
+            <e p="FileLog.cs" t="Include" />
+            <e p="ICommandResultVisualizer.cs" t="Include" />
+            <e p="ILog.cs" t="Include" />
+            <e p="IOutputFormatter.cs" t="Include" />
+            <e p="IOutputFormatterPool.cs" t="Include" />
+            <e p="IProgressNotifier.cs" t="Include" />
+            <e p="IProgressVisualizer.cs" t="Include" />
+            <e p="IUserInterface.cs" t="Include" />
+            <e p="JsonCommandResultVisualizer.cs" t="Include" />
+            <e p="LogCatalog.cs" t="Include" />
+            <e p="OutputFormatterPool.cs" t="Include" />
+            <e p="ShellChildProgressNotifier.cs" t="Include" />
+            <e p="ShellInfinitChildProgressNotifier.cs" t="Include" />
+            <e p="ShellInfinitProgressNotifier.cs" t="Include" />
+            <e p="ShellProgressBarProgressVisualizer.cs" t="Include" />
+            <e p="ShellProgressNotifier.cs" t="Include" />
+            <e p="ShellProgressNotifierBase.cs" t="Include" />
+            <e p="StringBuilderUserInterface.cs" t="Include" />
+          </e>
+          <e p="VerboseChangeObserver.cs" t="Include" />
+          <e p="Web" t="Include">
+            <e p="DownloadFileNotReachableException.cs" t="Include" />
+            <e p="HttpClientDownloadService.cs" t="Include" />
+            <e p="HttpClientExtensions.cs" t="Include" />
+            <e p="IDownloadService.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="PlcNext.CppParser" t="IncludeRecursive">
+        <e p="AssemblyInfo.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CppRipper" t="Include">
+          <e p="BaseGrammar.cs" t="Include" />
+          <e p="CodeModel" t="Include">
+            <e p="CppAttribute.cs" t="Include" />
+            <e p="CppClass.cs" t="Include" />
+            <e p="CppCodeEntity.cs" t="Include" />
+            <e p="CppCodeLanguage.cs" t="Include" />
+            <e p="CppCodeModel.cs" t="Include" />
+            <e p="CppComment.cs" t="Include" />
+            <e p="CppDataType.cs" t="Include" />
+            <e p="CppEnum.cs" t="Include" />
+            <e p="CppField.cs" t="Include" />
+            <e p="CppFileParser.cs" t="Include" />
+            <e p="CppStructure.cs" t="Include" />
+            <e p="CppSymbol.cs" t="Include" />
+            <e p="CppType.cs" t="Include" />
+            <e p="IFileParser.cs" t="Include" />
+            <e p="Includes" t="Include">
+              <e p="CppIncludeManager.cs" t="Include" />
+              <e p="IIncludeCache.cs" t="Include" />
+              <e p="IIncludeManager.cs" t="Include" />
+              <e p="IncludeCacheEntry.cs" t="Include" />
+              <e p="JsonIncludeCache.cs" t="Include" />
+            </e>
+          </e>
+          <e p="CppBaseGrammar.cs" t="Include" />
+          <e p="CppRipper.cs" t="Include" />
+          <e p="CppRipperExtensions.cs" t="Include" />
+          <e p="CppStructuralGrammar.cs" t="Include" />
+          <e p="ParseNode.cs" t="Include" />
+          <e p="Parser.cs" t="Include" />
+          <e p="ParserMessage.cs" t="Include" />
+          <e p="ParseState.cs" t="Include" />
+          <e p="ParsingException.cs" t="Include" />
+          <e p="Rule.cs" t="Include" />
+        </e>
+        <e p="DiModule.cs" t="Include" />
+        <e p="GlobalSuppressions.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="PlcNext.CppParser.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="PlcNext.CppParser.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="PlcNext.NamedPipeServer" t="IncludeRecursive">
+        <e p="AssemblyInfo.cs" t="Include" />
+        <e p="BaseDiModule.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CommandLine" t="Include">
+          <e p="CommandLineBuilder.cs" t="Include" />
+          <e p="CommandLineExtensions.cs" t="Include" />
+          <e p="CommandLineFacade.cs" t="Include" />
+          <e p="CommandLineLifetimeScope.cs" t="Include" />
+          <e p="ICommandLineBuilder.cs" t="Include" />
+          <e p="ICommandLineFacade.cs" t="Include" />
+          <e p="InfiniteProgressStartedEventArgs.cs" t="Include" />
+          <e p="MessageReceivedEventArgs.cs" t="Include" />
+          <e p="ProgressReceivedEventArgs.cs" t="Include" />
+        </e>
+        <e p="CommandLineMediator.cs" t="Include" />
+        <e p="Communication" t="Include">
+          <e p="ClientDisconnectedException.cs" t="Include" />
+          <e p="CliServer.cs" t="Include" />
+          <e p="CommandEventArgs.cs" t="Include" />
+          <e p="CommunicationConstants.cs" t="Include" />
+          <e p="CommunicationSettings.cs" t="Include" />
+          <e p="EndianTools.cs" t="Include" />
+          <e p="HandshakeEventArgs.cs" t="Include" />
+          <e p="ICliServer.cs" t="Include" />
+          <e p="ICommunicationProtocol.cs" t="Include" />
+          <e p="IHeart.cs" t="Include" />
+          <e p="IInstanceCommunicationService.cs" t="Include" />
+          <e p="IInstanceMessageSender.cs" t="Include" />
+          <e p="IMessageParser.cs" t="Include" />
+          <e p="IMessageSender.cs" t="Include" />
+          <e p="InterProcessUpdateReceiver.cs" t="Include" />
+          <e p="ITemporaryCommunicationChannel.cs" t="Include" />
+          <e p="JsonMessageParser.cs" t="Include" />
+          <e p="JsonMessageSender.cs" t="Include" />
+          <e p="MessageReceivedEventArgs.cs" t="Include" />
+          <e p="MessageSenderDiModule.cs" t="Include" />
+          <e p="MessageTimeoutException.cs" t="Include" />
+          <e p="NamedPipeCommunicationProtocol.cs" t="Include" />
+          <e p="NamedPipeInstanceCommunicationChannel.cs" t="Include" />
+          <e p="NamedPipeInstanceCommunicationService.cs" t="Include" />
+          <e p="PartialMessageException.cs" t="Include" />
+          <e p="ServerConnectedEventArgs.cs" t="Include" />
+          <e p="ThreadingHeart.cs" t="Include" />
+        </e>
+        <e p="Data" t="Include">
+          <e p="Command.cs" t="Include" />
+          <e p="CommandProgress.cs" t="Include" />
+          <e p="MessageType.cs" t="Include" />
+        </e>
+        <e p="DiModule.cs" t="Include" />
+        <e p="ExceptionTexts.Designer.cs" t="Include" />
+        <e p="ExceptionTexts.resx" t="Include" />
+        <e p="GlobalSuppressions.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="PlcNext.NamedPipeServer.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="PlcNext.NamedPipeServer.csproj" t="IncludeRecursive" />
+        <e p="ServerConnectionLifetimeScope.cs" t="Include" />
+        <e p="Tools" t="Include">
+          <e p="HighResolutionTimer.cs" t="Include" />
+          <e p="IEnvironmentInformation.cs" t="Include" />
+          <e p="PollingCollectionObserver.cs" t="Include" />
+          <e p="RealEnvironmentInformation.cs" t="Include" />
+        </e>
+      </e>
+      <e p="PlcNextCli.EAP" t="Include" />
+      <e p="PlcNextCli.sln" t="IncludeFlat" />
+      <e p="Solution Items" t="Include" />
+      <e p="Test.PlcNext" t="IncludeRecursive">
+        <e p="AssemblyInfo.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Deployment" t="Include">
+          <e p="AcfProject" t="Include">
+            <e p="MySettings.txt" t="Include" />
+            <e p="src" t="Include">
+              <e p="AcfProjectComponent.cpp" t="Include" />
+              <e p="AcfProjectComponent.hpp" t="Include" />
+              <e p="AcfProjectLibrary._acf.config" t="Include" />
+            </e>
+          </e>
+          <e p="AlmostAmbiguous" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="AlmostAmbiguousComp.cpp" t="Include" />
+              <e p="AlmostAmbiguousComp.hpp" t="Include" />
+              <e p="AlmostAmbiguousComponent.cpp" t="Include" />
+              <e p="AlmostAmbiguousComponent.hpp" t="Include" />
+              <e p="AlmostAmbiguousProgram.cpp" t="Include" />
+              <e p="AlmostAmbiguousProgram.hpp" t="Include" />
+              <e p="OtherProgram.cpp" t="Include" />
+              <e p="OtherProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="Arp.Plc.Esm" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="src" t="Include">
+                <e p="code" t="Include">
+                  <e p="EsmData.hpp" t="Include" />
+                  <e p="EsmInfo.hpp" t="Include" />
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                  <e p="TaskInfo.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Arp.Plc.Esm2" t="Include">
+            <e p="src" t="Include">
+              <e p="src" t="Include">
+                <e p="code" t="Include">
+                  <e p="EsmData.hpp" t="Include" />
+                  <e p="EsmInfo.hpp" t="Include" />
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                  <e p="TaskInfo.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="CliRepository" t="Include">
+            <e p="_remove0_point0_point0" t="Include">
+              <e p="linux" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+              <e p="osx" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+              <e p="windows" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+                <e p="x86" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="_remove95_point0_point0" t="Include">
+              <e p="linux" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.fooba" t="Include" />
+                </e>
+              </e>
+              <e p="osx" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.fooba" t="Include" />
+                </e>
+              </e>
+              <e p="windows" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.fooba" t="Include" />
+                </e>
+                <e p="x86" t="Include">
+                  <e p="plcncli.fooba" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="_remove97_point0_point0" t="Include">
+              <e p="linux" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+              <e p="osx" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+              <e p="windows" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+                <e p="x86" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="_remove98_point0_point0" t="Include">
+              <e p="linux" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+              <e p="osx" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+              <e p="windows" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+                <e p="x86" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="_remove99_point99_point99" t="Include">
+              <e p="linux" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+              <e p="osx" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+              <e p="windows" t="Include">
+                <e p="x64" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+                <e p="x86" t="Include">
+                  <e p="plcncli.zip" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="repository.xml" t="Include" />
+            <e p="repository_pointxml.cer" t="Include" />
+            <e p="update_commands.txt" t="Include" />
+          </e>
+          <e p="CodeFilesWithError" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgram1Impl.cpp" t="Include" />
+              <e p="MyProgram1Impl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ComponentInSourceFolder" t="Include">
+            <e p="src" t="Include">
+              <e p="Component.cpp" t="Include" />
+              <e p="Component.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ComponentsInMultipleNamespaces" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="extern" t="Include">
+              <e p="CircuitControl.cpp" t="Include" />
+              <e p="CircuitControl.hpp" t="Include" />
+              <e p="MultipleNamespacesComponent.cpp" t="Include" />
+              <e p="MultipleNamespacesComponent.hpp" t="Include" />
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="ComponentsInMultipleNamespacesComponent.cpp" t="Include" />
+              <e p="ComponentsInMultipleNamespacesComponent.hpp" t="Include" />
+              <e p="ComponentsInMultipleNamespacesProgram.cpp" t="Include" />
+              <e p="ComponentsInMultipleNamespacesProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ComponentsInMultipleSources" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="extern" t="Include">
+              <e p="CircuitControl.cpp" t="Include" />
+              <e p="CircuitControl.hpp" t="Include" />
+              <e p="MultipleNamespacesComponent.cpp" t="Include" />
+              <e p="MultipleNamespacesComponent.hpp" t="Include" />
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="ComponentsInMultipleNamespacesComponent.cpp" t="Include" />
+              <e p="ComponentsInMultipleNamespacesComponent.hpp" t="Include" />
+              <e p="ComponentsInMultipleNamespacesProgram.cpp" t="Include" />
+              <e p="ComponentsInMultipleNamespacesProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ComponentsWithSameName" t="Include">
+            <e p="c1" t="Include">
+              <e p="MyComponent.cpp" t="Include" />
+              <e p="MyComponent.hpp" t="Include" />
+            </e>
+            <e p="c2" t="Include">
+              <e p="MyComponent.cpp" t="Include" />
+              <e p="MyComponent.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="Demo" t="Include">
+            <e p="bin" t="Include">
+              <e p="AXCF2152_19.0.0.12345" t="Include">
+                <e p="Debug" t="Include">
+                  <e p="libDemo.so" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="intermediate" t="Include">
+              <e p="config" t="Include">
+                <e p="Demo.libmeta" t="Include" />
+                <e p="Demo.typemeta" t="Include" />
+                <e p="MyComponent" t="Include">
+                  <e p="MyComponent.compmeta" t="Include" />
+                  <e p="MyProgram" t="Include">
+                    <e p="MyProgram.progmeta" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="Demo" t="Include">
+                <e p="MyComponent" t="Include">
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="DemoCodeModel.json" t="Include" />
+          <e p="DemoLibraryCommandArgs.txt" t="Include" />
+          <e p="DemoLibraryCommandArgsWithSpecificId.txt" t="Include" />
+          <e p="DemoLibraryDifferentPathsCommandArgs.txt" t="Include" />
+          <e p="DemoLibraryWithExternalLibs.txt" t="Include" />
+          <e p="DemoLibraryWithExternalLibsMultibinary.txt" t="Include" />
+          <e p="DemoWithDifferentPaths" t="Include">
+            <e p="ba" t="Include">
+              <e p="Meta" t="Include">
+                <e p="Demo.libmeta" t="Include" />
+                <e p="Demo.typemeta" t="Include" />
+                <e p="MyComponent" t="Include">
+                  <e p="MyComponent.compmeta" t="Include" />
+                  <e p="MyProgram" t="Include">
+                    <e p="MyProgram.progmeta" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="foo" t="Include">
+              <e p="AXCF2152_1.0.0.12345" t="Include">
+                <e p="Release" t="Include">
+                  <e p="libDemo.so" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="Demo" t="Include">
+                <e p="MyComponent" t="Include">
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="DemoWithMultibinary" t="Include">
+            <e p="bin" t="Include">
+              <e p="AXCF2152_1.0.0.12345" t="Include">
+                <e p="Release" t="Include">
+                  <e p="lib" t="Include">
+                    <e p="libDemo.so" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="AXCF2152_2.0.0.12345" t="Include">
+                <e p="Release" t="Include">
+                  <e p="lib" t="Include">
+                    <e p="libDemo.so" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="intermediate" t="Include">
+              <e p="config" t="Include">
+                <e p="Demo.libmeta" t="Include" />
+                <e p="Demo.typemeta" t="Include" />
+                <e p="MyComponent" t="Include">
+                  <e p="MyComponent.compmeta" t="Include" />
+                  <e p="MyProgram" t="Include">
+                    <e p="MyProgram.progmeta" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="src" t="Include">
+              <e p="Demo" t="Include">
+                <e p="MyComponent" t="Include">
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="DemoWithMultibinaryLibraryCommandArgs.txt" t="Include" />
+          <e p="DemoWithoutCompmeta" t="Include">
+            <e p="bin" t="Include">
+              <e p="libDemo.so" t="Include" />
+            </e>
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="intermediate" t="Include">
+              <e p="config" t="Include">
+                <e p="Demo.libmeta" t="Include" />
+                <e p="Demo.typemeta" t="Include" />
+                <e p="MyComponent" t="Include">
+                  <e p="MyProgram" t="Include">
+                    <e p="MyProgram.progmeta" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="Demo" t="Include">
+                <e p="MyComponent" t="Include">
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="DemoWithoutLibrary" t="Include">
+            <e p="bin" t="Include" />
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="intermediate" t="Include">
+              <e p="config" t="Include">
+                <e p="Demo.libmeta" t="Include" />
+                <e p="Demo.typemeta" t="Include" />
+                <e p="MyComponent" t="Include">
+                  <e p="MyComponent.compmeta" t="Include" />
+                  <e p="MyProgram" t="Include">
+                    <e p="MyProgram.progmeta" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="Demo" t="Include">
+                <e p="MyComponent" t="Include">
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="DemoWithoutMeta" t="Include">
+            <e p="bin" t="Include">
+              <e p="libDemo.so" t="Include" />
+            </e>
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="intermediate" t="Include">
+              <e p="config" t="Include">
+                <e p="Demo.typemeta" t="Include" />
+                <e p="MyComponent" t="Include">
+                  <e p="MyComponent.compmeta" t="Include" />
+                  <e p="MyProgram" t="Include">
+                    <e p="MyProgram.progmeta" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="Demo" t="Include">
+                <e p="MyComponent" t="Include">
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="DoublePortDeclaration" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="DoublePortDeclarationComponent.cpp" t="Include" />
+              <e p="DoublePortDeclarationComponent.hpp" t="Include" />
+              <e p="DoublePortDeclarationProgram.cpp" t="Include" />
+              <e p="DoublePortDeclarationProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="Dummy_AXCF2152_Sdk.tar.xz" t="Include" />
+          <e p="EmptyWithLibmeta" t="Include">
+            <e p="intermediate" t="Include">
+              <e p="config" t="Include">
+                <e p="EmptyWithLibmeta.libmeta" t="Include" />
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="EnumTest" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="EnumTestComponent.cpp" t="Include" />
+              <e p="EnumTestComponent.hpp" t="Include" />
+              <e p="EnumTestProgram.cpp" t="Include" />
+              <e p="EnumTestProgram.hpp" t="Include" />
+              <e p="PortTypes.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ExternalLibrary" t="Include">
+            <e p="My" t="Include">
+              <e p="Company" t="Include">
+                <e p="Name" t="Include">
+                  <e p="ExternalStruct.hpp" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="ExternalLibraryTest" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="ExternalLibraryTestComponent.cpp" t="Include" />
+              <e p="ExternalLibraryTestComponent.hpp" t="Include" />
+              <e p="ExternalLibraryTestProgram.cpp" t="Include" />
+              <e p="ExternalLibraryTestProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="HiddenPlm" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="HiddenPlmComponent.cpp" t="Include" />
+              <e p="HiddenPlmComponent.hpp" t="Include" />
+              <e p="HiddenPlmProgram.cpp" t="Include" />
+              <e p="HiddenPlmProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ManipulatedRepository.xml" t="Include" />
+          <e p="MultipleNamespaces" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="extern" t="Include">
+              <e p="CircuitControl.cpp" t="Include" />
+              <e p="CircuitControl.hpp" t="Include" />
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MultipleNamespacesComponent.cpp" t="Include" />
+              <e p="MultipleNamespacesComponent.hpp" t="Include" />
+              <e p="MultipleNamespacesProgram.cpp" t="Include" />
+              <e p="MultipleNamespacesProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="NoEntities" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="CircuitControl.cpp" t="Include" />
+              <e p="CircuitControl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="OnlyOlderRepository.xml" t="Include" />
+          <e p="OnlyOlderRepository.xml.cer" t="Include" />
+          <e p="PartiallyBuildProjectWithCustomNamespace" t="Include">
+            <e p="bin" t="Include">
+              <e p="AXCF2152_19.0.0.17548" t="Include">
+                <e p="Release" t="Include">
+                  <e p="lib" t="Include">
+                    <e p="libPrjN_ST_Update_Proj_Targets_2237.so" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="intermediate" t="Include">
+              <e p="code" t="Include">
+                <e p="Component1.meta.cpp" t="Include" />
+                <e p="Component1ProgramProvider.cpp" t="Include" />
+                <e p="Component1ProgramProvider.hpp" t="Include" />
+                <e p="PrjN_ST_Update_Proj_Targets_2237Library.cpp" t="Include" />
+                <e p="PrjN_ST_Update_Proj_Targets_2237Library.hpp" t="Include" />
+                <e p="PrjN_ST_Update_Proj_Targets_2237Library.meta.cpp" t="Include" />
+              </e>
+              <e p="config" t="Include">
+                <e p="Component1" t="Include">
+                  <e p="Component1.compmeta" t="Include" />
+                  <e p="CppProgram11" t="Include">
+                    <e p="CppProgram11.progmeta" t="Include" />
+                  </e>
+                </e>
+                <e p="RNS_ST_Update_Proj_Targets_2237.libmeta" t="Include" />
+                <e p="RNS_ST_Update_Proj_Targets_2237.typemeta" t="Include" />
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="Component1.cpp" t="Include" />
+              <e p="Component1.hpp" t="Include" />
+              <e p="CppProgram11.cpp" t="Include" />
+              <e p="CppProgram11.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="plcncli_linux_x64_98_0_0.zip" t="Include" />
+          <e p="PortNameError" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="PortNameErrorComponent.cpp" t="Include" />
+              <e p="PortNameErrorComponent.hpp" t="Include" />
+              <e p="PortNameErrorProgram.cpp" t="Include" />
+              <e p="PortNameErrorProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="PortNameTooLong" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="src" t="Include">
+              <e p="PortNameTooLongComponent.cpp" t="Include" />
+              <e p="PortNameTooLongComponent.hpp" t="Include" />
+              <e p="PortNameTooLongProgram.cpp" t="Include" />
+              <e p="PortNameTooLongProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="PortNameTooShort" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="src" t="Include">
+              <e p="PortNameTooShortComponent.cpp" t="Include" />
+              <e p="PortNameTooShortComponent.hpp" t="Include" />
+              <e p="PortNameTooShortProgram.cpp" t="Include" />
+              <e p="PortNameTooShortProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ProgramsWithCorrectComments" t="Include">
+            <e p="MyComponent.cpp" t="Include" />
+            <e p="MyComponent.hpp" t="Include" />
+            <e p="MyProgram.cpp" t="Include" />
+            <e p="MyProgram.hpp" t="Include" />
+            <e p="MyProgram2.cpp" t="Include" />
+            <e p="MyProgram2.hpp" t="Include" />
+            <e p="MyProgram3.cpp" t="Include" />
+            <e p="MyProgram3.hpp" t="Include" />
+          </e>
+          <e p="ProgramWithAmbiguousComment" t="Include">
+            <e p="MyComponent.cpp" t="Include" />
+            <e p="MyComponent.hpp" t="Include" />
+            <e p="MyProgram.cpp" t="Include" />
+            <e p="MyProgram.hpp" t="Include" />
+            <e p="ns3" t="Include">
+              <e p="MyComponent.cpp" t="Include" />
+              <e p="MyComponent.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ProgramWithArrayInitializedPort" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ProgramWithDifferentPorts" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ProgramWithHiddenStructPortProgram" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="ProgramWithHiddenStructPortProgramComponent.cpp" t="Include" />
+              <e p="ProgramWithHiddenStructPortProgramComponent.hpp" t="Include" />
+              <e p="ProgramWithHiddenStructPortProgramProgram.cpp" t="Include" />
+              <e p="ProgramWithHiddenStructPortProgramProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ProgramWithNestedAndStructInStruct" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ProgramWithOneAttributedStructPort" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ProgramWithOneStructPort" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ProgramWithWrongComment" t="Include">
+            <e p="OtherProgram.cpp" t="Include" />
+            <e p="OtherProgram.hpp" t="Include" />
+          </e>
+          <e p="ProgramWithWrongPortAttributes" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="ProjectWithComponent" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="ProjectWithComponent" t="Include">
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+                <e p="OtherComponent.cpp" t="Include" />
+                <e p="OtherComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="PseudoAmbiguousComponents" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComp.cpp" t="Include" />
+              <e p="MyComp.hpp" t="Include" />
+              <e p="MyComponent.cpp" t="Include" />
+              <e p="MyComponent.hpp" t="Include" />
+              <e p="PseudoAmbiguousComponentsProgram.cpp" t="Include" />
+              <e p="PseudoAmbiguousComponentsProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="Standard" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="Standard" t="Include">
+                <e p="MyComponent" t="Include">
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="StandardAcfProject" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="src" t="Include">
+              <e p="StandardAcfProjectComponent.cpp" t="Include" />
+              <e p="StandardAcfProjectComponent.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="StandardFileNames.xml" t="Include" />
+          <e p="StandardNew" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="StandardComponent.cpp" t="Include" />
+              <e p="StandardComponent.hpp" t="Include" />
+              <e p="StandardNewProgram.cpp" t="Include" />
+              <e p="StandardNewProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="StandardPublicCliRepositoryKey.xml" t="Include" />
+          <e p="StandardSdkProperties.xml" t="Include" />
+          <e p="StandardSettings.xml" t="Include" />
+          <e p="StandardWithBuildArtifacts" t="Include">
+            <e p="intermediate" t="Include">
+              <e p="Build" t="Include">
+                <e p="MyComponentImpl.o" t="Include" />
+                <e p="MyProgramImpl.o" t="Include" />
+                <e p="StandardWithBuildArtifacts.so" t="Include" />
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="StandardWithMetadata" t="Include">
+            <e p="intermediate" t="Include">
+              <e p="config" t="Include">
+                <e p="StandardWithMetadata.typemeta" t="Include" />
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponentImpl.cpp" t="Include" />
+              <e p="MyComponentImpl.hpp" t="Include" />
+              <e p="MyProgramImpl.cpp" t="Include" />
+              <e p="MyProgramImpl.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="StandardWithMissingTarget" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="Standard" t="Include">
+                <e p="MyComponent" t="Include">
+                  <e p="MyProgram.cpp" t="Include" />
+                  <e p="MyProgram.hpp" t="Include" />
+                </e>
+                <e p="MyComponent.cpp" t="Include" />
+                <e p="MyComponent.hpp" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="StandardWithMissingTarget2" t="Include">
+            <e p="plcnext.proj" t="Include" />
+          </e>
+          <e p="StandardWithMissingTarget3" t="Include">
+            <e p="plcnext.proj" t="Include" />
+          </e>
+          <e p="Templates" t="Include">
+            <e p="AcfComponentTemplate" t="Include" />
+            <e p="AcfProjectTemplate" t="Include" />
+            <e p="BaseComponentTemplate" t="Include" />
+            <e p="BaseProjectTemplate" t="Include" />
+            <e p="BaseTemplates" t="Include" />
+            <e p="ComponentTemplate" t="Include" />
+            <e p="ProgramTemplate" t="Include" />
+            <e p="ProjectTemplate" t="Include" />
+          </e>
+          <e p="TestResults" t="Include">
+            <e p="DemoLibraryCommandArgs.txt" t="Include" />
+            <e p="DemoLibraryCommandArgsWithSpecificId.txt" t="Include" />
+            <e p="DemoLibraryDifferentPathsCommandArgs.txt" t="Include" />
+            <e p="DemoLibraryWithExternalLibs.txt" t="Include" />
+            <e p="DemoLibraryWithExternalLibsMultibinary.txt" t="Include" />
+            <e p="DemoWithMultibinaryLibraryCommandArgs.txt" t="Include" />
+            <e p="EnumTestLibrary.meta.cpp" t="Include" />
+            <e p="EsmLibrary.meta.cpp" t="Include" />
+            <e p="ExternalLibraryTest.meta.cpp" t="Include" />
+            <e p="GetAllSettingsReply.json" t="Include" />
+            <e p="GetCompilerSpecsPartialErrorReply.json" t="Include" />
+            <e p="GetCompilerSpecsReply.json" t="Include" />
+            <e p="GetComponentsReply.json" t="Include" />
+            <e p="GetIncludePathsPartialErrorReply.json" t="Include" />
+            <e p="GetIncludePathsReply.json" t="Include" />
+            <e p="GetProgramsReply.json" t="Include" />
+            <e p="GetProjectInformationAcfProjectReply.json" t="Include" />
+            <e p="GetProjectInformationAlmostAmbiguousReply.json" t="Include" />
+            <e p="GetProjectInformationMissingTargetReply.json" t="Include" />
+            <e p="GetProjectInformationMultipleSourcesReply.json" t="Include" />
+            <e p="GetProjectInformationStandardReply.json" t="Include" />
+            <e p="GetProjectTargetsReply.json" t="Include" />
+            <e p="GetSdksPartialErrorReply.json" t="Include" />
+            <e p="GetSdksReply.json" t="Include" />
+            <e p="GetSingleSettingReply.json" t="Include" />
+            <e p="GetTargetsReply.json" t="Include" />
+            <e p="HiddenPlm.meta.cpp" t="Include" />
+            <e p="PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt" t="Include" />
+          </e>
+          <e p="TooManyGeneratedFiles" t="Include">
+            <e p="CMakeLists.txt" t="Include" />
+            <e p="intermediate" t="Include">
+              <e p="code" t="Include">
+                <e p="AccessComponent._meta.cpp" t="Include" />
+                <e p="AccessComponentProgramProvider.cpp" t="Include" />
+                <e p="AccessComponentProgramProvider.hpp" t="Include" />
+                <e p="TooManyGeneratedFilesComponent._meta.cpp" t="Include" />
+                <e p="TooManyGeneratedFilesComponentProgramProvider.cpp" t="Include" />
+                <e p="TooManyGeneratedFilesComponentProgramProvider.hpp" t="Include" />
+                <e p="TooManyGeneratedFilesLibrary._meta.cpp" t="Include" />
+                <e p="TooManyGeneratedFilesLibrary.cpp" t="Include" />
+                <e p="TooManyGeneratedFilesLibrary.hpp" t="Include" />
+              </e>
+            </e>
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="TooManyGeneratedFilesComponent.cpp" t="Include" />
+              <e p="TooManyGeneratedFilesComponent.hpp" t="Include" />
+              <e p="TooManyGeneratedFilesProgram.cpp" t="Include" />
+              <e p="TooManyGeneratedFilesProgram.hpp" t="Include" />
+            </e>
+          </e>
+          <e p="TwoComponentsAndPrograms" t="Include">
+            <e p="plcnext.proj" t="Include" />
+            <e p="src" t="Include">
+              <e p="MyComponent.cpp" t="Include" />
+              <e p="MyComponent.hpp" t="Include" />
+              <e p="MyOtherComponent.cpp" t="Include" />
+              <e p="MyOtherComponent.hpp" t="Include" />
+              <e p="MyOtherProgram.cpp" t="Include" />
+              <e p="MyOtherProgram.hpp" t="Include" />
+              <e p="MyProgram.cpp" t="Include" />
+              <e p="MyProgram.hpp" t="Include" />
+              <e p="MyProgram2.cpp" t="Include" />
+              <e p="MyProgram2.hpp" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="DynamicProxyGenAssembly2.dll" t="Include" />
+        <e p="NamedPipe" t="Include">
+          <e p="NamedPipeServerProtocolSplitMessagesTest.cs" t="Include" />
+          <e p="NamedPipeServerProtocolTest.cs" t="Include" />
+          <e p="SystemTests" t="Include">
+            <e p="Features" t="Include">
+              <e p="Client_To_Server_Feature.cs" t="Include" />
+              <e p="Progress_Feature.cs" t="Include" />
+              <e p="Server_To_Client_Feature.cs" t="Include" />
+              <e p="Totally_Integrated_Cancel_Feature.cs" t="Include" />
+              <e p="Totally_Integrated_Get_Feature.cs" t="Include" />
+              <e p="Totally_Integrated_Update_Feature.cs" t="Include" />
+            </e>
+            <e p="StepDefinitions" t="Include">
+              <e p="CommandLineIntegrationTestBase.cs" t="Include" />
+              <e p="CommandLineIntegrationTestBase.Given.cs" t="Include" />
+              <e p="CommandLineIntegrationTestBase.Then.cs" t="Include" />
+              <e p="CommandLineIntegrationTestBase.When.cs" t="Include" />
+              <e p="SystemTestBase.cs" t="Include" />
+              <e p="SystemTestBase.Given.cs" t="Include" />
+              <e p="SystemTestBase.Then.cs" t="Include" />
+              <e p="SystemTestBase.When.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Tools" t="Include">
+            <e p="CommandLineIntegrationContext.cs" t="Include" />
+            <e p="IClientSimulator.cs" t="Include" />
+            <e p="LogTracer.cs" t="Include" />
+            <e p="NamedPipeCommunicationProtocolSimulator.cs" t="Include" />
+            <e p="NamedPipeServerProtocolExtensions.cs" t="Include" />
+            <e p="RandomTools.cs" t="Include" />
+            <e p="StreamExtensions.cs" t="Include" />
+            <e p="SystemTestContext.cs" t="Include" />
+            <e p="WaitingProcessManager.cs" t="Include" />
+          </e>
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.0" t="Include">
+              <e p="Test.PlcNext.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="ScenarioExtensions.cs" t="Include" />
+        <e p="SystemTests" t="Include">
+          <e p="Features" t="Include">
+            <e p="Build_Feature.cs" t="Include" />
+            <e p="Component_Creation_Feature.cs" t="Include" />
+            <e p="Deploy_Feature.cs" t="Include" />
+            <e p="Generate_Feature.cs" t="Include" />
+            <e p="Generate_Library_Feature.cs" t="Include" />
+            <e p="Install_SDK_Feature.cs" t="Include" />
+            <e p="LoadProject_Feature.cs" t="Include" />
+            <e p="Program_Creation_Feature.cs" t="Include" />
+            <e p="Project_Creation_Feature.cs" t="Include" />
+            <e p="Set_Targets_Feature.cs" t="Include" />
+            <e p="Settings_Feature.cs" t="Include" />
+            <e p="Transaction_Feature.cs" t="Include" />
+            <e p="Update_Feature.cs" t="Include" />
+            <e p="Update_Targets_Feature.cs" t="Include" />
+          </e>
+          <e p="StepDefinitions" t="Include">
+            <e p="MockedSystemTestBase.cs" t="Include" />
+            <e p="SystemTestBase.cs" t="Include" />
+            <e p="SystemTestBase.Given.cs" t="Include" />
+            <e p="SystemTestBase.Then.cs" t="Include" />
+            <e p="SystemTestBase.When.cs" t="Include" />
+          </e>
+          <e p="Tools" t="Include">
+            <e p="DiModule.cs" t="Include" />
+            <e p="InstanceRegistrationSource.cs" t="Include" />
+            <e p="Progress.cs" t="Include" />
+            <e p="SystemTestContext.cs" t="Include" />
+            <e p="VerboseCommandLineParser.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Test.PlcNext.csproj" t="IncludeRecursive" />
+        <e p="Tools" t="Include">
+          <e p="Abstractions" t="Include">
+            <e p="IAbstraction.cs" t="Include" />
+            <e p="ICMakeConversationAbstraction.cs" t="Include" />
+            <e p="IDownloadServiceAbstraction.cs" t="Include" />
+            <e p="IEnvironmentServiceAbstraction.cs" t="Include" />
+            <e p="IExceptionHandlerAbstraction.cs" t="Include" />
+            <e p="IFileSystemAbstraction.cs" t="Include" />
+            <e p="IGuidFactoryAbstraction.cs" t="Include" />
+            <e p="IProcessManagerAbstraction.cs" t="Include" />
+            <e p="IUserInterfaceAbstraction.cs" t="Include" />
+            <e p="Mocked" t="Include">
+              <e p="MockedCMakeConversationAbstraction.cs" t="Include" />
+              <e p="MockedDownloadServiceAbstraction.cs" t="Include" />
+              <e p="MockedEnvironmentServiceAbstraction.cs" t="Include" />
+              <e p="MockedExceptionHandlerAbstraction.cs" t="Include" />
+              <e p="MockedFileSystemAbstraction.cs" t="Include" />
+              <e p="MockedGuidAbstraction.cs" t="Include" />
+              <e p="MockedProcessManagerAbstraction.cs" t="Include" />
+              <e p="MockedUserInterfaceAbstraction.cs" t="Include" />
+            </e>
+          </e>
+          <e p="CompmetaData.cs" t="Include" />
+          <e p="ErrorInformation.cs" t="Include" />
+          <e p="LibraryCommandArgs.cs" t="Include" />
+          <e p="ProgmetaData.cs" t="Include" />
+          <e p="ProjectMetaFileChecker.cs" t="Include" />
+          <e p="ReflectionExtensions.cs" t="Include" />
+          <e p="TypemetaStructure.cs" t="Include" />
+        </e>
+      </e>
+    </e>
+    <e p="C:\Users\9QJ6PC\.nuget\packages\microsoft.net.test.sdk\16.0.1\Build\netcoreapp1.0" t="Include">
+      <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
+    </e>
+    <e p="C:\Users\9QJ6PC\.nuget\packages\xunit.runner.visualstudio\2.4.1\Build\netcoreapp1.0\xunit.runner.reporters.netcoreapp10.dll" t="Include" />
+    <e p="C:\Users\9QJ6PC\.nuget\packages\xunit.runner.visualstudio\2.4.1\Build\netcoreapp1.0\xunit.runner.utility.netcoreapp10.dll" t="Include" />
+    <e p="C:\Users\9QJ6PC\.nuget\packages\xunit.runner.visualstudio\2.4.1\Build\netcoreapp1.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
+    <e p="C:\Users\9QJ6PC\.nuget\packages\xunitxml.testlogger\2.1.26\Build\_common\Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestAdapter.dll" t="Include" />
+    <e p="C:\Users\9QJ6PC\.nuget\packages\xunitxml.testlogger\2.1.26\Build\_common\Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger.dll" t="Include" />
+    <e p="C:\Users\9QJ6PC\.Rider2019.1\config\scratches" t="IncludeRecursive" />
+    <e p="C:\Users\9QJ6PC\.Rider2019.1\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\9QJ6PC\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_PlcNextCli.1522638432.00" t="ExcludeRecursive" />
+  </component>
+</project>

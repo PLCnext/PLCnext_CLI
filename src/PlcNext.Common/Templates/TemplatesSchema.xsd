@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This schema file describes the structure of the root templates file. -->
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/clitemplates"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	id="templates" targetNamespace="http://www.phoenixcontact.com/schema/clitemplates"
+	version="1.0">
+
+  <xs:include schemaLocation="TemplateBaseSchema.xsd"/>
+
+  <xs:element name="Templates">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+          Root element for the template root file.
+          It contains references to all template files, which sould be loaded.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Include" type="include">
+          <xs:annotation>
+            <xs:documentation>
+              The path to the template file.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="include">
+    <xs:simpleContent>
+      <xs:extension base="filePath">
+        <xs:attribute name="type" type="includeType" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:simpleType name="includeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Template"/>
+      <xs:enumeration value="Fields"/>
+      <xs:enumeration value="Format"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

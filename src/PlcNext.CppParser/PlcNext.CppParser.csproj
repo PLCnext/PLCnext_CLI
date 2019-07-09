@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName Condition="'$(PlcNextToolName)' != ''">$(PlcNextToolName).CppParser</AssemblyName>
+    <Antlr4UseCSharpGenerator>True</Antlr4UseCSharpGenerator>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Antlr4 Include="**/*.g4">
+      <Listener>false</Listener>
+    </Antlr4>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PlcNext.Common\PlcNext.Common.csproj" />
+  </ItemGroup>
+
+</Project>

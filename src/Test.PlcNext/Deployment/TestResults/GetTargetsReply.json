@@ -1,0 +1,35 @@
+{
+  "command": "get targets",
+  "parsedCommand": {
+    "command": "get targets",
+    "arguments": {
+      "short": "False",
+      "verbose": "False"
+    }
+  },
+  "inReplyTo": "command",
+  "reply": {
+    "targets": [
+      {
+        "name": "AXCF2152",
+        "version": "1.0.0.12345",
+        "longVersion": "1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)",
+        "shortVersion": "1.0.0"
+      },
+      {
+        "name": "AXCF2152",
+        "version": "2.0.0.12345",
+        "longVersion": "2.0 LTS (2.0.0.12345 branches/release/2.0.0/ beta)",
+        "shortVersion": "2.0.0"
+      },
+      {
+        "name": "AXCF2152",
+        "version": "19.0.0.12345",
+        "longVersion": "19.0 LTS (19.0.0.12345 branches/release/19.0.0/ beta)",
+        "shortVersion": "19.0.0"
+      }
+    ]
+  },
+  "success": true,
+  "type": "reply"
+}
