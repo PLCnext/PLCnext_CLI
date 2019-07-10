@@ -1,0 +1,27 @@
+﻿{
+  "command": "get project-information",
+  "parsedCommand": {
+    "command": "get project-information",
+    "arguments": {
+      "path": "",
+      "sources": "",
+      "verbose": "False"
+    }
+  },
+  "inReplyTo": "command",
+  "reply": {
+    "namespace": "AppProject",
+    "type": "appproject",
+    "targets": [],
+    "entities": [
+      {
+        "name": "AppProjectComponent",
+        "namespace": "AppProject",
+        "type": "appcomponent",
+        "relatedEntity": []
+      }
+    ]
+  },
+  "success": true,
+  "type": "reply"
+}

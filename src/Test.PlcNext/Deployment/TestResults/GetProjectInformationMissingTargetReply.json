@@ -1,15 +1,18 @@
 {
-  "command": "get project-targets",
+  "command": "get project-information",
   "parsedCommand": {
-    "command": "get project-targets",
+    "command": "get project-information",
     "arguments": {
       "path": "",
-      "short": "False",
+      "sources": "",
       "verbose": "False"
     }
   },
   "inReplyTo": "command",
   "reply": {
+    "name": "StandardWithMissingTarget",
+    "namespace": "Standard",
+    "type": "project",
     "targets": [
       {
         "name": "AXCF2152",
@@ -24,6 +27,24 @@
         "longVersion": "1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)",
         "shortVersion": "1.0.0",
         "available": false
+      }
+    ],
+    "entities": [
+      {
+        "name": "MyComponent",
+        "namespace": "Standard",
+        "type": "component",
+        "relatedEntity": [
+          "MyProgram"
+        ]
+      },
+      {
+        "name": "MyProgram",
+        "namespace": "Standard::MyComponent",
+        "type": "program",
+        "relatedEntity": [
+          "MyComponent"
+        ]
       }
     ]
   },

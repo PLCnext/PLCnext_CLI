@@ -1,0 +1,46 @@
+﻿{
+  "command": "get project-information",
+  "parsedCommand": {
+    "command": "get project-information",
+    "arguments": {
+      "path": "",
+      "sources": "",
+      "verbose": "False"
+    }
+  },
+  "inReplyTo": "command",
+  "reply": {
+    "name": "Standard",
+    "namespace": "Standard",
+    "type": "project",
+    "targets": [
+      {
+        "name": "AXCF2152",
+        "version": "1.0.0.12345",
+        "longVersion": "1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)",
+        "shortVersion": "1.0.0",
+        "available": true
+      }
+    ],
+    "entities": [
+      {
+        "name": "MyComponent",
+        "namespace": "Standard",
+        "type": "component",
+        "relatedEntity": [
+          "MyProgram"
+        ]
+      },
+      {
+        "name": "MyProgram",
+        "namespace": "Standard::MyComponent",
+        "type": "program",
+        "relatedEntity": [
+          "MyComponent"
+        ]
+      }
+    ]
+  },
+  "success": true,
+  "type": "reply"
+}

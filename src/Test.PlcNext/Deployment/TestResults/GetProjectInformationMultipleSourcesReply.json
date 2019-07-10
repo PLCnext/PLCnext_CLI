@@ -1,0 +1,45 @@
+{
+  "type": "reply",
+  "inReplyTo": "command",
+  "command": "get project-information -s extern,src",
+  "parsedCommand": {
+    "command": "get project-information",
+    "arguments": {
+      "path": "",
+      "sources": "extern,src",
+      "verbose": "False"
+    }
+  },
+  "reply": {
+    "name": "ComponentsInMultipleNamespaces",
+    "namespace": "ComponentsInMultipleNamespaces",
+    "type": "project",
+    "targets":  [],
+    "entities": [
+      {
+        "name": "MultipleNamespacesComponent",
+        "namespace": "ComponentsInMultipleNamespaces",
+        "type": "component",
+        "relatedEntity": [
+        ]
+      },
+      {
+        "name": "ComponentsInMultipleNamespacesComponent",
+        "namespace": "ComponentsInMultipleNamespaces",
+        "type": "component",
+        "relatedEntity": [
+          "ComponentsInMultipleNamespacesProgram"
+        ]
+      },
+      {
+        "name": "ComponentsInMultipleNamespacesProgram",
+        "namespace": "ComponentsInMultipleNamespaces",
+        "type": "program",
+        "relatedEntity": [
+          "ComponentsInMultipleNamespacesComponent"
+        ]
+      }
+    ]
+  },
+  "success": true
+}

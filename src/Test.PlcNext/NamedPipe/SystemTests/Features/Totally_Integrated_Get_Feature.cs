@@ -38,21 +38,20 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
         {
             private readonly List<object[]> data = new List<object[]>
             {
-                new object[] {"components -s extern,src", "ComponentsInMultipleSources", "GetComponentsReply.json"},
-                new object[] {"programs", "AlmostAmbiguous", "GetProgramsReply.json"},
                 new object[] {"include-paths", "Standard", "GetIncludePathsReply.json"},
                 new object[] {"include-paths", "StandardWithMissingTarget", "GetIncludePathsPartialErrorReply.json"},
                 new object[] {"sdks", "Standard", "GetSdksReply.json"},
-                new object[] {"project-name", "Standard", "GetNameReply.json"},
                 new object[] {"project-sdks", "StandardWithMissingTarget", "GetSdksPartialErrorReply.json"},
                 new object[] {"targets", "Standard", "GetTargetsReply.json"},
-                new object[] {"project-targets", "StandardWithMissingTarget", "GetProjectTargetsReply.json"},
                 new object[] {"compiler-specifications", "Standard", "GetCompilerSpecsReply.json"},
                 new object[] {"compiler-specifications", "StandardWithMissingTarget", "GetCompilerSpecsPartialErrorReply.json"},
                 new object[] {"setting AttributePrefix", "Standard", "GetSingleSettingReply.json"},
                 new object[] {"setting -a", "Standard", "GetAllSettingsReply.json"},
-                new object[] {"project-namespace", "Standard", "GetNamespaceReply.json"},
-                new object[] {"appcomponents", "StandardAppProject", "GetAppcomponentsReply.json"},
+                new object[] {"project-information", "Standard", "GetProjectInformationStandardReply.json"},
+                new object[] {"project-information", "AppProject", "GetProjectInformationAppProjectReply.json"},
+                new object[] {"project-information", "StandardWithMissingTarget", "GetProjectInformationMissingTargetReply.json"},
+                new object[] {"project-information -s extern,src", "ComponentsInMultipleSources", "GetProjectInformationMultipleSourcesReply.json"},
+                new object[] {"project-information", "AlmostAmbiguous", "GetProjectInformationAlmostAmbiguousReply.json"},
             };
 
             public IEnumerator<object[]> GetEnumerator() => data.GetEnumerator();

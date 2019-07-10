@@ -69,38 +69,21 @@ namespace PlcNext.Common.Commands
                                                         t.ShortVersion,
                                                         availableTargets.Any(at => t.Name == at.Name && at.LongVersion == t.LongVersion)));
             exceptions = targetsResult.Errors;
-            
-            
-            IEnumerable<Entity> components = template.EntityHierarchy.Where(e => e.Type.Equals("component", StringComparison.OrdinalIgnoreCase)
-                                                                              || e.Type.Equals("appcomponent", StringComparison.OrdinalIgnoreCase))
-                                                    .ToArray();
-            IEnumerable<ComponentResult> componentResult = components.Select(c =>
+
+            IEnumerable<CodeEntity> entities = template.EntityHierarchy.Select(e =>
             {
-                CodeEntity codeEntity = CodeEntity.Decorate(c);
-                return new ComponentResult(c.Name,
-                                           string.IsNullOrEmpty(codeEntity.Namespace)
-                                               ? string.Empty
-                                               : codeEntity.Namespace);
-            });
+                CodeEntity codeEntity = CodeEntity.Decorate(e);
+                return codeEntity;
+            }
+            );
 
-            IEnumerable<Entity> programs = template.EntityHierarchy.Where(e => e.Type.Equals("program", StringComparison.OrdinalIgnoreCase))
-                                                  .ToArray();
-            IEnumerable<ProgramResult> programsResult = programs.Select(p =>
+            IEnumerable<EntityResult> entitiesResult = entities.Select(e =>
             {
-                CodeEntity codeEntity = CodeEntity.Decorate(p);
-                TemplateEntity templateEntity = TemplateEntity.Decorate(p);
-                Entity componentEntity = templateEntity.RelatedEntites.FirstOrDefault(e => e.Type == "component");
-                if (componentEntity == null)
-                {
-                    throw new InvalidOperationException($"Program {p.Name} has no related component. This should not be possible.");
-                }
+                TemplateEntity te = TemplateEntity.Decorate(e);
+                return new EntityResult(e.Name, e.Namespace, e.Type, te.RelatedEntites.Where(en => !en.Type.Contains("project")).Select(en => en.Name));
+            }).Where(e => !e.Type.Contains("project"));
 
-                CodeEntity componentCodeEntity = CodeEntity.Decorate(componentEntity);
-                return new ProgramResult(p.Name, codeEntity.Namespace, componentEntity.Name,
-                                         componentCodeEntity.Namespace);
-            });
-
-            return new CommandResult(0, new ProjectInformationCommandResult(name, ns, type, commandResult, componentResult, programsResult), exceptions);
+            return new CommandResult(0, new ProjectInformationCommandResult(name, ns, type, commandResult, entitiesResult), exceptions);
         }
     }
 }

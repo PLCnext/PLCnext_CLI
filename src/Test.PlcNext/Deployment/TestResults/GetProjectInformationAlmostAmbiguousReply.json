@@ -1,0 +1,54 @@
+{
+  "type": "reply",
+  "inReplyTo": "command",
+  "command": "get project-information",
+  "parsedCommand": {
+    "command": "get project-information",
+    "arguments": {
+      "path": "",
+      "sources": "",
+      "verbose": "False"
+    }
+  },
+  "reply": {
+    "name": "AlmostAmbiguous",
+    "namespace": "AlmostAmbiguous",
+    "type": "project",
+    "targets": [],
+    "entities": [
+      {
+        "name": "AlmostAmbiguousComp",
+        "namespace": "AlmostAmbiguous",
+        "type": "component",
+        "relatedEntity": [
+          "OtherProgram"
+        ]
+      },
+      {
+        "name": "OtherProgram",
+        "namespace": "AlmostAmbiguous",
+        "type": "program",
+        "relatedEntity": [
+          "AlmostAmbiguousComp"
+        ]
+      },
+      {
+        "name": "AlmostAmbiguousComponent",
+        "namespace": "AlmostAmbiguous",
+        "type": "component",
+        "relatedEntity": [
+          "AlmostAmbiguousProgram"
+        ]
+      },
+      {
+        "name": "AlmostAmbiguousProgram",
+        "namespace": "AlmostAmbiguous",
+        "type": "program",
+        "relatedEntity": [
+          "AlmostAmbiguousComponent"
+        ]
+      }
+    ]
+  },
+  "success": true
+}
