@@ -44,19 +44,19 @@ namespace Test.PlcNext.NamedPipe
         }
 
         [Fact]
-        public void SendMaxLengthMessageAsSingleMessage()
+        public async Task SendMaxLengthMessageAsSingleMessage()
         {
             protocol.SendMessage(GenerateMaxLengthMessage());
 
-            Assert.False(simulator.LastMessageWasSplit(), "Max length message was split.");
+            Assert.False(await simulator.LastMessageWasSplit(), "Max length message was split.");
         }
 
         [Fact]
-        public void SendSplitMessage()
+        public async Task SendSplitMessage()
         {
             protocol.SendMessage(GenerateSplitLengthMessage());
 
-            Assert.True(simulator.LastMessageWasSplit(), "Max length message was split.");
+            Assert.True(await simulator.LastMessageWasSplit(), "Max length message was split.");
         }
 
         [Fact]

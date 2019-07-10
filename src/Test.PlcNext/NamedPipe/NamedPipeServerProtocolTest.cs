@@ -47,16 +47,16 @@ namespace Test.PlcNext.NamedPipe
             protocol.Start();
         }
 
-        [Fact]
-        public void SendMessageIsReceivedByTheClient()
+        [Fact(Timeout = 10000)]
+        public async Task SendMessageIsReceivedByTheClient()
         {
             protocol.SendMessage(DefaultMessage);
-            string receivedMessage = simulator.ReadMessage();
+            string receivedMessage = await simulator.ReadMessage();
 
             Assert.Equal(DefaultMessage, receivedMessage);
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
         public async Task ReceiveMessagesFromClient()
         {
             await simulator.WriteMessage(DefaultMessage);
@@ -64,42 +64,42 @@ namespace Test.PlcNext.NamedPipe
             Assert.Equal(DefaultMessage, GetLatestServerMessage());
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
         public async Task ConfirmMessageFromClient()
         {
             await simulator.WriteMessage(DefaultMessage);
 
-            Assert.Equal(NamedPipeCommunicationProtocol.SuccessConfirmationFlag, simulator.GetLastConfirmationFlag());
+            Assert.Equal(NamedPipeCommunicationProtocol.SuccessConfirmationFlag, await simulator.GetLastConfirmationFlag());
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
         public async Task ErrorConfirmationOnCorruptedMessage()
         {
             byte[] header = GenerateCorruptedHeader(DefaultMessage);
             await simulator.WriteMessage(DefaultMessage, header);
 
-            Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, simulator.GetLastConfirmationFlag());
+            Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, await simulator.GetLastConfirmationFlag());
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
         public async Task ErrorConfirmationOnMissingMessageAfterHeader()
         {
             byte[] header = GenerateCorruptedHeader(DefaultMessage);
             await simulator.WriteMessage(string.Empty, header);
 
-            Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, simulator.GetLastConfirmationFlag());
+            Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, await simulator.GetLastConfirmationFlag());
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
         public async Task ErrorConfirmationOnMissingMessageAfterBufferSize()
         {
             byte[] header = GenerateCorruptedHeader(2*NamedPipeCommunicationProtocol.BufferSize);
             await simulator.WriteMessage(streamFactory.GenerateRandomStream(NamedPipeCommunicationProtocol.BufferSize), header);
 
-            Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, simulator.GetLastConfirmationFlag());
+            Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, await simulator.GetLastConfirmationFlag());
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
         public async Task ErrorConfirmationOnPartialMessageChunk()
         {
             byte[] header = GenerateCorruptedHeader(2 * NamedPipeCommunicationProtocol.BufferSize);
@@ -107,28 +107,28 @@ namespace Test.PlcNext.NamedPipe
                                                                         NamedPipeCommunicationProtocol.BufferSize / 2);
             await simulator.WriteMessage(generatedStream, header);
 
-            Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, simulator.GetLastConfirmationFlag());
+            Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, await simulator.GetLastConfirmationFlag());
         }
 
-        [Fact]
-        public void ServerResendsMessagesWithErrorConfirmationThreeTimes()
+        [Fact(Timeout = 10000)]
+        public async Task ServerResendsMessagesWithErrorConfirmationThreeTimes()
         {
             simulator.UseErrorConfirmation(NamedPipeCommunicationProtocol.MaxRetrySendingCount-1);
             protocol.SendMessage(DefaultMessage);
 
-            Assert.True(simulator.WaitForMessages(NamedPipeCommunicationProtocol.MaxRetrySendingCount, m => m == DefaultMessage), "Did not receive message three times.");
+            Assert.True(await simulator.WaitForMessages(NamedPipeCommunicationProtocol.MaxRetrySendingCount, m => m == DefaultMessage), "Did not receive message three times.");
         }
 
-        [Fact]
-        public void ServerResendsMessagesWithTimeoutThreeTimes()
+        [Fact(Timeout = 10000)]
+        public async Task ServerResendsMessagesWithTimeoutThreeTimes()
         {
             simulator.SkipConfirmation(NamedPipeCommunicationProtocol.MaxRetrySendingCount-1);
             protocol.SendMessage(DefaultMessage);
 
-            Assert.True(simulator.WaitForMessages(NamedPipeCommunicationProtocol.MaxRetrySendingCount, m => m == DefaultMessage), "Did not receive message three times.");
+            Assert.True(await simulator.WaitForMessages(NamedPipeCommunicationProtocol.MaxRetrySendingCount, m => m == DefaultMessage), "Did not receive message three times.");
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
         public void ServerDisconnectsAfterThreeFailedAttempts()
         {
             simulator.UseErrorConfirmation(NamedPipeCommunicationProtocol.MaxRetrySendingCount);
@@ -138,7 +138,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.True(serverError.WaitOne(100), "Server did not raise error event.");
         }
 
-        [Fact]
+        [Fact(Timeout = 10000)]
         public void ServerClosesAfterClientDisconnect()
         {
             simulator.Disconnect();

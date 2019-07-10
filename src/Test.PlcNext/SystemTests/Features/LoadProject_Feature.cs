@@ -30,7 +30,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ProgramsWithCorrectComments"),
                 _ => When_I_generate_all_metafiles(),
                 _ => Then_the_command_was_executed_without_error()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -40,7 +40,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ProgramWithAmbiguousComment"),
                 _ => When_I_generate_all_metafiles(),
                 _ => Then_the_user_was_informed_that_the_comment_is_ambiguous()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -50,7 +50,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ProgramWithWrongComment"),
                 _ => When_I_generate_all_metafiles(),
                 _ => Then_the_user_was_informed_that_the_comment_points_to_nonexisting_component()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
     }
 }

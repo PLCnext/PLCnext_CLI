@@ -7,10 +7,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 using PlcNext.Common.Tools.IO;
 using PlcNext.NamedPipeServer;
 using PlcNext.NamedPipeServer.Communication;
@@ -33,26 +35,56 @@ namespace Test.PlcNext.NamedPipe.Tools
             return Encoding.UTF8.GetString(stream.ReadToEnd());
         }
 
-        public static bool WaitOneWithAliveEvent(this EventWaitHandle waitHandle, int timeout,
-                                                 AutoResetEvent aliveEvent)
+        public static void Reset(this AsyncAutoResetEvent resetEvent)
         {
-            if (waitHandle.WaitOne(timeout))
+            try
+            {
+                resetEvent.Wait(new CancellationToken(true));
+            }
+            catch (Exception)
+            {
+                //do nothing only canceled exceptions
+            }
+        }
+
+        public static async Task<bool> WaitOneWithAliveEvent(this AsyncAutoResetEvent waitHandle, int timeout,
+                                                 AsyncAutoResetEvent aliveEvent)
+        {
+            if (await waitHandle.WaitOne(timeout))
             {
                 return true;
             }
-            while (aliveEvent.WaitOne(timeout))
+            while (await aliveEvent.WaitOne(timeout))
             {
-                if (waitHandle.WaitOne(0))
+                if (await waitHandle.WaitOne(0))
                 {
                     return true;
                 }
             }
-            if (waitHandle.WaitOne(timeout))
+            if (await waitHandle.WaitOne(timeout))
             {
                 return true;
             }
 
             return false;
+        }
+
+        public static async Task<bool> WaitOne(this AsyncAutoResetEvent resetEvent, int timeout)
+        {
+            using (CancellationTokenSource timeoutSource = new CancellationTokenSource())
+            {
+                Task waitTask = resetEvent.WaitAsync(timeoutSource.Token);
+                timeoutSource.CancelAfter(timeout);
+                try
+                {
+                    await waitTask;
+                }
+                catch (Exception)
+                {
+                    //do nothing only canceled exceptions
+                }
+                return !waitTask.IsCanceled;
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JetBrains.Annotations;
+using Nito.AsyncEx;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.IO;
 using PlcNext.Common.Tools.UI;
@@ -34,10 +35,10 @@ namespace Test.PlcNext.NamedPipe.Tools
         private readonly ConcurrentStack<Stream> messagesReceived = new ConcurrentStack<Stream>();
         private readonly ConcurrentStack<byte> confirmationFlags = new ConcurrentStack<byte>();
         
-        private readonly AutoResetEvent messageResetEvent = new AutoResetEvent(false);
-        private readonly AutoResetEvent messagePreResetEvent = new AutoResetEvent(false);
-        private readonly AutoResetEvent aliveEvent = new AutoResetEvent(false);
-        private readonly AutoResetEvent confirmResetEvent = new AutoResetEvent(false);
+        private readonly AsyncAutoResetEvent messageResetEvent = new AsyncAutoResetEvent(false);
+        private readonly AsyncAutoResetEvent messagePreResetEvent = new AsyncAutoResetEvent(false);
+        private readonly AsyncAutoResetEvent aliveEvent = new AsyncAutoResetEvent(false);
+        private readonly AsyncAutoResetEvent confirmResetEvent = new AsyncAutoResetEvent(false);
         private readonly ManualResetEvent closedEvent = new ManualResetEvent(false);
         
         public const int DefaultTimeout = 500;
@@ -73,9 +74,9 @@ namespace Test.PlcNext.NamedPipe.Tools
             }
         }
 
-        public Task WriteMessage(Stream data, byte[] header = null, int count = 1)
+        public async Task WriteMessage(Stream data, byte[] header = null, int count = 1)
         {
-            AutoResetEventAsync sendCompleted = new AutoResetEventAsync(false);
+            AsyncAutoResetEvent sendCompleted = new AsyncAutoResetEvent(false);
             using (FixedHeader(header))
             {
                 for (int i = 0; i < count; i++)
@@ -83,21 +84,26 @@ namespace Test.PlcNext.NamedPipe.Tools
                     SendMessage(data, () => sendCompleted.Set());
                 }
             }
-            
-            return sendCompleted.WaitAsync();
+
+            Assert.True(await sendCompleted.WaitOne(DefaultTimeout),
+                        $"Sending client message did not return after {DefaultTimeout}ms.");
+//            sendCompleted.WaitOne(DefaultTimeout)
+//                         .Should().BeTrue($"client message should have returned after {DefaultTimeout}ms.");
+//            return Task.CompletedTask;
         }
 
-        public void WaitForLastMessage(int timeout = DefaultTimeout)
+        public async Task WaitForLastMessage(int timeout = DefaultTimeout)
         {
             messageResetEvent.Reset();
-            while (messageResetEvent.WaitOneWithAliveEvent(timeout, aliveEvent))
+            while (await messageResetEvent.WaitOneWithAliveEvent(timeout, aliveEvent))
             {
                 //do nothing
             }
         }
 
         [AssertionMethod]
-        public string ReadMessage(bool checkTimeout = true, int timeout = DefaultTimeout)
+        public async Task<string> ReadMessage(bool checkTimeout = true,
+                                        int timeout = DefaultTimeout)
         {
             messageResetEvent.Reset();
             if (messagesReceived.TryPop(out Stream message))
@@ -106,7 +112,7 @@ namespace Test.PlcNext.NamedPipe.Tools
             }
 
             log.LogVerbose($"Client waiting for message with alive event - timeout: {timeout}.");
-            bool result = messageResetEvent.WaitOneWithAliveEvent(timeout, aliveEvent);
+            bool result = await messageResetEvent.WaitOneWithAliveEvent(timeout, aliveEvent);
             log.LogVerbose($"Waiting for message returned.");
             if (checkTimeout)
             {
@@ -138,7 +144,7 @@ namespace Test.PlcNext.NamedPipe.Tools
             errorConfirmationCount = count;
         }
 
-        public bool WaitForMessages(int messageCount, Func<string, bool> messageFilter = null)
+        public async Task<bool> WaitForMessages(int messageCount, Func<string, bool> messageFilter = null)
         {
             TimeSpan timeoutTimeSpan = new TimeSpan(0,0,0,0, DefaultTimeout * messageCount);
             DateTime start = DateTime.Now;
@@ -150,7 +156,7 @@ namespace Test.PlcNext.NamedPipe.Tools
                     return true;
                 }
 
-                if (!messageResetEvent.WaitOneWithAliveEvent(DefaultTimeout, aliveEvent))
+                if (!await messageResetEvent.WaitOneWithAliveEvent(DefaultTimeout, aliveEvent))
                 {
                     return false;
                 }
@@ -195,32 +201,26 @@ namespace Test.PlcNext.NamedPipe.Tools
             base.Disconnect();
         }
 
-        public bool LastMessageWasSplit()
+        public async Task<bool> LastMessageWasSplit()
         {
             messagePreResetEvent.Reset();
             if (messagesReceived.Count == 0)
             {
-                Assert.True(messagePreResetEvent.WaitOneWithAliveEvent(DefaultTimeout, aliveEvent),"Timeout while waiting for first message");
+                Assert.True(await messagePreResetEvent.WaitOneWithAliveEvent(DefaultTimeout, aliveEvent),"Timeout while waiting for first message");
             }
             return wasSplitMessage;
         }
 
-        public byte GetLastConfirmationFlag()
+        public async Task<byte> GetLastConfirmationFlag()
         {
             confirmResetEvent.Reset();
-            while (confirmResetEvent.WaitOneWithAliveEvent(DefaultTimeout, aliveEvent))
+            while (await confirmResetEvent.WaitOneWithAliveEvent(DefaultTimeout, aliveEvent))
             {
                 //do nothing wait for last confirmation flag
             }
 
             confirmationFlags.Count.Should().BeGreaterThan(0, "a confirmation was expected.");
             return confirmationFlags.TryPop(out byte confirmation) ? confirmation : (byte)0xAB;
-        }
-
-        protected override OutgoingMessage GenerateOutgoingMessage(Guid messageGuid, Stream messageCopy,
-                                                                   Action messageCompletedAction)
-        {
-            return new SimulatorOutgoingMessage(messageGuid,messageCopy, messageCompletedAction,this, log, serverStream, fixedHeader);
         }
 
         protected override IncomingMessageQueue CreateIncomingMessageQueue(OutgoingMessageQueue outgoingQueue)
@@ -288,7 +288,7 @@ namespace Test.PlcNext.NamedPipe.Tools
 
             public SimulatorOutgoingMessageQueue(ILog log, CancellationToken cancellationToken, PipeStream writeStream,
                                                  NamedPipeCommunicationProtocolSimulator simulator)
-                : base(log, cancellationToken, writeStream)
+                : base(log, cancellationToken, writeStream, simulator)
             {
                 this.log = log;
                 this.writeStream = writeStream;
@@ -298,6 +298,13 @@ namespace Test.PlcNext.NamedPipe.Tools
             protected override Confirmation CreateConfirmation(Guid messageId, bool success)
             {
                 return new SimulatorConfirmation(messageId, success, writeStream, log, simulator);
+            }
+
+            protected override OutgoingMessage GenerateOutgoingMessage(Guid messageGuid, Stream messageCopy,
+                                                                       Action messageCompletedAction)
+            {
+                return new SimulatorOutgoingMessage(messageGuid, messageCopy, messageCompletedAction, simulator, log,
+                                                    writeStream, simulator.fixedHeader);
             }
         }
         
@@ -427,11 +434,19 @@ namespace Test.PlcNext.NamedPipe.Tools
                     Log.LogInformation($"Send header only.{Environment.NewLine}" +
                                        $"{string.Join(", ", header.Select(b => b.ToString("X")))}");
                     await writeStream.WriteAsync(header, 0, header.Length, cancellationToken);
+                    Log.LogVerbose("Invoke message completed action.");
                     messageCompletedAction?.Invoke();
                     return;
                 }
                 
                 await base.SendMessageInChunks(cancellationToken);
+                Log.LogVerbose("Invoke message completed action.");
+                messageCompletedAction?.Invoke();
+            }
+
+            protected override void OnMessageCompleted()
+            {
+                //do nothing as it is done prior above
             }
         }
     }

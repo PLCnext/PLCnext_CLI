@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.Threading.Tasks;
 using Test.PlcNext.NamedPipe.Tools;
 
 namespace Test.PlcNext.NamedPipe.SystemTests.StepDefinitions
@@ -33,55 +34,55 @@ namespace Test.PlcNext.NamedPipe.SystemTests.StepDefinitions
             ScenarioContext.CheckServerDisconnected();
         }
 
-        protected void Then_the_command_was_canceled(params string[] command)
+        protected async Task Then_the_command_was_canceled(params string[] command)
         {
-            ScenarioContext.CheckCommandCanceled(command, true);
+            await ScenarioContext.CheckCommandCanceled(command, true);
         }
 
-        protected void Then_the_command_was_not_canceled(params string[] command)
+        protected async Task Then_the_command_was_not_canceled(params string[] command)
         {
-            ScenarioContext.CheckCommandCanceled(command, false);
+            await ScenarioContext.CheckCommandCanceled(command, false);
         }
 
-        protected void Then_the_client_received_a_command_reply_for_the_command_with_the_result(
+        protected async Task Then_the_client_received_a_command_reply_for_the_command_with_the_result(
             string command, bool result)
         {
-            ScenarioContext.CheckCommandReply(command,result);
+            await ScenarioContext.CheckCommandReply(command,result);
         }
 
-        protected void Then_the_client_did_not_receive_a_command_reply_for_the_command(string command)
+        protected async Task Then_the_client_did_not_receive_a_command_reply_for_the_command(string command)
         {
-            ScenarioContext.CheckNoCommandReply(command);
+            await ScenarioContext.CheckNoCommandReply(command);
         }
 
-        protected void Then_the_the_client_received_a_cancel_reply_for_the_command(string command)
+        protected async Task Then_the_the_client_received_a_cancel_reply_for_the_command(string command)
         {
-            ScenarioContext.CheckCancelReply(command);
+            await ScenarioContext.CheckCancelReply(command);
         }
 
-        protected void Then_the_the_client_received_a_successful_handshake_reply()
+        protected async Task Then_the_the_client_received_a_successful_handshake_reply()
         {
-            ScenarioContext.CheckHandshakeReply(true);
+            await ScenarioContext.CheckHandshakeReply(true);
         }
 
-        protected void Then_the_the_client_received_a_handshake_reply_once()
+        protected async Task Then_the_the_client_received_a_handshake_reply_once()
         {
-            ScenarioContext.CountHandshakeReplies(1);
+            await ScenarioContext.CountHandshakeReplies(1);
         }
 
-        protected void Then_the_the_client_received_an_unsuccessful_handshake_reply()
+        protected async Task Then_the_the_client_received_an_unsuccessful_handshake_reply()
         {
-            ScenarioContext.CheckHandshakeReply(false);
+            await ScenarioContext.CheckHandshakeReply(false);
         }
 
-        protected void Then_the_the_client_received_no_reply()
+        protected async Task Then_the_the_client_received_no_reply()
         {
-            ScenarioContext.CheckNoMessage();
+            await ScenarioContext.CheckNoMessage();
         }
 
-        protected void Then_the_client_received_a_message_with_the_content_CONTENT_and_type_TYPE_for_the_command(string content, string type, string command)
+        protected async Task Then_the_client_received_a_message_with_the_content_CONTENT_and_type_TYPE_for_the_command(string content, string type, string command)
         {
-            ScenarioContext.CheckMessageReceived(content, type, command);
+            await ScenarioContext.CheckMessageReceived(content, type, command);
         }
 
         protected void Then_the_client_received_at_least_COUNT_heartbeats(int count)
@@ -94,54 +95,54 @@ namespace Test.PlcNext.NamedPipe.SystemTests.StepDefinitions
             ScenarioContext.CheckHeartbeatMessages(count, false);
         }
 
-        protected void Then_the_last_reported_progress_is_PROGRESS_per_mille(int progress)
+        protected async Task Then_the_last_reported_progress_is_PROGRESS_per_mille(int progress)
         {
-            ScenarioContext.CheckLastReportedProgress(progress);
+            await ScenarioContext.CheckLastReportedProgress(progress);
         }
 
-        protected void Then_the_last_reported_progress_is_PROGRESS_per_mille_with_the_message(int progress, string message)
+        protected async Task Then_the_last_reported_progress_is_PROGRESS_per_mille_with_the_message(int progress, string message)
         {
-            ScenarioContext.CheckLastReportedProgress(progress, message);
+            await ScenarioContext.CheckLastReportedProgress(progress, message);
         }
 
-        protected void Then_the_last_reported_progress_has_the_message(string message)
+        protected async Task Then_the_last_reported_progress_has_the_message(string message)
         {
-            ScenarioContext.CheckLastReportedProgress(progressMessage: message);
+            await ScenarioContext.CheckLastReportedProgress(progressMessage: message);
         }
 
-        protected void Then_the_client_received_a_message_as_shown_in_the_file_within_TIMEOUT_s(string file, int timeout)
+        protected async Task Then_the_client_received_a_message_as_shown_in_the_file_within_TIMEOUT_s(string file, int timeout)
         {
-            ScenarioContext.CheckMessageIsSameAsFile(file, timeout*1000);
+            await ScenarioContext.CheckMessageIsSameAsFile(file, timeout*1000);
         }
 
-        protected void Then_the_client_received_a_setting_updated_message()
+        protected async Task Then_the_client_received_a_setting_updated_message()
         {
-            ScenarioContext.CheckUpdateMessage(UpdateMessageType.Setting);
+            await ScenarioContext.CheckUpdateMessage(UpdateMessageType.Setting);
         }
 
-        protected void Then_the_client_received_a_project_target_updated_message_for_the_project(string project)
+        protected async Task Then_the_client_received_a_project_target_updated_message_for_the_project(string project)
         {
-            ScenarioContext.CheckUpdateMessage(UpdateMessageType.ProjectSettings, project);
+            await ScenarioContext.CheckUpdateMessage(UpdateMessageType.ProjectSettings, project);
         }
 
-        protected void Then_the_client_received_a_sdks_updated_message()
+        protected async Task Then_the_client_received_a_sdks_updated_message()
         {
-            ScenarioContext.CheckUpdateMessage(UpdateMessageType.Sdk);
+            await ScenarioContext.CheckUpdateMessage(UpdateMessageType.Sdk);
         }
 
-        protected void Then_the_client_received_no_setting_updated_message()
+        protected async Task Then_the_client_received_no_setting_updated_message()
         {
-            ScenarioContext.CheckNoMessage();
+            await ScenarioContext.CheckNoMessage();
         }
 
-        protected void Then_the_client_received_no_project_target_updated_message_for_the_project(string project)
+        protected async Task Then_the_client_received_no_project_target_updated_message_for_the_project(string project)
         {
-            ScenarioContext.CheckNoMessage();
+            await ScenarioContext.CheckNoMessage();
         }
 
-        protected void Then_the_client_received_no_sdks_updated_message()
+        protected async Task Then_the_client_received_no_sdks_updated_message()
         {
-            ScenarioContext.CheckNoMessage();
+            await ScenarioContext.CheckNoMessage();
         }
 
         protected void Then_the_server_registered_a_disconnect()

@@ -9,6 +9,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
 using FluentAssertions;
@@ -94,9 +95,9 @@ namespace Test.PlcNext.NamedPipe.Tools
             CommandLineContext.Dispose();
         }
 
-        public void CheckCanceledInternally()
+        public async Task CheckCanceledInternally()
         {
-            ClientSimulator.WaitForLastMessage();
+            await ClientSimulator.WaitForLastMessage();
             processManager.CancellationToken.IsCancellationRequested.Should()
                           .BeTrue("cancellation should have been propagated but was not.");
         }

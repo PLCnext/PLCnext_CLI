@@ -32,7 +32,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_a_new_progress_with_the_maximum_is_started_for_the_command(13, "command", "--with", "args"),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille(0)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -43,7 +43,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_the_progress_is_started_and_reported_for_the_command(new Progress(1, 13), "command", "--with", "args"),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille(77)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -54,7 +54,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_a_new_progress_with_the_maximum_and_the_message_is_started_for_the_command(13, "Initial message", "command", "--with", "args"),
                 _ => Then_the_last_reported_progress_has_the_message("Initial message")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -66,7 +66,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_a_new_progress_with_the_maximum_and_the_message_is_started_for_the_command(13, "Initial message", "command", "--with", "args"),
                 _ => When_the_progress_is_reported_for_the_command(new Progress(1, 13, "In between message"), "command", "--with", "args"),
                 _ => Then_the_last_reported_progress_has_the_message("In between message")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -78,7 +78,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_the_progress_is_started_and_reported_for_the_command(new Progress(1, 13, "fooba"), "command", "--with", "args"),
                 _ => When_the_progress_is_incremented_by_AMOUNT_with_the_message(1,"Increment message"),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille_with_the_message(154, "Increment message")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -91,7 +91,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_the_progress_is_incremented_by_AMOUNT_with_the_message(1,"Increment message"),
                 _ => When_all_progresses_are_completed(),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille_with_the_message(1000, "Completed")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -102,7 +102,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_an_infinite_progress_with_the_message_is_started("Infinite message"),
                 _ => Then_the_client_received_a_message_with_the_content_CONTENT_and_type_TYPE_for_the_command("Infinite message","information","command --with args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -114,7 +114,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_the_progress_is_started_and_reported_for_the_command(new Progress(1, 13, "fooba"), "command", "--with", "args"),
                 _ => When_an_infinite_child_progress_with_the_message_is_started("Infinite message"),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille_with_the_message(77, "Infinite message")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -127,7 +127,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_an_infinite_child_progress_with_the_message_is_started("Infinite message"),
                 _ => When_all_child_progresses_are_completed(),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille(154)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -139,7 +139,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_the_progress_is_started_and_reported_for_the_command(new Progress(1, 13, "fooba"), "command", "--with", "args"),
                 _ => When_an_child_progress_with_the_maximum_of_MAXIMUM_and_the_message_is_started(7, "Child progress message"),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille_with_the_message(77, "Child progress message")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -152,7 +152,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_an_child_progress_with_the_maximum_of_MAXIMUM_and_the_message_is_started(7, "Infinite message"),
                 _ => When_the_progress_is_reported_for_the_command(new Progress(3, 7, "In between child message"), "command", "--with", "args"),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille_with_the_message(110, "In between child message")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -165,7 +165,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_an_child_progress_with_the_maximum_of_MAXIMUM_and_the_message_is_started(7, "Infinite message"),
                 _ => When_all_child_progresses_are_completed(),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille(154)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
     }
 }

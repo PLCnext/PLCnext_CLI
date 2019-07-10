@@ -31,7 +31,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("build"),
                 _ => When_I_cancel_the_command("build"),
                 _ => Then_the_command_line_instance_was_canceled_internally()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -43,7 +43,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("build"),
                 _ => When_I_kill_the_server(),
                 _ => Then_the_command_line_instance_was_canceled_internally()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
     }
 }

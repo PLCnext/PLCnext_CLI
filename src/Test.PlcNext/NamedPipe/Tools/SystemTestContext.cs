@@ -85,7 +85,7 @@ namespace Test.PlcNext.NamedPipe.Tools
         {
             server = Host.Resolve<ICliServer>();
             server.Disconnected += ServerOnDisconnected;
-            string serverName = $"server-{Guid.NewGuid().ToByteString()}";
+            string serverName = $"{Guid.NewGuid().ToByteString()}";
             Task<bool> serverStart = server.Start(serverName, false, heartbeat);
             clientSimulator = NamedPipeCommunicationProtocolSimulator.Connect(serverName,Host.Resolve<StreamFactory>(), Host.Resolve<ILog>());
             Assert.True(await serverStart, "Server not started correctly. See log.");
@@ -238,9 +238,9 @@ namespace Test.PlcNext.NamedPipe.Tools
             await ClientSimulator.WriteMessage(message);
         }
 
-        public void CheckCommandCanceled(string[] command, bool canceled)
+        public async Task CheckCommandCanceled(string[] command, bool canceled)
         {
-            clientSimulator.WaitForLastMessage();
+            await clientSimulator.WaitForLastMessage();
             if (canceled)
             {
                 Assert.True(issuedCommands.CommandCanceled(command), $"Command not found or not canceled.{Environment.NewLine}" +
@@ -259,18 +259,18 @@ namespace Test.PlcNext.NamedPipe.Tools
             issuedCommands.FinishCommand(command, result);
         }
 
-        public void CheckCommandReply(string command, bool result)
+        public async Task CheckCommandReply(string command, bool result)
         {
-            CheckExpectedMessage($"{{\"type\":\"reply\", \"inReplyTo\":\"command\", \"command\":\"{command}\", \"parsedCommand\":{{\"error\":\"This is a test double\"}}, \"reply\":{{}}, \"success\":{result.ToString().ToLowerInvariant()}}}");
+            await CheckExpectedMessage($"{{\"type\":\"reply\", \"inReplyTo\":\"command\", \"command\":\"{command}\", \"parsedCommand\":{{\"error\":\"This is a test double\"}}, \"reply\":{{}}, \"success\":{result.ToString().ToLowerInvariant()}}}");
         }
 
-        public void CheckNoCommandReply(string command)
+        public async Task CheckNoCommandReply(string command)
         {
-            string message = ClientSimulator.ReadMessage(false);
+            string message = await ClientSimulator.ReadMessage(false);
             while (!string.IsNullOrEmpty(message))
             {
                 Assert.False(IsExpectedMessage(), $"Message {message} should not have been send.");
-                message = ClientSimulator.ReadMessage(false);
+                message = await ClientSimulator.ReadMessage(false);
             }
 
             bool IsExpectedMessage()
@@ -285,23 +285,23 @@ namespace Test.PlcNext.NamedPipe.Tools
             }
         }
 
-        public void CheckCancelReply(string command)
+        public async Task CheckCancelReply(string command)
         {
-            CheckExpectedMessage($"{{\"type\":\"reply\", \"inReplyTo\":\"cancel\", \"command\":\"{command}\", \"parsedCommand\":{{\"error\":\"This is a test double\"}}, \"reply\":{{}}, \"success\":true}}");
+            await CheckExpectedMessage($"{{\"type\":\"reply\", \"inReplyTo\":\"cancel\", \"command\":\"{command}\", \"parsedCommand\":{{\"error\":\"This is a test double\"}}, \"reply\":{{}}, \"success\":true}}");
         }
 
-        public void CheckHandshakeReply(bool result)
+        public async Task CheckHandshakeReply(bool result)
         {
-            CheckExpectedMessage($"{{\"type\":\"reply\", \"inReplyTo\":\"handshake\", \"reply\":{{\"supportedProtocolVersions\":" +
+            await CheckExpectedMessage($"{{\"type\":\"reply\", \"inReplyTo\":\"handshake\", \"reply\":{{\"supportedProtocolVersions\":" +
                                  $"[{string.Join(", ",CommunicationConstants.SupportedProtocolVersions.Select(v => $"{{\"major\":{v.Major},\"minor\":{v.Minor}}}"))}]" +
                                  $"}}, \"success\":{result.ToString().ToLowerInvariant()}}}");
         }
 
-        public void CountHandshakeReplies(int count)
+        public async Task CountHandshakeReplies(int count)
         {
             int actual = 0;
             string message;
-            while (!string.IsNullOrEmpty(message = ClientSimulator.ReadMessage(false)))
+            while (!string.IsNullOrEmpty(message = await ClientSimulator.ReadMessage(false)))
             {
                 if (message.Contains("handshake"))
                 {
@@ -312,9 +312,9 @@ namespace Test.PlcNext.NamedPipe.Tools
             actual.Should().Be(count);
         }
 
-        public void CheckMessageReceived(string message, string messageType, string command)
+        public async Task CheckMessageReceived(string message, string messageType, string command)
         {
-            CheckExpectedMessage($"{{\"type\":\"message\", \"command\":\"{command}\", \"parsedCommand\":{{\"error\":\"This is a test double\"}}, \"message\":\"{message}\", \"messageType\":\"{messageType}\"}}");
+            await CheckExpectedMessage($"{{\"type\":\"message\", \"command\":\"{command}\", \"parsedCommand\":{{\"error\":\"This is a test double\"}}, \"message\":\"{message}\", \"messageType\":\"{messageType}\"}}");
         }
 
         public void CheckHeartbeatMessages(int expectedCount, bool allowMoreHeartbeats = true)
@@ -385,12 +385,12 @@ namespace Test.PlcNext.NamedPipe.Tools
             issuedCommands.StartInfiniteChildProgress(message);
         }
 
-        public void CheckLastReportedProgress(int currentProgress = int.MinValue, string progressMessage = "")
+        public async Task CheckLastReportedProgress(int currentProgress = int.MinValue, string progressMessage = "")
         {
             string message;
             bool progressFound = false;
-            ClientSimulator.WaitForLastMessage();
-            while (!string.IsNullOrEmpty((message = ClientSimulator.ReadMessage(false))))
+            await ClientSimulator.WaitForLastMessage();
+            while (!string.IsNullOrEmpty((message = await ClientSimulator.ReadMessage(false))))
             {
                 if (IsProgressMessage(out JObject progress))
                 {
@@ -418,15 +418,15 @@ namespace Test.PlcNext.NamedPipe.Tools
             }
         }
 
-        private void CheckExpectedMessage(string expectedMessage)
+        private async Task CheckExpectedMessage(string expectedMessage)
         {
             JObject expectedObject = JObject.Parse(expectedMessage);
-            CheckExpectedMessage(expectedObject);
+            await CheckExpectedMessage(expectedObject);
         }
 
-        private void CheckExpectedMessage(JObject expectedObject, int? timeout = null)
+        private async Task CheckExpectedMessage(JObject expectedObject, int? timeout = null)
         {
-            CheckExpectedMessage(o => JToken.DeepEquals(expectedObject, o),
+            await CheckExpectedMessage(o => JToken.DeepEquals(expectedObject, o),
                                  s =>
                                      $"Message was not expected. Continue with next message. Actual:{Environment.NewLine}" +
                                      $"{s}{Environment.NewLine}" +
@@ -435,17 +435,17 @@ namespace Test.PlcNext.NamedPipe.Tools
                                  timeout);
         }
 
-        private void CheckExpectedMessage(Func<JObject, bool> isExpectedMessage, Func<string, string> notExpectedLogMessage, int? timeout = null)
+        private async Task CheckExpectedMessage(Func<JObject, bool> isExpectedMessage, Func<string, string> notExpectedLogMessage, int? timeout = null)
         {
             string message = timeout.HasValue
-                                 ? ClientSimulator.ReadMessage(timeout: timeout.Value)
-                                 : ClientSimulator.ReadMessage();
+                                 ? await ClientSimulator.ReadMessage(timeout: timeout.Value)
+                                 : await ClientSimulator.ReadMessage();
             while (!IsExpectedMessage())
             {
                 Log.LogInformation(notExpectedLogMessage(message));
                 message = timeout.HasValue
-                              ? ClientSimulator.ReadMessage(timeout: timeout.Value)
-                              : ClientSimulator.ReadMessage();
+                              ? await ClientSimulator.ReadMessage(timeout: timeout.Value)
+                              : await ClientSimulator.ReadMessage();
             }
 
             bool IsExpectedMessage()
@@ -455,7 +455,7 @@ namespace Test.PlcNext.NamedPipe.Tools
             }
         }
 
-        public void CheckMessageIsSameAsFile(string file, int timeout)
+        public async Task CheckMessageIsSameAsFile(string file, int timeout)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream resourceStream = assembly.GetManifestResourceStream($"Test.PlcNext.Deployment.TestResults.{file}").ConvertPaths())
@@ -463,13 +463,13 @@ namespace Test.PlcNext.NamedPipe.Tools
             using (JsonReader reader = new JsonTextReader(resourceReader))
             {
                 JObject expectedMessage = JObject.Load(reader, new JsonLoadSettings());
-                CheckExpectedMessage(expectedMessage, timeout);
+                await CheckExpectedMessage(expectedMessage, timeout);
             }
         }
 
-        public void CheckNoMessage()
+        public async Task CheckNoMessage()
         {
-            string message = ClientSimulator.ReadMessage(false);
+            string message = await ClientSimulator.ReadMessage(false);
             Assert.True(string.IsNullOrEmpty(message),$"There should have been no reply, but {message} was send.");
         }
 
@@ -479,15 +479,15 @@ namespace Test.PlcNext.NamedPipe.Tools
             issuedCommands.ReportCommandLineMessage(message, messageType);
         }
         
-        public void CheckUpdateMessage(UpdateMessageType messageType, string projectName = "")
+        public async Task CheckUpdateMessage(UpdateMessageType messageType, string projectName = "")
         {
             switch (messageType)
             {
                 case UpdateMessageType.Setting:
-                    CheckExpectedMessage("{\"type\":\"update\", \"updateTopic\":\"settings\"}");
+                    await CheckExpectedMessage("{\"type\":\"update\", \"updateTopic\":\"settings\"}");
                     break;
                 case UpdateMessageType.ProjectSettings:
-                    CheckExpectedMessage(IsExpectedProjectSettingUpdate,
+                    await CheckExpectedMessage(IsExpectedProjectSettingUpdate,
                                          s =>
                                              $"Message was not expected. Continue with next message. Actual:{Environment.NewLine}" +
                                              $"{s}{Environment.NewLine}" +
@@ -495,7 +495,7 @@ namespace Test.PlcNext.NamedPipe.Tools
                                              $"{{\"type\":\"update\", \"updateTopic\":\"project-settings\", \"project\":\".*{projectName}\"}}");
                     break;
                 case UpdateMessageType.Sdk:
-                    CheckExpectedMessage("{\"type\":\"update\", \"updateTopic\":\"sdks\"}");
+                    await CheckExpectedMessage("{\"type\":\"update\", \"updateTopic\":\"sdks\"}");
                     break;
                 default:
                     Assert.True(false,$"Message type {messageType} is not yet implemented.");

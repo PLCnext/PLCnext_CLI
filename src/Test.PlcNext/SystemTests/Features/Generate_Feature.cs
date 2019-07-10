@@ -39,7 +39,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                      new TypeMember("value2","bit", 0),
                                                                                      new TypeMember("value3","int64", 6),
                                                                                      new TypeMember("value4","int64", 1),
-                                                                                 }))).RunAsync();
+                                                                                 }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -56,7 +56,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                        new TypeMember("value2","bit", 0),
                                                                                                        new TypeMember("value3","int64", 6),
                                                                                                        new TypeMember("value4","int64", 1),
-                                                                                                   }))).RunAsync();
+                                                                                                   }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -71,7 +71,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                    {
                                                                                                        new TypeMember("value1","int32", 0, "Input|Opc"),
                                                                                                        new TypeMember("value2","bit", 0, null),
-                                                                                                   }))).RunAsync();
+                                                                                                   }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -95,7 +95,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                    {
                                                                                                        new TypeMember("blubber","nested"),
                                                                                                        new TypeMember("test","supernested"),
-                                                                                                   }))).RunAsync();
+                                                                                                   }))).RunAsyncWithTimeout();
         }        
 
         [Scenario]
@@ -105,7 +105,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project(project),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_the_error_is_shown(error)).RunAsync();
+                _ => Then_the_error_is_shown(error)).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -114,7 +114,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProjectWithComponent"),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_codefiles_were_generated_for_the_component("MyComponent", new[] { "examplePort1", "examplePort2" })).RunAsync();
+                _ => Then_codefiles_were_generated_for_the_component("MyComponent", new[] { "examplePort1", "examplePort2" })).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -123,7 +123,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("TooManyGeneratedFiles"),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_codefiles_were_not_generated_for_the_component("AccessComponent")).RunAsync();
+                _ => Then_codefiles_were_not_generated_for_the_component("AccessComponent")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -138,7 +138,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                    new[]
                                                                                                    {
                                                                                                        new TypeMember("fooba","boolean"),
-                                                                                                   }))).RunAsync();
+                                                                                                   }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -148,7 +148,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_project_with_name("A.B.C.D"),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_the_generated_components_namespace_starts_with_namespace("DComponent", "A.B.C.D")).RunAsync();
+                _ => Then_the_generated_components_namespace_starts_with_namespace("DComponent", "A.B.C.D")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -157,7 +157,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_the_library_files_are_generated()).RunAsync();
+                _ => Then_the_library_files_are_generated()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -167,7 +167,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("AppProject"),
                 _ => When_I_generate_all_codefiles(),
                 _ => Then_the_library_files_are_generated()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -177,7 +177,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("TwoComponentsAndPrograms"),
                 _ => When_I_generate_all_codefiles(),
                 _ => Then_the_provider_files_are_generated_for_component("MyComponent", new[] { "MyProgram", "MyProgram2" }),
-                _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram"})).RunAsync();
+                _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram"})).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -195,7 +195,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                       new Portmeta("examplePort2","Example","Output", 1),
                                                                                       new Portmeta("examplePort3","Example","Output", 5),
                                                                                       new Portmeta("examplePort4","int32","", 0),
-                                                                                  }))).RunAsync();
+                                                                                  }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -212,7 +212,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                    new Portmeta("OhMyPort","OhMy","Output"),
                                                                                                    new Portmeta("OtherPort","OtherEnum","Input"),
                                                                                                    new Portmeta("StructPort","EnumStruct","Input"),
-                                                                                               }))).RunAsync();
+                                                                                               }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -229,7 +229,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                    new Portmeta("NewPort","boolean","Input"),
                                                                                                    new Portmeta("NewPortWithSpace","boolean","Input"),
                                                                                                    new Portmeta("NewPortWithOtherComment","boolean","Input"),
-                                                                                               }))).RunAsync();
+                                                                                               }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -256,7 +256,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                            new EnumSymbol("What",0),
                                                                                                            new EnumSymbol("That",1),
                                                                                                            new EnumSymbol("Not",12),
-                                                                                                       }))).RunAsync();
+                                                                                                       }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -271,7 +271,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                new[]
                                                                                                {
                                                                                                    new Portmeta("intArray","int16","Input|Retain", 12),
-                                                                                               }))).RunAsync();
+                                                                                               }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -295,7 +295,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                 new string[] { "MyOtherComponent" },
                                                                                 new[] { new Portmeta("examplePort4","int32","", 0) },
                                                                                 new[] { "MyOtherProgram"}
-                                                                                ))).RunAsync();
+                                                                                ))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -314,7 +314,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                 new string[] { "AlmostAmbiguousComp" },
                                                                                 new Portmeta[0],
                                                                                 new[] { "OtherProgram" }
-                                                                                ))).RunAsync();
+                                                                                ))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -323,7 +323,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_the_libmeta_file_is_generated_with_the_components("MyComponent")).RunAsync();
+                _ => Then_the_libmeta_file_is_generated_with_the_components("MyComponent")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -333,7 +333,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("AppProject"),
                 _ => When_I_generate_all_metafiles(),
                 _ => Then_the_acfconfig_file_is_generated_with_the_components("AppProject","AppProjectComponent")
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -343,7 +343,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Arp.Plc.Esm"),
                 _ => Given_is_the_working_directory_PATH("Arp.Plc.Esm"),
                 _ => When_I_generate_all_codefiles_with_the_source_directories("src/src"),
-                _ => Then_the_typemeta_method_looks_like_NAME("EsmLibrary.meta.cpp")).RunAsync();
+                _ => Then_the_typemeta_method_looks_like_NAME("EsmLibrary.meta.cpp")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -352,7 +352,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("EnumTest"),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_the_typemeta_method_looks_like_NAME("EnumTestLibrary.meta.cpp")).RunAsync();
+                _ => Then_the_typemeta_method_looks_like_NAME("EnumTestLibrary.meta.cpp")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -374,7 +374,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                        new TypeMember("ExecutionTimeThreshold","int64"),
                                                                                                        new TypeMember("ExecutionTimeThresholdCount","uint32"),
                                                                                                        new TypeMember("TaskName","StaticString[80]",2),
-                                                                                                   }))).RunAsync();
+                                                                                                   }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -387,7 +387,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                 new [] { "Component" },
                                                                                 new Portmeta[] { },
                                                                                 new string[] { }
-                                                                                ))).RunAsync();
+                                                                                ))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -411,7 +411,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                 new string[] { "MyOtherComponent" },
                                                                                 new[] { new Portmeta("examplePort4", "int32", "", 0) },
                                                                                 new[] { "MyOtherProgram" }
-                                                                                ))).RunAsync();
+                                                                                ))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -421,7 +421,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Standard"),
                 _ => Given_is_the_working_directory_PATH("Standard"),
                 _ => When_I_generate_all_files_from_inside_the_project_folder(),
-                _ => Then_the_libmeta_file_is_generated_with_the_components("MyComponent")).RunAsync();
+                _ => Then_the_libmeta_file_is_generated_with_the_components("MyComponent")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -431,7 +431,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Standard"),
                 _ => Given_is_the_working_directory_PATH("Standard"),
                 _ => When_I_generate_all_codefiles_from_inside_the_project_folder(),
-                _ => Then_the_library_files_are_generated()).RunAsync();
+                _ => Then_the_library_files_are_generated()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -441,7 +441,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("MultipleNamespaces"),
                 _ => Given_is_the_working_directory_PATH("MultipleNamespaces"),
                 _ => When_I_generate_all_codefiles_with_the_source_directories("src","extern"),
-                _ => Then_the_library_files_are_generated()).RunAsync();
+                _ => Then_the_library_files_are_generated()).RunAsyncWithTimeout();
         }
         [Scenario]
         public async Task Generate_struct_typemeta_information_for_other_namespace_structs()
@@ -461,7 +461,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                        new TypeMember("EcoShValvePosition","float64"),
                                                                                                        new TypeMember("HGBValvePosition","float64"),
                                                                                                        new TypeMember("CPValvePosition","float64"),
-                                                                                                   }))).RunAsync();
+                                                                                                   }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -471,7 +471,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ComponentsInMultipleNamespaces"),
                 _ => Given_is_the_working_directory_PATH("ComponentsInMultipleNamespaces"),
                 _ => When_I_generate_all_codefiles_with_the_source_directories("src", "extern"),
-                _ => Then_the_user_was_informed_that_there_are_multiple_root_namespaces()).RunAsync();
+                _ => Then_the_user_was_informed_that_there_are_multiple_root_namespaces()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -481,7 +481,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("NoEntities"),
                 _ => Given_is_the_working_directory_PATH("NoEntities"),
                 _ => When_I_generate_all_codefiles_from_inside_the_project_folder(),
-                _ => Then_the_library_files_are_generated()).RunAsync();
+                _ => Then_the_library_files_are_generated()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -492,7 +492,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("TwoComponentsAndPrograms"),
                 _ => When_I_generate_all_codefiles_from_inside_the_project_folder(),
                 _ => Then_the_provider_files_are_generated_for_component("MyComponent", new[] { "MyProgram", "MyProgram2" }),
-                _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram" })).RunAsync();
+                _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram" })).RunAsyncWithTimeout();
         }
 
     }

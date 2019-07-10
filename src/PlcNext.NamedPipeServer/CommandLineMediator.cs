@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.UI;
 using PlcNext.NamedPipeServer.CommandLine;
@@ -92,7 +93,7 @@ namespace PlcNext.NamedPipeServer
                                             .ContinueWith(task =>
                                              {
                                                  heart.Stop();
-                                                 AutoResetEventAsync waitEvent = new AutoResetEventAsync(false);
+                                                 AsyncAutoResetEvent waitEvent = new AsyncAutoResetEvent(false);
                                                  
                                                  messageSender.SendCommandReply(task.Result,
                                                                                 () => waitEvent.Set());

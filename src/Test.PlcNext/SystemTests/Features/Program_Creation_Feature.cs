@@ -29,7 +29,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_create_a_new_program_with_name_for_component("NewProgram", "MyComponent", false),
                 _ => Then_the_project_contains_a_program_with_name("NewProgram"),
                 _ => Then_the_user_was_informed_that_the_program_was_created_successfully(),
-                _ => Then_the_programs_namespace_starts_with_namespace("NewProgram", "Standard")).RunAsync();
+                _ => Then_the_programs_namespace_starts_with_namespace("NewProgram", "Standard")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -39,7 +39,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("StandardNew"),
                 _ => Given_is_the_working_directory_PATH("StandardNew"),
                 _ => When_I_create_a_new_program_for_component("StandardComponent", false, false),
-                _ => Then_the_user_was_informed_that_the_artifact_exists_already()).RunAsync();
+                _ => Then_the_user_was_informed_that_the_artifact_exists_already()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -49,7 +49,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_create_a_new_program_with_name_for_component_for_project_in_specific_folder("NewProgram", "MyComponent", false),
                 _ => Then_the_project_contains_a_program_with_name("NewProgram"),
-                _ => Then_the_user_was_informed_that_the_program_was_created_successfully()).RunAsync();
+                _ => Then_the_user_was_informed_that_the_program_was_created_successfully()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -61,7 +61,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_create_a_new_program_for_component("MyComponent", true, false),
                 _ => Then_the_project_contains_a_program_with_name("MyProgram"),
                 _ => Then_the_code_entity_was_created(),
-                _ => Then_the_user_was_informed_that_the_program_was_created_successfully()).RunAsync();
+                _ => Then_the_user_was_informed_that_the_program_was_created_successfully()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -70,7 +70,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_create_a_new_program(false),
-                _ => Then_the_user_was_informed_that_the_component_option_is_missing()).RunAsync();
+                _ => Then_the_user_was_informed_that_the_component_option_is_missing()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -81,7 +81,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_create_a_new_project_with_name("A.B.C.D"),
                 _ => When_I_create_a_new_program_for_component("DComponent", true, true),
                 _ => Then_the_user_was_informed_that_the_program_was_created_successfully(),
-                _ => Then_the_programs_namespace_starts_with_namespace("DProgram", "A.B.C.D")).RunAsync();
+                _ => Then_the_programs_namespace_starts_with_namespace("DProgram", "A.B.C.D")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -91,7 +91,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_project_with_name("A.B.C.D"),
                 _ => When_I_create_a_new_program_with_path_for_component("customfolder", true, false, "DComponent"),
-                _ => Then_the_program_exists_in_path("DProgram", "A.B.C.D/src/customfolder")).RunAsync();
+                _ => Then_the_program_exists_in_path("DProgram", "A.B.C.D/src/customfolder")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -101,7 +101,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_project_with_name("A.B.C.D"),
                 _ => When_I_create_a_new_program_with_path_for_component(Path.GetFullPath("A.B.C.D"), true, false, "MyComponent"),
-                _ => Then_the_program_exists_in_path("DProgram", "A.B.C.D")).RunAsync();
+                _ => Then_the_program_exists_in_path("DProgram", "A.B.C.D")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -112,7 +112,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Standard"),
                 _ => When_I_create_a_new_program_with_name_for_component("NewProgram", "MyComponent", false),
                 _ => Then_the_user_was_informed_that_the_program_was_created_successfully(),
-                _ => Then_the_program_exists_in_path("NewProgram", "src")).RunAsync();
+                _ => Then_the_program_exists_in_path("NewProgram", "src")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -121,7 +121,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_program_for_component("MyComponent", false, false),
-                _ => Then_the_user_was_informed_that_the_artifact_was_not_found()).RunAsync();
+                _ => Then_the_user_was_informed_that_the_artifact_was_not_found()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -130,7 +130,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ComponentsWithSameName"),
                 _ => When_I_create_a_new_program_for_component("MyComponent", false, false),
-                _ => Then_the_user_was_informed_that_the_component_name_is_ambiguous()).RunAsync();
+                _ => Then_the_user_was_informed_that_the_component_name_is_ambiguous()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -140,7 +140,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("PseudoAmbiguousComponents"),
                 _ => Given_is_the_working_directory_PATH("PseudoAmbiguousComponents"),
                 _ => When_I_create_a_new_program_with_name_for_component("MyProgram", "PseudoAmbiguousComponents::MyComp", false),
-                _ => Then_the_project_contains_a_program_with_name("MyProgram")).RunAsync();
+                _ => Then_the_project_contains_a_program_with_name("MyProgram")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -149,7 +149,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("TwoComponentsAndPrograms"),
                 _ => When_I_create_a_new_program_for_component("Component", false, true),
-                _ => Then_the_user_was_informed_that_the_component_name_is_ambiguous()).RunAsync();
+                _ => Then_the_user_was_informed_that_the_component_name_is_ambiguous()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -160,7 +160,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("ComponentsInMultipleSources"),
                 _ => When_I_create_a_new_program_with_name_for_component_with_source_folders("NewProgram", "ComponentsInMultipleNamespaces::MultipleNamespacesComponent", "src", "extern"),
                 _ => Then_the_project_contains_a_program_with_name("NewProgram"),
-                _ => Then_the_programs_namespace_starts_with_namespace("NewProgram", "ComponentsInMultipleNamespaces")).RunAsync();
+                _ => Then_the_programs_namespace_starts_with_namespace("NewProgram", "ComponentsInMultipleNamespaces")).RunAsyncWithTimeout();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client(),
                 _ => When_I_executed_the_command("command --with args"),
                 _ => Then_the_command_was_triggered("command", "--with", "args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -40,7 +40,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client_without_handshake(),
                 _ => When_I_executed_the_command("command --with args"),
                 _ => Then_no_command_was_triggered()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -50,7 +50,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client_with_wrong_handshake(),
                 _ => When_I_executed_the_command("command --with args"),
                 _ => Then_no_command_was_triggered()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -60,7 +60,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client(),
                 _ => When_I_kill_the_server(),
                 _ => Then_the_server_disconnected()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -71,7 +71,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_I_cancel_the_command("command --with args"),
                 _ => Then_the_command_was_canceled("command", "--with", "args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -82,7 +82,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_I_cancel_the_command(),
                 _ => Then_the_command_was_not_canceled("command", "--with", "args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -93,7 +93,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_I_executed_the_command("command --with args"),
                 _ => Then_the_command_was_triggered_once("command", "--with", "args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -103,7 +103,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client(),
                 _ => When_I_executed_the_command_twice_with_same_id("command --with args"),
                 _ => Then_the_command_was_triggered_once("command", "--with", "args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -116,7 +116,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("other command --withFlag"),
                 _ => When_I_cancel_the_command("command --with other,args"),
                 _ => Then_the_command_was_canceled("command", "--with", "other,args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
     }
 }

@@ -7,13 +7,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.Threading.Tasks;
+
 namespace Test.PlcNext.NamedPipe.SystemTests.StepDefinitions
 {
     public abstract partial class CommandLineIntegrationTestBase
     {
-        protected void Then_the_command_line_instance_was_canceled_internally()
+        protected async Task Then_the_command_line_instance_was_canceled_internally()
         {
-            ScenarioContext.CheckCanceledInternally();
+            await ScenarioContext.CheckCanceledInternally();
         }
     }
 }

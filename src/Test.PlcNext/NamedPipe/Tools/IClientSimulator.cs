@@ -19,16 +19,17 @@ namespace Test.PlcNext.NamedPipe.Tools
     {
         Task WriteMessage(string message, byte[] header = null, int count = 1);
         Task WriteMessage(Stream data, byte[] header = null, int count = 1);
-        void WaitForLastMessage(int timeout = NamedPipeCommunicationProtocolSimulator.DefaultTimeout);
-        string ReadMessage(bool checkTimeout = true, int timeout = NamedPipeCommunicationProtocolSimulator.DefaultTimeout);
+        Task WaitForLastMessage(int timeout = NamedPipeCommunicationProtocolSimulator.DefaultTimeout);
+        Task<string> ReadMessage(bool checkTimeout = true,
+                                 int timeout = NamedPipeCommunicationProtocolSimulator.DefaultTimeout);
         void Dispose();
         void UseErrorConfirmation(int count);
-        bool WaitForMessages(int messageCount, Func<string, bool> messageFilter = null);
+        Task<bool> WaitForMessages(int messageCount, Func<string, bool> messageFilter = null);
         int CountReceivedMessages(Func<string, bool> messageFilter = null);
         bool WaitForDisconnect();
         void SkipConfirmation(int count);
         void Disconnect();
-        bool LastMessageWasSplit();
-        byte GetLastConfirmationFlag();
+        Task<bool> LastMessageWasSplit();
+        Task<byte> GetLastConfirmationFlag();
     }
 }

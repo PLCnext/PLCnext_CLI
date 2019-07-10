@@ -31,7 +31,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_update_the_CLI_to_the_latest_version(),
                 _ => Then_the_version_of_the_CLI_is_VERSION(new Version(99, 99, 99, 0))
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -41,7 +41,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_update_the_CLI_to_the_version(new Version(98, 0, 0)),
                 _ => Then_the_version_of_the_CLI_is_VERSION(new Version(98, 0, 0, 0))
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -51,7 +51,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_update_the_CLI_to_the_version(new Version(0, 0, 0)),
                 _ => Then_the_version_of_the_CLI_is_VERSION(new Version(0, 0, 0, 0))
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -61,7 +61,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_are_settings_with_the_modification_KEY_VALUE("AttributePrefix", "!"),
                 _ => When_I_update_the_CLI_to_the_version(new Version(98, 0, 0)),
                 _ => Then_the_new_CLI_setting_has_the_value("AttributePrefix", "!")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -71,7 +71,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_are_settings_with_the_modification_KEY_VALUE("AttributePrefix", "!"),
                 _ => When_I_update_the_CLI_to_the_version(new Version(0, 0, 0)),
                 _ => Then_the_new_CLI_setting_has_the_value("AttributePrefix", "!")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -81,7 +81,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_are_settings_with_the_modification_KEY_VALUE("AttributePrefix", "!"),
                 _ => When_I_update_the_CLI_to_the_version(new Version(0, 0, 0)),
                 _ => Then_the_user_was_informed_that_the_setting_was_lost("SdkPaths")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -91,7 +91,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_update_repository_file_is_unreachable(),
                 _ => When_I_update_the_CLI_to_the_latest_version(),
                 _ => Then_the_user_was_informed_that_the_site_is_not_reachable("http://localhost/cli/repository.xml")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -101,7 +101,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_update_the_CLI_to_the_latest_version_with_the_proxy("http://1.2.3.4:1234"),
                 _ => Then_the_user_was_informed_that_the_site_is_not_reachable("http://localhost/cli/repository.xml")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -111,7 +111,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_a_manipulated_repository_file(),
                 _ => When_I_update_the_CLI_to_the_latest_version(),
                 _ => Then_the_user_was_informed_that_the_repository_file_was_manipulated()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -121,7 +121,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_update_repository_file_certificate_is_unreachable(),
                 _ => When_I_update_the_CLI_to_the_latest_version(),
                 _ => Then_the_user_was_informed_that_the_site_is_not_reachable("http://localhost/cli/repository.xml.cer")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -131,7 +131,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_update_the_CLI_to_the_version(new Version(97, 0, 0)),
                 _ => Then_the_user_was_informed_that_the_archive_file_was_manipulated()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -141,7 +141,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_update_the_CLI_to_the_version(new Version(96, 0, 0)),
                 _ => Then_the_user_was_informed_that_the_site_is_not_reachable($"http://localhost/cli/96.0.0/linux/x64/plcncli.zip")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -151,7 +151,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_update_the_CLI_to_the_version(new Version(1, 2, 3)),
                 _ => Then_the_user_was_informed_that_the_version_is_not_available(new Version(1, 2, 3))
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -161,7 +161,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_a_repository_file_with_only_older_versions(),
                 _ => When_I_update_the_CLI_to_the_latest_version(),
                 _ => Then_the_user_was_informed_that_the_CLI_is_up_to_date()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -171,7 +171,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_a_repository_file_with_only_older_versions(),
                 _ => When_I_get_all_available_CLI_versions(),
                 _ => Then_the_user_was_informed_that_the_versions_are_available(new Version(0, 0, 0))
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -181,7 +181,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_update_the_CLI_to_the_version(new Version(95, 0, 0)),
                 _ => Then_the_user_was_informed_that_the_file_extension_is_unkown()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -191,7 +191,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_public_key_for_the_cli_repository_is_missing(),
                 _ => When_I_update_the_CLI_to_the_latest_version(),
                 _ => Then_the_user_was_informed_that_the_cli_public_key_is_missing()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -201,7 +201,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_update_the_CLI_with_the_file("plcncli_linux_x64_98_0_0.zip"),
                 _ => Then_the_version_of_the_CLI_is_VERSION(new Version(98, 0, 0, 0))
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
     }
 }

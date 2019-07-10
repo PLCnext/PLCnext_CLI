@@ -36,7 +36,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgs.txt")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -50,7 +50,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs { LibraryId = "3125fbc7-77b1-47c4-b5f9-39872cd6df9c" }),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgsWithSpecificId.txt")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -61,7 +61,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs { LibraryId = "3125fbc7xxx" }),
                 _ => Then_the_user_was_informed_that_the_library_id_is_malformatted()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -72,7 +72,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("DemoWithoutLibrary"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_user_was_informed_that_the_library_was_not_found()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -83,7 +83,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("DemoWithoutMeta"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_user_was_informed_that_the_meta_files_were_not_found()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -97,7 +97,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs{LibraryLocation = "foo", MetaFileDirectory = Path.Combine("ba","Meta"), OutputDirectory = "out"}),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryDifferentPathsCommandArgs.txt")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -112,7 +112,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgs.txt")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -124,7 +124,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_library_builder_is_missing(),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_user_was_informed_that_the_library_builder_was_not_found()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -138,7 +138,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs {Targets = new[] { "axcf2152,1.0", "axcf2152,2"} }),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoWithMultibinaryLibraryCommandArgs.txt")
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -157,7 +157,7 @@ namespace Test.PlcNext.SystemTests.Features
                     OutputDirectory = "out"
                 }),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryDifferentPathsCommandArgs.txt")
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -168,7 +168,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("DemoWithoutCompmeta"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_user_was_informed_that_a_compmeta_file_was_not_found()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -183,7 +183,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_library_was_generated()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -203,7 +203,7 @@ namespace Test.PlcNext.SystemTests.Features
                     OutputDirectory = "out"
                 }),
                 _ => Then_the_library_was_generated()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -219,7 +219,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo", "Some/Path/T,o/Some.so"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryWithExternalLibs.txt")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -235,7 +235,7 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "\"Some/Path/T,o/Some.so\"" }
                 }),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryWithExternalLibs.txt")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -252,7 +252,7 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "axcf2152,1.0,Some/Path/To/Some.so" }
                 }),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryWithExternalLibsMultibinary.txt")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -270,7 +270,7 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "axcf2152,19.0,Some/Path/To/Some.so", "OtherLib.so" }
                 }),
                 _ => Then_the_user_was_informed_that_the_library_option_is_wrong_combined()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -287,7 +287,7 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "nfc482s,19.0,Some/Path/To/Some.so" }
                 }),
                 _ => Then_the_user_was_informed_that_the_library_option_is_malformatted()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -304,7 +304,7 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "axcf2152,Some/Path/To/Some.so" }
                 }),
                 _ => Then_the_user_was_informed_that_the_target_is_ambiguous()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -321,7 +321,7 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "axcf2152,1.0,Some/Path/To/Some.so" }
                 }),
                 _ => Then_the_user_was_informed_that_the_library_option_is_malformatted()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -338,7 +338,7 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "axcf2152,1,Some/Path/To/Some.so" }
                 }),
                 _ => Then_the_user_was_informed_that_the_target_is_ambiguous()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -354,7 +354,7 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "axcf2152,2,Some/Path/To/Some.so" }
                 }),
                 _ => Then_the_user_was_informed_that_the_library_was_not_found()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -365,7 +365,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Demo"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_user_was_informed_that_the_cmake_build_system_was_not_found()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
     }
 }

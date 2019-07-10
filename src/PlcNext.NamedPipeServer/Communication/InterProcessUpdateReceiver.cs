@@ -10,6 +10,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.IO;
 using PlcNext.Common.Tools.UI;
@@ -72,7 +73,7 @@ namespace PlcNext.NamedPipeServer.Communication
                     protocol = await NamedPipeCommunicationProtocol.Connect(serverName, streamFactory, log,
                                                                             cancellationToken: CancellationToken);
                     log.LogVerbose($"Other instance connected to the update receiver {serverName}.");
-                    AutoResetEventAsync waitEvent = new AutoResetEventAsync(false);
+                    AsyncAutoResetEvent waitEvent = new AsyncAutoResetEvent(false);
                     protocol.Error += ProtocolOnError;
                     protocol.MessageReceived += ProtocolOnMessageReceived;
                     protocol.Start();

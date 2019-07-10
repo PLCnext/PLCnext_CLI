@@ -26,7 +26,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
 				_ => Given_is_an_empty_workspace(),
 				_ => When_I_create_a_new_project_with_name("NewProject"),
-				_ => Then_the_project_NAME_was_created("NewProject")).RunAsync();
+				_ => Then_the_project_NAME_was_created("NewProject")).RunAsyncWithTimeout();
 	    }
 
 	    [Scenario]
@@ -35,7 +35,7 @@ namespace Test.PlcNext.SystemTests.Features
 	        await Runner.AddSteps(
 	            _ => Given_is_an_empty_workspace_with_name("Root"),
 	            _ => When_I_create_a_new_project(),
-	            _ => Then_the_project_NAME_was_created_inside_root_folder("Root")).RunAsync();
+	            _ => Then_the_project_NAME_was_created_inside_root_folder("Root")).RunAsyncWithTimeout();
 	    }
 
         [Scenario]
@@ -44,7 +44,7 @@ namespace Test.PlcNext.SystemTests.Features
 	        await Runner.AddSteps(
 	            _ => Given_is_an_empty_workspace(),
 	            _ => When_I_create_a_new_project_with_name_in_folder("NewProject", "Fooba"),
-	            _ => Then_the_project_NAME_was_created_in_folder("NewProject", "Fooba")).RunAsync();
+	            _ => Then_the_project_NAME_was_created_in_folder("NewProject", "Fooba")).RunAsyncWithTimeout();
 	    }
 
 	    [Scenario]
@@ -53,7 +53,7 @@ namespace Test.PlcNext.SystemTests.Features
 	        await Runner.AddSteps(
 	            _ => Given_is_a_new_project_NAME("NewProject"),
 	            _ => When_I_create_a_new_project_with_name("NewProject"),
-                _ => Then_the_user_was_informed_that_the_artifact_exists_already()).RunAsync();
+                _ => Then_the_user_was_informed_that_the_artifact_exists_already()).RunAsyncWithTimeout();
 	    }
 
 	    [Scenario]
@@ -62,7 +62,7 @@ namespace Test.PlcNext.SystemTests.Features
 	        await Runner.AddSteps(
 	            _ => Given_is_a_new_project_NAME("NewProject"),
 	            _ => When_I_create_a_new_project_with_name_forced("NewProject"),
-	            _ => Then_the_project_NAME_was_again_created("NewProject")).RunAsync();
+	            _ => Then_the_project_NAME_was_again_created("NewProject")).RunAsyncWithTimeout();
 	    }
 
         [Scenario]
@@ -71,7 +71,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_project(),
-                _ => Then_the_project_contains_component_and_program_cpp_and_hpp_files()).RunAsync();
+                _ => Then_the_project_contains_component_and_program_cpp_and_hpp_files()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -80,7 +80,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_project_with_componentname("NewComponent"),
-                _ => Then_the_project_contains_a_component_with_name("NewComponent")).RunAsync();
+                _ => Then_the_project_contains_a_component_with_name("NewComponent")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -89,7 +89,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_project_with_programname("NewProgram"),
-                _ => Then_the_project_contains_a_program_with_name("NewProgram")).RunAsync();
+                _ => Then_the_project_contains_a_program_with_name("NewProgram")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -99,7 +99,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_project_with_name("A.B.C.D"),
                 _ => Then_the_components_namespace_starts_with_namespace("DComponent", "A.B.C.D"),
-                _ => Then_the_programs_namespace_starts_with_namespace("DProgram", "A.B.C.D")).RunAsync();
+                _ => Then_the_programs_namespace_starts_with_namespace("DProgram", "A.B.C.D")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -109,7 +109,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_appproject_with_componentname("MyProject"),
                 _ => Then_the_project_contains_an_appcomponent_with_name("MyProjectComponent")
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 	}
 }

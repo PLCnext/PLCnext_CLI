@@ -31,7 +31,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_build_the_project(),
                 _ => Then_the_build_was_executed()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -41,7 +41,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("StandardWithMetadata"),
                 _ => When_I_build_the_project(),
                 _ => Then_the_build_was_executed()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -52,7 +52,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Standard"),
                 _ => When_I_execute_build_from_inside_the_project_folder(),
                 _ => Then_the_build_was_executed()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -62,7 +62,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_build_the_project_for_target("Unsupported Target"),
                 _ => Then_the_user_was_informed_that_the_target_was_not_found()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -72,7 +72,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ProjectWithComponent"),
                 _ => When_I_build_the_project_for_target("AXCF2152,1.0"),
                 _ => Then_the_build_was_executed()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -82,7 +82,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ProjectWithComponent"),
                 _ => When_I_build_the_project(),
                 _ => Then_the_user_was_informed_that_the_project_does_not_contain_any_target()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -92,7 +92,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Arp.Plc.Esm"),
                 _ => When_I_build_the_project_with_build_type("Release"),
                 _ => Then_the_build_was_executed()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -103,7 +103,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Arp.Plc.Esm2"),
                 _ => When_I_build_the_project_from_inside_the_project_folder_for_target("axcf2152","1.0"),
                 _ => Then_the_build_was_executed()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -114,7 +114,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Arp.Plc.Esm2"),
                 _ => When_I_execute_build_from_inside_the_project_folder(),
                 _ => Then_the_user_was_informed_that_the_project_does_not_contain_any_target()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -125,7 +125,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Arp.Plc.Esm2"),
                 _ => When_I_build_the_project_from_inside_the_project_folder_for_target("axcf2152", "1.0"),
                 _ => Then_the_cmake_file_was_generated()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
     }
 }

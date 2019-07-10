@@ -32,7 +32,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_the_project_with_set_default_path(project),
                 _ => When_I_executed_the_command($"get {command}"),
                 _ => Then_the_client_received_a_message_as_shown_in_the_file_within_TIMEOUT_s(reply,2)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         private class GetCommandDataGenerator : IEnumerable<object[]>
         {

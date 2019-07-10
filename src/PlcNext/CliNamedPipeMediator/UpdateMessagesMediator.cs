@@ -10,6 +10,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 using PlcNext.Common.Project;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Events;
@@ -70,7 +71,7 @@ namespace PlcNext.CliNamedPipeMediator
             SendUpdate((messageSender, wait) => messageSender.SendSettingsUpdated(() => wait.Set()));
         }
 
-        private async Task SendUpdate(Action<IInstanceMessageSender, AutoResetEventAsync> sendAction)
+        private async Task SendUpdate(Action<IInstanceMessageSender, AsyncAutoResetEvent> sendAction)
         {
             foreach (int otherInstancesProcessId in processInformationService.GetOtherInstancesProcessIds())
             {
@@ -80,7 +81,7 @@ namespace PlcNext.CliNamedPipeMediator
                     using (ITemporaryCommunicationChannel communicationChannel =
                         await instanceCommunicationService.OpenCommunicationChannel(otherInstancesProcessId))
                     {
-                        AutoResetEventAsync waitEvent = new AutoResetEventAsync(false);
+                        AsyncAutoResetEvent waitEvent = new AsyncAutoResetEvent(false);
                         sendAction(communicationChannel.MessageSender,waitEvent);
                         await waitEvent.WaitAsync(cancellationToken);
                         executionContext.WriteVerbose($"Update message send.");

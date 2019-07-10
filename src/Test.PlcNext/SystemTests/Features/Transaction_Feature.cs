@@ -28,7 +28,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ComponentInSourceFolder"),
                 _ => When_I_create_a_new_project_with_name_and_componentname("ComponentInSourceFolder", "Component"),
-                _ => Then_no_files_were_changed_or_added_to_the_workspace()).RunAsync();
+                _ => Then_no_files_were_changed_or_added_to_the_workspace()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -37,7 +37,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ComponentInSourceFolder"),
                 _ => When_I_create_a_new_project_with_name_and_componentname("ComponentInSourceFolder", "Component"),
-                _ => Then_existing_files_were_not_deleted()).RunAsync();
+                _ => Then_existing_files_were_not_deleted()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -49,7 +49,7 @@ namespace Test.PlcNext.SystemTests.Features
                     Path.Combine("Standard", Constants.IntermediateFolderName,
                                  Constants.MetadataFolderName, "Standard.typemeta")),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_no_files_were_changed_or_added_to_the_workspace()).RunAsync();
+                _ => Then_no_files_were_changed_or_added_to_the_workspace()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -61,7 +61,7 @@ namespace Test.PlcNext.SystemTests.Features
                     Path.Combine("EmptyWithLibmeta", Constants.IntermediateFolderName, 
                                  Constants.MetadataFolderName, "EmptyWithLibmeta.typemeta")),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_existing_files_were_not_deleted()).RunAsync();
+                _ => Then_existing_files_were_not_deleted()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -73,7 +73,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_build_the_project(),
                 _ => Then_existing_files_were_not_deleted(),
                 _ => Then_only_the_cmake_file_was_added_to_the_workspace()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -84,7 +84,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_the_processManager_starts_a_process_that_throws_an_error(),
                 _ => When_I_build_the_project(),
                 _ => Then_only_the_cmake_file_was_added_to_the_workspace()
-                ).RunAsync();
+                ).RunAsyncWithTimeout();
         }
     }
 }

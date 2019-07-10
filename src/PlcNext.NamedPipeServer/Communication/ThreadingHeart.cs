@@ -10,6 +10,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.UI;
 using PlcNext.NamedPipeServer.Tools;
@@ -24,7 +25,7 @@ namespace PlcNext.NamedPipeServer.Communication
 
         private readonly object threadSyncRoot = new object();
         private readonly object liveCounterSyncRoot = new object();
-        private readonly AutoResetEventAsync heartbeatCompleted = new AutoResetEventAsync(false);
+        private readonly AsyncAutoResetEvent heartbeatCompleted = new AsyncAutoResetEvent(false);
         
         private Thread heartbeatThread;
         private CancellationTokenSource threadKillToken;

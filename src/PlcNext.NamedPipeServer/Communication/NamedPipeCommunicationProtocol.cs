@@ -81,7 +81,7 @@ namespace PlcNext.NamedPipeServer.Communication
 
         protected virtual OutgoingMessageQueue CreateOutgoingMessageQueue()
         {
-            return new OutgoingMessageQueue(log, CancellationToken, writeStream);
+            return new OutgoingMessageQueue(log, CancellationToken, writeStream, this);
         }
 
         protected virtual IncomingMessageQueue CreateIncomingMessageQueue(OutgoingMessageQueue outgoingQueue)
@@ -182,19 +182,10 @@ namespace PlcNext.NamedPipeServer.Communication
 
         public void SendMessage(Stream message, Action messageCompletedAction = null)
         {
-            Guid messageGuid = Guid.NewGuid();
-
             Stream messageCopy = streamFactory.Create(message.Length);
             message.CopyTo(messageCopy, BufferSize);
 
-            OutgoingMessage outgoingMessage = GenerateOutgoingMessage(messageGuid, messageCopy, messageCompletedAction);
-            outgoingMessageQueue.Enqueue(outgoingMessage);
-        }
-
-        protected virtual OutgoingMessage GenerateOutgoingMessage(Guid messageGuid, Stream messageCopy,
-                                                                  Action messageCompletedAction)
-        {
-            return new OutgoingMessage(messageGuid, messageCopy, messageCompletedAction, this, log, writeStream);
+            outgoingMessageQueue.Enqueue(messageCopy, messageCompletedAction);
         }
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
@@ -274,7 +265,8 @@ namespace PlcNext.NamedPipeServer.Communication
                     {
                         log.LogInformation("Start message reader");
                         byte[] header = new byte[HeaderSize];
-                        int headerResult = await readStream.ReadAsync(header, 0, header.Length, cancellationToken);
+                        int headerResult = await readStream.ReadAsync(header, 0, header.Length, cancellationToken)
+                                                           .ConfigureAwait(false);
                         try
                         {
                             if (headerResult == 0)
@@ -320,7 +312,8 @@ namespace PlcNext.NamedPipeServer.Communication
                         int result = await readStream.ReadAsync(buffer, 0, remaining,
                                                                 CancellationTokenSource.CreateLinkedTokenSource(delayToken, 
                                                                                                                 cancellationToken)
-                                                                                       .Token);
+                                                                                       .Token)
+                                                     .ConfigureAwait(false);
 
                         if (result == 0)
                         {
@@ -396,7 +389,8 @@ namespace PlcNext.NamedPipeServer.Communication
                             int result = await readStream.ReadAsync(buffer, 0, BufferSize,
                                                                     CancellationTokenSource.CreateLinkedTokenSource(delayToken, 
                                                                                                                     cancellationToken)
-                                                                       .Token);
+                                                                       .Token)
+                                                         .ConfigureAwait(false);
 
                             if (result == 0)
                             {
@@ -574,26 +568,17 @@ namespace PlcNext.NamedPipeServer.Communication
             private readonly ILog log;
             private readonly CancellationToken cancellationToken;
             private readonly PipeStream writeStream;
-            private readonly Timer confirmationTimer = new Timer(MaxConfirmationResponseTime) {AutoReset = false};
+            private readonly NamedPipeCommunicationProtocol communicationProtocol;
             
             private PollingCollectionObserver pollingCollectionObserver;
             private int sending;
 
-            public OutgoingMessageQueue(ILog log, CancellationToken cancellationToken, PipeStream writeStream)
+            public OutgoingMessageQueue(ILog log, CancellationToken cancellationToken, PipeStream writeStream, NamedPipeCommunicationProtocol communicationProtocol)
             {
                 this.log = log;
                 this.cancellationToken = cancellationToken;
                 this.writeStream = writeStream;
-                confirmationTimer.Elapsed += ConfirmationTimerOnElapsed;
-            }
-
-            private void ConfirmationTimerOnElapsed(object sender, ElapsedEventArgs e)
-            {
-                if (unconfirmedMessages.TryRemove(unconfirmedMessages.Keys.FirstOrDefault(),
-                                                  out OutgoingMessage message))
-                {
-                    ResendMessage(message);
-                }
+                this.communicationProtocol = communicationProtocol;
             }
 
             public void WaitForFirstMessage()
@@ -625,6 +610,7 @@ namespace PlcNext.NamedPipeServer.Communication
                         }
 
                         sending = 0;
+                        log.LogVerbose("Sending cycle completed. Wait for next message.");
                     }
                     catch (Exception)
                     {
@@ -636,15 +622,16 @@ namespace PlcNext.NamedPipeServer.Communication
                 {
                     unconfirmedMessages.TryAdd(message.Id, message);
                     await message.SendMessageAsync(cancellationToken);
-                    confirmationTimer.Start();
                 }
             }
 
             public void ConfirmAndContinue(Guid messageId)
             {
-                if (unconfirmedMessages.TryRemove(messageId, out _))
+                if (unconfirmedMessages.TryRemove(messageId, out OutgoingMessage message))
                 {
-                    confirmationTimer.Stop();
+                    message.ConfirmationTimeElapsed -= OutgoingMessageOnConfirmationTimeElapsed;
+                    message.CompleteMessage();
+                    message.Dispose();
                     log.LogInformation($"Confirmed message {messageId.ToByteString()}.");
                 }
                 else
@@ -667,15 +654,33 @@ namespace PlcNext.NamedPipeServer.Communication
 
             private void ResendMessage(OutgoingMessage message)
             {
-                confirmationTimer.Stop();
+                message.PrepareResend();
                 log.LogVerbose($"Resend message {message.Id.ToByteString()} explicitly.");
                 resendMessages.Enqueue(message);
             }
 
-            public void Enqueue(OutgoingMessage outgoingMessage)
+            public void Enqueue(Stream message, Action messageCompletedAction)
             {
+                Guid messageGuid = Guid.NewGuid();
+                OutgoingMessage outgoingMessage = GenerateOutgoingMessage(messageGuid, message, messageCompletedAction);
+                outgoingMessage.ConfirmationTimeElapsed += OutgoingMessageOnConfirmationTimeElapsed;
+                
                 log.LogVerbose($"Enqueue message {outgoingMessage.Id.ToByteString()} with length {outgoingMessage.Data.Length}.");
                 pendingMessages.Enqueue(outgoingMessage);
+            }
+
+            private void OutgoingMessageOnConfirmationTimeElapsed(object sender, EventArgs e)
+            {
+                if (sender is OutgoingMessage message && unconfirmedMessages.TryRemove(message.Id, out _))
+                {
+                    ResendMessage(message);
+                }
+            }
+
+            protected virtual OutgoingMessage GenerateOutgoingMessage(Guid messageGuid, Stream messageCopy,
+                                                                      Action messageCompletedAction)
+            {
+                return new OutgoingMessage(messageGuid, messageCopy, messageCompletedAction, communicationProtocol, log, writeStream);
             }
 
             public void SendMessageConfirmation(Guid messageId, bool success)
@@ -691,18 +696,17 @@ namespace PlcNext.NamedPipeServer.Communication
 
             public void Dispose()
             {
-                confirmationTimer.Elapsed -= ConfirmationTimerOnElapsed;
-                confirmationTimer.Dispose();
-                
                 pollingCollectionObserver?.Dispose();
                 
                 foreach (OutgoingMessage message in pendingMessages)
                 {
+                    message.ConfirmationTimeElapsed -= OutgoingMessageOnConfirmationTimeElapsed;
                     message.Dispose();
                 }
 
                 foreach (OutgoingMessage outgoingMessage in unconfirmedMessages.Values.ToArray())
                 {
+                    outgoingMessage.ConfirmationTimeElapsed -= OutgoingMessageOnConfirmationTimeElapsed;
                     outgoingMessage.Dispose();
                 }
 
@@ -733,7 +737,8 @@ namespace PlcNext.NamedPipeServer.Communication
                 byte[] confirmationHeader = GenerateHeader();
                     
                 log.LogInformation($"Send message confirmation for message {messageId.ToByteString()}.");
-                await writeStream.WriteAsync(confirmationHeader, 0, confirmationHeader.Length, cancellationToken);
+                await writeStream.WriteAsync(confirmationHeader, 0, confirmationHeader.Length, cancellationToken)
+                                 .ConfigureAwait(false);
             }
 
             protected virtual byte[] GenerateHeader()
@@ -757,6 +762,9 @@ namespace PlcNext.NamedPipeServer.Communication
             private readonly NamedPipeCommunicationProtocol communicationProtocol;
             private int sendCounter;
             private readonly PipeStream writeStream;
+            private readonly Timer confirmationTimer = new Timer(MaxConfirmationResponseTime) {AutoReset = false};
+            private bool isCompleted;
+            private readonly object completedSyncRoot = new object();
 
             public OutgoingMessage(Guid id, Stream data, Action messageCompletedAction,
                                    NamedPipeCommunicationProtocol communicationProtocol, ILog log,
@@ -765,6 +773,12 @@ namespace PlcNext.NamedPipeServer.Communication
                 this.messageCompletedAction = messageCompletedAction;
                 this.communicationProtocol = communicationProtocol;
                 this.writeStream = writeStream;
+                confirmationTimer.Elapsed += ConfirmationTimerOnElapsed;
+            }
+
+            private void ConfirmationTimerOnElapsed(object sender, ElapsedEventArgs e)
+            {
+                OnConfirmationTimeElapsed();
             }
 
             private bool HasUnsentData => Data.Position < Data.Length;
@@ -772,6 +786,8 @@ namespace PlcNext.NamedPipeServer.Communication
             protected bool NextMessageIsSplit => Data.Length - Data.Position > MaxMessageLength;
 
             protected int RemainingLength => (int) (Data.Length - Data.Position);
+
+            public event EventHandler<EventArgs> ConfirmationTimeElapsed; 
 
             public async Task SendMessageAsync(CancellationToken cancellationToken)
             {
@@ -796,7 +812,8 @@ namespace PlcNext.NamedPipeServer.Communication
                                                           NextMessageIsSplit
                                                               ? SplitMessageIndicator
                                                               : RemainingLength);
-                    await writeStream.WriteAsync(header, 0, header.Length, cancellationToken);
+                    await writeStream.WriteAsync(header, 0, header.Length, cancellationToken)
+                                     .ConfigureAwait(false);
 
                     int sentDataLength = NextMessageIsSplit
                                              ? MaxMessageLength
@@ -808,15 +825,24 @@ namespace PlcNext.NamedPipeServer.Communication
                     {
                         byte[] buffer = new byte[BufferSize];
                         await Data.ReadAsync(buffer, 0, BufferSize, cancellationToken);
-                        await writeStream.WriteAsync(buffer, 0, BufferSize, cancellationToken);
+                        await writeStream.WriteAsync(buffer, 0, BufferSize, cancellationToken)
+                                         .ConfigureAwait(false);
                     }
 
                     byte[] remainingBuffer = new byte[remaining];
                     await Data.ReadAsync(remainingBuffer, 0, remaining, cancellationToken);
-                    await writeStream.WriteAsync(remainingBuffer, 0, remaining, cancellationToken);
+                    await writeStream.WriteAsync(remainingBuffer, 0, remaining, cancellationToken)
+                                     .ConfigureAwait(false);
                     Log.LogInformation($"Message {Id.ToByteString()} send.");
                 }
-                messageCompletedAction?.Invoke();
+
+                lock (completedSyncRoot)
+                {
+                    if (!isCompleted)
+                    {
+                        confirmationTimer.Start();
+                    }
+                }
             }
 
             protected virtual byte[] GenerateMessageHeader(Guid guid, int length)
@@ -827,6 +853,44 @@ namespace PlcNext.NamedPipeServer.Communication
                                    .Concat(guid.ToByteArray())
                                    .Concat(new[] { DefaultConfirmationFlag })
                                    .ToArray();
+            }
+
+            public void CompleteMessage()
+            {
+                lock (completedSyncRoot)
+                {
+                    if (isCompleted)
+                    {
+                        return;
+                    }
+
+                    isCompleted = true;
+                    confirmationTimer.Stop();
+                    OnMessageCompleted();
+                }
+            }
+
+            protected virtual void OnMessageCompleted()
+            {
+                Log.LogVerbose("Invoke message completed action.");
+                messageCompletedAction?.Invoke();
+            }
+
+            private void OnConfirmationTimeElapsed()
+            {
+                ConfirmationTimeElapsed?.Invoke(this, EventArgs.Empty);
+            }
+
+            public override void Dispose()
+            {
+                confirmationTimer.Elapsed -= ConfirmationTimerOnElapsed;
+                confirmationTimer.Dispose();
+                base.Dispose();
+            }
+
+            public void PrepareResend()
+            {
+                confirmationTimer.Stop();
             }
         }
 

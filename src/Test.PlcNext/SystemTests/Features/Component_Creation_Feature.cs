@@ -28,7 +28,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Standard"),
                 _ => When_I_create_a_new_component_with_name("NewComponent", false),
                 _ => Then_the_user_was_informed_that_the_component_was_created_successfully(),
-                _ => Then_the_project_contains_a_component_with_name("NewComponent")).RunAsync();
+                _ => Then_the_project_contains_a_component_with_name("NewComponent")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -38,7 +38,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_create_a_new_component_with_name_for_project_in_specific_folder("NewComponent", false),
                 _ => Then_the_user_was_informed_that_the_component_was_created_successfully(),
-                _ => Then_the_project_contains_a_component_with_name("NewComponent")).RunAsync();
+                _ => Then_the_project_contains_a_component_with_name("NewComponent")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -50,7 +50,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_create_a_new_component(true, false),
                 _ => Then_the_project_contains_a_component_with_name("StandardComponent"),
                 _ => Then_the_user_was_informed_that_the_component_was_created_successfully(),
-                _ => Then_the_code_entity_was_created()).RunAsync();
+                _ => Then_the_code_entity_was_created()).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -61,7 +61,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_create_a_new_project_with_name("A.B.C.D"),
                 _ => When_I_create_a_new_component(true, true),
                 _ => Then_the_user_was_informed_that_the_component_was_created_successfully(),
-                _ => Then_the_components_namespace_starts_with_namespace("DComponent", "A.B.C.D")).RunAsync();
+                _ => Then_the_components_namespace_starts_with_namespace("DComponent", "A.B.C.D")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -71,7 +71,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_project_with_name("A.B.C.D"),
                 _ => When_I_create_a_new_component_with_path("src/customfolder", true, false),
-                _ => Then_the_component_exists_in_path("DComponent", "A.B.C.D/src/customfolder")).RunAsync();
+                _ => Then_the_component_exists_in_path("DComponent", "A.B.C.D/src/customfolder")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -81,7 +81,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_project_with_name("A.B.C.D"),
                 _ => When_I_create_a_new_component_with_path(Path.GetFullPath("A.B.C.D"), true, false),
-                _ => Then_the_component_exists_in_path("DComponent", "A.B.C.D")).RunAsync();
+                _ => Then_the_component_exists_in_path("DComponent", "A.B.C.D")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -91,7 +91,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Arp.Plc.Esm"),
                 _ => Given_is_the_working_directory_PATH("Arp.Plc.Esm"),
                 _ => When_I_create_a_new_component(false, false),
-                _ => Then_the_components_namespace_starts_with_namespace("EsmComponent", "Arp.Plc.Esm")).RunAsync();
+                _ => Then_the_components_namespace_starts_with_namespace("EsmComponent", "Arp.Plc.Esm")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -101,7 +101,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_an_empty_workspace(),
                 _ => When_I_create_a_new_component(false, false),
                 _ => Then_the_user_was_informed_that_the_component_was_created_successfully(),
-                _ => Then_the_entity_was_created_in_default_namespace("RootComponent")).RunAsync();
+                _ => Then_the_entity_was_created_in_default_namespace("RootComponent")).RunAsyncWithTimeout();
         }
     }
 }

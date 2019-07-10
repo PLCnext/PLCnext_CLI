@@ -14,6 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlcNext.Common.DataModel;
+using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.Settings;
 
@@ -28,102 +29,96 @@ namespace PlcNext.Common.Templates
 
         public string Resolve(string stringToResolve, IEntityBase dataSource)
         {
-            Task<string> result = ResolveAsync(stringToResolve, dataSource);
-            result.Wait();
-            return result.Result;
-        }
-
-        public Task<string> ResolveAsync(string stringToResolve, IEntityBase dataSource)
-        {
-            return Task.Run(async () =>
+            StringBuilder resolved = new StringBuilder();
+            int index = 0;
+            while (index != stringToResolve.Length - 1)
             {
-                StringBuilder result = new StringBuilder();
-                int index = 0;
-                while (index != stringToResolve.Length - 1)
+                Match sequenceFound = controlSequenceFinder.Match(stringToResolve, index);
+                if (!sequenceFound.Success)
                 {
-                    Match sequenceFound = controlSequenceFinder.Match(stringToResolve, index);
-                    if (!sequenceFound.Success)
-                    {
-                        break;
-                    }
-
-                    result.Append(await ResolveTemplateContent(stringToResolve.Substring(index, sequenceFound.Index - index)));
-
-                    string controlSequence = sequenceFound.Groups["expression"].Value;
-                    string startTag = $"$([{controlSequence}]";
-                    string endTag = $"$([end-{controlSequence}])";
-                    int length = sequenceFound.Length;
-                    index = sequenceFound.Index;
-                    int nestedSequences = Count(stringToResolve.Substring(index + startTag.Length, length - startTag.Length), startTag);
-                    int endIndex = index + length;
-                    while (nestedSequences > 0)
-                    {
-                        int newEnd = stringToResolve.Substring(endIndex).IndexOf(endTag, StringComparison.OrdinalIgnoreCase);
-                        if (newEnd < 0)
-                        {
-                            throw new ControlSequenceEndTagNotFoundException(controlSequence);
-                        }
-
-                        newEnd = endIndex + newEnd;
-
-                        //Find nested tags between last end tag and this end tag
-                        nestedSequences += Count(stringToResolve.Substring(endIndex, newEnd - endIndex), startTag);
-                        nestedSequences--;
-                        endIndex = newEnd + endTag.Length;
-                    }
-
-                    Match controlSequenceDataMatch = greedyContentFinder.Match(stringToResolve, index, endIndex - index);
-                    if (!controlSequenceDataMatch.Success)
-                    {
-                        throw new InvalidOperationException("Should not happen");
-                    }
-
-                    result.Append(await ResolveControlSequence(controlSequenceDataMatch.Groups["expression"].Value,
-                                                               controlSequenceDataMatch.Groups["parameter"].Value,
-                                                               controlSequenceDataMatch.Groups["content"].Value));
-                    if (controlSequenceDataMatch.Value.Contains('\n'))
-                    {
-                        Match newlineMatch = newlineSearcher.Match(stringToResolve, endIndex);
-                        if (newlineMatch.Success && newlineMatch.Index == endIndex)
-                        {
-                            endIndex += newlineMatch.Length;
-                        }
-                    }
-                    index = endIndex;
+                    break;
                 }
 
-                result.Append(await ResolveTemplateContent(stringToResolve.Substring(index)));
-                return result.ToString();
-            });
+                resolved.Append(ResolveTemplateContent(stringToResolve.Substring(index, sequenceFound.Index - index)));
 
-            async Task<string> ResolveControlSequence(string sequence, string parameter, string content)
+                string controlSequence = sequenceFound.Groups["expression"].Value;
+                string startTag = $"$([{controlSequence}]";
+                string endTag = $"$([end-{controlSequence}])";
+                int length = sequenceFound.Length;
+                index = sequenceFound.Index;
+                int nestedSequences =
+                    Count(stringToResolve.Substring(index + startTag.Length, length - startTag.Length), startTag);
+                int endIndex = index + length;
+                while (nestedSequences > 0)
+                {
+                    int newEnd = stringToResolve.Substring(endIndex)
+                                                .IndexOf(endTag, StringComparison.OrdinalIgnoreCase);
+                    if (newEnd < 0)
+                    {
+                        throw new ControlSequenceEndTagNotFoundException(controlSequence);
+                    }
+
+                    newEnd = endIndex + newEnd;
+
+                    //Find nested tags between last end tag and this end tag
+                    nestedSequences += Count(stringToResolve.Substring(endIndex, newEnd - endIndex), startTag);
+                    nestedSequences--;
+                    endIndex = newEnd + endTag.Length;
+                }
+
+                Match controlSequenceDataMatch = greedyContentFinder.Match(stringToResolve, index, endIndex - index);
+                if (!controlSequenceDataMatch.Success)
+                {
+                    throw new InvalidOperationException("Should not happen");
+                }
+
+                resolved.Append(ResolveControlSequence(controlSequenceDataMatch.Groups["expression"].Value,
+                                                       controlSequenceDataMatch.Groups["parameter"].Value,
+                                                       controlSequenceDataMatch.Groups["content"].Value));
+                if (controlSequenceDataMatch.Value.Contains('\n'))
+                {
+                    Match newlineMatch = newlineSearcher.Match(stringToResolve, endIndex);
+                    if (newlineMatch.Success && newlineMatch.Index == endIndex)
+                    {
+                        endIndex += newlineMatch.Length;
+                    }
+                }
+
+                index = endIndex;
+            }
+
+            resolved.Append(ResolveTemplateContent(stringToResolve.Substring(index)));
+            return resolved.ToString();
+
+            string ResolveControlSequence(string sequence, string parameter, string content)
             {
                 switch (sequence.ToLowerInvariant())
                 {
                     case "if-exist":
-                        return await IfSequence(IfExistCondition);
+                        return IfSequence(IfExistCondition);
                     case "if-specified":
-                        return await IfSequence(IfSpecifiedCondition);
+                        return IfSequence(IfSpecifiedCondition);
                     case "foreach":
-                        return await ForeachSequence();
+                        return ForeachSequence();
                     case "no-dublicate-lines":
-                        return await RemoveDublicateLinesSequence();
+                        return RemoveDublicateLinesSequence();
                     default:
                         throw new UnrecognizedControlSequenceException(sequence);
                 }
 
-                async Task<string> RemoveDublicateLinesSequence()
+                string RemoveDublicateLinesSequence()
                 {
                     if (!string.IsNullOrEmpty(parameter))
                     {
                         throw new NoDublicateLinesParameterMismatchException();
                     }
-                    string[] lines = (await ResolveAsync(content, dataSource)).Split(new[] {'\r', '\n'},
-                                                                                      StringSplitOptions.RemoveEmptyEntries);
-                    return string.Join(Environment.NewLine, lines.Distinct())+Environment.NewLine;
+
+                    string[] lines = (Resolve(content, dataSource)).Split(new[] {'\r', '\n'},
+                                                                          StringSplitOptions.RemoveEmptyEntries);
+                    return string.Join(Environment.NewLine, lines.Distinct()) + Environment.NewLine;
                 }
 
-                async Task<string> IfSequence(Func<bool> conditionCheck)
+                string IfSequence(Func<bool> conditionCheck)
                 {
                     if (string.IsNullOrEmpty(parameter))
                     {
@@ -132,7 +127,7 @@ namespace PlcNext.Common.Templates
 
                     bool condition = conditionCheck();
 
-                    return await IfResult(condition);
+                    return IfResult(condition);
                 }
 
                 bool IfExistCondition()
@@ -156,29 +151,29 @@ namespace PlcNext.Common.Templates
                     else
                     {
                         specified = dataSource.HasContent(parameter) &&
-                            !string.IsNullOrEmpty(dataSource[parameter].Value<string>());
+                                    !string.IsNullOrEmpty(dataSource[parameter].Value<string>());
                     }
 
                     return specified;
                 }
 
-                async Task<string> IfResult(bool condition)
+                string IfResult(bool condition)
                 {
                     string result = string.Empty;
                     string[] elseSplit = content.Split(new[] {"$([else])"}, StringSplitOptions.RemoveEmptyEntries);
                     if (condition)
                     {
-                        result = await ResolveAsync(elseSplit[0], dataSource);
+                        result = Resolve(elseSplit[0], dataSource);
                     }
                     else if (elseSplit.Length == 2)
                     {
-                        result = await ResolveAsync(elseSplit[1], dataSource);
+                        result = Resolve(elseSplit[1], dataSource);
                     }
 
                     return result;
                 }
 
-                async Task<string> ForeachSequence()
+                string ForeachSequence()
                 {
                     StringBuilder foreachResult = new StringBuilder();
                     if ((content.StartsWith("\n") || content.StartsWith("\r\n")) &&
@@ -188,24 +183,27 @@ namespace PlcNext.Common.Templates
                         content = content.TrimStart('\r').TrimStart('\n');
                     }
 
-                    string[] nameSplit = parameter.Split(new []{ "[in]" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] nameSplit = parameter.Split(new[] {"[in]"}, StringSplitOptions.RemoveEmptyEntries);
                     if (nameSplit.Length != 2)
                     {
                         throw new ForeachSequenceParameterMismatchException(parameter);
                     }
 
                     string elementName = nameSplit[0].Trim();
-                    string[] oftypeSplit = nameSplit[1].Split(new[] {"[of-type]"}, StringSplitOptions.RemoveEmptyEntries);
+                    string[] oftypeSplit =
+                        nameSplit[1].Split(new[] {"[of-type]"}, StringSplitOptions.RemoveEmptyEntries);
                     string collection = oftypeSplit[0].Trim();
                     string filter = oftypeSplit.Length == 2 ? oftypeSplit[1].Trim() : string.Empty;
 
-                    string[] path = collection.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-                    IEnumerable<Entity> data = await ResolveRecursively(path);
+                    string[] path = collection.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+                    IEnumerable<Entity> data = ResolveRecursively(path);
 
                     if (!string.IsNullOrEmpty(filter))
                     {
-                        data = data.Where(d => d.Template()?.name.Equals(filter, StringComparison.OrdinalIgnoreCase) == true);
+                        data = data.Where(d => d.Template()?.name.Equals(filter, StringComparison.OrdinalIgnoreCase) ==
+                                               true);
                     }
+
                     ForeachItemContainer container = new ForeachItemContainer(elementName);
                     using (dataSource.AddTemporaryDataSource(container))
                     using (dataSource.SkipCaching(elementName))
@@ -213,7 +211,7 @@ namespace PlcNext.Common.Templates
                         foreach (Entity entity in data)
                         {
                             container.Current = entity;
-                            foreachResult.Append(await ResolveAsync(content, dataSource));
+                            foreachResult.Append(Resolve(content, dataSource));
                         }
                     }
 
@@ -221,7 +219,7 @@ namespace PlcNext.Common.Templates
                 }
             }
 
-            async Task<string> ResolveTemplateContent(string resolvable)
+            string ResolveTemplateContent(string resolvable)
             {
                 string result = resolvable;
                 Match controlSequenceMatch = templateAccessRegex.Match(resolvable);
@@ -235,7 +233,7 @@ namespace PlcNext.Common.Templates
                     }
 
                     string[] path = content.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
-                    string value = (await ResolveRecursively(path)).Value<string>();
+                    string value = (ResolveRecursively(path)).Value<string>();
                     result = result.Replace(controlSequenceMatch.Value, value);
                     controlSequenceMatch = controlSequenceMatch.NextMatch();
                 }
@@ -243,7 +241,7 @@ namespace PlcNext.Common.Templates
                 return ResolveTextControlSequences(result);
             }
 
-            async Task<IEntityBase> ResolveRecursively(string[] path)
+            IEntityBase ResolveRecursively(string[] path)
             {
                 IEntityBase current = dataSource;
                 foreach (string part in path)
@@ -251,7 +249,7 @@ namespace PlcNext.Common.Templates
                     current = current[part];
                     if (current.HasValue<string>())
                     {
-                        string value = await ResolveAsync(current.Value<string>(), current);
+                        string value = Resolve(current.Value<string>(), current);
                         value = ResolveTextControlSequences(value);
                         current.SetValue(value);
                     }
@@ -264,6 +262,12 @@ namespace PlcNext.Common.Templates
             {
                 return (data.Length - data.Replace(substring, string.Empty).Length) / substring.Length;
             }
+        }
+
+        Task<string> ITemplateResolver.ResolveAsync(string stringToResolve, IEntityBase dataSource)
+        {
+            return Task.Factory.StartNew(() => Resolve(stringToResolve, dataSource), 
+                                         TaskCreationOptions.LongRunning);
         }
 
         private string ResolveTextControlSequences(string value)

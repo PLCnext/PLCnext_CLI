@@ -34,7 +34,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_the_command_successful_finishes("command", "--with", "args"),
                 _ => Then_the_client_received_a_command_reply_for_the_command_with_the_result("command --with args", true)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -45,7 +45,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command  --with args"),
                 _ => When_the_command_unsuccessful_finishes("command", "--with", "args"),
                 _ => Then_the_client_received_a_command_reply_for_the_command_with_the_result("command  --with args", false)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -56,7 +56,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_I_cancel_the_command("command --with args"),
                 _ => Then_the_client_did_not_receive_a_command_reply_for_the_command("command --with args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -67,7 +67,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_I_cancel_the_command("command --with args"),
                 _ => Then_the_the_client_received_a_cancel_reply_for_the_command("command --with args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -80,7 +80,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("other command --withFlag"),
                 _ => When_I_cancel_the_command("command --with other,args"),
                 _ => Then_the_the_client_received_a_cancel_reply_for_the_command("command --with other,args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -90,7 +90,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_started_server(),
                 _ => When_I_connect_with_a_valid_handshake(),
                 _ => Then_the_the_client_received_a_successful_handshake_reply()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -100,7 +100,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_started_server(),
                 _ => When_I_connect_with_a_valid_handshake_twice(),
                 _ => Then_the_the_client_received_a_handshake_reply_once()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -110,7 +110,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_started_server(),
                 _ => When_I_connect_with_a_wrong_handshake(),
                 _ => Then_the_the_client_received_an_unsuccessful_handshake_reply()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -121,7 +121,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_I_cancel_the_command("command --with args"),
                 _ => Then_the_the_client_received_no_reply()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -133,7 +133,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_the_command_line_outputs_the_message_MESSAGE_with_the_type_TYPE(message, messageType),
                 _ => Then_the_client_received_a_message_with_the_content_CONTENT_and_type_TYPE_for_the_command(message, messageType, "command --with args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -143,7 +143,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_started_server_with_heartbeat_enabled(),
                 _ => When_I_wait_for_TIME_ms(400),
                 _ => Then_the_client_received_at_most_COUNT_heartbeats(0)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -153,7 +153,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_started_server_with_heartbeat_enabled_and_valid_handshake(),
                 _ => When_I_wait_for_TIME_ms(400),
                 _ => Then_the_client_received_at_most_COUNT_heartbeats(0)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -164,7 +164,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_I_wait_for_TIME_ms(420),
                 _ => Then_the_client_received_at_least_COUNT_heartbeats(4)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -178,7 +178,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_the_command_successful_finishes("command","--with","args"),
                 _ => When_I_wait_for_TIME_ms(320),
                 _ => Then_the_client_received_at_least_COUNT_heartbeats(7)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -193,7 +193,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_the_command_successful_finishes("command","--with","other,args"),
                 _ => When_I_wait_for_TIME_ms(400),
                 _ => Then_the_client_received_at_most_COUNT_heartbeats(6)
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -203,7 +203,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client(),
                 _ => When_the_client_disconnects_from_the_server(),
                 _ => Then_the_server_registered_a_disconnect()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -214,7 +214,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_I_kill_the_server(),
                 _ => Then_the_the_client_received_a_cancel_reply_for_the_command("command --with args")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
 
         public class MessageDataGenerator : IEnumerable<object[]>

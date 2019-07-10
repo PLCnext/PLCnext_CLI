@@ -30,7 +30,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client(),
                 _ => When_I_change_the_setting_to_the_value("AttributePrefix", "!"),
                 _ => Then_the_client_received_a_setting_updated_message()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -41,7 +41,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_add_the_target("AXCF2152","2.0"),
                 _ => Then_the_client_received_a_project_target_updated_message_for_the_project("Standard")
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -51,7 +51,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client(),
                 _ => When_I_explore_all_sdks(),
                 _ => Then_the_client_received_a_sdks_updated_message()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -61,7 +61,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client_without_handshake(),
                 _ => When_I_change_the_setting_to_the_value("AttributePrefix", "!"),
                 _ => Then_the_client_received_no_setting_updated_message()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -72,7 +72,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_add_the_target("AXCF2152","2.0"),
                 _ => Then_the_client_received_no_setting_updated_message()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
         
         [Scenario]
@@ -82,7 +82,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => Given_is_a_connected_client_without_handshake(),
                 _ => When_I_explore_all_sdks(),
                 _ => Then_the_client_received_no_setting_updated_message()
-            ).RunAsync();
+            ).RunAsyncWithTimeout();
         }
     }
 }
