@@ -109,7 +109,7 @@ namespace PlcNext.NamedPipeServer.Communication
         public void Dispose()
         {
             disposeSource.Cancel();
-            updateThread.Join();
+            updateThread.Join(CommunicationConstants.ThreadJoinTimeout);
             
             messageParser.HandshakeCompleted -= MessageParserOnHandshakeCompleted;
             protocol?.Dispose();

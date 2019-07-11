@@ -500,7 +500,7 @@ namespace PlcNext.NamedPipeServer.Communication
 
             public void Dispose()
             {
-                readingThread?.Join();
+                readingThread?.Join(CommunicationConstants.ThreadJoinTimeout);
                 pollingCollectionObserver?.Dispose();
                 
                 foreach (IncomingMessage message in messages)

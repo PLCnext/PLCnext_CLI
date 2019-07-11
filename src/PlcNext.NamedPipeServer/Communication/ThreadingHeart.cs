@@ -86,7 +86,7 @@ namespace PlcNext.NamedPipeServer.Communication
             try
             {
                 HighResolutionTimer timer = null;
-                CancellationToken.Register(() => timer?.Stop(true));
+                CancellationToken.Register(() => timer?.Stop(false));
                 heartbeatCompleted.Set();
                 DateTime start = DateTime.Now - new TimeSpan(0, 0, 0, 0, CommunicationConstants.HeartbeatInterval);
                 while (!CancellationToken.IsCancellationRequested)
@@ -104,7 +104,7 @@ namespace PlcNext.NamedPipeServer.Communication
                     void TimerOnElapsed(object sender, HighResolutionTimerElapsedEventArgs e)
                     {
                         timer.Elapsed -= TimerOnElapsed;
-                        timer.Stop(true);
+                        timer.Stop(false);
                         start = DateTime.Now;
                         messageSender.SendHeartbeat(() =>
                         {
@@ -138,7 +138,7 @@ namespace PlcNext.NamedPipeServer.Communication
             lock (threadSyncRoot)
             {
                 threadKillToken?.Cancel();
-                heartbeatThread?.Join();
+                heartbeatThread?.Join(CommunicationConstants.ThreadJoinTimeout);
                 threadKillToken?.Dispose();
                 threadKillToken = null;
                 heartbeatThread = null;
