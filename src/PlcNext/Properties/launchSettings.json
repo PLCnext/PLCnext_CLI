@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "PlcNext": {
-      "commandName": "Project",
-      "commandLineArgs": "get components -s src,extern",
-      "workingDirectory": "C:\\temp\\test\\ComponentsInMultipleNamespaces"
-    }
-  }
-}
