@@ -14,7 +14,7 @@ namespace PlcNext.NamedPipeServer.Communication
 {
     public interface ICliServer
     {
-        Task<bool> Start(string serverName, bool twoChannelCommunication, bool heartbeat);
+        Task<bool> Start(string serverName, bool heartbeat);
         void Stop();
         event EventHandler<ServerConnectedEventArgs> Connected;
         event EventHandler<EventArgs> Disconnected;

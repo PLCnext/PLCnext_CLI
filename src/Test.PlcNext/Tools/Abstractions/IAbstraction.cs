@@ -14,6 +14,6 @@ namespace Test.PlcNext.Tools.Abstractions
 {
     public interface IAbstraction : IDisposable
     {
-        void Initialize(InstancesRegistrationSource exportProvider);
+        void Initialize(InstancesRegistrationSource exportProvider, Action<string> printMessage);
     }
 }

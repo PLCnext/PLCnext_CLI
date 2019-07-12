@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -40,6 +42,10 @@ namespace Test.PlcNext.SystemTests.Features
                     _ => When_I_install_SDK_to_DESTINATION("Dummy_AXCF2152_Sdk.tar.xz", "C:/foo/ba"),
                     _ => Then_the_sdk_is_available_in_DESTINATION("C:/foo/ba")
                 ).RunAsyncWithTimeout();
+        }
+
+        public Install_Sdk_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

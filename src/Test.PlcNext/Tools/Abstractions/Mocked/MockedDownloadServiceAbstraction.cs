@@ -83,7 +83,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
             }
         }
 
-        public void Initialize(InstancesRegistrationSource exportProvider)
+        public void Initialize(InstancesRegistrationSource exportProvider, Action<string> printMessage)
         {
             exportProvider.AddInstance(downloadService);
         }

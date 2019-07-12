@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -122,6 +124,10 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_project_supports_the_targets("AXCF2152,1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)"
                                                          , "AXCF2152,2.0 LTS (2.0.0.12345 branches/release/2.0.0/ beta)")
                 ).RunAsyncWithTimeout();
+        }
+
+        public Set_Targets_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

@@ -157,6 +157,7 @@ namespace PlcNext.NamedPipeServer.Tools
 
                 while (_isRunning)
                 {
+                    float lastTrigger = nextTrigger;
                     nextTrigger += _interval;
                     double elapsed;
 
@@ -181,7 +182,7 @@ namespace PlcNext.NamedPipeServer.Tools
                     }
 
 
-                    double delay = elapsed - nextTrigger;
+                    double delay = elapsed - lastTrigger;
                     Elapsed?.Invoke(this, new HighResolutionTimerElapsedEventArgs(delay));
 
                     if (!_isRunning)

@@ -15,6 +15,8 @@ using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using PlcNext.Common.Tools;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -85,6 +87,10 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_build_the_project(),
                 _ => Then_only_the_cmake_file_was_added_to_the_workspace()
                 ).RunAsyncWithTimeout();
+        }
+
+        public Transaction_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

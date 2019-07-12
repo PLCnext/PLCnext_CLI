@@ -33,15 +33,6 @@ namespace PlcNext.CommandLine
             Required = true)]
         public string ServerName { get; set; }
 
-        [Option(CommandLineConstants.TwoChannelChar, CommandLineConstants.TwoChannelOption, HelpText =
-                "Usually the server will create a single bi-directional communication channel with the given name. " +
-                "With this option the server will create a separate read and write channel. " +
-                "The two channels will be <server-name>/server-output and <server-name>/server-input. " +
-                "The server will send messages through the server-output channel and expect message " +
-                "through the server-input channel.",
-            Required = false)]
-        public bool TwoChannelCommunication { get; set; }
-
         [Option(CommandLineConstants.HeartbeatChar, CommandLineConstants.HeartbeatOption, HelpText =
                 "With this option the server will send a heartbeat at least every 100 ms. " +
                 "Without the heartbeat it will be more difficult to check whether the server is not stuck. " +
@@ -71,7 +62,7 @@ namespace PlcNext.CommandLine
                 ICliServer server = serverHost.Resolve<ICliServer>();
                 server.Disconnected += ServerOnDisconnected;
                 context.WriteInformation(string.Format(MessageResources.StartingServerMessage, ServerName));
-                bool result = await server.Start(ServerName, TwoChannelCommunication, HeartbeatEnabled);
+                bool result = await server.Start(ServerName, HeartbeatEnabled);
                 if (!result)
                 {
                     return -1;

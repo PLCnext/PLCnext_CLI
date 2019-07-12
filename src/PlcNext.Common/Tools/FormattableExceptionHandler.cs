@@ -18,11 +18,11 @@ namespace PlcNext.Common.Tools
 {
     internal class FormattableExceptionHandler : IExceptionHandler
     {
-        private readonly IUserInterface userInterface;
+        private readonly ExecutionContext executionContext;
 
-        public FormattableExceptionHandler(IUserInterface userInterface)
+        public FormattableExceptionHandler(ExecutionContext executionContext)
         {
-            this.userInterface = userInterface;
+            this.executionContext = executionContext;
         }
 
         public bool HandleException(Exception e)
@@ -47,14 +47,14 @@ namespace PlcNext.Common.Tools
 
             void WriteError(FormattableException exception)
             {
-                userInterface.WriteError(exception.Message);
+                executionContext.WriteError(exception.Message);
                 Exception inner = exception.InnerException;
                 while (inner != null)
                 {
-                    userInterface.WriteError($"-> {inner.Message}");
+                    executionContext.WriteError($"-> {inner.Message}");
                     inner = inner.InnerException;
                 }
-                Trace.TraceError($"Complete exception: {exception}");
+                executionContext.WriteError($"Complete exception: {exception}", false);
             }
 
             bool IsHandlable(Exception exception)

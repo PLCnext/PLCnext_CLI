@@ -13,6 +13,8 @@ using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -102,6 +104,10 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_create_a_new_component(false, false),
                 _ => Then_the_user_was_informed_that_the_component_was_created_successfully(),
                 _ => Then_the_entity_was_created_in_default_namespace("RootComponent")).RunAsyncWithTimeout();
+        }
+
+        public Component_Creation_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

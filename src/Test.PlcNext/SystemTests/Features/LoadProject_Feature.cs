@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -51,6 +53,10 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_generate_all_metafiles(),
                 _ => Then_the_user_was_informed_that_the_comment_points_to_nonexisting_component()
                 ).RunAsyncWithTimeout();
+        }
+
+        public LoadProject_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

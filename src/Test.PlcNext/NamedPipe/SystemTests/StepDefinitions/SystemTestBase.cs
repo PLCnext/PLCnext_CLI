@@ -10,7 +10,9 @@
 using System;
 using System.Diagnostics;
 using LightBDD.XUnit2;
+using PlcNext.Common.Tools;
 using Test.PlcNext.NamedPipe.Tools;
+using Xunit.Abstractions;
 
 namespace Test.PlcNext.NamedPipe.SystemTests.StepDefinitions
 {
@@ -34,19 +36,19 @@ namespace Test.PlcNext.NamedPipe.SystemTests.StepDefinitions
             }
         }
 
-        protected SystemTestBase()
+        protected SystemTestBase(ITestOutputHelper output) : base(output)
         {
             testContext = new SystemTestContext();
         }
 
-        protected SystemTestBase(SystemTestContext testContext)
+        protected SystemTestBase(SystemTestContext testContext, ITestOutputHelper output) : base(output)
         {
             this.testContext = testContext;
         }
 
         public void Dispose()
         {
-            testContext?.Dispose();
+            Extensions.ExecutesWithTimeout(() => testContext?.Dispose(), 2000);
         }
     }
 }

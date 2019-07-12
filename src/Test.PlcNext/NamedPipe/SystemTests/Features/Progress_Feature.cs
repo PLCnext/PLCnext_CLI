@@ -16,15 +16,17 @@ using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.NamedPipe.SystemTests.StepDefinitions;
 using Test.PlcNext.SystemTests.Tools;
+using Xunit.Abstractions;
 
 #pragma warning disable 4014
 
 namespace Test.PlcNext.NamedPipe.SystemTests.Features
 {
     [FeatureDescription(@"Check all scenarios with progress.")]
+    [IgnoreScenario("Disabled named pipe communication")]
     public class Progress_Feature : SystemTestBase
     {
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Initial_progress_is_reported_to_the_user()
         {
             await Runner.AddSteps(
@@ -35,7 +37,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
 
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Progress_is_reported_to_the_user()
         {
             await Runner.AddSteps(
@@ -46,7 +48,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
 
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Initial_progress_message_is_reported_to_user()
         {
             await Runner.AddSteps(
@@ -57,7 +59,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
 
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Progress_message_is_reported_to_user()
         {
             await Runner.AddSteps(
@@ -69,7 +71,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
 
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Incremental_progress_updates_the_progress_and_shows_message()
         {
             await Runner.AddSteps(
@@ -81,7 +83,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Completed_progress_sends_final_progress_message()
         {
             await Runner.AddSteps(
@@ -94,7 +96,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Infinite_progress_reported_as_information_message()
         {
             await Runner.AddSteps(
@@ -105,7 +107,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Spawn_infinite_child_progress_reported_as_progress_message_with_unchanged_progress()
         {
             await Runner.AddSteps(
@@ -117,7 +119,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Complete_infinite_child_progress_increments_main_progress()
         {
             await Runner.AddSteps(
@@ -130,7 +132,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Spawn_child_progress_reported_as_progress_message_with_unchanged_progress()
         {
             await Runner.AddSteps(
@@ -142,7 +144,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Increment_child_progress_updates_progress_and_progress_message()
         {
             await Runner.AddSteps(
@@ -155,7 +157,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Complete_child_progress_increments_progress()
         {
             await Runner.AddSteps(
@@ -166,6 +168,10 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_all_child_progresses_are_completed(),
                 _ => Then_the_last_reported_progress_is_PROGRESS_per_mille(154)
             ).RunAsyncWithTimeout();
+        }
+
+        public Progress_Feature(ITestOutputHelper output) : base(output)
+        {
         }
     }
 }

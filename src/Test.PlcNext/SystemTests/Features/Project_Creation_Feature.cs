@@ -12,6 +12,8 @@ using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -110,6 +112,10 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_create_a_new_appproject_with_componentname("MyProject"),
                 _ => Then_the_project_contains_an_appcomponent_with_name("MyProjectComponent")
                 ).RunAsyncWithTimeout();
+        }
+
+        public Project_Creation_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
 	}
 }

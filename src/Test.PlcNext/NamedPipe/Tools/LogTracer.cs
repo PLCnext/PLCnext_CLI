@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using PlcNext.Common.Tools.UI;
 using Xunit.Abstractions;
 
@@ -17,7 +18,11 @@ namespace Test.PlcNext.NamedPipe.Tools
     {
         private readonly Action<string> printMessage;
 
-        public LogTracer(ITestOutputHelper output) : this(output.WriteLine)
+        public LogTracer(ITestOutputHelper output) : this(m =>
+        {
+            output.WriteLine(m);
+            Debug.WriteLine(m);
+        })
         {
         }
 

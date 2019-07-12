@@ -15,6 +15,8 @@ using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -190,6 +192,10 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_change_the_setting_to_the_value("UseSystemCommands", "Schnuden"),
                 _ => Then_the_user_was_informed_that_only_bool_values_are_allowed()
             ).RunAsyncWithTimeout();
+        }
+
+        public Settings_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

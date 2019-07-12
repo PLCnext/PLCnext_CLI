@@ -17,20 +17,29 @@ namespace PlcNext.Common.Tools
 {
     internal class AutomaticRollbackTransactionFactory : ITransactionFactory
     {
+        private readonly ExecutionContext executionContext;
+
+        public AutomaticRollbackTransactionFactory(ExecutionContext executionContext)
+        {
+            this.executionContext = executionContext;
+        }
+
         public ITransaction StartTransaction(out ChangeObservable observable)
         {
             observable = new ChangeObservable();
-            return new AutomaticRollbackTransaction(observable);
+            return new AutomaticRollbackTransaction(observable, executionContext);
         }
 
         private class AutomaticRollbackTransaction : IObserver<Change>, ITransaction
         {
+            private readonly ExecutionContext context;
             private readonly IDisposable subscribeToken;
             private bool completed;
             private readonly List<Change> changes = new List<Change>();
 
-            public AutomaticRollbackTransaction(IObservable<Change> observable)
+            public AutomaticRollbackTransaction(IObservable<Change> observable, ExecutionContext context)
             {
+                this.context = context;
                 subscribeToken = observable.Subscribe(this);
             }
 
@@ -60,7 +69,7 @@ namespace PlcNext.Common.Tools
 
             private void Rollback()
             {
-                Trace.TraceInformation("Rollback transaction.");
+                context.WriteVerbose("Rollback transaction.");
                 changes.Reverse();
                 foreach (Change change in changes)
                 {

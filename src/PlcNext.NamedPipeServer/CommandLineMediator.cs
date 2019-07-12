@@ -73,16 +73,15 @@ namespace PlcNext.NamedPipeServer
             messageSender.SendHandshakeReply(e.Success);
         }
 
-        private void MessageParserOnSuicideIssued(object sender, EventArgs e)
+        private async void MessageParserOnSuicideIssued(object sender, EventArgs e)
         {
             commandLine.CancelAllCommands();
-            WaitForCommandsToFinish();
+            await WaitForCommandsToFinish();
             server.Stop();
 
-            void WaitForCommandsToFinish()
+            async Task WaitForCommandsToFinish()
             {
-                Task.WaitAll(executingCommands.Keys.ToArray(),
-                             CommunicationConstants.KillCancelWaitTimeout);
+                await Task.WhenAll(executingCommands.Keys.ToArray());
             }
         }
 

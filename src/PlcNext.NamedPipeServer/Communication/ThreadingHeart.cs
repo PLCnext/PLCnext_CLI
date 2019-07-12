@@ -23,15 +23,15 @@ namespace PlcNext.NamedPipeServer.Communication
         private readonly CommunicationSettings settings;
         private readonly ILog log;
 
-        private readonly object threadSyncRoot = new object();
+        private readonly object heartSyncRoot = new object();
         private readonly object liveCounterSyncRoot = new object();
-        private readonly AsyncAutoResetEvent heartbeatCompleted = new AsyncAutoResetEvent(false);
         
         private Thread heartbeatThread;
-        private CancellationTokenSource threadKillToken;
+        private CancellationTokenSource heartKillToken;
         private int lifeCounter;
+        private bool isAlive;
 
-        private CancellationToken CancellationToken => threadKillToken.Token;
+        private CancellationToken CancellationToken => heartKillToken.Token;
 
         public ThreadingHeart(IMessageSender messageSender, CommunicationSettings settings, ILog log)
         {
@@ -52,7 +52,8 @@ namespace PlcNext.NamedPipeServer.Communication
                 if (lifeCounter == 0)
                 {
                     log.LogInformation("Start heartbeat.");
-                    CreateThread();
+                    isAlive = true;
+                    StartHeartbeat();
                 }
                 lifeCounter++;
             }
@@ -71,77 +72,109 @@ namespace PlcNext.NamedPipeServer.Communication
                 if (lifeCounter == 0)
                 {
                     log.LogInformation("Stop heartbeat.");
-                    KillThread();
+                    KillHeart();
                 }
             }
         }
 
         public void Dispose()
         {
-            KillThread();
+            KillHeart();
         }
 
-        private async void StartHeartbeat()
+        private void StartHeartbeat()
         {
-            try
+            HighResolutionTimer timer = null;
+            DateTime start = DateTime.Now;
+            lock (heartSyncRoot)
             {
-                HighResolutionTimer timer = null;
-                CancellationToken.Register(() => timer?.Stop(false));
-                heartbeatCompleted.Set();
-                DateTime start = DateTime.Now - new TimeSpan(0, 0, 0, 0, CommunicationConstants.HeartbeatInterval);
-                while (!CancellationToken.IsCancellationRequested)
+                if (!isAlive)
                 {
-                    await heartbeatCompleted.WaitAsync(CancellationToken);
-                    DateTime end = DateTime.Now;
-                    TimeSpan lastWriteTimeSpan = end >= start ? end - start : TimeSpan.Zero;
-                    int delay = Math.Max(CommunicationConstants.HeartbeatInterval - lastWriteTimeSpan.Milliseconds, 0);
-                    log.LogVerbose($"Last heartbeat send, wait for {delay}ms.");
-                    timer = new HighResolutionTimer(delay)
-                        {UseHighPriorityThread = false};
-                    timer.Elapsed += TimerOnElapsed;
-                    timer.Start();
-                    
-                    void TimerOnElapsed(object sender, HighResolutionTimerElapsedEventArgs e)
+                    return;
+                }
+                
+                heartKillToken = new CancellationTokenSource();
+                CancellationToken.Register(StopHeart);
+            
+                StartTimer(10);
+            }
+
+            void StartTimer(int delay)
+            {
+                timer = new HighResolutionTimer(delay)
+                    {UseHighPriorityThread = false};
+                timer.Elapsed += TimerOnElapsed;
+                timer.Start();
+                log.LogVerbose("Heartbeat timer started.");
+            }
+
+            void TimerOnElapsed(object sender, HighResolutionTimerElapsedEventArgs e)
+            {
+                try
+                {
+                    lock (heartSyncRoot)
                     {
+                        if (!isAlive)
+                        {
+                            return;
+                        }
+
                         timer.Elapsed -= TimerOnElapsed;
                         timer.Stop(false);
                         start = DateTime.Now;
-                        messageSender.SendHeartbeat(() =>
-                        {
-                            heartbeatCompleted.Set();
-                        });
+                        log.LogVerbose($"Sending heartbeat message after waiting {e.Delay:F}ms.");
+                        messageSender.SendHeartbeat(RestartTimer);
                     }
                 }
-            }
-            catch (Exception)
-            {
-                //Do not log anything as any log will lead to another exception
-            }
-        }
-
-        private void CreateThread()
-        {
-            lock (threadSyncRoot)
-            {
-                threadKillToken = new CancellationTokenSource();
-                heartbeatThread = new Thread(StartHeartbeat)
+                catch (Exception)
                 {
-                    Priority = ThreadPriority.Normal,
-                    IsBackground = true
-                };
-                heartbeatThread.Start();
+                    //do nothing as it would crash the application
+                }
+            }
+
+            void RestartTimer()
+            {
+                try
+                {
+                    lock (heartSyncRoot)
+                    {
+                        if (!isAlive)
+                        {
+                            return;
+                        }
+                        
+                        DateTime end = DateTime.Now;
+                        TimeSpan lastWriteTimeSpan = end >= start ? end - start : TimeSpan.Zero;
+                        int delay = Math.Max(
+                            CommunicationConstants.HeartbeatInterval - lastWriteTimeSpan.Milliseconds, 0);
+
+                        log.LogVerbose($"Last heartbeat send, wait for {delay}ms.");
+                        StartTimer(delay);
+                    }
+                }
+                catch (Exception)
+                {
+                    //do nothing as it would crash the application
+                }
+            }
+
+            void StopHeart()
+            {
+                lock (heartSyncRoot)
+                {
+                    timer?.Stop(false);
+                    heartKillToken?.Dispose();
+                    heartKillToken = null;
+                }
             }
         }
 
-        private void KillThread()
+        private void KillHeart()
         {
-            lock (threadSyncRoot)
+            lock (heartSyncRoot)
             {
-                threadKillToken?.Cancel();
-                heartbeatThread?.Join(CommunicationConstants.ThreadJoinTimeout);
-                threadKillToken?.Dispose();
-                threadKillToken = null;
-                heartbeatThread = null;
+                isAlive = false;
+                heartKillToken?.Cancel();
             }
         }
     }

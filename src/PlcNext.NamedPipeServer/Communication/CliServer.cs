@@ -30,7 +30,7 @@ namespace PlcNext.NamedPipeServer.Communication
             this.log = log;
         }
 
-        public async Task<bool> Start(string serverName, bool twoChannelCommunication, bool heartbeat)
+        public async Task<bool> Start(string serverName, bool heartbeat)
         {
             if (communicationProtocol != null)
             {
@@ -41,7 +41,7 @@ namespace PlcNext.NamedPipeServer.Communication
             {
                 startCancellationTokenSource = new CancellationTokenSource();
                 communicationProtocol =
-                    await NamedPipeCommunicationProtocol.Connect(serverName, streamFactory, log, twoChannelCommunication,
+                    await NamedPipeCommunicationProtocol.Connect(serverName, streamFactory, log,
                                                         startCancellationTokenSource.Token);
             }
             catch (TaskCanceledException e)

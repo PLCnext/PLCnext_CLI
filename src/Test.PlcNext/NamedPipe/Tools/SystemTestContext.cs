@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -85,8 +86,10 @@ namespace Test.PlcNext.NamedPipe.Tools
         {
             server = Host.Resolve<ICliServer>();
             server.Disconnected += ServerOnDisconnected;
-            string serverName = $"{Guid.NewGuid().ToByteString()}";
-            Task<bool> serverStart = server.Start(serverName, false, heartbeat);
+            string serverName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                                    ? Guid.NewGuid().ToByteString()
+                                    : $"/tmp/{Guid.NewGuid().ToByteString()}";
+            Task<bool> serverStart = server.Start(serverName, heartbeat);
             clientSimulator = NamedPipeCommunicationProtocolSimulator.Connect(serverName,Host.Resolve<StreamFactory>(), Host.Resolve<ILog>());
             Assert.True(await serverStart, "Server not started correctly. See log.");
         }

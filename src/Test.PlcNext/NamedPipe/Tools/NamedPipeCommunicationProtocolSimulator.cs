@@ -28,7 +28,8 @@ namespace Test.PlcNext.NamedPipe.Tools
 {
     public class NamedPipeCommunicationProtocolSimulator : NamedPipeCommunicationProtocol, IClientSimulator
     {
-        private readonly PipeStream serverStream;
+        private readonly PipeStream readStream;
+        private readonly PipeStream writeStream;
         private readonly StreamFactory streamFactory;
         private readonly ILog log;
         
@@ -47,21 +48,27 @@ namespace Test.PlcNext.NamedPipe.Tools
         private int skipConfirmationCount;
         private bool wasSplitMessage;
 
-        protected NamedPipeCommunicationProtocolSimulator(PipeStream serverStream, StreamFactory streamFactory, ILog log) : base(serverStream, streamFactory, log)
+        private NamedPipeCommunicationProtocolSimulator(PipeStream readStream, PipeStream writeStream,
+                                                        StreamFactory streamFactory, ILog log)
+            : base(readStream, writeStream, streamFactory, log)
         {
-            this.serverStream = serverStream;
+            this.readStream = readStream;
+            this.writeStream = writeStream;
             this.streamFactory = streamFactory;
             this.log = log;
         }
 
         public static NamedPipeCommunicationProtocolSimulator Connect(string pipeName, StreamFactory streamFactory, ILog logger)
         {
-            NamedPipeClientStream clientStream = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
-            clientStream.Connect();
+            NamedPipeClientStream writeClient = new NamedPipeClientStream(".", Path.Combine(pipeName, "server-input"), PipeDirection.InOut,
+                                                                          PipeOptions.None);
+            NamedPipeClientStream readClient = new NamedPipeClientStream(".", Path.Combine(pipeName, "server-output"), PipeDirection.InOut,
+                                                                         PipeOptions.None);
+            readClient.Connect();
+            writeClient.Connect();
 
             NamedPipeCommunicationProtocolSimulator result = new NamedPipeCommunicationProtocolSimulator(
-                clientStream, streamFactory,
-                new SimulatorServerNameLogDecorator(logger, pipeName, true));
+                readClient, writeClient, streamFactory, new SimulatorServerNameLogDecorator(logger, pipeName, true));
             result.Start();
             return result;
         }
@@ -225,13 +232,13 @@ namespace Test.PlcNext.NamedPipe.Tools
 
         protected override IncomingMessageQueue CreateIncomingMessageQueue(OutgoingMessageQueue outgoingQueue)
         {
-            return new SimulatorIncomingMessageQueue(streamFactory, log, serverStream, this, CancellationToken,
+            return new SimulatorIncomingMessageQueue(streamFactory, log, readStream, this, CancellationToken,
                                                      outgoingQueue);
         }
 
         protected override OutgoingMessageQueue CreateOutgoingMessageQueue()
         {
-            return new SimulatorOutgoingMessageQueue(log, CancellationToken, serverStream, this);
+            return new SimulatorOutgoingMessageQueue(log, CancellationToken, writeStream, this);
         }
 
         protected override void OnError()
@@ -321,14 +328,14 @@ namespace Test.PlcNext.NamedPipe.Tools
                 this.simulator = simulator;
             }
 
-            public override Task SendAsync(CancellationToken cancellationToken)
+            public override void Send()
             {
                 if (simulator.skipConfirmationCount > 0)
                 {
                     simulator.skipConfirmationCount--;
-                    return Task.CompletedTask;
+                    return;
                 }
-                return base.SendAsync(cancellationToken);
+                base.Send();
             }
 
             protected override byte[] GenerateHeader()
@@ -367,10 +374,10 @@ namespace Test.PlcNext.NamedPipe.Tools
                 return base.ParseHeader(header);
             }
 
-            protected override Task AppendBufferAsync(Stream messageStream, byte[] buffer, int length)
+            protected override void AppendBuffer(Stream messageStream, byte[] buffer, int length)
             {
                 communicationProtocol.aliveEvent.Set();
-                return base.AppendBufferAsync(messageStream, buffer, length);
+                base.AppendBuffer(messageStream, buffer, length);
             }
 
             protected override void EnqueueSplitMessage(Guid messageGuid, IncomingMessage message)
@@ -379,10 +386,10 @@ namespace Test.PlcNext.NamedPipe.Tools
                 base.EnqueueSplitMessage(messageGuid, message);
             }
 
-            protected override Task MergeWithSplitMessage(IncomingMessage splitMessage, Stream messageStream)
+            protected override void MergeWithSplitMessage(IncomingMessage splitMessage, Stream messageStream)
             {
                 lastAppendedMessage = splitMessage.Id;
-                return base.MergeWithSplitMessage(splitMessage, messageStream);
+                base.MergeWithSplitMessage(splitMessage, messageStream);
             }
 
             protected override void CompleteMessage(IncomingMessage message, Guid messageGuid, byte confirmation)
@@ -423,7 +430,7 @@ namespace Test.PlcNext.NamedPipe.Tools
                 return fixedHeader ?? base.GenerateMessageHeader(guid, length);
             }
 
-            protected override async Task SendMessageInChunks(CancellationToken cancellationToken)
+            protected override void SendMessageInChunks(CancellationToken cancellationToken)
             {
                 if (Data.Length == 0)
                 {
@@ -433,13 +440,13 @@ namespace Test.PlcNext.NamedPipe.Tools
                                                               : RemainingLength);
                     Log.LogInformation($"Send header only.{Environment.NewLine}" +
                                        $"{string.Join(", ", header.Select(b => b.ToString("X")))}");
-                    await writeStream.WriteAsync(header, 0, header.Length, cancellationToken);
+                    writeStream.Write(header, 0, header.Length);
                     Log.LogVerbose("Invoke message completed action.");
                     messageCompletedAction?.Invoke();
                     return;
                 }
                 
-                await base.SendMessageInChunks(cancellationToken);
+                base.SendMessageInChunks(cancellationToken);
                 Log.LogVerbose("Invoke message completed action.");
                 messageCompletedAction?.Invoke();
             }

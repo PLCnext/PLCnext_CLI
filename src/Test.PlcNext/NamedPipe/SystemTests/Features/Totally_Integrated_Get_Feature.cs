@@ -15,15 +15,17 @@ using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.NamedPipe.SystemTests.StepDefinitions;
 using Xunit;
+using Xunit.Abstractions;
 
 #pragma warning disable 4014
 
 namespace Test.PlcNext.NamedPipe.SystemTests.Features
 {
     [FeatureDescription(@"Check the get commands using the integrated named pipe server and command line.")]
+    [IgnoreScenario("Disabled named pipe communication")]
     public class Totally_Integrated_Get_Feature : CommandLineIntegrationTestBase
     {
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         [ClassData(typeof(GetCommandDataGenerator))]
         public async Task Executing_the_get_COMMAND_command_with_the_project_returns_the_reply(string command, string project, string reply)
         {
@@ -60,6 +62,10 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             {
                 return GetEnumerator();
             }
+        }
+
+        public Totally_Integrated_Get_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

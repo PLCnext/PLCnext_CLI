@@ -9,13 +9,14 @@
 
 using Test.PlcNext.NamedPipe.Tools;
 using Test.PlcNext.Tools.Abstractions.Mocked;
+using Xunit.Abstractions;
 using SystemTestContext = Test.PlcNext.SystemTests.Tools.SystemTestContext;
 
 namespace Test.PlcNext.NamedPipe.SystemTests.StepDefinitions
 {
     public abstract partial class CommandLineIntegrationTestBase : SystemTestBase
     {
-        protected CommandLineIntegrationTestBase(bool withUpdates = false, bool withWaitingProcess = false) : base(new CommandLineIntegrationContext(new SystemTestContext(new MockedFileSystemAbstraction(),
+        protected CommandLineIntegrationTestBase(ITestOutputHelper helper, bool withUpdates = false, bool withWaitingProcess = false) : base(new CommandLineIntegrationContext(new SystemTestContext(new MockedFileSystemAbstraction(),
                                                                                                                   new MockedDownloadServiceAbstraction(),
                                                                                                                   withWaitingProcess
                                                                                                                       ? null
@@ -28,7 +29,8 @@ namespace Test.PlcNext.NamedPipe.SystemTests.StepDefinitions
                                                                                                                   new MockedGuidAbstraction(),
                                                                                                                   new MockedCMakeConversationAbstraction(),
                                                                                                                   false),
-                                                                              withUpdates, withWaitingProcess))
+                                                                              withUpdates, withWaitingProcess),
+            helper)
         {
             
         }

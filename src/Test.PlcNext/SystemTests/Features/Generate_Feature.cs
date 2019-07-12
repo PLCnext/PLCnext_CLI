@@ -19,6 +19,8 @@ using Test.PlcNext.SystemTests.StepDefinitions;
 using Test.PlcNext.SystemTests.Tools;
 using Test.PlcNext.Tools;
 using Xunit;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -495,6 +497,9 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram" })).RunAsyncWithTimeout();
         }
 
+        public Generate_Feature(ITestOutputHelper helper) : base(helper)
+        {
+        }
     }
 
     public class ErrorDataGenerator : IEnumerable<object[]>

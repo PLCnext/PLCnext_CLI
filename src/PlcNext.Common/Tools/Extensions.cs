@@ -11,11 +11,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace PlcNext.Common.Tools
 {
     public static class Extensions
     {
+        public static T ExecutesWithTimeout<T>(this Func<T> function, int timeout)
+        {
+            T result = default(T);
+            Thread actionThread = new Thread(() => result = function());
+            actionThread.Start();
+            bool finished = actionThread.Join(timeout);
+            if (!finished)
+            {
+                throw new OperationCanceledException();
+            }
+
+            return result;
+        }
+        
+        public static void ExecutesWithTimeout(this Action action, int timeout)
+        {
+            Thread actionThread = new Thread(action.Invoke);
+            actionThread.Start();
+            bool finished = actionThread.Join(timeout);
+            if (!finished)
+            {
+                throw new OperationCanceledException();
+            }
+        }
+        
         public static string ToByteString(this Guid guid)
         {
             byte[] bytes = guid.ToByteArray();

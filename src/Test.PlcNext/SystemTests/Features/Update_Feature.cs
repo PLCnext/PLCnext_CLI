@@ -17,6 +17,8 @@ using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Microsoft.DotNet.PlatformAbstractions;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -202,6 +204,10 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_update_the_CLI_with_the_file("plcncli_linux_x64_98_0_0.zip"),
                 _ => Then_the_version_of_the_CLI_is_VERSION(new Version(98, 0, 0, 0))
             ).RunAsyncWithTimeout();
+        }
+
+        public Update_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

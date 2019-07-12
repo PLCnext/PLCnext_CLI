@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
+using Nito.AsyncEx.Synchronous;
 
 namespace Test.PlcNext
 {
@@ -24,6 +25,7 @@ namespace Test.PlcNext
             Task completedTask = await Task.WhenAny(runnerTask, Task.Delay(timeout, taskCancel.Token));
             completedTask.Should().Be(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
             taskCancel.Cancel();
+            completedTask.WaitAndUnwrapException(CancellationToken.None);
         } 
     }
 }

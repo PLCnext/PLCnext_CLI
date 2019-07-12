@@ -17,6 +17,5 @@ namespace Test.PlcNext.Tools.Abstractions
         IEnumerable<string> Errors { get; }
         IEnumerable<string> Informations { get; }
         IEnumerable<string> Warnings { get; }
-        void RegisterOutputPrinter(Action<string> printer);
     }
 }

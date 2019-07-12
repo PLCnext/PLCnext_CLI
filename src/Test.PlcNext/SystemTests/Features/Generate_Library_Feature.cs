@@ -17,6 +17,7 @@ using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.StepDefinitions;
 using Test.PlcNext.Tools;
+using Xunit.Abstractions;
 
 #pragma warning disable 4014
 
@@ -366,6 +367,10 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_generate_the_library(),
                 _ => Then_the_user_was_informed_that_the_cmake_build_system_was_not_found()
                 ).RunAsyncWithTimeout();
+        }
+
+        public Generate_Library_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

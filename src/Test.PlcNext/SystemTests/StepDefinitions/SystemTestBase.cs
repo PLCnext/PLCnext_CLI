@@ -15,6 +15,7 @@ using System.Text;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.Tools;
 using Test.PlcNext.Tools;
+using Xunit.Abstractions;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
@@ -38,7 +39,7 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             }
         }
 
-        protected SystemTestBase(SystemTestContext testContext)
+        protected SystemTestBase(SystemTestContext testContext, ITestOutputHelper helper) : base(helper)
         {
             this.testContext = testContext;
         }

@@ -13,19 +13,20 @@ using System.Text;
 using Test.PlcNext.SystemTests.Tools;
 using Test.PlcNext.Tools;
 using Test.PlcNext.Tools.Abstractions.Mocked;
+using Xunit.Abstractions;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
     public class MockedSystemTestBase : SystemTestBase
     {
-        public MockedSystemTestBase() : base(new SystemTestContext(new MockedFileSystemAbstraction(),
+        public MockedSystemTestBase(ITestOutputHelper helper) : base(new SystemTestContext(new MockedFileSystemAbstraction(),
                                                  new MockedDownloadServiceAbstraction(),
                                                  new MockedProcessManagerAbstraction(),
                                                  new MockedUserInterfaceAbstraction(),
                                                  new MockedEnvironmentServiceAbstraction(),
                                                  new MockedExceptionHandlerAbstraction(),
                                                  new MockedGuidAbstraction(),
-                                                 new MockedCMakeConversationAbstraction()))
+                                                 new MockedCMakeConversationAbstraction()), helper)
         {
         }
     }

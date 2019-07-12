@@ -17,9 +17,8 @@ namespace PlcNext.NamedPipeServer.Communication
     {
         public static readonly Version[] SupportedProtocolVersions = {new Version(1, 0),};
         public const int ThreadJoinTimeout = 200;
-        public const int HeartbeatInterval = 80;
+        public const int HeartbeatInterval = 160;
         public const int ProgressResolution = 1000;
-        public const int KillCancelWaitTimeout = 800;
         public const string MessageSenderContainerKey = "MessageSenderContainer";
     }
 }

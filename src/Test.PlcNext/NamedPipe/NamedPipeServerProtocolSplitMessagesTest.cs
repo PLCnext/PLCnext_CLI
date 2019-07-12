@@ -9,6 +9,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using PlcNext.Common.Tools;
@@ -33,7 +34,9 @@ namespace Test.PlcNext.NamedPipe
         public NamedPipeServerProtocolSplitMessagesTest(ITestOutputHelper output)
         {
             streamFactory = PageStreamFactory.CreateDefault(16);
-            string serverName = Guid.NewGuid().ToByteString();
+            string serverName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                                    ? Guid.NewGuid().ToByteString()
+                                    : $"/tmp/{Guid.NewGuid().ToByteString()}";
             Task<ICommunicationProtocol> creationTask = NamedPipeCommunicationProtocol.Connect(serverName, streamFactory, new LogTracer(output));
             simulator = NamedPipeCommunicationProtocolSimulator.Connect(serverName, streamFactory, new LogTracer(output));
             creationTask.Wait();
@@ -43,7 +46,7 @@ namespace Test.PlcNext.NamedPipe
             protocol.Start();
         }
 
-        [Fact]
+        [Fact(Skip = "Disabled named pipe communication")]
         public async Task SendMaxLengthMessageAsSingleMessage()
         {
             protocol.SendMessage(GenerateMaxLengthMessage());
@@ -51,7 +54,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.False(await simulator.LastMessageWasSplit(), "Max length message was split.");
         }
 
-        [Fact]
+        [Fact(Skip = "Disabled named pipe communication")]
         public async Task SendSplitMessage()
         {
             protocol.SendMessage(GenerateSplitLengthMessage());
@@ -59,7 +62,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.True(await simulator.LastMessageWasSplit(), "Max length message was split.");
         }
 
-        [Fact]
+        [Fact(Skip = "Disabled named pipe communication")]
         public async Task ReceiveSplitMessage()
         {
             await simulator.WriteMessage(GenerateSplitLengthMessage());
@@ -93,9 +96,12 @@ namespace Test.PlcNext.NamedPipe
 
         public void Dispose()
         {
-            protocol.MessageReceived -= OnMessageReceived;
-            protocol.Dispose();
-            simulator.Dispose();
+            Extensions.ExecutesWithTimeout(() =>
+            {
+                protocol.MessageReceived -= OnMessageReceived;
+                protocol.Dispose();
+                simulator.Dispose();
+            }, 2000);
         }
 
         #endregion

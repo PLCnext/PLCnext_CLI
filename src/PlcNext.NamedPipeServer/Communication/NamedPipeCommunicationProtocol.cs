@@ -17,8 +17,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using ICSharpCode.SharpZipLib.Zip;
-using Nito.AsyncEx;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.IO;
 using PlcNext.Common.Tools.UI;
@@ -41,7 +39,7 @@ namespace PlcNext.NamedPipeServer.Communication
         public const byte SuccessConfirmationFlag = 0x01;
         public const byte ErrorConfirmationFlag = 0xFF;
         public const int MaxRetrySendingCount = 3;
-        public const int MaxConfirmationResponseTime = 100;
+        public const int MaxConfirmationResponseTime = 200;
         public const int BufferSize = 4096;
         private bool disconnected;
         private readonly object disconnectedLock = new object();
@@ -51,12 +49,7 @@ namespace PlcNext.NamedPipeServer.Communication
         private readonly CancellationTokenSource disposedCancellationTokenSource = new CancellationTokenSource();
         protected CancellationToken CancellationToken => disposedCancellationTokenSource.Token;
 
-        protected NamedPipeCommunicationProtocol(PipeStream serverStream, StreamFactory streamFactory, ILog log) : this(
-            serverStream, serverStream, streamFactory, log)
-        {
-        }
-
-        private NamedPipeCommunicationProtocol(PipeStream readStream, PipeStream writeStream, StreamFactory streamFactory, ILog log)
+        protected NamedPipeCommunicationProtocol(PipeStream readStream, PipeStream writeStream, StreamFactory streamFactory, ILog log)
         {
             this.readStream = readStream;
             this.writeStream = writeStream;
@@ -107,6 +100,15 @@ namespace PlcNext.NamedPipeServer.Communication
             log.LogInformation("Disconnecting the pipe stream.");
             disposedCancellationTokenSource.Cancel();
             
+            //first disconnect write stream to free other reader and signal shutdown
+            writeStream.Close();
+            writeStream.Dispose();
+            
+            //next dispose reader
+            readStream.Close();
+            readStream.Dispose();
+            
+            //lastly wait for threads to close on their own
             if (incomingMessageQueue != null)
             {
                 incomingMessageQueue.MessageReceived -= OnMessageReceived;
@@ -114,68 +116,40 @@ namespace PlcNext.NamedPipeServer.Communication
             }
             outgoingMessageQueue?.Dispose();
             
-            if (readStream.IsConnected && readStream is NamedPipeServerStream serverReadStream)
-            {
-                serverReadStream.Disconnect();
-            }
-            readStream.Close();
-            readStream.Dispose();
-            if (writeStream.IsConnected && writeStream is NamedPipeServerStream serverWriteStream)
-            {
-                serverWriteStream.Disconnect();
-            }
-            writeStream.Close();
-            writeStream.Dispose();
+            //and report disconnect
             OnError();
         }
 
-        public static async Task<ICommunicationProtocol> Connect(string address, StreamFactory streamFactory, 
-                                                                ILog log,
-                                                                bool twoChannelCommunication = false, 
-                                                                CancellationToken cancellationToken = default(CancellationToken),
-                                                                bool actAsClient = false)
+        public static async Task<ICommunicationProtocol> Connect(string address, StreamFactory streamFactory,
+                                                                 ILog log,
+                                                                 CancellationToken cancellationToken =
+                                                                     default(CancellationToken),
+                                                                 bool actAsClient = false)
         {
             NamedPipeCommunicationProtocol result;
-            if (twoChannelCommunication && !actAsClient)
+            if (!actAsClient)
             {
                 NamedPipeServerStream writeServer = new NamedPipeServerStream(Path.Combine(address, "server-output"), PipeDirection.InOut, 1,
                                                                          PipeTransmissionMode.Byte,
-                                                                         PipeOptions.Asynchronous);
+                                                                         PipeOptions.None);
                 NamedPipeServerStream readServer = new NamedPipeServerStream(Path.Combine(address, "server-input"), PipeDirection.InOut, 1,
                                                                          PipeTransmissionMode.Byte,
-                                                                         PipeOptions.Asynchronous);
-                await readServer.WaitForConnectionAsync(cancellationToken);
-                await writeServer.WaitForConnectionAsync(cancellationToken);
+                                                                         PipeOptions.None);
+                await Task.WhenAll(readServer.WaitForConnectionAsync(cancellationToken),
+                                   writeServer.WaitForConnectionAsync(cancellationToken));
 
                 result = new NamedPipeCommunicationProtocol(readServer, writeServer, streamFactory, new ServerNameLogDecorator(log,address,false));
             }
-            else if(!twoChannelCommunication && !actAsClient)
-            {
-                NamedPipeServerStream server = new NamedPipeServerStream(address, PipeDirection.InOut, 1,
-                                                                         PipeTransmissionMode.Byte,
-                                                                         PipeOptions.Asynchronous);
-                await server.WaitForConnectionAsync(cancellationToken);
-
-                result = new NamedPipeCommunicationProtocol(server, streamFactory, new ServerNameLogDecorator(log,address,false));
-            }
-            else if(twoChannelCommunication)
-            {
-                NamedPipeClientStream writeClient = new NamedPipeClientStream(".", Path.Combine(address, "server-input"), PipeDirection.In,
-                                                                             PipeOptions.Asynchronous);
-                NamedPipeClientStream readClient = new NamedPipeClientStream(".", Path.Combine(address, "server-input"), PipeDirection.Out,
-                                                                              PipeOptions.Asynchronous);
-                await readClient.ConnectAsync(cancellationToken);
-                await writeClient.ConnectAsync(cancellationToken);
-
-                result = new NamedPipeCommunicationProtocol(readClient, writeClient, streamFactory, new ServerNameLogDecorator(log,address,true));
-            }
             else
             {
-                NamedPipeClientStream client = new NamedPipeClientStream(".", address, PipeDirection.InOut,
-                                                                             PipeOptions.Asynchronous);
-                await client.ConnectAsync(cancellationToken);
+                NamedPipeClientStream writeClient = new NamedPipeClientStream(".", Path.Combine(address, "server-input"), PipeDirection.InOut,
+                                                                             PipeOptions.None);
+                NamedPipeClientStream readClient = new NamedPipeClientStream(".", Path.Combine(address, "server-output"), PipeDirection.InOut,
+                                                                              PipeOptions.None);
+                await Task.WhenAll(readClient.ConnectAsync(cancellationToken),
+                                   writeClient.ConnectAsync(cancellationToken));
 
-                result = new NamedPipeCommunicationProtocol(client, streamFactory, new ServerNameLogDecorator(log,address,true));
+                result = new NamedPipeCommunicationProtocol(readClient, writeClient, streamFactory, new ServerNameLogDecorator(log,address,true));
             }
             return result;
         }
@@ -249,15 +223,18 @@ namespace PlcNext.NamedPipeServer.Communication
             {
                 lock (flushLock)
                 {
+                    log.LogVerbose("Entered flush lock.");
                     while (messages.TryDequeue(out IncomingMessage current))
                     {
+                        log.LogVerbose($"Flush message {current.Id}.");
                         OnMessageReceived(new MessageReceivedEventArgs(current.Data));
                         current.Dispose();
                     }
                 }
+                log.LogVerbose("Finished flushing messages. Released lock.");
             }
 
-            private async void StartReading()
+            private void StartReading()
             {
                 try
                 {
@@ -265,8 +242,7 @@ namespace PlcNext.NamedPipeServer.Communication
                     {
                         log.LogInformation("Start message reader");
                         byte[] header = new byte[HeaderSize];
-                        int headerResult = await readStream.ReadAsync(header, 0, header.Length, cancellationToken)
-                                                           .ConfigureAwait(false);
+                        int headerResult = readStream.Read(header, 0, header.Length);
                         try
                         {
                             if (headerResult == 0)
@@ -278,7 +254,7 @@ namespace PlcNext.NamedPipeServer.Communication
 
                             if (messageLength > 0)
                             {
-                                await ReadMessage(messageLength, isSplit, messageGuid, confirmation);
+                                ReadMessage(messageLength, isSplit, messageGuid, confirmation);
                             }
                             else
                             {
@@ -297,7 +273,7 @@ namespace PlcNext.NamedPipeServer.Communication
                     //Do not log anything as any log will lead to another exception
                 }
 
-                async Task ReadMessage(int messageLength, bool isSplit, Guid messageGuid, byte confirmation)
+                void ReadMessage(int messageLength, bool isSplit, Guid messageGuid, byte confirmation)
                 {
                     Stream messageStream = streamFactory.Create(messageLength);
                     int intervals = messageLength / BufferSize;
@@ -307,13 +283,9 @@ namespace PlcNext.NamedPipeServer.Communication
 
                     try
                     {
-                        await ReadIntervals();
-                        CancellationToken delayToken = new CancellationTokenSource(MaxConfirmationResponseTime).Token;
-                        int result = await readStream.ReadAsync(buffer, 0, remaining,
-                                                                CancellationTokenSource.CreateLinkedTokenSource(delayToken, 
-                                                                                                                cancellationToken)
-                                                                                       .Token)
-                                                     .ConfigureAwait(false);
+                        ReadIntervals();
+                        int result = Extensions.ExecutesWithTimeout(() => readStream.Read(buffer, 0, remaining),
+                                                                    MaxConfirmationResponseTime);
 
                         if (result == 0)
                         {
@@ -325,13 +297,13 @@ namespace PlcNext.NamedPipeServer.Communication
                             throw new PartialMessageException(messageGuid);
                         }
 
-                        await AppendBufferAsync(messageStream, buffer, remaining);
+                        AppendBuffer(messageStream, buffer, remaining);
                         messageStream.Seek(0, SeekOrigin.Begin);
 
                         if (splitMessages.ContainsKey(messageGuid) &&
                             splitMessages.TryGetValue(messageGuid, out IncomingMessage splitMessage))
                         {
-                            await MergeWithSplitMessage(splitMessage, messageStream);
+                            MergeWithSplitMessage(splitMessage, messageStream);
                             message = splitMessage;
                         }
                         
@@ -368,29 +340,32 @@ namespace PlcNext.NamedPipeServer.Communication
 
                         log.LogError($"Exception during message read.{Environment.NewLine}" +
                                      $"{e}");
-                        outgoingMessageQueue.SendMessageConfirmation(messageGuid, false);
-                        message.Dispose();
-                        messageStream.Dispose();
+                        if (e is PartialMessageException)
+                        {
+                            outgoingMessageQueue.SendMessageConfirmation(messageGuid, false);
+                            message.Dispose();
+                            messageStream.Dispose();
+                        }
+                        else
+                        {
+                            throw new ClientDisconnectedException();
+                        }
                     }
                     
                     log.LogVerbose("Finished reading message.");
 
-                    async Task ReadIntervals()
+                    void ReadIntervals()
                     {
                         while (intervals > 0)
                         {
                             intervals--;
-                            await ReadInterval();
+                            ReadInterval();
                         }
 
-                        async Task ReadInterval()
+                        void ReadInterval()
                         {
-                            CancellationToken delayToken = new CancellationTokenSource(MaxConfirmationResponseTime).Token;
-                            int result = await readStream.ReadAsync(buffer, 0, BufferSize,
-                                                                    CancellationTokenSource.CreateLinkedTokenSource(delayToken, 
-                                                                                                                    cancellationToken)
-                                                                       .Token)
-                                                         .ConfigureAwait(false);
+                            int result = Extensions.ExecutesWithTimeout(() => readStream.Read(buffer, 0, BufferSize),
+                                                                        MaxConfirmationResponseTime);
 
                             if (result == 0)
                             {
@@ -402,7 +377,7 @@ namespace PlcNext.NamedPipeServer.Communication
                                 throw new PartialMessageException(messageGuid);
                             }
 
-                            await AppendBufferAsync(messageStream, buffer, BufferSize);
+                            AppendBuffer(messageStream, buffer, BufferSize);
                         }
                     }
                 }
@@ -464,9 +439,9 @@ namespace PlcNext.NamedPipeServer.Communication
                 }
             }
 
-            protected virtual async Task MergeWithSplitMessage(IncomingMessage splitMessage, Stream messageStream)
+            protected virtual void MergeWithSplitMessage(IncomingMessage splitMessage, Stream messageStream)
             {
-                await splitMessage.AppendMessageStreamAsync(messageStream, cancellationToken);
+                splitMessage.AppendMessageStream(messageStream, cancellationToken);
                 messageStream.Dispose();
             }
 
@@ -475,10 +450,9 @@ namespace PlcNext.NamedPipeServer.Communication
                 splitMessages.TryAdd(messageGuid, message);
             }
 
-            protected virtual async Task AppendBufferAsync(Stream messageStream, byte[] buffer, int length)
+            protected virtual void AppendBuffer(Stream messageStream, byte[] buffer, int length)
             {
-                //TODO this blocks when writing for the first time in SendSplitMessage Test
-                await messageStream.WriteAsync(buffer, 0, length, cancellationToken);
+                messageStream.Write(buffer, 0, length);
             }
 
             protected virtual (int messageLength, bool isSplit, Guid messageGuid, byte confirmation) ParseHeader(byte[] header)
@@ -583,7 +557,7 @@ namespace PlcNext.NamedPipeServer.Communication
 
             public void WaitForFirstMessage()
             {
-                pollingCollectionObserver = PollingCollectionObserver.Observe(async () =>
+                pollingCollectionObserver = PollingCollectionObserver.Observe(() =>
                 {
                     try
                     {
@@ -594,19 +568,19 @@ namespace PlcNext.NamedPipeServer.Communication
                     
                         while (pendingConfirmations.TryDequeue(out Confirmation confirmation))
                         {
-                            await confirmation.SendAsync(cancellationToken);
+                            confirmation.Send();
                         }
 
                         if (resendMessages.TryDequeue(out OutgoingMessage resend))
                         {
                             do
                             {
-                                await SendMessage(resend);
+                                SendMessage(resend);
                             } while (resendMessages.TryDequeue(out resend));
                         }
                         else if (unconfirmedMessages.IsEmpty && pendingMessages.TryDequeue(out OutgoingMessage message))
                         {
-                            await SendMessage(message);
+                            SendMessage(message);
                         }
 
                         sending = 0;
@@ -618,10 +592,10 @@ namespace PlcNext.NamedPipeServer.Communication
                     }
                 }, pendingConfirmations, pendingMessages, resendMessages);
                 
-                async Task SendMessage(OutgoingMessage message)
+                void SendMessage(OutgoingMessage message)
                 {
                     unconfirmedMessages.TryAdd(message.Id, message);
-                    await message.SendMessageAsync(cancellationToken);
+                    message.SendMessage(cancellationToken);
                 }
             }
 
@@ -732,13 +706,12 @@ namespace PlcNext.NamedPipeServer.Communication
                 this.log = log;
             }
 
-            public virtual async Task SendAsync(CancellationToken cancellationToken)
+            public virtual void Send()
             {
                 byte[] confirmationHeader = GenerateHeader();
                     
                 log.LogInformation($"Send message confirmation for message {messageId.ToByteString()}.");
-                await writeStream.WriteAsync(confirmationHeader, 0, confirmationHeader.Length, cancellationToken)
-                                 .ConfigureAwait(false);
+                writeStream.Write(confirmationHeader, 0, confirmationHeader.Length);
             }
 
             protected virtual byte[] GenerateHeader()
@@ -789,7 +762,7 @@ namespace PlcNext.NamedPipeServer.Communication
 
             public event EventHandler<EventArgs> ConfirmationTimeElapsed; 
 
-            public async Task SendMessageAsync(CancellationToken cancellationToken)
+            public void SendMessage(CancellationToken cancellationToken)
             {
                 sendCounter++;
                 if (sendCounter > MaxRetrySendingCount)
@@ -801,19 +774,20 @@ namespace PlcNext.NamedPipeServer.Communication
                 Log.LogInformation($"Start sending message {Id.ToByteString()}. Attempt nr. {sendCounter}.");
 
                 Data.Seek(0, SeekOrigin.Begin);
-                await SendMessageInChunks(cancellationToken);
+                SendMessageInChunks(cancellationToken);
             }
 
-            protected virtual async Task SendMessageInChunks(CancellationToken cancellationToken)
+            protected virtual void SendMessageInChunks(CancellationToken cancellationToken)
             {
                 while (HasUnsentData)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     byte[] header = GenerateMessageHeader(Id,
                                                           NextMessageIsSplit
                                                               ? SplitMessageIndicator
                                                               : RemainingLength);
-                    await writeStream.WriteAsync(header, 0, header.Length, cancellationToken)
-                                     .ConfigureAwait(false);
+                    writeStream.Write(header, 0, header.Length);
+                    cancellationToken.ThrowIfCancellationRequested();
 
                     int sentDataLength = NextMessageIsSplit
                                              ? MaxMessageLength
@@ -824,15 +798,14 @@ namespace PlcNext.NamedPipeServer.Communication
                     for (int i = 0; i < chunks; i++)
                     {
                         byte[] buffer = new byte[BufferSize];
-                        await Data.ReadAsync(buffer, 0, BufferSize, cancellationToken);
-                        await writeStream.WriteAsync(buffer, 0, BufferSize, cancellationToken)
-                                         .ConfigureAwait(false);
+                        Data.Read(buffer, 0, BufferSize);
+                        writeStream.Write(buffer, 0, BufferSize);
+                        cancellationToken.ThrowIfCancellationRequested();
                     }
 
                     byte[] remainingBuffer = new byte[remaining];
-                    await Data.ReadAsync(remainingBuffer, 0, remaining, cancellationToken);
-                    await writeStream.WriteAsync(remainingBuffer, 0, remaining, cancellationToken)
-                                     .ConfigureAwait(false);
+                    Data.Read(remainingBuffer, 0, remaining);
+                    writeStream.Write(remainingBuffer, 0, remaining);
                     Log.LogInformation($"Message {Id.ToByteString()} send.");
                 }
 
@@ -900,7 +873,7 @@ namespace PlcNext.NamedPipeServer.Communication
             {
             }
 
-            public async Task AppendMessageStreamAsync(Stream messageStream, CancellationToken token)
+            public void AppendMessageStream(Stream messageStream, CancellationToken token)
             {
                 int intervals = (int)messageStream.Length / BufferSize;
                 int remaining = (int)messageStream.Length % BufferSize;
@@ -909,13 +882,16 @@ namespace PlcNext.NamedPipeServer.Communication
                 Data.Seek(0, SeekOrigin.End);
                 Data.SetLength(Data.Length + messageStream.Length);
                 messageStream.Seek(0, SeekOrigin.Begin);
+                token.ThrowIfCancellationRequested();
                 for (int i = 0; i < intervals; i++)
                 {
-                    await messageStream.ReadAsync(buffer, 0, BufferSize, token);
-                    await Data.WriteAsync(buffer, 0, BufferSize, token);
+                    messageStream.Read(buffer, 0, BufferSize);
+                    Data.Write(buffer, 0, BufferSize);
+                    token.ThrowIfCancellationRequested();
                 }
-                await messageStream.ReadAsync(buffer, 0, remaining, token);
-                await Data.WriteAsync(buffer, 0, remaining, token);
+                messageStream.Read(buffer, 0, remaining);
+                Data.Write(buffer, 0, remaining);
+                token.ThrowIfCancellationRequested();
             }
         }
 

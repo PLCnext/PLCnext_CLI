@@ -127,14 +127,14 @@ namespace Test.PlcNext.SystemTests.Tools
         public void Initialize(Action<string> printMessage, Action<ContainerBuilder> buildAction = null)
         {
             InstancesRegistrationSource exportProvider = new InstancesRegistrationSource();
-            fileSystemAbstraction.Initialize(exportProvider);
-            downloadServiceAbstraction.Initialize(exportProvider);
-            processManagerAbstraction?.Initialize(exportProvider);
-            userInterfaceAbstraction?.Initialize(exportProvider);
-            environmentServiceAbstraction.Initialize(exportProvider);
-            exceptionHandlerAbstraction.Initialize(exportProvider);
-            guidFactoryAbstraction.Initialize(exportProvider);
-            cmakeConversationAbstraction.Initialize(exportProvider);
+            fileSystemAbstraction.Initialize(exportProvider, printMessage);
+            downloadServiceAbstraction.Initialize(exportProvider, printMessage);
+            processManagerAbstraction?.Initialize(exportProvider, printMessage);
+            userInterfaceAbstraction?.Initialize(exportProvider, printMessage);
+            environmentServiceAbstraction.Initialize(exportProvider, printMessage);
+            exceptionHandlerAbstraction.Initialize(exportProvider, printMessage);
+            guidFactoryAbstraction.Initialize(exportProvider, printMessage);
+            cmakeConversationAbstraction.Initialize(exportProvider, printMessage);
             exportProvider.AddInstance(Substitute.For<IProgressVisualizer>());
             exportProvider.AddInstance(Substitute.For<ILog>());
             exportProvider.AddInstance(CreateExplorer());
@@ -149,7 +149,6 @@ namespace Test.PlcNext.SystemTests.Tools
             Host = builder.Build();
             Initialized = true;
             exceptionHandlerAbstraction.UserInterface = Host.ResolveOptional<IUserInterface>();
-            userInterfaceAbstraction?.RegisterOutputPrinter(printMessage);
 
             ISdkExplorer CreateExplorer()
             {

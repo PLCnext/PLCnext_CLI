@@ -12,17 +12,19 @@ using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.NamedPipe.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
 
 #pragma warning disable 4014
 
 namespace Test.PlcNext.NamedPipe.SystemTests.Features
 {
     [FeatureDescription(@"Checks that the cancel .")]
+    [IgnoreScenario("Disabled named pipe communication")]
     public class Totally_Integrated_Cancel_Feature : CommandLineIntegrationTestBase
     {
-        public Totally_Integrated_Cancel_Feature() : base(withWaitingProcess:true){}
+        public Totally_Integrated_Cancel_Feature(ITestOutputHelper helper) : base(helper, withWaitingProcess:true){}
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Cancel_inside_CLI_on_cancel_command()
         {
             await Runner.AddSteps(
@@ -34,7 +36,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Cancel_inside_CLI_on_kill_command()
         {
             await Runner.AddSteps(

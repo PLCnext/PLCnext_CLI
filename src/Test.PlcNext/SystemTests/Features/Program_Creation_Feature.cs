@@ -13,6 +13,8 @@ using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Xunit.Abstractions;
+
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
@@ -161,6 +163,10 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_create_a_new_program_with_name_for_component_with_source_folders("NewProgram", "ComponentsInMultipleNamespaces::MultipleNamespacesComponent", "src", "extern"),
                 _ => Then_the_project_contains_a_program_with_name("NewProgram"),
                 _ => Then_the_programs_namespace_starts_with_namespace("NewProgram", "ComponentsInMultipleNamespaces")).RunAsyncWithTimeout();
+        }
+
+        public Program_Creation_Feature(ITestOutputHelper helper) : base(helper)
+        {
         }
     }
 }

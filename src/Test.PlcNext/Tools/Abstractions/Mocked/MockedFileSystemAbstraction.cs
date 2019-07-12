@@ -35,6 +35,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
         private readonly HashSet<VirtualFile> changedFiles = new HashSet<VirtualFile>();
         private readonly HashSet<string> throwOnAccessFiles = new HashSet<string>();
         private bool create;
+        private Action<string> printMessage;
 
         public MockedFileSystemAbstraction()
         {
@@ -114,7 +115,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                 directoryContentResolver.Create<VirtualDirectory>(null).ReturnsForAnyArgs(info =>
                 {
                     VirtualDirectory child = CreateDirectory(info.Arg<string>(), Path.Combine(fullName, info.Arg<string>()));
-                    Trace.TraceInformation($"Create {child} in {currentDirectory.FullName}");
+                    printMessage?.Invoke($"{DateTime.Now:dd/MM/yyyy hh:mm:ss.fff}: Create {child} in {currentDirectory.FullName}");
                     directoryContents[currentDirectory].Add(child);
                     return child;
                 });
@@ -122,13 +123,13 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                                         .ReturnsForAnyArgs(info =>
                                         {
                                             VirtualFile result = CreateFile(info.Arg<string>(), Path.Combine(fullName, info.Arg<string>()));
-                                            Trace.TraceInformation($"Create {result} in {currentDirectory.FullName}");
+                                            printMessage?.Invoke($"{DateTime.Now:dd/MM/yyyy hh:mm:ss.fff}: Create {result} in {currentDirectory.FullName}");
                                             directoryContents[currentDirectory].Add(result);
                                             return result;
                                         });
                 directoryContentResolver.When(r => r.Delete()).Do((info) =>
                 {
-                    Trace.TraceInformation($"Delete {currentDirectory}");
+                    printMessage?.Invoke($"{DateTime.Now:dd/MM/yyyy hh:mm:ss.fff}: Delete {currentDirectory}");
                     directoryContents.Remove(currentDirectory);
                 });
 
@@ -148,13 +149,13 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                         {
                             deletedFileContents[file.FullName] = fileContents[file];
                         }
-                        Trace.TraceInformation($"Delete {file}");
+                        printMessage?.Invoke($"{DateTime.Now:dd/MM/yyyy hh:mm:ss.fff}: Delete {file}");
                         fileContents.Remove(file);
                     });
                     fileContentResolver.When(r => r.UnDelete()).Do(info =>
                     {
                         fileContents[file] = new MemoryStream();
-                        Trace.TraceInformation($"Undelete {file}");
+                        printMessage?.Invoke($"{DateTime.Now:dd/MM/yyyy hh:mm:ss.fff}: Undelete {file}");
                     });
                     return file;
                 }
@@ -204,8 +205,10 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
             }
         }
 
-        public void Initialize(InstancesRegistrationSource exportProvider)
+        public void Initialize(InstancesRegistrationSource exportProvider, Action<string> printMessage)
         {
+            this.printMessage = printMessage;
+            
             exportProvider.AddInstance(FileSystem);
             
             SetupSdks();
@@ -361,7 +364,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
 
             if (directory == null || string.IsNullOrEmpty(fileName) || !directory.FileExists(fileName))
             {
-                Trace.TraceInformation($"File {path} not found. [{directory}] Available structure{Environment.NewLine}{PrintStructure()}");
+                printMessage?.Invoke($"{DateTime.Now:dd/MM/yyyy hh:mm:ss.fff}: File {path} not found. [{directory}] Available structure{Environment.NewLine}{PrintStructure()}");
                 return null;
             }
             return GetFileContent(directory.File(fileName));

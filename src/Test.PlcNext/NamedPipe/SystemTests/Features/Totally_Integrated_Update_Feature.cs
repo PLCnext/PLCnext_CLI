@@ -13,17 +13,19 @@ using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.NamedPipe.SystemTests.StepDefinitions;
 using Xunit;
+using Xunit.Abstractions;
 
 #pragma warning disable 4014
 
 namespace Test.PlcNext.NamedPipe.SystemTests.Features
 {
     [FeatureDescription(@"Checks the feature that other cli instances will trigger an update to the server instance.")]
+    [IgnoreScenario("Disabled named pipe communication")]
     public class Totally_Integrated_Update_Feature : CommandLineIntegrationTestBase
     {
-        public Totally_Integrated_Update_Feature() : base(true){}
+        public Totally_Integrated_Update_Feature(ITestOutputHelper helper) : base(helper, true){}
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Sending_update_when_the_settings_are_changed()
         {
             await Runner.AddSteps(
@@ -33,7 +35,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Sending_update_when_the_project_targets_are_changed()
         {
             await Runner.AddSteps(
@@ -44,7 +46,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Sending_update_when_a_sdk_was_explored()
         {
             await Runner.AddSteps(
@@ -54,7 +56,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Sending_no_update_without_prior_handshake_setting()
         {
             await Runner.AddSteps(
@@ -64,7 +66,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Sending_no_update_without_prior_handshake_project_target()
         {
             await Runner.AddSteps(
@@ -75,7 +77,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
         
-        [Scenario]
+        [Scenario(Timeout = 10000)]
         public async Task Sending_no_update_without_prior_handshake_sdk()
         {
             await Runner.AddSteps(
