@@ -881,7 +881,7 @@ namespace Test.PlcNext.SystemTests.Tools
 
         public void CheckGeneratedAcfConfig(string ns, string componentname)
         {
-            string path = GetPathOfGeneratedFile("acf.config", Constants.MetadataFolderName);
+            string path = GetPathOfFile($"{ns}Library.acf.config", Constants.LibraryFolderName);
             using (Stream fileStream = fileSystemAbstraction.Open(path))
             using(StreamReader reader = new StreamReader(fileStream))
             {
