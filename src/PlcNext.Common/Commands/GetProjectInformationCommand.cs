@@ -67,7 +67,8 @@ namespace PlcNext.Common.Commands
                                                      .Select(t => new TargetResult(t.Name, t.Version,
                                                         t.LongVersion,
                                                         t.ShortVersion,
-                                                        availableTargets.Any(at => t.Name == at.Name && at.LongVersion == t.LongVersion)));
+                                                        availableTargets.Any(at => t.Name == at.Name && at.LongVersion == t.LongVersion)))
+                                                     .OrderBy(t => t.Name).ThenByDescending(t => t.Version);
             exceptions = targetsResult.Errors;
 
             IEnumerable<CodeEntity> entities = template.EntityHierarchy.Select(e =>
