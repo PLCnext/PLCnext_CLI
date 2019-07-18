@@ -679,6 +679,8 @@
     <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\acf.config" Link="Deployment\Templates\AppProjectTemplate\acf.config" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\StandardWithMissingTarget3\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\StandardWithMissingTarget2\plcnext.proj" />
     <EmbeddedResource Include="Deployment\DoublePortDeclaration\plcnext.proj" />
     <EmbeddedResource Include="Deployment\EnumTest\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PortNameError\plcnext.proj" />

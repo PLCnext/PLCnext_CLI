@@ -256,7 +256,7 @@ namespace PlcNext.Common.Project
             }
         }
 
-        public void UpdateTargets(ProjectEntity project)
+        public void UpdateTargets(ProjectEntity project, bool downgrade)
         {
             foreach (Target projectTarget in GetProjectTargets(project).ToArray())
             {
@@ -280,10 +280,21 @@ namespace PlcNext.Common.Project
                 Target newVersion = availableVersions.Where(t => t.Item2 > version)
                                                      .OrderBy(t => t.Item2)
                                                      .FirstOrDefault()
-                                                     .Item1
-                                    ?? availableVersions.OrderBy(t => t.Item2)
+                                                     .Item1;
+                if(newVersion == null)
+                {
+                    if(downgrade)
+                    {
+                        newVersion = availableVersions.OrderBy(t => t.Item2)
                                                         .First()
                                                         .Item1;
+                    }
+                    else
+                    {
+                        throw new NoHigherTargetAvailableException(projectTarget.GetLongFullName());
+                    }
+                }
+
                 RemoveTarget(project, projectTarget.Name, projectTarget.LongVersion);
                 AddTarget(project, newVersion.Name, newVersion.LongVersion);
                 executionContext.WriteInformation($"Updated the target '{projectTarget.Name}' from version {projectTarget.Version} to version {newVersion.Version}");

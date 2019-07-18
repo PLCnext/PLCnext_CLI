@@ -434,5 +434,10 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfWarning("Could not find cmake build system",
                                                        "message of missing cmake build system expected");
         }
+
+        protected void Then_the_user_was_informed_that_the_target_can_not_be_updated()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(NoHigherTargetAvailableException));
+        }
     }
 }

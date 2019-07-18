@@ -343,4 +343,7 @@
   <data name="TargetInstalledTwice" xml:space="preserve">
     <value>The target {0} is installed more than once. Please check your installed targets.</value>
   </data>
+  <data name="NoHigherTargetAvailable" xml:space="preserve">
+    <value>No higher target available for target '{0}'. Use --downgrade option, remove project-target via set setting or install higher target version. </value>
+  </data>
 </root>

@@ -1307,5 +1307,16 @@ namespace Test.PlcNext.SystemTests.Tools
         {
             await CommandLineParser.Parse("explore-sdks");
         }
+
+        public async Task UpdateTargets(bool downgrade)
+        {
+            List<string> args = new List<string>(new[] { "update", "project-targets", "--path", knownProjectName });
+
+            if (downgrade)
+            {
+                args.Add("--downgrade");
+            }
+            await CommandLineParser.Parse(args.ToArray());
+        }
     }
 }

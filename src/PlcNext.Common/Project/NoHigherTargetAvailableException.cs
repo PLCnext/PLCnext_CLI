@@ -7,22 +7,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using PlcNext.Common.Tools;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
-namespace PlcNext.Common.Commands
+namespace PlcNext.Common.Project
 {
-    public class UpdateTargetsCommandArgs : CommandArgs
+    public class NoHigherTargetAvailableException : FormattableException
     {
-        public UpdateTargetsCommandArgs(string path, bool downgrade)
+        public NoHigherTargetAvailableException(string target) 
+            : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.NoHigherTargetAvailable, target))
         {
-            Path = path;
-            Downgrade = downgrade;
+
         }
-
-        public string Path { get; }
-
-        public bool Downgrade { get; }
     }
 }

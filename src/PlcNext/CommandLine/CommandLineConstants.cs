@@ -125,6 +125,10 @@ namespace PlcNext.CommandLine
 
         //GetProjectInformationVerb
         public const string ProjectInformationVerb = "project-information";
+
+        //UpdateTargets
+        public const string DowngradeOption = "downgrade";
+        public const char DowngradeChar = 'd';
     }
 
 }

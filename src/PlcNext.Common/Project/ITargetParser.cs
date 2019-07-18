@@ -20,7 +20,7 @@ namespace PlcNext.Common.Project
         Target RemoveTarget(ProjectEntity project, string target, string version);
         Target AddTarget(ProjectEntity project, string target, string version);
         IEnumerable<(Target, string)> GetSpecificTargets(IEnumerable<string> targets, bool validate = true);
-        void UpdateTargets(ProjectEntity project);
+        void UpdateTargets(ProjectEntity project, bool downgrade);
         Target ParseTarget(string target, string version, IEnumerable<Target> searchableTargets);
     }
 }

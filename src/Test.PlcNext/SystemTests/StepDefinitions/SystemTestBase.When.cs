@@ -265,5 +265,14 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             await ScenarioContext.InstallSdk(sdk, destination);
         }
 
+        protected async Task When_I_update_the_project_targets()
+        {
+            await ScenarioContext.UpdateTargets(false);
+        }
+
+        protected async Task When_I_update_the_project_targets_with_downgrade_option()
+        {
+            await ScenarioContext.UpdateTargets(true);
+        }
     }
 }

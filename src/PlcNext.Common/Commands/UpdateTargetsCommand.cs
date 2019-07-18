@@ -34,7 +34,7 @@ namespace PlcNext.Common.Commands
         protected override int Execute(UpdateTargetsCommandArgs args, ChangeObservable observable)
         {
             ProjectEntity project = ProjectEntity.Decorate(entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root);
-            targetParser.UpdateTargets(project);
+            targetParser.UpdateTargets(project, args.Downgrade);
             return 0;
         }
     }

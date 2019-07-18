@@ -24,6 +24,10 @@ namespace PlcNext.CommandLine
         [Option(CommandLineConstants.PathChar, CommandLineConstants.PathOption, HelpText = "Path to the project settings file.", Default = "./" + Constants.ProjectFileName)]
         public string Path { get; set; }
 
+        [Option(CommandLineConstants.DowngradeChar, CommandLineConstants.DowngradeOption, 
+            HelpText = "If no higher version is available, downgrade target to lowest available version.")]
+        public bool Downgrade { get; set; }
+
         [Usage]
         public static IEnumerable<UsageExample> UpdateTargetsUsageExample => 
         new[]
@@ -35,7 +39,7 @@ namespace PlcNext.CommandLine
 
         protected override Task<int> Execute(ICommandManager commandManager)
         {
-            return commandManager.Execute(new UpdateTargetsCommandArgs(Path));
+            return commandManager.Execute(new UpdateTargetsCommandArgs(Path, Downgrade));
         }
     }
 }
