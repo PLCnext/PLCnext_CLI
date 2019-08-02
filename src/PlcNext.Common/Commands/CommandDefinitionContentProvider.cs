@@ -63,7 +63,7 @@ namespace PlcNext.Common.Commands
 
         public Entity Resolve(Entity owner, string key, bool fallback = false)
         {
-            templateRelationship[] relationships = owner.Template().Relationship;
+            templateRelationship[] relationships = owner.HasTemplate() ? owner.Template().Relationship : null;
             templateRelationship relationship = relationships?.FirstOrDefault(r => r.name.Equals(key, StringComparison.OrdinalIgnoreCase))
                 ??relationships?.FirstOrDefault(r => r.name.Equals(key.Singular(), StringComparison.OrdinalIgnoreCase));
             TemplateDescription relationshipDescription = relationship != null ?templateRepository.Template(relationship.type):null;
@@ -142,7 +142,7 @@ namespace PlcNext.Common.Commands
 
                 bool TryGetTemplateFormat(out string formattedValue)
                 {
-                    TemplateDescription description = owner.Template();
+                    TemplateDescription description = owner.HasTemplate() ? owner.Template() : null;
                     if (description != null)
                     {
                         templateArgumentDefinition templateArgument = description.Arguments.FirstOrDefault(a => a.name == key);
