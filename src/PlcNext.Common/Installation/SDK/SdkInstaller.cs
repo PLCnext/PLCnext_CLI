@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using PlcNext.Common.Project;
@@ -42,7 +43,7 @@ namespace PlcNext.Common.Installation.SDK
                     throw new FileExistsException(destination.FullName);
                 }
 
-                using (IProgressNotifier progressNotifier = progressVisualizer.Spawn(1, "Install SDK.", null))
+                using (IProgressNotifier progressNotifier = Console.IsInputRedirected || Console.IsOutputRedirected ? null : progressVisualizer.Spawn(1, "Install SDK.", null))
                 {
                     await fileUnpackService.Unpack(packedSdk, destination, progressNotifier, observable);
                 }
