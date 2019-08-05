@@ -20,65 +20,66 @@ namespace PlcNext.Common.Tools.UI
 {
     public static class LogCatalog
     {
-        private static readonly EventWaitHandle WaitHandle = new EventWaitHandle(true, EventResetMode.AutoReset, "ebce3df1-946c-4ec4-8369-cec004a40392");
-
         public static ILog CreateNewLog(string logCatalogPath, string executedCommand)
         {
-            string filePath = null;
-            if (WaitHandle.WaitOne(1000))
+            using (Mutex interProcessMutex = new Mutex(false, "Global\\ebce3df1-946c-4ec4-8369-cec004a40392"))
             {
-                try
+                string filePath = null;
+                if (interProcessMutex.WaitOne(1000))
                 {
-                    string directory = Path.GetDirectoryName(logCatalogPath) ?? string.Empty;
-                    if (!Directory.Exists(directory))
+                    try
                     {
-                        Directory.CreateDirectory(directory);
+                        string directory = Path.GetDirectoryName(logCatalogPath) ?? string.Empty;
+                        if (!Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                        }
+                        string logFilesDirectory = Path.Combine(directory, "LogFiles");
+                        if (!Directory.Exists(logFilesDirectory))
+                        {
+                            Directory.CreateDirectory(logFilesDirectory);
+                        }
+
+                        if (!File.Exists(logCatalogPath))
+                        {
+                            File.WriteAllText(logCatalogPath, "{\"MaxCatalogSize\": 100}", Encoding.UTF8);
+                        }
+
+                        using (FileStream catalogStream = File.Open(logCatalogPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                        {
+                            JObject catalogContent = ReadCatalog(catalogStream);
+
+                            int catalogSize = catalogContent.ContainsKey("MaxCatalogSize") &&
+                                              catalogContent["MaxCatalogSize"].Type == JTokenType.Integer
+                                                  ? catalogContent["MaxCatalogSize"].Value<int>()
+                                                  : 100;
+                            JArray files = catalogContent.ContainsKey("LogFiles") &&
+                                           catalogContent["LogFiles"] is JArray filesArray
+                                               ? filesArray
+                                               : CreateLogFilesArray(catalogContent);
+
+                            RemoveOldFiles(files, catalogSize, logFilesDirectory);
+
+                            filePath = CreateFile(logFilesDirectory, files);
+
+                            SaveCatalog(catalogStream, catalogContent);
+                        }
                     }
-                    string logFilesDirectory = Path.Combine(directory, "LogFiles");
-                    if (!Directory.Exists(logFilesDirectory))
+                    catch (Exception e)
                     {
-                        Directory.CreateDirectory(logFilesDirectory);
+                        Console.WriteLine($"Error while accessing log file catalog:{Environment.NewLine}{e}");
                     }
-
-                    if (!File.Exists(logCatalogPath))
+                    finally
                     {
-                        File.WriteAllText(logCatalogPath, "{\"MaxCatalogSize\": 100}", Encoding.UTF8);
-                    }
-
-                    using (FileStream catalogStream = File.Open(logCatalogPath,FileMode.Open,FileAccess.ReadWrite,FileShare.None))
-                    {
-                        JObject catalogContent = ReadCatalog(catalogStream);
-
-                        int catalogSize = catalogContent.ContainsKey("MaxCatalogSize") &&
-                                          catalogContent["MaxCatalogSize"].Type == JTokenType.Integer
-                                              ? catalogContent["MaxCatalogSize"].Value<int>()
-                                              : 100;
-                        JArray files = catalogContent.ContainsKey("LogFiles") &&
-                                       catalogContent["LogFiles"] is JArray filesArray
-                                           ? filesArray
-                                           : CreateLogFilesArray(catalogContent);
-
-                        RemoveOldFiles(files, catalogSize, logFilesDirectory);
-
-                        CreateFile(logFilesDirectory, files);
-
-                        SaveCatalog(catalogStream, catalogContent);
+                        interProcessMutex.ReleaseMutex();
                     }
                 }
-                catch (Exception e)
+                else
                 {
-                    Console.WriteLine($"Error while accessing log file catalog:{Environment.NewLine}{e}");
+                    Console.WriteLine("Timeout while waiting for other processes to free log file catalog.");
                 }
-                finally
-                {
-                    WaitHandle.Set();
-                }
+                return FileLog.Create(filePath);
             }
-            else
-            {
-                Console.WriteLine("Timeout while waiting for other processes to free log file catalog.");
-            }
-            return FileLog.Create(filePath);
 
             JArray CreateLogFilesArray(JObject catalogContent)
             {
@@ -170,8 +171,9 @@ namespace PlcNext.Common.Tools.UI
                 }
             }
 
-            void CreateFile(string logFilesDirectory, JArray files)
+            string CreateFile(string logFilesDirectory, JArray files)
             {
+                string filePath;
                 do
                 {
                     filePath = Path.Combine(logFilesDirectory, $"Log-{Guid.NewGuid().ToByteString()}.txt");
@@ -182,6 +184,7 @@ namespace PlcNext.Common.Tools.UI
                                                     new JProperty("Command", new JValue(executedCommand)),
                                                     new JProperty("File", new JValue(filePath)));
                 files.Insert(0, newFileObject);
+                return filePath;
             }
         }
     }
