@@ -233,7 +233,7 @@ namespace PlcNext.Common.Tools.SDK
             string message = $"{{\"cookie\":\"HypnoticCookieCutter\",\"type\":\"handshake\",\"protocolVersion\":{{\"major\":1}}, " +
                              $"\"sourceDirectory\":\"{sourceDirectory}\",\"buildDirectory\":\"{buildDirectory}\", " +
                              $"\"generator\":\"{makefileGenerator}\"}}";
-            await serverStream.WriteMessage(message).TimeoutAfter(CMakeServerTimeout);
+            serverStream.WriteMessage(message);
             CMakeReplyMessage reply = await WaitForReply("handshake");
             cookie = reply.Cookie;
         }
@@ -241,11 +241,11 @@ namespace PlcNext.Common.Tools.SDK
         private async Task Configure()
         {
             string message = $"{{\"cookie\":\"{cookie}\",\"type\":\"configure\"}}";
-            await serverStream.WriteMessage(message).TimeoutAfter(CMakeServerTimeout);
+            serverStream.WriteMessage(message);
             await WaitForReply("configure");
 
             message = $"{{\"cookie\":\"{cookie}\",\"type\":\"compute\"}}";
-            await serverStream.WriteMessage(message).TimeoutAfter(CMakeServerTimeout);
+            serverStream.WriteMessage(message);
             await WaitForReply("compute");
             //Replies of contigure and compute have no useful informations
         }
@@ -253,7 +253,7 @@ namespace PlcNext.Common.Tools.SDK
         public async Task<JArray> GetCodeModel()
         {
             string message = $"{{\"cookie\":\"{cookie}\",\"type\":\"codemodel\"}}";
-            await serverStream.WriteMessage(message).TimeoutAfter(CMakeServerTimeout);
+            serverStream.WriteMessage(message);
             CMakeCodeModelReplyMessage reply = (CMakeCodeModelReplyMessage)await WaitForReply("codemodel");
             return reply.CodeModel;
         }
@@ -261,7 +261,7 @@ namespace PlcNext.Common.Tools.SDK
         public async Task<JArray> GetCache()
         {
             string message = $"{{\"cookie\":\"{cookie}\",\"type\":\"cache\"}}";
-            await serverStream.WriteMessage(message).TimeoutAfter(CMakeServerTimeout);
+            serverStream.WriteMessage(message);
             CMakeCacheReplyMessage reply = (CMakeCacheReplyMessage)await WaitForReply("cache");
             return reply.Cache;
         }
@@ -399,7 +399,7 @@ namespace PlcNext.Common.Tools.SDK
             do
             {
                 byte[] buffer = new byte[BufferSize];
-                readBytes = await ioStream.ReadAsync(buffer, 0, BufferSize);
+                readBytes = await ioStream.ReadAsync(buffer, 0, BufferSize).ConfigureAwait(false);
                 message.Append(streamEncoding.GetString(buffer, 0, readBytes));
 
             } while (readBytes == BufferSize && !EndsWithEndTag());
@@ -433,7 +433,7 @@ namespace PlcNext.Common.Tools.SDK
             }
         }
 
-        public async Task WriteMessage(string message)
+        public void WriteMessage(string message)
         {
             log.LogVerbose($"Post message to cmake server:{Environment.NewLine}" +
                            $"{message}");
@@ -444,7 +444,7 @@ namespace PlcNext.Common.Tools.SDK
             {
                 len = ushort.MaxValue;
             }
-            await ioStream.WriteAsync(outBuffer, 0, len);
+            ioStream.Write(outBuffer, 0, len);
             ioStream.Flush();
         }
     }
