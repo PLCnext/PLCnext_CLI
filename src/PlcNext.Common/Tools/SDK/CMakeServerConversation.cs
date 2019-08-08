@@ -193,6 +193,9 @@ namespace PlcNext.Common.Tools.SDK
                     case "message":
                         cMakeMessage = CMakeMessageMessage.Create(content);
                         break;
+                    case "signal":
+                        log.LogInformation("Signal messages are ignored.");
+                        return null;
                     default:
                         throw new FormattableException($"Unkown message type {content["type"].Value<string>()}.{Environment.NewLine}" +
                                                             $"Complete message: {message}");
@@ -289,7 +292,8 @@ namespace PlcNext.Common.Tools.SDK
                     }
                 }
             } while (progressMessage != null ||
-                     messageMessage != null);
+                     messageMessage != null ||
+                     message == null);
 
             CMakeReplyMessage replyMessage = (CMakeReplyMessage)message;
             CheckCookieAndType(replyMessage);
@@ -344,7 +348,11 @@ namespace PlcNext.Common.Tools.SDK
                 }
 
                 CMakeServerStream serverStream = new CMakeServerStream(pipeClient, executionContext);
-                CMakeHelloMessage hello = CMakeMessage.Parse<CMakeHelloMessage>(await serverStream.ReadMessage().TimeoutAfter(CMakeServerTimeout), executionContext);
+                CMakeHelloMessage hello;
+                do
+                {
+                    hello = CMakeMessage.Parse<CMakeHelloMessage>(await serverStream.ReadMessage().TimeoutAfter(CMakeServerTimeout), executionContext);
+                } while (hello == null);
 
                 if (hello.SupportedProtocolVersions.All(v => v.Major != 1))
                 {
