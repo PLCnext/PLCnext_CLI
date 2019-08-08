@@ -49,6 +49,8 @@ namespace PlcNext.Common.Commands
             }
             else
             {
+                ExecutionContext.WriteWarning("This command is deprecated. Use 'get project-information' instead.", false);
+
                 ProjectEntity project = ProjectEntity.Decorate(entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root);
                 TargetsResult targetsResult = targetParser.Targets(project, false);
                 Target[] availableTargets = sdkRepository.GetAllTargets().ToArray();

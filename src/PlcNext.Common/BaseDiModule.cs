@@ -56,11 +56,13 @@ namespace PlcNext.Common
             builder.RegisterType<DynamicCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GenerateLibraryCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GetCompilerSpecificationsCommand>().As<ICommand>().InstancePerLifetimeScope();
+            builder.RegisterType<GetComponentsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GetIncludePathsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GetSdksCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GetSettingsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GetTargetsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GetProjectInformationCommand>().As<ICommand>().InstancePerLifetimeScope();
+            builder.RegisterType<GetProgramsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GetUpdateVersionsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<InstallSdkCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<ScanSdksCommand>().As<ICommand>().InstancePerLifetimeScope();

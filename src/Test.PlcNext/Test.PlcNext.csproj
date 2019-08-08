@@ -13,10 +13,13 @@
     <None Remove="Deployment\StandardAppProject\CMakeLists.txt" />
     <None Remove="Deployment\StandardAppProject\src\StandardAppProjectComponent.cpp" />
     <None Remove="Deployment\StandardAppProject\src\StandardAppProjectComponent.hpp" />
+    <None Remove="Deployment\TestResults\GetComponentsReply.json" />
+    <None Remove="Deployment\TestResults\GetProgramsReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationAlmostAmbiguousReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationAppProjectReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationMultipleSourcesReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationStandardReply.json" />
+    <None Remove="Deployment\TestResults\GetProjectTargetsReply.json" />
     <EmbeddedResource Include="Deployment\StandardAppProject\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\StandardAppProject\src\StandardAppProjectComponent.cpp" />
     <EmbeddedResource Include="Deployment\StandardAppProject\src\StandardAppProjectComponent.hpp" />
@@ -27,6 +30,8 @@
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.hpp" />
     <EmbeddedResource Include="Deployment\TestResults\GetAllSettingsReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetCompilerSpecsPartialErrorReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetComponentsReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetProgramsReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetProjectInformationMultipleSourcesReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetIncludePathsPartialErrorReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetProjectInformationAlmostAmbiguousReply.json" />
@@ -36,6 +41,7 @@
     <EmbeddedResource Include="Deployment\TestResults\GetProjectInformationAppProjectReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetProjectInformationStandardReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetProjectInformationMissingTargetReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetProjectTargetsReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetSdksPartialErrorReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetSdksReply.json" />
     <None Remove="Deployment\TestResults\GetTargetsReply.json" />

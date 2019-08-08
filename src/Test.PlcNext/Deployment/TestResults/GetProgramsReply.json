@@ -1,0 +1,31 @@
+{
+  "type": "reply",
+  "inReplyTo": "command",
+  "command": "get programs",
+  "parsedCommand": {
+    "command": "get programs",
+    "arguments": {
+      "path": "",
+      "sources": "",
+      "component": "",
+      "verbose": "False"
+    }
+  },
+  "reply": {
+    "programs": [
+      {
+        "name": "OtherProgram",
+        "namespace": "AlmostAmbiguous",
+        "componentName": "AlmostAmbiguousComp",
+        "componentNamespace": "AlmostAmbiguous"
+      },
+      {
+        "name": "AlmostAmbiguousProgram",
+        "namespace": "AlmostAmbiguous",
+        "componentName": "AlmostAmbiguousComponent",
+        "componentNamespace": "AlmostAmbiguous"
+      }
+    ]
+  },
+  "success": true
+}

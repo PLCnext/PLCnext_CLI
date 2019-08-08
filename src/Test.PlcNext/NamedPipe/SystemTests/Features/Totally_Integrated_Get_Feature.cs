@@ -40,6 +40,8 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
         {
             private readonly List<object[]> data = new List<object[]>
             {
+                new object[] {"components -s extern,src", "ComponentsInMultipleSources", "GetComponentsReply.json"},
+                new object[] {"programs", "AlmostAmbiguous", "GetProgramsReply.json"},
                 new object[] {"include-paths", "Standard", "GetIncludePathsReply.json"},
                 new object[] {"include-paths", "StandardWithMissingTarget", "GetIncludePathsPartialErrorReply.json"},
                 new object[] {"sdks", "Standard", "GetSdksReply.json"},
@@ -49,6 +51,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 new object[] {"compiler-specifications", "StandardWithMissingTarget", "GetCompilerSpecsPartialErrorReply.json"},
                 new object[] {"setting AttributePrefix", "Standard", "GetSingleSettingReply.json"},
                 new object[] {"setting -a", "Standard", "GetAllSettingsReply.json"},
+                new object[] {"project-targets", "StandardWithMissingTarget", "GetProjectTargetsReply.json"},
                 new object[] {"project-information", "Standard", "GetProjectInformationStandardReply.json"},
                 new object[] {"project-information", "AppProject", "GetProjectInformationAppProjectReply.json"},
                 new object[] {"project-information", "StandardWithMissingTarget", "GetProjectInformationMissingTargetReply.json"},
