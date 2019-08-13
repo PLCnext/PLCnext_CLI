@@ -43,7 +43,7 @@ namespace PlcNext.Common.Project
             this.executionContext = executionContext;
         }
         
-        public IEnumerable<Entity> FindAllEnities(string entityName, Entity owner)
+        public IEnumerable<Entity> FindAllEntities(string entityName, Entity owner)
         {
             if (!owner.HasPathCommandArgument())
             {

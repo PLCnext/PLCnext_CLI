@@ -274,7 +274,7 @@ namespace PlcNext.Common.Project
                     Entity root = null;
                     foreach (TemplateDescription possibleTemplate in templateDescriptions.OrderByDescending(Depth))
                     {
-                        root = identifierRepository.FindAllEnities(possibleTemplate.name, owner,
+                        root = identifierRepository.FindAllEntities(possibleTemplate.name, owner,
                                                                     possibleTemplate.identifier)
                                                     .FirstOrDefault();
                         if (root != null)

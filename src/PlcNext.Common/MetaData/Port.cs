@@ -14,7 +14,7 @@ using PlcNext.Common.CodeModel;
 
 namespace PlcNext.Common.MetaData
 {
-    internal class Port
+    public class Port
     {
         public Port(IField field, (string, CodePosition) attributes, string datatype)
         {

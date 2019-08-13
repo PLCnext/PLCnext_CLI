@@ -14,7 +14,7 @@ using PlcNext.Common.CodeModel;
 
 namespace PlcNext.Common.MetaData
 {
-    internal interface IAttributeView
+    public interface IAttributeView
     {
         IEnumerable<string> Attributes(IField field);
         IEnumerable<string> Attributes(Port port);

@@ -16,6 +16,6 @@ namespace PlcNext.Common.Templates
 {
     internal interface ITemplateIdentifierRepository
     {
-        IEnumerable<Entity> FindAllEnities(string entityName, Entity owner, string identifierName);
+        IEnumerable<Entity> FindAllEntities(string entityName, Entity owner, string identifierName);
     }
 }

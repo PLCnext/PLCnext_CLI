@@ -24,11 +24,11 @@ namespace PlcNext.Common.Templates
             this.identifiers = identifiers;
         }
 
-        public IEnumerable<Entity> FindAllEnities(string entityName, Entity owner, string identifierName)
+        public IEnumerable<Entity> FindAllEntities(string entityName, Entity owner, string identifierName)
         {
             ITemplateIdentifier identifier = GetIdentifier();
 
-            return identifier.FindAllEnities(entityName, owner);
+            return identifier.FindAllEntities(entityName, owner);
 
             ITemplateIdentifier GetIdentifier()
             {
