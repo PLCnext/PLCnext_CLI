@@ -37,5 +37,11 @@ namespace PlcNext.Common.Project
                                                           ? this[EntityKeys.ProjectSettingsKey]
                                                              .Value<MutableProjectSettings>()
                                                           : new MutableProjectSettings();
+
+        public Version Version => HasValue<Version>()
+                                      ? Value<Version>()
+                                      : HasContent(EntityKeys.ProjectVersionKey)
+                                          ? this[EntityKeys.ProjectVersionKey].Value<Version>()
+                                          : new Version(1, 0);
     }
 }

@@ -22,6 +22,13 @@
             </xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element minOccurs="0" name="Version" type="version" default="1.0">
+          <xs:annotation>
+            <xs:documentation>
+              The version of the project. The default value will be 1.0
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="Extension" type="extension"/>
         <xs:element minOccurs="0" maxOccurs="1" name="Type" type="typeDefinition" default="project"/>
       </xs:sequence>
@@ -83,6 +90,18 @@
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="\{[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="version">
+    <xs:annotation>
+      <xs:documentation>
+        Simple type used to specify version numbers and
+        restrict their structure.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^(\d+)(.\d+)?(.\d+)?(.\d+)?$" />
     </xs:restriction>
   </xs:simpleType>
 

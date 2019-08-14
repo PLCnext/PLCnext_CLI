@@ -35,6 +35,7 @@ namespace PlcNext.Common.Project
             EntityKeys.PathKey,
             EntityKeys.NameKey,
             EntityKeys.ProjectSettingsKey,
+            EntityKeys.ProjectVersionKey,
         };
 
         public ProjectSettingsProvider(IFileSystem fileSystem, ExecutionContext executionContext)
@@ -101,6 +102,8 @@ namespace PlcNext.Common.Project
                     return GetProjectName();
                 case EntityKeys.ProjectSettingsKey:
                     return GetProjectSettings();
+                case EntityKeys.ProjectVersionKey:
+                    return GetProjectVersion();
                 default:
                     throw new ContentProviderException(key, owner);
             }
@@ -122,6 +125,12 @@ namespace PlcNext.Common.Project
             {
                 ProjectDescription description = owner.Value<ProjectDescription>();
                 return owner.Create(key, description?.Root.Name?? Path.GetFileName(owner.Path));
+            }
+
+            Entity GetProjectVersion()
+            {
+                ProjectDescription description = owner.Value<ProjectDescription>();
+                return owner.Create(key, Version.Parse(description.Settings.Version));
             }
         }
 

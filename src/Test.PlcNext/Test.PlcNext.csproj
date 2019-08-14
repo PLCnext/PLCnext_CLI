@@ -322,18 +322,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\CMakeLists.txt" Link="Deployment\Templates\BaseProjectTemplate\CMakeLists.txt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\BaseProjectTemplate\TemplateDescription.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\ComponentTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\AppComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\AppComponentTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProgramTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\BaseTemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\BaseTemplateDescription.xml" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\CMakeLists.txt" Link="Deployment\Templates\ProjectTemplate\CMakeLists.txt" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\CodeTemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\CodeTemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FieldTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FieldTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FormatTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FormatTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\AppProjectTemplate\TemplateDescription.xml" />
-	<EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\BaseTemplateDescription.xml" Link="Deployment\Templates\AppProjectTemplate\BaseTemplateDescription.xml" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\CMakeLists.txt" Link="Deployment\Templates\AppProjectTemplate\CMakeLists.txt" />
     <EmbeddedResource Include="..\PlcNext\Templates\Templates.xml" Link="Deployment\Templates\Templates.xml" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComp.cpp" />
@@ -673,17 +675,15 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.hpp" Link="Deployment\Templates\ProgramTemplate\Program.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.progmeta" Link="Deployment\Templates\ProgramTemplate\Program.progmeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\.proj" Link="Deployment\Templates\ProjectTemplate\.proj" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.cpp" Link="Deployment\Templates\ProjectTemplate\Library.cpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.hpp" Link="Deployment\Templates\ProjectTemplate\Library.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.libmeta" Link="Deployment\Templates\ProjectTemplate\Library.libmeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
 	<EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\.proj" Link="Deployment\Templates\AppProjectTemplate\.proj" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\Library.cpp" Link="Deployment\Templates\AppProjectTemplate\Library.cpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\Library.hpp" Link="Deployment\Templates\AppProjectTemplate\Library.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AppProjectTemplate\Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\acf.config" Link="Deployment\Templates\AppProjectTemplate\acf.config" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\Library.cpp" Link="Deployment\Templates\BaseProjectTemplate\Library.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\Library.hpp" Link="Deployment\Templates\BaseProjectTemplate\Library.hpp" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget3\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget2\plcnext.proj" />
@@ -740,6 +740,7 @@
     <Folder Include="Deployment\DemoWithoutLibrary\bin\" />
     <Folder Include="Deployment\Templates\ComponentTemplate\" />
     <Folder Include="Deployment\Templates\AppComponentTemplate\" />
+    <Folder Include="Deployment\Templates\BaseProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProgramTemplate\" />
     <Folder Include="Deployment\Templates\AppProjectTemplate\" />

@@ -123,7 +123,7 @@ namespace PlcNext.Common.Build
                 }
             }
 
-            string GenerateCmakeCommand(string target, string version)
+            string GenerateCmakeCommand(string target, string version, string shortVersion)
             {
                 List<string> commandParts = new List<string>();
                 string sdkRoot = buildInformation.Sdk.Root.FullName.Replace("\\", "/");
@@ -169,8 +169,12 @@ namespace PlcNext.Common.Build
                 string GenerateStagingPrefixForTarget()
                 {
                     string basePath = buildInformation.RootFileEntity.Directory.FullName;
-                    //return Path.Combine(basePath, Constants.LibraryFolderName, $"{target}_{version}", GetRealBuildType()).Replace(Path.DirectorySeparatorChar,'/');
-                    return Path.Combine(basePath, Constants.LibraryFolderName).Replace(Path.DirectorySeparatorChar, '/');
+                    return buildInformation.RootProjectEntity.Version > new Version(1, 0)
+                               ? Path.Combine(basePath, Constants.LibraryFolderName, $"{target}_{shortVersion}",
+                                              GetRealBuildType())
+                                     .Replace(Path.DirectorySeparatorChar, '/')
+                               : Path.Combine(basePath, Constants.LibraryFolderName)
+                                     .Replace(Path.DirectorySeparatorChar, '/');
                 }
             }
 
@@ -191,7 +195,8 @@ namespace PlcNext.Common.Build
                     !buildInformation.NoConfigure)
                 {
                     string cmakeCommand = GenerateCmakeCommand(buildInformation.Target.Name,
-                                                               buildInformation.Target.LongVersion);
+                                                               buildInformation.Target.LongVersion,
+                                                               buildInformation.Target.Version);
 
                     CallCmake(cmakeFolder, cmakeCommand, true, true);
                 }
@@ -242,6 +247,11 @@ namespace PlcNext.Common.Build
 
             void TouchMainCMakeFile()
             {
+                if (buildInformation.RootProjectEntity.Version > new Version(1, 0))
+                {
+                    //do not touch newer project version cmake file
+                    return;
+                }
                 if (!buildInformation.RootFileEntity.Directory.FileExists("CMakeLists.txt"))
                 {
                     throw new CMakeFileNotFoundException();

@@ -53,6 +53,7 @@ namespace PlcNext.Common.Tools
 
         //ProjectSettingsProvider
         public const string ProjectSettingsKey = "__internalprojectsettings__";
+        public const string ProjectVersionKey = "__internalprojectversion__";
 
         //General keys
         public const string PathKey = "path";
