@@ -123,6 +123,9 @@ namespace PlcNext.CommandLine
         public const string HeartbeatOption = "heartbeat";
         public const char HeartbeatChar = 'h';
 
+        //MigrateCliVerb
+        public const string MigrateCliVerb = "migrate-old-cli";
+
         //GetProjectInformationVerb
         public const string ProjectInformationVerb = "project-information";
 

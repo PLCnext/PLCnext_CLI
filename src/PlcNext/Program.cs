@@ -16,12 +16,15 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Autofac;
+using PlcNext.CommandLine;
 using PlcNext.Common;
 using PlcNext.Common.CommandLine;
+using PlcNext.Common.Commands;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
 using PlcNext.CppParser;
+using PlcNext.Migration;
 
 namespace PlcNext
 {
@@ -37,6 +40,10 @@ namespace PlcNext
 
         private static async Task<int> MainAsync(string[] args)
         {
+            if (args.Any() && args[0].ToLowerInvariant() == CommandLineConstants.MigrateCliVerb)
+            {
+                return Migrate() ? 0 : 1;
+            }
 #if DEBUG
             Stopwatch stopwatch = Stopwatch.StartNew();
 #endif
@@ -85,6 +92,34 @@ namespace PlcNext
                 ILog result = LogCatalog.CreateNewLog(path, string.Join(" ", args));
                 result.AddInitialLog(args);
                 return result;
+            }
+
+            bool Migrate()
+            {
+                ILog log = LogHelper.GetMigrationLog();
+                try
+                {
+                    log.AddInitialLog(args);
+                    //Not implemented feature: Old version has caches and settings in same location as current version.
+                    //How to identify the version? Probably create a .version file.
+                    return MigrationChain.Start(m =>
+                                          {
+                                              Console.WriteLine(m);
+                                              log.LogInformation(m);
+                                          })
+                                         .AddPotentialLocation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                                                            "plcncli.Common"),new Version(19,0))
+                                         .AddMigrationFile("settings.xml")
+                                         .AddMigrationFile("sdk-properties.xml")
+                                         .SetMigrationDestination(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                                                               (Assembly.GetEntryAssembly()??Assembly.GetExecutingAssembly()).GetName().Name))
+                                         .AddConversionStep<ConversionFrom190>()
+                                         .Execute();
+                }
+                finally
+                {
+                    (log as IDisposable)?.Dispose();
+                }
             }
         }
     }

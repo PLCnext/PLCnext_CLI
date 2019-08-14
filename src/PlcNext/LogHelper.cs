@@ -21,30 +21,38 @@ namespace PlcNext
     public static class LogHelper
     {
         private const string LogCatalogPathDefault = "{ApplicationData}/{ApplicationName}/logs/cli/catalog.json";
+        private const string MigrationLogPathDefault = "{ApplicationData}/{ApplicationName}/logs";
         
         public static string GetLogCatalogLocation()
         {
             return ResolvePathNames(LogCatalogPathDefault.CleanPath());
+        }
 
-            string ResolvePathNames(string unresolved)
+        private static string ResolvePathNames(string unresolved)
+        {
+            IEnvironmentPathNames pathNames = new EnvironmentPathNames();
+            string resolved = unresolved;
+            Regex resolvePattern = new Regex(@"{(?<resolvable>\w+)}");
+            Match resolveMatch = resolvePattern.Match(unresolved);
+            while (resolveMatch.Success)
             {
-                IEnvironmentPathNames pathNames = new EnvironmentPathNames();
-                string resolved = unresolved;
-                Regex resolvePattern = new Regex(@"{(?<resolvable>\w+)}");
-                Match resolveMatch = resolvePattern.Match(unresolved);
-                while (resolveMatch.Success)
+                string key = resolveMatch.Groups["resolvable"].Value;
+                if (pathNames.ContainsKey(key))
                 {
-                    string key = resolveMatch.Groups["resolvable"].Value;
-                    if (pathNames.ContainsKey(key))
-                    {
-                        resolved = resolved.Replace(resolveMatch.Value, pathNames[key]);
-                    }
-
-                    resolveMatch = resolvePattern.Match(resolved);
+                    resolved = resolved.Replace(resolveMatch.Value, pathNames[key]);
                 }
 
-                return resolved;
+                resolveMatch = resolvePattern.Match(resolved);
             }
+
+            return resolved;
+        }
+
+        public static ILog GetMigrationLog()
+        {
+            string migrationFile = ResolvePathNames(Path.Combine(MigrationLogPathDefault.CleanPath(),
+                                                                 $"migration-{DateTime.Now:dd-MM-yyyy_hh-mm-ss-fff}.txt"));
+            return FileLog.Create(migrationFile);
         }
 
         public static void AddInitialLog(this ILog log, string[] args)
