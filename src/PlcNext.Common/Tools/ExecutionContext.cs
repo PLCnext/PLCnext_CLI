@@ -151,6 +151,11 @@ namespace PlcNext.Common.Tools
             userInterface.ResumeOutput();
         }
 
+        public void SetQuiet(bool quiet)
+        {
+            userInterface.SetQuiet(quiet);
+        }
+
         void ILog.LogVerbose(string message)
         {
             WriteVerbose(message, false);

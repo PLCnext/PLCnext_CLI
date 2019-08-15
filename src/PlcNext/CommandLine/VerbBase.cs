@@ -25,6 +25,9 @@ namespace PlcNext.CommandLine
         [Option("verbose", HelpText = "Enables verbose output.")]
         public bool Verbose { get; set; }
 
+        [Option("quiet", HelpText = "Suppresses all output.")]
+        public bool Quiet { get; set; }
+
         //This flag will be evaluated by the main program.
         //This is necessary because otherwise the parser would say "unrecognized option"
         [Option("no-sdk-exploration", Hidden = true)]
@@ -38,6 +41,7 @@ namespace PlcNext.CommandLine
             }
 
             UserInterface?.SetVerbosity(Verbose);
+            UserInterface?.SetQuiet(Quiet);
 
             return await Execute(CommandManager);
         }

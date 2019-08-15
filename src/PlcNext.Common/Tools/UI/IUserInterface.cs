@@ -18,5 +18,6 @@ namespace PlcNext.Common.Tools.UI
         void WriteWarning(string message);
         void PauseOutput();
         void ResumeOutput();
+        void SetQuiet(bool quiet);
     }
 }

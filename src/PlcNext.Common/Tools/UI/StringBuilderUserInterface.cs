@@ -102,5 +102,10 @@ namespace PlcNext.Common.Tools.UI
         {
             //do nothing
         }
+
+        public void SetQuiet(bool quiet)
+        {
+            //do nothing
+        }
     }
 }

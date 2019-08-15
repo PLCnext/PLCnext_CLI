@@ -29,6 +29,7 @@ namespace PlcNext.Common.Tools.UI
         }
 
         private bool showVerbose;
+        private bool beQuiet;
         private bool paused;
         private readonly List<(string, TraceSeverity)> storedMessages = new List<(string, TraceSeverity)>();
         private readonly ILog log;
@@ -117,8 +118,17 @@ namespace PlcNext.Common.Tools.UI
             }
         }
 
+        public void SetQuiet(bool quiet)
+        {
+            beQuiet = quiet;
+        }
+
         private void PostMessage((string message, TraceSeverity severity) message)
         {
+            if (beQuiet)
+            {
+                return;
+            }
             if (paused)
             {
                 storedMessages.Add(message);

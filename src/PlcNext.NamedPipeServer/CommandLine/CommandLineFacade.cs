@@ -206,6 +206,11 @@ namespace PlcNext.NamedPipeServer.CommandLine
                 //not necessary
             }
 
+            public void SetQuiet(bool quiet)
+            {
+                //not necessary
+            }
+
             public IProgressNotifier Spawn(double maxTicks, string startMessage, string completedMessage)
             {
                 return new ProgressNotifierReporter(completedMessage, facade, maxTicks, startMessage, command);
