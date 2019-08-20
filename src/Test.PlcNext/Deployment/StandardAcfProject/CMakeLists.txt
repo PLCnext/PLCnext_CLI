@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.13)
 
-project(StandardAppProject)
+project(StandardAcfProject)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -13,13 +13,13 @@ set (WILDCARD_HEADER *.h *.hpp *.hxx)
 
 file(GLOB_RECURSE Headers src/${WILDCARD_HEADER} intermediate/code/${WILDCARD_HEADER})
 file(GLOB_RECURSE Sources src/${WILDCARD_SOURCE} intermediate/code/${WILDCARD_SOURCE})
-add_library(StandardAppProject SHARED ${Headers} ${Sources})
+add_library(StandardAcfProject SHARED ${Headers} ${Sources})
 
 #######################################################################################
 
 ################# project include-paths ###############################################
 
-target_include_directories(StandardAppProject
+target_include_directories(StandardAcfProject
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/intermediate/code>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
@@ -38,7 +38,7 @@ list(INSERT CMAKE_MODULE_PATH 0 "${ARP_TOOLCHAIN_CMAKE_MODULE_PATH}")
 #          the firmware will crash and there will be NO indication why it crashed.    #
 #######################################################################################
 
-target_link_options(StandardAppProject PRIVATE LINKER:--no-undefined)
+target_link_options(StandardAcfProject PRIVATE LINKER:--no-undefined)
 
 #######################################################################################
 
@@ -47,14 +47,14 @@ target_link_options(StandardAppProject PRIVATE LINKER:--no-undefined)
 find_package(ArpDevice REQUIRED)
 find_package(ArpProgramming REQUIRED)
 
-target_link_libraries(StandardAppProject PRIVATE ArpDevice ArpProgramming)
+target_link_libraries(StandardAcfProject PRIVATE ArpDevice ArpProgramming)
 
 #######################################################################################
 
 ################# install ############################################################
 
 string(REGEX REPLACE "^.*\\(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*$" "\\1" _ARP_SHORT_DEVICE_VERSION ${ARP_DEVICE_VERSION})
-install(TARGETS StandardAppProject
+install(TARGETS StandardAcfProject
     LIBRARY DESTINATION ${ARP_DEVICE}_${_ARP_SHORT_DEVICE_VERSION}/$<CONFIG>/lib
     ARCHIVE DESTINATION ${ARP_DEVICE}_${_ARP_SHORT_DEVICE_VERSION}/$<CONFIG>/lib
     RUNTIME DESTINATION ${ARP_DEVICE}_${_ARP_SHORT_DEVICE_VERSION}/$<CONFIG>/bin)

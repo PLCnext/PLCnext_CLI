@@ -113,9 +113,9 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckComponentHasName(name);
         }
 
-        protected void Then_the_project_contains_an_appcomponent_with_name(string name)
+        protected void Then_the_project_contains_an_acfcomponent_with_name(string name)
         {
-            ScenarioContext.CheckIsAppComponent(name);
+            ScenarioContext.CheckIsAcfComponent(name);
             ScenarioContext.CheckComponentHasName(name);
         }
 

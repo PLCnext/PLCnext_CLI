@@ -28,9 +28,9 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             await ScenarioContext.CreateProject(componentName: componentname);
         }
 
-        protected async Task When_I_create_a_new_appproject_with_componentname(string componentName)
+        protected async Task When_I_create_a_new_acfproject_with_componentname(string componentName)
         {
-            await ScenarioContext.CreateProject(componentName, appproject: true);
+            await ScenarioContext.CreateProject(componentName, acfproject: true);
         }
         protected async Task When_I_create_a_new_project_with_name_and_componentname(string name, string componentname)
         {

@@ -10,19 +10,21 @@
     <Compile Remove="TestResults\**" />
     <EmbeddedResource Remove="TestResults\**" />
     <None Remove="TestResults\**" />
-    <None Remove="Deployment\StandardAppProject\CMakeLists.txt" />
-    <None Remove="Deployment\StandardAppProject\src\StandardAppProjectComponent.cpp" />
-    <None Remove="Deployment\StandardAppProject\src\StandardAppProjectComponent.hpp" />
+    <None Remove="Deployment\AcfProject\src\AcfProjectComponent.cpp" />
+    <None Remove="Deployment\AcfProject\src\AcfProjectComponent.hpp" />
+    <None Remove="Deployment\StandardAcfProject\CMakeLists.txt" />
+    <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
+    <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />
     <None Remove="Deployment\TestResults\GetComponentsReply.json" />
     <None Remove="Deployment\TestResults\GetProgramsReply.json" />
+    <None Remove="Deployment\TestResults\GetProjectInformationAcfProjectReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationAlmostAmbiguousReply.json" />
-    <None Remove="Deployment\TestResults\GetProjectInformationAppProjectReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationMultipleSourcesReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationStandardReply.json" />
     <None Remove="Deployment\TestResults\GetProjectTargetsReply.json" />
-    <EmbeddedResource Include="Deployment\StandardAppProject\CMakeLists.txt" />
-    <EmbeddedResource Include="Deployment\StandardAppProject\src\StandardAppProjectComponent.cpp" />
-    <EmbeddedResource Include="Deployment\StandardAppProject\src\StandardAppProjectComponent.hpp" />
+    <EmbeddedResource Include="Deployment\StandardAcfProject\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
+    <EmbeddedResource Include="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.cpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.hpp" />
@@ -38,7 +40,7 @@
     <None Remove="Deployment\TestResults\GetIncludePathsReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetIncludePathsReply.json" />
     <None Remove="Deployment\TestResults\GetSdksReply.json" />
-    <EmbeddedResource Include="Deployment\TestResults\GetProjectInformationAppProjectReply.json" />
+    <EmbeddedResource Include="Deployment\TestResults\GetProjectInformationAcfProjectReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetProjectInformationStandardReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetProjectInformationMissingTargetReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetProjectTargetsReply.json" />
@@ -62,8 +64,6 @@
     <None Remove="Deployment\AlmostAmbiguous\src\AlmostAmbiguousProgram.hpp" />
     <None Remove="Deployment\AlmostAmbiguous\src\OtherProgram.cpp" />
     <None Remove="Deployment\AlmostAmbiguous\src\OtherProgram.hpp" />
-    <None Remove="Deployment\AppProject\src\AppProjectComponent.cpp" />
-    <None Remove="Deployment\AppProject\src\AppProjectComponent.hpp" />
     <None Remove="Deployment\Arp.Plc.Esm2\src\src\Code\EsmData.hpp" />
     <None Remove="Deployment\Arp.Plc.Esm2\src\src\Code\EsmInfo.hpp" />
     <None Remove="Deployment\Arp.Plc.Esm2\src\src\Code\MyProgram.cpp" />
@@ -328,14 +328,14 @@
 
   <ItemGroup>
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\ComponentTemplate\TemplateDescription.xml" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AppComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\AppComponentTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\AcfComponentTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProgramTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\BaseTemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\BaseTemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\CodeTemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\CodeTemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FieldTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FieldTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FormatTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FormatTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\TemplateDescription.xml" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\AppProjectTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\AcfProjectTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\Templates.xml" Link="Deployment\Templates\Templates.xml" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\AlmostAmbiguousComp.cpp" />
@@ -346,8 +346,8 @@
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\AlmostAmbiguousProgram.hpp" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\OtherProgram.cpp" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\src\OtherProgram.hpp" />
-    <EmbeddedResource Include="Deployment\AppProject\src\AppProjectComponent.cpp" />
-    <EmbeddedResource Include="Deployment\AppProject\src\AppProjectComponent.hpp" />
+    <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectComponent.cpp" />
+    <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectComponent.hpp" />
     <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\Code\EsmData.hpp" />
     <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\Code\EsmInfo.hpp" />
     <EmbeddedResource Include="Deployment\Arp.Plc.Esm2\src\src\Code\MyProgram.cpp" />
@@ -668,9 +668,9 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\ComponentTemplate\Component.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\ComponentProgramProvider.cpp" Link="Deployment\Templates\ComponentTemplate\ComponentProgramProvider.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\ComponentProgramProvider.hpp" Link="Deployment\Templates\ComponentTemplate\ComponentProgramProvider.hpp" />
-	<EmbeddedResource Include="..\PlcNext\Templates\AppComponentTemplate\Component.cpp" Link="Deployment\Templates\AppComponentTemplate\Component.cpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AppComponentTemplate\Component.hpp" Link="Deployment\Templates\AppComponentTemplate\Component.hpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AppComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\AppComponentTemplate\Component.meta.cpp" />
+	<EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\Component.cpp" Link="Deployment\Templates\AcfComponentTemplate\Component.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\Component.hpp" Link="Deployment\Templates\AcfComponentTemplate\Component.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\AcfComponentTemplate\Component.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.cpp" Link="Deployment\Templates\ProgramTemplate\Program.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.hpp" Link="Deployment\Templates\ProgramTemplate\Program.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.progmeta" Link="Deployment\Templates\ProgramTemplate\Program.progmeta" />
@@ -678,9 +678,9 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.libmeta" Link="Deployment\Templates\ProjectTemplate\Library.libmeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
-	<EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\.proj" Link="Deployment\Templates\AppProjectTemplate\.proj" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AppProjectTemplate\Library.meta.cpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AppProjectTemplate\acf.config" Link="Deployment\Templates\AppProjectTemplate\acf.config" />
+	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\acf.config" Link="Deployment\Templates\AcfProjectTemplate\acf.config" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\Library.cpp" Link="Deployment\Templates\BaseProjectTemplate\Library.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\Library.hpp" Link="Deployment\Templates\BaseProjectTemplate\Library.hpp" />
@@ -739,11 +739,11 @@
   <ItemGroup>
     <Folder Include="Deployment\DemoWithoutLibrary\bin\" />
     <Folder Include="Deployment\Templates\ComponentTemplate\" />
-    <Folder Include="Deployment\Templates\AppComponentTemplate\" />
+    <Folder Include="Deployment\Templates\AcfComponentTemplate\" />
     <Folder Include="Deployment\Templates\BaseProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProgramTemplate\" />
-    <Folder Include="Deployment\Templates\AppProjectTemplate\" />
+    <Folder Include="Deployment\Templates\AcfProjectTemplate\" />
   </ItemGroup>
 
   <ItemGroup>

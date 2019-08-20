@@ -163,10 +163,10 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Generate_applibrary_files_on_generate()
+        public async Task Generate_acflibrary_files_on_generate()
         {
             await Runner.AddSteps(
-                _ => Given_is_the_project("AppProject"),
+                _ => Given_is_the_project("AcfProject"),
                 _ => When_I_generate_all_codefiles(),
                 _ => Then_the_library_files_are_generated()
                 ).RunAsyncWithTimeout();
@@ -329,12 +329,12 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Generate_acfconfig_on_generate_for_appproject()
+        public async Task Generate_acfconfig_on_generate_for_acfproject()
         {
             await Runner.AddSteps(
-                _ => Given_is_the_project("AppProject"),
+                _ => Given_is_the_project("AcfProject"),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_the_acfconfig_file_is_generated_with_the_components("AppProject","AppProjectComponent")
+                _ => Then_the_acfconfig_file_is_generated_with_the_components("AcfProject","AcfProjectComponent")
                 ).RunAsyncWithTimeout();
         }
 

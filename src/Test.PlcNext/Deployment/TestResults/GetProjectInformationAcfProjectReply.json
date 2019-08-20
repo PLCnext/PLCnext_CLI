@@ -10,14 +10,14 @@
   },
   "inReplyTo": "command",
   "reply": {
-    "namespace": "AppProject",
-    "type": "appproject",
+    "namespace": "AcfProject",
+    "type": "acfproject",
     "targets": [],
     "entities": [
       {
-        "name": "AppProjectComponent",
-        "namespace": "AppProject",
-        "type": "appcomponent",
+        "name": "AcfProjectComponent",
+        "namespace": "AcfProject",
+        "type": "acfcomponent",
         "relatedEntity": []
       }
     ]

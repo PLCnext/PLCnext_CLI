@@ -46,9 +46,6 @@ namespace PlcNext.CommandLine
         //GetComponentsVerb
         public const string ComponentsVerb = "components";
 
-        //GetAppComponentsVerb
-        public const string AppComponentsVerb = "appcomponents";
-
         //GetIncludePathsVerb
         public const string IncludepathsVerb = "include-paths";
 

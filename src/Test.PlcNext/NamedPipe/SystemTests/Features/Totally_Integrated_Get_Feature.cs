@@ -53,7 +53,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 new object[] {"setting -a", "Standard", "GetAllSettingsReply.json"},
                 new object[] {"project-targets", "StandardWithMissingTarget", "GetProjectTargetsReply.json"},
                 new object[] {"project-information", "Standard", "GetProjectInformationStandardReply.json"},
-                new object[] {"project-information", "AppProject", "GetProjectInformationAppProjectReply.json"},
+                new object[] {"project-information", "AcfProject", "GetProjectInformationAcfProjectReply.json"},
                 new object[] {"project-information", "StandardWithMissingTarget", "GetProjectInformationMissingTargetReply.json"},
                 new object[] {"project-information -s extern,src", "ComponentsInMultipleSources", "GetProjectInformationMultipleSourcesReply.json"},
                 new object[] {"project-information", "AlmostAmbiguous", "GetProjectInformationAlmostAmbiguousReply.json"},

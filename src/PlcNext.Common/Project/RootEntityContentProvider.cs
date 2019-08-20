@@ -202,7 +202,7 @@ namespace PlcNext.Common.Project
                                         string content = streamReader.ReadToEnd();
                                         if (content.Contains("MetaComponentBase"))
                                         {
-                                            fallbackEntity = owner.Create("appproject");
+                                            fallbackEntity = owner.Create("acfproject");
                                         }
                                     }
                                     return false;

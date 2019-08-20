@@ -1,39 +1,39 @@
-﻿#include "AppProjectComponent.hpp"
+﻿#include "AcfProjectComponent.hpp"
 
-namespace AppProject
+namespace AcfProject
 {
 
-void AppProjectComponent::Initialize()
+void AcfProjectComponent::Initialize()
 {
     // subscribe events from the event system (Es) here (use Arp::System::Es::EventManager)
 }
 
-void AppProjectComponent::SubscribeServices()
+void AcfProjectComponent::SubscribeServices()
 {
 	// subscribe the services used by this component here
 }
 
-void AppProjectComponent::LoadSettings(const String& /*settingsPath*/)
+void AcfProjectComponent::LoadSettings(const String& /*settingsPath*/)
 {
 	// load firmware settings here
 }
 
-void AppProjectComponent::SetupSettings()
+void AcfProjectComponent::SetupSettings()
 {
 	// setup firmware settings here
 }
 
-void AppProjectComponent::PublishServices()
+void AcfProjectComponent::PublishServices()
 {
 	// publish the services of this component here
 }
 
-void AppProjectComponent::LoadConfig()
+void AcfProjectComponent::LoadConfig()
 {
     // load project config here
 }
 
-void AppProjectComponent::SetupConfig()
+void AcfProjectComponent::SetupConfig()
 {
     // never remove next line
     MetaComponentBase::SetupConfig();
@@ -41,7 +41,7 @@ void AppProjectComponent::SetupConfig()
     // setup project config here
 }
 
-void AppProjectComponent::ResetConfig()
+void AcfProjectComponent::ResetConfig()
 {
     // never remove next line
     MetaComponentBase::ResetConfig();
@@ -49,14 +49,14 @@ void AppProjectComponent::ResetConfig()
     // implement this inverse to SetupConfig() and LoadConfig()
 }
 
-void AppProjectComponent::Dispose()
+void AcfProjectComponent::Dispose()
 {
 	// implement this inverse to SetupSettings(), LoadSettings() and Initialize()
 }
 
-void AppProjectComponent::PowerDown()
+void AcfProjectComponent::PowerDown()
 {
 	// implement this only if data must be retained even on power down event
 }
 
-} // end of namespace AppProject
+} // end of namespace AcfProject

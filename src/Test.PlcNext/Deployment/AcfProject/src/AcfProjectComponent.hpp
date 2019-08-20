@@ -2,25 +2,25 @@
 #include "Arp/System/Core/Arp.h"
 #include "Arp/System/Acf/ComponentBase.hpp"
 #include "Arp/System/Acf/IApplication.hpp"
-#include "AppProjectLibrary.hpp"
+#include "AcfProjectLibrary.hpp"
 #include "Arp/Plc/Commons/Meta/MetaComponentBase.hpp"
 #include "Arp/System/Commons/Logging.h"
 
-namespace AppProject
+namespace AcfProject
 {
 
 using namespace Arp;
 using namespace Arp::System::Acf;
 using namespace Arp::Plc::Commons::Meta;
 
-//#appcomponent
-class AppProjectComponent : public ComponentBase, public MetaComponentBase, private Loggable<AppProjectComponent>
+//#acfcomponent
+class AcfProjectComponent : public ComponentBase, public MetaComponentBase, private Loggable<AcfProjectComponent>
 {
 public: // typedefs
 
 public: // construction/destruction
-    AppProjectComponent(IApplication& application, const String& name);
-    virtual ~AppProjectComponent() = default;
+    AcfProjectComponent(IApplication& application, const String& name);
+    virtual ~AcfProjectComponent() = default;
 
 public: // IComponent operations
     void Initialize() override;
@@ -38,8 +38,8 @@ public: // MetaComponentBase operations
     void RegisterComponentPorts() override;
 
 private: // methods
-    AppProjectComponent(const AppProjectComponent& arg) = delete;
-    AppProjectComponent& operator= (const AppProjectComponent& arg) = delete;
+    AcfProjectComponent(const AcfProjectComponent& arg) = delete;
+    AcfProjectComponent& operator= (const AcfProjectComponent& arg) = delete;
 
 public: // static factory operations
     static IComponent::Ptr Create(Arp::System::Acf::IApplication& application, const String& name);
@@ -61,16 +61,16 @@ public: /* Ports
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-// inline methods of class AppProjectComponent
-inline AppProjectComponent::AppProjectComponent(IApplication& application, const String& name)
-: ComponentBase(application, ::AppProject::AppProjectLibrary::GetInstance(), name, ComponentCategory::Custom)
-, MetaComponentBase(::AppProject::AppProjectLibrary::GetInstance().GetNamespace())
+// inline methods of class AcfProjectComponent
+inline AcfProjectComponent::AcfProjectComponent(IApplication& application, const String& name)
+: ComponentBase(application, ::AcfProject::AcfProjectLibrary::GetInstance(), name, ComponentCategory::Custom)
+, MetaComponentBase(::AcfProject::AcfProjectLibrary::GetInstance().GetNamespace())
 {
 }
 
-inline IComponent::Ptr AppProjectComponent::Create(Arp::System::Acf::IApplication& application, const String& name)
+inline IComponent::Ptr AcfProjectComponent::Create(Arp::System::Acf::IApplication& application, const String& name)
 {
-    return IComponent::Ptr(new AppProjectComponent(application, name));
+    return IComponent::Ptr(new AcfProjectComponent(application, name));
 }
 
-} // end of namespace AppProject
+} // end of namespace AcfProject

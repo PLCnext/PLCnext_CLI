@@ -105,12 +105,12 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Create_new_app_component_creates_component()
+        public async Task Create_new_acf_component_creates_component()
         {
             await Runner.AddSteps(
                 _ => Given_is_an_empty_workspace(),
-                _ => When_I_create_a_new_appproject_with_componentname("MyProject"),
-                _ => Then_the_project_contains_an_appcomponent_with_name("MyProjectComponent")
+                _ => When_I_create_a_new_acfproject_with_componentname("MyProject"),
+                _ => Then_the_project_contains_an_acfcomponent_with_name("MyProjectComponent")
                 ).RunAsyncWithTimeout();
         }
 

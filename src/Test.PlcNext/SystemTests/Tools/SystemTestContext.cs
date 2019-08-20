@@ -174,12 +174,12 @@ namespace Test.PlcNext.SystemTests.Tools
         private string knownProjectName;
 
         public async Task CreateProject(string projectName = null, string componentName = null, string programName = null,
-            bool forced = false, string folder = null, bool appproject = false)
+            bool forced = false, string folder = null, bool acfproject = false)
         {
 
             string[] args;
-            if (appproject)
-                args = new string[] { "new", "appproject" };
+            if (acfproject)
+                args = new string[] { "new", "acfproject" };
             else
                 args = new string[] { "new", "project" };
 
@@ -303,7 +303,7 @@ namespace Test.PlcNext.SystemTests.Tools
             }
         }
 
-        internal void CheckIsAppComponent(string componentname)
+        internal void CheckIsAcfComponent(string componentname)
         {
             string path = GetPathOfFile($"{componentname}.hpp", Constants.SourceFolderName);
             using (Stream fileContent = fileSystemAbstraction.Open(path))
