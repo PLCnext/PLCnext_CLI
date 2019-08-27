@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System;
+
 namespace PlcNext.Common.Tools.FileSystem
 {
     /// <summary>
@@ -25,6 +27,8 @@ namespace PlcNext.Common.Tools.FileSystem
         VirtualFile GetFile(string path, string basePath = "");
 
         bool FileExists(string path, string basePath = "");
+
+        DateTime GetLastWriteTime(string path, string basePath = "");
 
         string[] GetPath(string path);
 

@@ -23,6 +23,7 @@ using PlcNext.Common.Tools.Settings;
 using PlcNext.Common.Tools.Web;
 using Xunit.Sdk;
 using System.Threading.Tasks;
+using PlcNext.Common.CodeModel;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools.SDK;
 
@@ -192,9 +193,9 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckGeneratedComponentCodeFiles(component, shouldExist: false);
         }
 
-        protected void Then_the_library_files_are_generated()
+        protected void Then_the_library_files_are_generated_containing_the_components(params string[] components)
         {
-            ScenarioContext.CheckLibraryIsGenerated();
+            ScenarioContext.CheckLibraryIsGenerated(components);
         }
 
         protected void Then_the_provider_files_are_generated_for_component(string component, string[] programs)
@@ -438,6 +439,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_user_was_informed_that_the_target_can_not_be_updated()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(NoHigherTargetAvailableException));
+        }
+
+        protected void Then_the_user_was_informed_that_the_data_type_is_not_known()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(UnknownDataTypeException));
         }
     }
 }

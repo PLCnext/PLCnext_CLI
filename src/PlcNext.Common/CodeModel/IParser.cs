@@ -14,6 +14,8 @@ namespace PlcNext.Common.CodeModel
 {
     public interface IParser
     {
-        ICodeModel Parse(IEnumerable<VirtualDirectory> sourceDirectories);
+        ICodeModel Parse(ICollection<VirtualDirectory> sourceDirectories,
+                         ICollection<VirtualDirectory> includeDirectories,
+                         out IEnumerable<CodeSpecificException> loggableExceptions);
     }
 }

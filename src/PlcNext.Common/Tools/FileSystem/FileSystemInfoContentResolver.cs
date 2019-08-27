@@ -46,5 +46,16 @@ namespace PlcNext.Common.Tools.FileSystem
         }
 
         public abstract void UnDelete();
+        public string CreatePath(string[] parts)
+        {
+            return Path.Combine(parts);
+        }
+
+        public string[] SplitPath(string path)
+        {
+            path = path.CleanPath();
+            return path.Split(new[] {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar},
+                              StringSplitOptions.RemoveEmptyEntries);
+        }
     }
 }

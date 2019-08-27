@@ -140,7 +140,8 @@ namespace PlcNext.Common.Templates
                         bool isRelevant = false;
                         if (rel != null)
                         {
-                            if (rel.type.Equals(template.name, StringComparison.OrdinalIgnoreCase))
+                            if (template.TemplateNames(templateRepository)
+                                        .Any(n => n.Equals(rel.type, StringComparison.OrdinalIgnoreCase)))
                             {
                                 isRelevant = template.isRoot||
                                              type.Attributes.Any(a => a.Name.Equals(rel.name, StringComparison.OrdinalIgnoreCase) &&
@@ -179,10 +180,10 @@ namespace PlcNext.Common.Templates
 
                 (templateRelationship, TemplateDescription)[] GetRelatedTemplates()
                 {
-                    IEnumerable<(templateRelationship, TemplateDescription)> ownRelationships = template.Relationship
-                                                                               ?.Select(r => (r, templateRepository.Template(r.type)))
-                                                                                .Where(t => t.Item2 != null)
-                                                                        ?? Enumerable.Empty<(templateRelationship, TemplateDescription)>();
+                    IEnumerable<(templateRelationship, TemplateDescription)> ownRelationships = template.IncludingBaseTemplates(templateRepository)
+                                                                                                        .SelectMany(t => t.Relationship??Enumerable.Empty<templateRelationship>())
+                                                                                                        .Select(r => (r, templateRepository.Template(r.type)))
+                                                                                                        .Where(t => t.Item2 != null);
                     return templateRepository.Templates
                                              .Select(GetRelation)
                                              .Where(t => t.Item1 != null)
@@ -191,7 +192,9 @@ namespace PlcNext.Common.Templates
 
                     (templateRelationship, TemplateDescription) GetRelation(TemplateDescription arg)
                     {
-                        return (arg.Relationship?.FirstOrDefault(r => r.type.Equals(template.name, StringComparison.OrdinalIgnoreCase)), arg);
+                        return (arg.Relationship?.FirstOrDefault(r => template.TemplateNames(templateRepository)
+                                                                              .Any(n => n.Equals(r.type,StringComparison.OrdinalIgnoreCase))), 
+                                                                 arg);
                     }
                 }
             }
@@ -250,8 +253,7 @@ namespace PlcNext.Common.Templates
                             return arg.Attributes.Select(a => (!a.Values.Any() &&
                                                                !a.NamedValues.Any() &&
                                                                relationships.ContainsKey(a.Name.ToLowerInvariant()) &&
-                                                               relationships[a.Name.ToLowerInvariant()]
-                                                                  .Any(r => !string.IsNullOrEmpty(r)),
+                                                               relationships[a.Name.ToLowerInvariant()].Any(),
                                                                a.Name.ToLowerInvariant()))
                                       .FirstOrDefault(r => r.Item1);
                         }
@@ -263,6 +265,7 @@ namespace PlcNext.Common.Templates
                                                                                           .Select(r => templateRepository.Template(r.type))
                                                                                           .Where(t => t != null)
                                                                                           .Select(t => t.isRoot ? string.Empty : t.name.ToLowerInvariant())
+                                                                                          .Where(n => !string.IsNullOrEmpty(n))
                                                                                           .ToArray());
                     }
                 }

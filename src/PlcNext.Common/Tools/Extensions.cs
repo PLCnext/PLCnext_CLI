@@ -11,12 +11,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace PlcNext.Common.Tools
 {
     public static class Extensions
     {
+        public static string ToPropertyName(this string name)
+        {
+            return name.Replace("-", "")
+                       .Replace("_", "")
+                       .ToLowerInvariant();
+        }
+
+        public static string ResolvePathName(this string path, IEnvironmentPathNames pathNames)
+        {
+            string resolved = path;
+            Regex resolvePattern = new Regex(@"{(?<resolvable>\w+)}");
+            Match resolveMatch = resolvePattern.Match(path);
+            while (resolveMatch.Success)
+            {
+                string key = resolveMatch.Groups["resolvable"].Value;
+                if (pathNames.ContainsKey(key))
+                {
+                    resolved = resolved.Replace(resolveMatch.Value, pathNames[key]);
+                }
+
+                resolveMatch = resolvePattern.Match(resolved);
+            }
+
+            return resolved;
+        }
+
         public static T ExecutesWithTimeout<T>(this Func<T> function, int timeout)
         {
             T result = default(T);

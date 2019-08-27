@@ -44,6 +44,7 @@ namespace PlcNext.Common.Tools
         public const char OptionsSeparator = ',';
         public const int CMakeServerTimeout = 2000;
         public const string OutputArgumentName = "output";
+        public const string NoIncludePathDetection = "no-include-path-detection";
         public const int MaxIORetries = 10;
 
         //file names

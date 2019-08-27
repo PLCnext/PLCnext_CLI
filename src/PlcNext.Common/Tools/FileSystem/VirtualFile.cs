@@ -8,7 +8,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace PlcNext.Common.Tools.FileSystem
 {
@@ -41,6 +43,37 @@ namespace PlcNext.Common.Tools.FileSystem
         public bool CheckAccess()
         {
             return contentResolver.CheckAccess();
+        }
+
+        public string GetRelativePath(VirtualDirectory directory)
+        {
+            List<VirtualDirectory> reverseDirectoryPath = new List<VirtualDirectory>();
+            VirtualDirectory current = directory;
+            while (current != null)
+            {
+                reverseDirectoryPath.Add(current);
+                current = current.Parent;
+            }
+
+            List<string> reverseFilePath = new List<string>(new[] {Name});
+            current = Parent;
+            while (current != null)
+            {
+                if (reverseDirectoryPath.Contains(current))
+                {
+                    foreach (VirtualDirectory _ in reverseDirectoryPath.TakeWhile(d => d != current))
+                    {
+                        reverseFilePath.Add("..");
+                    }
+
+                    reverseFilePath.Reverse();
+                    return contentResolver.CreatePath(reverseFilePath.ToArray());
+                }
+                reverseFilePath.Add(current.Name);
+                current = current.Parent;
+            }
+
+            return FullName;
         }
     }
 }

@@ -12,11 +12,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using PlcNext.Common.Templates.Description;
 
 namespace PlcNext.Common.Templates
 {
     public static class TemplateExtensions
     {
+        public static ICollection<string> TemplateNames(this TemplateDescription templateDescription,
+                                                        ITemplateRepository templateRepository)
+        {
+            return templateDescription.IncludingBaseTemplates(templateRepository)
+                                      .Select(t => t.name)
+                                      .ToArray();
+        }
+        public static ICollection<TemplateDescription> IncludingBaseTemplates(this TemplateDescription templateDescription,
+                                                        ITemplateRepository templateRepository)
+        {
+            List<TemplateDescription> templates = new List<TemplateDescription>();
+            TemplateDescription template = templateDescription;
+            while (template != null)
+            {
+                templates.Add(template);
+                template = templateRepository.Template(template.basedOn);
+            }
+
+            return templates;
+        }
+
         public static (bool success, string message, string newValue) Verify(
             this Field.valueRestriction restriction, string value)
         {

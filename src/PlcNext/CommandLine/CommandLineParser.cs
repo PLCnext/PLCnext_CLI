@@ -54,7 +54,7 @@ namespace PlcNext.CommandLine
                 args, dynamicVerbFactory, typeof(BuildVerb), typeof(GenerateVerb), typeof(GetVerb),
                 typeof(SetVerb), typeof(UpdateVerb), typeof(InstallVerb),
                 typeof(ScanSdksVerb), typeof(StartServerVerb), typeof(StartClientVerb),
-                typeof(ShowLogVerb));
+                typeof(ShowLogVerb), typeof(MigrateCliVerb));
             return result
                   .MapResult((object verb) => Execute(verb),
                              (errors) => OnError(result));
@@ -70,7 +70,7 @@ namespace PlcNext.CommandLine
                 args, dynamicVerbFactory, typeof(BuildVerb), typeof(GenerateVerb), typeof(GetVerb),
                 typeof(SetVerb), typeof(UpdateVerb), typeof(InstallVerb),
                 typeof(ScanSdksVerb), typeof(StartServerVerb), typeof(StartClientVerb),
-                typeof(ShowLogVerb));
+                typeof(ShowLogVerb), typeof(MigrateCliVerb));
             return result
                .MapResult((object verb) => ConvertToString(verb),
                           (errors) => ConvertError(result));

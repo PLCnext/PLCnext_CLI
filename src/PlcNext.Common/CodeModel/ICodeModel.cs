@@ -20,7 +20,7 @@ namespace PlcNext.Common.CodeModel
         IDictionary<IType, VirtualFile> Types { get; }
         IStructure Structure(string structureName);
         IClass Class(string className);
-        IEnum Enum(string className);
+        IEnum Enum(string enumName);
         IType Type(string typeName);
         VirtualDirectory GetBaseDirectory(IType type);
     }

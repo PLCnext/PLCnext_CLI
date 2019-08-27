@@ -34,7 +34,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Demo"),
                 _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgs.txt")
             ).RunAsyncWithTimeout();
@@ -48,7 +48,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("Demo"),
                 _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs { LibraryId = "3125fbc7-77b1-47c4-b5f9-39872cd6df9c" }),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgsWithSpecificId.txt")
             ).RunAsyncWithTimeout();
@@ -95,7 +95,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("DemoWithDifferentPaths"),
                 _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,1.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs{LibraryLocation = "foo", MetaFileDirectory = Path.Combine("ba","Meta"), OutputDirectory = "out"}),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryDifferentPathsCommandArgs.txt")
             ).RunAsyncWithTimeout();
@@ -110,7 +110,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_a_different_library_builder_location(),
                 _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgs.txt")
             ).RunAsyncWithTimeout();
@@ -136,7 +136,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("DemoWithMultibinary"),
                 _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,1.0.0.12345", "AXCF2152,2.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs {Targets = new[] { "axcf2152,1.0", "axcf2152,2"} }),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoWithMultibinaryLibraryCommandArgs.txt")
                 ).RunAsyncWithTimeout();
@@ -150,7 +150,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("DemoWithDifferentPaths"),
                 _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,1.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs
                 {
                     Targets = new[] {"axcf2152,1.0,foo/AXCF2152_1.0.0.12345/Release" },
@@ -181,7 +181,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_are_settings_with_the_cleared_setting_KEY("SdkPaths"),
                 _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_library_was_generated()
             ).RunAsyncWithTimeout();
@@ -196,7 +196,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_are_settings_with_the_cleared_setting_KEY("SdkPaths"),
                 _ => Given_is_that_the_cmake_build_system_exists_for_targets("axcf2152,1.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs
                 {
                     Targets = new[] { "axcf2152,1.0.0.12345,foo/AXCF2152_1.0.0.12345/Release" },
@@ -217,7 +217,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_is_that_the_file_exists("intermediate/cmake/AXCF2152,19.0.0.12345/Debug/Some/Path/T,o/Some.so"),
                 // if path which is returned by cmake server is relative, it is always relative to cmake build system
-                _ => Given_cmake_returns_a_codemodel_with_the_following_content("Demo", "Some/Path/T,o/Some.so"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo", "Some/Path/T,o/Some.so"),
                 _ => When_I_generate_the_library(),
                 _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryWithExternalLibs.txt")
             ).RunAsyncWithTimeout();

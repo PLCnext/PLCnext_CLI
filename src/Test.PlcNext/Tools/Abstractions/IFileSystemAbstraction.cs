@@ -23,6 +23,7 @@ namespace Test.PlcNext.Tools.Abstractions
 
         void Load(string workspace);
         void Load(Stream content, string fileName);
+        void LoadInto(string workspace, string destination);
 
         IEnumerable<string> CreatedFiles { get; }
 

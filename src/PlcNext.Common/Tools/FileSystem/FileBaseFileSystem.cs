@@ -28,13 +28,8 @@ namespace PlcNext.Common.Tools.FileSystem
         public VirtualDirectory GetDirectory(string path, string basePath = "", bool createNew = true)
         {
             bool created = false;
-            path = path.CleanPath();
-            basePath = basePath.CleanPath();
 
-            if (!string.IsNullOrEmpty(basePath) && !Path.IsPathRooted(path))
-            {
-                path = Path.Combine(basePath, path);
-            }
+            path = GetFullPath(path, basePath);
             if (string.IsNullOrEmpty(path))
             {
                 return CurrentDirectory;
@@ -94,13 +89,26 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public bool FileExists(string path, string basePath = "")
         {
+            path = GetFullPath(path, basePath);
+            return File.Exists(path);
+        }
+
+        private static string GetFullPath(string path, string basePath)
+        {
             path = path.CleanPath();
             basePath = basePath.CleanPath();
             if (!string.IsNullOrEmpty(basePath) && !Path.IsPathRooted(path))
             {
                 path = Path.Combine(basePath, path);
             }
-            return File.Exists(path);
+
+            return path;
+        }
+
+        public DateTime GetLastWriteTime(string path, string basePath = "")
+        {
+            path = GetFullPath(path, basePath);
+            return File.Exists(path) ? File.GetLastWriteTime(path) : DateTime.MinValue;
         }
 
         public string[] GetPath(string path)

@@ -21,7 +21,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
     {
         public CppEnum(string ns, string name, string[] usings, ParseNode content, List<ParserMessage> messages,
                        ParseNode typeDeclaration, string attributePrefix) : base(
-            ns, name, usings, content, messages, typeDeclaration, attributePrefix)
+            ns, name, usings, content, messages, typeDeclaration, attributePrefix, false)
         {
             ParseSymbols();
 

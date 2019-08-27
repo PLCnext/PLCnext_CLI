@@ -45,7 +45,11 @@ namespace PlcNext.Common.Project
 
         public void AddTargets(IEnumerable<string> targets)
         {
-            SetTargets((Value.Target ?? new string[0]).Concat(targets));
+            targets = targets.ToArray();
+            if (targets.Any())
+            {
+                SetTargets((Value.Target ?? new string[0]).Concat(targets));
+            }
         }
 
         public bool RemoveTarget(string target)
@@ -57,6 +61,10 @@ namespace PlcNext.Common.Project
         {
             IEnumerable<string> existingTargets = (Value.Target ?? new string[0]).Intersect(targets)
                                                                                  .ToArray();
+            if (!existingTargets.Any())
+            {
+                return 0;
+            }
             SetTargets((Value.Target ?? new string[0]).Except(existingTargets));
             return existingTargets.Count();
         }

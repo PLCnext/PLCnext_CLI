@@ -25,33 +25,14 @@ namespace PlcNext
         
         public static string GetLogCatalogLocation()
         {
-            return ResolvePathNames(LogCatalogPathDefault.CleanPath());
-        }
-
-        private static string ResolvePathNames(string unresolved)
-        {
-            IEnvironmentPathNames pathNames = new EnvironmentPathNames();
-            string resolved = unresolved;
-            Regex resolvePattern = new Regex(@"{(?<resolvable>\w+)}");
-            Match resolveMatch = resolvePattern.Match(unresolved);
-            while (resolveMatch.Success)
-            {
-                string key = resolveMatch.Groups["resolvable"].Value;
-                if (pathNames.ContainsKey(key))
-                {
-                    resolved = resolved.Replace(resolveMatch.Value, pathNames[key]);
-                }
-
-                resolveMatch = resolvePattern.Match(resolved);
-            }
-
-            return resolved;
+            return LogCatalogPathDefault.CleanPath().ResolvePathName(new EnvironmentPathNames());
         }
 
         public static ILog GetMigrationLog()
         {
-            string migrationFile = ResolvePathNames(Path.Combine(MigrationLogPathDefault.CleanPath(),
-                                                                 $"migration-{DateTime.Now:dd-MM-yyyy_hh-mm-ss-fff}.txt"));
+            string migrationFile = Path.Combine(MigrationLogPathDefault.CleanPath(),
+                                                $"migration-{DateTime.Now:dd-MM-yyyy_hh-mm-ss-fff}.txt")
+                                       .ResolvePathName(new EnvironmentPathNames());
             return FileLog.Create(migrationFile);
         }
 

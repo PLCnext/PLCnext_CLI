@@ -23,28 +23,17 @@ namespace PlcNext.Common.Tools.FileSystem
         public FileInfoContentResolver(FileInfo fileInfo, bool created, ILog log) : base(fileInfo, created, log)
         {
             this.fileInfo = fileInfo;
-            if (!created && fileInfo.Exists)
-            {
-                try
-                {
-                    recyclableMemoryStream = RecyclableMemoryStreamManager.Instance.GetStream();
-                    using (Stream stream = fileInfo.OpenRead())
-                    {
-                        stream.CopyTo(recyclableMemoryStream);
-                    }
-                }
-                catch (Exception e)
-                {
-                    recyclableMemoryStream?.Dispose();
-                    recyclableMemoryStream = null;
-                    log.LogError($"Exception while reading file {this.fileInfo.FullName}. " +
-                                 $"File cannot be restored on error.{Environment.NewLine}{e}");
-                }
-            }
+        }
+
+        public override void Delete()
+        {
+            EnsureMemento();
+            base.Delete();
         }
 
         public Stream GetContent(bool write = false, bool retry = false)
         {
+            EnsureMemento();
             try
             {
                 if (fileInfo.Directory?.Exists == false)
@@ -76,6 +65,28 @@ namespace PlcNext.Common.Tools.FileSystem
                 }
             }
             throw (exception ?? new IOException()).Format();
+        }
+
+        private void EnsureMemento()
+        {
+            if (!Created && fileInfo.Exists && recyclableMemoryStream == null)
+            {
+                try
+                {
+                    recyclableMemoryStream = RecyclableMemoryStreamManager.Instance.GetStream();
+                    using (Stream stream = fileInfo.OpenRead())
+                    {
+                        stream.CopyTo(recyclableMemoryStream);
+                    }
+                }
+                catch (Exception e)
+                {
+                    recyclableMemoryStream?.Dispose();
+                    recyclableMemoryStream = null;
+                    Log.LogError($"Exception while reading file {this.fileInfo.FullName}. " +
+                                 $"File cannot be restored on error.{Environment.NewLine}{e}");
+                }
+            }
         }
 
         public void Touch()

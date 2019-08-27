@@ -188,5 +188,38 @@ namespace PlcNext.Common.Tools.FileSystem
             Cleared = false;
             entriesWhenCleared.Clear();
         }
+
+        public bool TryGetFileFromPath(string path, out VirtualFile file)
+        {
+            path = path.CleanPath();
+            string[] parts = contentResolver.SplitPath(path);
+            VirtualDirectory current = this;
+            foreach (string part in parts.Take(parts.Length -1))
+            {
+                if (part == ".")
+                {
+                    continue;
+                }
+
+                if (part == "..")
+                {
+                    current = current.Parent;
+                }
+                else
+                {
+                    current = current.Entries.OfType<VirtualDirectory>()
+                                     .FirstOrDefault(d => d.Name == part);
+                }
+
+                if (current == null)
+                {
+                    file = null;
+                    return false;
+                }
+            }
+
+            file = current.Entries.OfType<VirtualFile>().FirstOrDefault(f => f.Name == parts[parts.Length - 1]);
+            return file != null;
+        }
     }
 }

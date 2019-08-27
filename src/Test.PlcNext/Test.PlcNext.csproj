@@ -7,14 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Deployment\StandardAppProject\**" />
     <Compile Remove="TestResults\**" />
+    <EmbeddedResource Remove="Deployment\StandardAppProject\**" />
     <EmbeddedResource Remove="TestResults\**" />
+    <None Remove="Deployment\StandardAppProject\**" />
     <None Remove="TestResults\**" />
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.cpp" />
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.hpp" />
     <None Remove="Deployment\StandardAcfProject\CMakeLists.txt" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />
+    <None Remove="Deployment\ExternalLibraryTest\CMakeLists.txt" />
+    <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestComponent.cpp" />
+    <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestComponent.hpp" />
+    <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.cpp" />
+    <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
+    <None Remove="Deployment\ExternalLibrary\ExternalStruct.hpp" />
+    <None Remove="Deployment\TestResults\ExternalLibraryTest.meta.cpp" />
     <None Remove="Deployment\TestResults\GetComponentsReply.json" />
     <None Remove="Deployment\TestResults\GetProgramsReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationAcfProjectReply.json" />
@@ -25,11 +35,18 @@
     <EmbeddedResource Include="Deployment\StandardAcfProject\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
     <EmbeddedResource Include="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ExternalLibraryTest\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ExternalLibrary\My\Company\Name\ExternalStruct.hpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.cpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.hpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.cpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\ExternalLibraryTest.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\GetAllSettingsReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetCompilerSpecsPartialErrorReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetComponentsReply.json" />
@@ -319,6 +336,10 @@
     <None Remove="Deployment\TwoComponentsAndPrograms\src\MyProgram.hpp" />
     <None Remove="Deployment\TwoComponentsAndPrograms\src\MyProgram2.cpp" />
     <None Remove="Deployment\TwoComponentsAndPrograms\src\MyProgram2.hpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\BaseComponentTemplate\TemplateDescription.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -665,12 +686,10 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.compmeta" Link="Deployment\Templates\ComponentTemplate\Component.compmeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.cpp" Link="Deployment\Templates\ComponentTemplate\Component.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.hpp" Link="Deployment\Templates\ComponentTemplate\Component.hpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\ComponentTemplate\Component.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\ComponentProgramProvider.cpp" Link="Deployment\Templates\ComponentTemplate\ComponentProgramProvider.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\ComponentProgramProvider.hpp" Link="Deployment\Templates\ComponentTemplate\ComponentProgramProvider.hpp" />
 	<EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\Component.cpp" Link="Deployment\Templates\AcfComponentTemplate\Component.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\Component.hpp" Link="Deployment\Templates\AcfComponentTemplate\Component.hpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\AcfComponentTemplate\Component.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.cpp" Link="Deployment\Templates\ProgramTemplate\Program.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.hpp" Link="Deployment\Templates\ProgramTemplate\Program.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.progmeta" Link="Deployment\Templates\ProgramTemplate\Program.progmeta" />
@@ -684,7 +703,10 @@
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\Library.cpp" Link="Deployment\Templates\BaseProjectTemplate\Library.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\Library.hpp" Link="Deployment\Templates\BaseProjectTemplate\Library.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\BaseComponentTemplate\Component.meta.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.cpp" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ExternalLibraryTest\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget3\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget2\plcnext.proj" />
     <EmbeddedResource Include="Deployment\DoublePortDeclaration\plcnext.proj" />
@@ -713,7 +735,7 @@
     <PackageReference Include="LightBDD.XUnit2" Version="3.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="Mono.Cecil" Version="0.10.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NSubstitute" Version="4.0.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
@@ -741,9 +763,9 @@
     <Folder Include="Deployment\Templates\ComponentTemplate\" />
     <Folder Include="Deployment\Templates\AcfComponentTemplate\" />
     <Folder Include="Deployment\Templates\BaseProjectTemplate\" />
+    <Folder Include="Deployment\Templates\BaseComponentTemplate\" />
     <Folder Include="Deployment\Templates\ProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProgramTemplate\" />
-    <Folder Include="Deployment\Templates\AcfProjectTemplate\" />
   </ItemGroup>
 
   <ItemGroup>

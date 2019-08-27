@@ -109,7 +109,7 @@ namespace PlcNext.CppParser.CppRipper
             visibility_group = visibility + Eat(multiline_ws) + COLON + Eat(multiline_ws);
 
             pp_directive
-                = CharSeq("#") + NoFailSeq(ws + identifier + Eat(simple_ws) + until_eol + eol);
+                = CharSeq("#") + NoFailSeq(ws + identifier + Eat(simple_ws) + until_eol + (eol | EndOfInput()));
 
             type_decl 
                 = Opt(template_decl) + (class_decl | struct_decl | union_decl | enum_decl);

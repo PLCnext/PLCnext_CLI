@@ -58,6 +58,7 @@ namespace PlcNext.Common.Tools
         //General keys
         public const string PathKey = "path";
         public const string SourceDirectoryKey = "sources";
+        public const string IncludeDirectoryKey = "includes";
         public const string OutputKey = "output";
         public const string NameKey = "name";
         public const string FullNameKey = "fullname";

@@ -32,7 +32,14 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 	        ScenarioContext.LoadProject(project);
         }
 
-	    protected void Given_is_that_the_SDK_is_missing()
+        protected void Given_is_the_project_with_the_additional_library_in_the_directory(string project, string directory, string library)
+        {
+            ScenarioContext.LoadProject(project);
+            ScenarioContext.LoadLibrary(library, directory);
+        }
+
+
+        protected void Given_is_that_the_SDK_is_missing()
 	    {
 	        ScenarioContext.RemoveSdk();
 	    }
@@ -126,9 +133,14 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CreateFile(relativeFilePath);
         }
 
-        protected void Given_cmake_returns_a_codemodel_with_the_following_content(string projectName, params string[] externalLibs)
+        protected void Given_cmake_returns_a_code_model_with_the_following_libraries(string projectName, params string[] libraries)
         {
-            ScenarioContext.SetCodeModel(projectName, externalLibs);
+            ScenarioContext.SetCodeModel(projectName, libraries);
+        }
+
+        protected void Given_cmake_returns_a_code_model_with_the_following_include_paths(string projectName, params string[] includePaths)
+        {
+            ScenarioContext.SetCodeModel(projectName, includePaths:includePaths);
         }
     }
 }

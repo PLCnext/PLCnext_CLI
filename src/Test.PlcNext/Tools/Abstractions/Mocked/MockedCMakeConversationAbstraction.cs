@@ -38,7 +38,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
 
         public MockedCMakeConversationAbstraction()
         {
-            cmakeConversation.GetCodeModelFromServer(null, null, null, Arg.Any<bool>(), null, null, null)
+            cmakeConversation.GetCodeModelFromServer(null, null, null)
                     .ReturnsForAnyArgs(info => new JArray(CodeModel));
         }
 

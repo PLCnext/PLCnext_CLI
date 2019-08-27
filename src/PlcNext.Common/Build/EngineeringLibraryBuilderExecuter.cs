@@ -34,28 +34,22 @@ namespace PlcNext.Common.Build
     internal class EngineeringLibraryBuilderExecuter : ILibraryBuilderExecuter
     {
         private readonly IProcessManager processManager;
-        private readonly ITargetParser targetParser;
         private readonly IFileSystem fileSystem;
         private readonly IGuidFactory guidFactory;
         private readonly IBinariesLocator binariesLocator;
-        private readonly IEnvironmentService environmentService;
         private readonly ICMakeConversation cmakeConversation;
-        private readonly IUserInterface userInterface;
 
         private static readonly Regex LibrariesDecoder = new Regex("(?<path>\\\"[^\\\"]+\\\"|[^ |\\\"]+)", RegexOptions.Compiled);
 
-        public EngineeringLibraryBuilderExecuter(IProcessManager processManager, ITargetParser targetParser, IFileSystem fileSystem,
-                                                 IGuidFactory guidFactory, IBinariesLocator binariesLocator, IEnvironmentService environmentService,
-                                                 ICMakeConversation cmakeConversation, IUserInterface userInterface)
+        public EngineeringLibraryBuilderExecuter(IProcessManager processManager, IFileSystem fileSystem,
+                                                 IGuidFactory guidFactory, IBinariesLocator binariesLocator,
+                                                 ICMakeConversation cmakeConversation)
         {
             this.processManager = processManager;
-            this.targetParser = targetParser;
             this.fileSystem = fileSystem;
             this.guidFactory = guidFactory;
             this.binariesLocator = binariesLocator;
-            this.environmentService = environmentService;
             this.cmakeConversation = cmakeConversation;
-            this.userInterface = userInterface;
         }
 
         public int Execute(ProjectEntity project, string metaFilesDirectory, string libraryLocation,
@@ -264,11 +258,7 @@ namespace PlcNext.Common.Build
                         throw new CMakeBuildSystemNotFoundException(binaryDirectory);
                     }
 
-                    JArray codeModel = cmakeConversation.GetCodeModelFromServer(processManager,
-                                                                                binariesLocator,
-                                                                                tempDirectory.Directory("cmake"),
-                                                                                environmentService.Platform == OSPlatform.Windows,
-                                                                                userInterface,
+                    JArray codeModel = cmakeConversation.GetCodeModelFromServer(tempDirectory.Directory("cmake"),
                                                                                 projectFileEntity.Directory,
                                                                                 fileSystem.GetDirectory(binaryDirectory));
                     ExploreCMakeOutput();
@@ -280,30 +270,7 @@ namespace PlcNext.Common.Build
                             throw new FormattableException("Could not fetch codemodel from cmake build system.");
                         }
 
-                        JObject proj = codeModel.OfType<JObject>()
-                                                       .Where(o => o.ContainsKey("projects"))
-                                                       .SelectMany(o => o["projects"])
-                                                       .OfType<JObject>()
-                                                       .FirstOrDefault(o => o.ContainsKey("name") &&
-                                                                            o["name"].Value<string>() == project.Name);
-                        if (proj == null)
-                        {
-                            throw new FormattableException($"The code model does not contain any project with the name '{project.Name}'. " +
-                                                           $"The code model contains the following data:{Environment.NewLine}" +
-                                                           $"{codeModel.ToString(Formatting.Indented)}");
-                        }
-
-                        JObject projectTarget = proj.ContainsKey("targets")
-                                             ? proj["targets"].OfType<JObject>()
-                                                                 .Where(o => o.ContainsKey("name"))
-                                                                 .FirstOrDefault(o => o["name"].Value<string>() == project.Name)
-                                             : null;
-                        if (projectTarget == null)
-                        {
-                            throw new FormattableException($"The codemodel of project '{project.Name}' does not contain any target with the name '{project.Name}'. " +
-                                                           $"The project contains the following data:{Environment.NewLine}" +
-                                                           $"{proj.ToString(Formatting.Indented)}");
-                        }
+                        JObject projectTarget = codeModel.GetProjectTarget(project.Name);
 
                         string cmakeSysroot = projectTarget["sysroot"].Value<string>();
                         if (cmakeSysroot == null || !fileSystem.DirectoryExists(cmakeSysroot))

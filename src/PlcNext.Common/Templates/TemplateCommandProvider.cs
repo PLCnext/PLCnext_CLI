@@ -134,6 +134,27 @@ namespace PlcNext.Common.Templates
                                             .SetArgumentType(ArgumentType.MultipleValue)
                                             .Build()
                                             .CreateArgument()
+                                            .SetName(EntityKeys.IncludeDirectoryKey)
+                                            .SetShortName('i')
+                                            .SetHelp(
+                                                 "Overrides the includes used to find header files. Usually CMake is used to determine " +
+                                                 "the include paths. If that is not possible or wanted the value of this argument is " +
+                                                 "used instead of the CMake determined include paths. Relative paths are relative " +
+                                                 "to the directory defined with the '--path' option. If any path contains a ' ' quotation " +
+                                                 "marks should be used around all paths, e.g. \"path1,path With Space,path2\". Additionally " +
+                                                 "to these paths the include paths determined by the SDK will always be considered and " +
+                                                 "do not need to be specified additionally.")
+                                            .SetArgumentType(ArgumentType.MultipleValue)
+                                            .Build()
+                                            .CreateArgument()
+                                            .SetName(Constants.NoIncludePathDetection)
+                                            .SetShortName('n')
+                                            .SetHelp("Disables the automatic include path detection using CMake. This option is not necessary if the " +
+                                                     $"'-{EntityKeys.IncludeDirectoryKey}' option is used, as that option will automatically disable " +
+                                                     "the CMake detection. The system paths defined by the SDK are still used.")
+                                            .SetArgumentType(ArgumentType.Bool)
+                                            .Build()
+                                            .CreateArgument()
                                             .SetName(Constants.OutputArgumentName)
                                             .SetShortName('o')
                                             .SetHelp("The path where the files will be generated in. " +
@@ -165,6 +186,11 @@ namespace PlcNext.Common.Templates
             if (generateCommands.Contains(definition))
             {
                 Entity dataModel = entityFactory.Create(definition.Name, definition);
+                userInterface.WriteInformation(definition.Name == "all"
+                                                   ? $"Generating all files for {dataModel.Root.Path}."
+                                                   : $"Generating all files with the '{definition.Name}' " +
+                                                     $"generator for {dataModel.Root.Path}.");
+
                 SingleValueArgument singleValueArgument = definition.Argument<SingleValueArgument>(Constants.OutputArgumentName);
                 await templateFileGenerator.GenerateFiles(dataModel.Root, definition.Name, singleValueArgument.Value, singleValueArgument.IsDefined, observable);
 

@@ -14,6 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PlcNext.Common.DataModel;
+using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.Settings;
@@ -26,6 +27,13 @@ namespace PlcNext.Common.Templates
         private readonly Regex controlSequenceFinder = new Regex(@"\$\(\[(?<expression>[^\]]+?)\][^\)]*?\)[\s\S]*?\$\(\[end-\1\]\)", RegexOptions.Compiled);
         private readonly Regex greedyContentFinder = new Regex(@"\$\(\[(?<expression>[^\]]+?)\](?<parameter>[^\)]*?)\)(?<content>[\s\S]*)\$\(\[end-\1\]\)", RegexOptions.Compiled);
         private readonly Regex newlineSearcher = new Regex(@"\s*?(?:\r\n|\r|\n)", RegexOptions.Compiled);
+
+        private readonly ITemplateRepository repository;
+
+        public TemplateResolver(ITemplateRepository repository)
+        {
+            this.repository = repository;
+        }
 
         public string Resolve(string stringToResolve, IEntityBase dataSource)
         {
@@ -200,8 +208,7 @@ namespace PlcNext.Common.Templates
 
                     if (!string.IsNullOrEmpty(filter))
                     {
-                        data = data.Where(d => d.Template()?.name.Equals(filter, StringComparison.OrdinalIgnoreCase) ==
-                                               true);
+                        data = data.Where(TemplateEqualsFilter);
                     }
 
                     ForeachItemContainer container = new ForeachItemContainer(elementName);
@@ -216,6 +223,12 @@ namespace PlcNext.Common.Templates
                     }
 
                     return foreachResult.ToString();
+
+                    bool TemplateEqualsFilter(Entity entity)
+                    {
+                        return entity.Template().TemplateNames(repository)
+                                     .Any(n => n.Equals(filter, StringComparison.OrdinalIgnoreCase));
+                    }
                 }
             }
 

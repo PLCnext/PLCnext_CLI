@@ -34,6 +34,7 @@ using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
 using PlcNext.NamedPipeServer.Communication;
 using PlcNext.NamedPipeServer.Tools;
+using Test.PlcNext.NamedPipe.Tools;
 using Test.PlcNext.Tools;
 using Test.PlcNext.Tools.Abstractions;
 using Xunit;
@@ -135,8 +136,9 @@ namespace Test.PlcNext.SystemTests.Tools
             exceptionHandlerAbstraction.Initialize(exportProvider, printMessage);
             guidFactoryAbstraction.Initialize(exportProvider, printMessage);
             cmakeConversationAbstraction.Initialize(exportProvider, printMessage);
+            ILog log = new LogTracer(printMessage);
             exportProvider.AddInstance(Substitute.For<IProgressVisualizer>());
-            exportProvider.AddInstance(Substitute.For<ILog>());
+            exportProvider.AddInstance(log);
             exportProvider.AddInstance(CreateExplorer());
             ContainerBuilder builder = new ContainerBuilder();
             builder.RegisterModule(new DiModule(exportProvider, autoActivatedComponents));
@@ -377,11 +379,11 @@ namespace Test.PlcNext.SystemTests.Tools
             }
         }
 
-        internal void CheckLibraryIsGenerated()
+        internal void CheckLibraryIsGenerated(string[] components)
         {
             knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
-            string libName = knownProjectName.Split('.', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
-            libName = $"{libName}Library";
+            string projectName = knownProjectName.Split('.', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+            string libName = $"{projectName}Library";
             libName.Should().NotBeNullOrEmpty("Library name cannot be determined.");
             string path = GetPathOfGeneratedFile($"{libName}.{Constants.ClassExtension}", Constants.GeneratedCodeFolderName);
             using (Stream fileContent = fileSystemAbstraction.Open(path))
@@ -389,7 +391,15 @@ namespace Test.PlcNext.SystemTests.Tools
                 using (StreamReader reader = new StreamReader(fileContent))
                 {
                     string content = reader.ReadToEnd();
-                    content.Contains($"{libName}::{libName}(AppDomain& appDomain)").Should().BeTrue();
+                    content.Should().Contain($"{libName}::{libName}(AppDomain& appDomain)");
+                    foreach (string component in components)
+                    {
+                        (content.Contains($"this->componentFactory.AddFactoryMethod(TypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);") ||
+                         content.Contains($"this->componentFactory.AddFactoryMethod(CommonTypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);"))
+                               .Should().BeTrue($"Could not find line 'this->componentFactory.AddFactoryMethod" +
+                                                $"(TypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);' " +
+                                                $"in {libName}.{Constants.ClassExtension}");
+                    }
                 }
             }
 
@@ -435,6 +445,11 @@ namespace Test.PlcNext.SystemTests.Tools
             fileSystemAbstraction.Load(project);
         }
 
+        public void LoadLibrary(string library, string directory)
+        {
+            fileSystemAbstraction.LoadInto(library, Path.Combine(knownProjectName, directory));
+        }
+
         public void FileAddedOrChanged(int countChanged)
         {
             fileSystemAbstraction.ChangedFiles.Concat(fileSystemAbstraction.CreatedFiles)
@@ -447,80 +462,66 @@ namespace Test.PlcNext.SystemTests.Tools
                                  .Be(countDeleted, "there should be the specified number of initially deleted files");
         }
 
-        public async Task GenerateMeta(bool addPath, params string[] sourceDirectories)
+        public async Task GenerateMeta(bool addPath, string[] sourceDirectories = null, string[] includes = null, bool autoDetection = true)
         {
+            List<string> arguments = new List<string>(new[] { "generate", "config" });
             if (addPath)
             {
-                if (sourceDirectories.Any())
-                {
-                    await CommandLineParser.Parse("generate", "config", "-p",
-                                                  fileSystemAbstraction.FileExists(
-                                                      $"{knownProjectName}/plcnext.proj", string.Empty)
-                                                      ? $"{knownProjectName}/plcnext.proj"
-                                                      : $"{knownProjectName}",
-                                                  "-s",
-                                                  string.Join(",", sourceDirectories));
-                }
-                else
-                {
-                    await CommandLineParser.Parse("generate", "config", "-p",
-                                                  fileSystemAbstraction.FileExists(
-                                                      $"{knownProjectName}/plcnext.proj", string.Empty)
-                                                      ? $"{knownProjectName}/plcnext.proj"
-                                                      : $"{knownProjectName}");
-                }
+                arguments.Add("-p");
+                arguments.Add(fileSystemAbstraction.FileExists($"{knownProjectName}/plcnext.proj", string.Empty)
+                                  ? $"{knownProjectName}/plcnext.proj"
+                                  : $"{knownProjectName}");
             }
-            else
+
+            if (sourceDirectories?.Any() == true)
             {
-                if (sourceDirectories.Any())
-                {
-                    await CommandLineParser.Parse("generate", "config",
-                                                  "-s",
-                                                  string.Join(",", sourceDirectories));
-                }
-                else
-                {
-                    await CommandLineParser.Parse("generate", "config");
-                }
+                arguments.Add("-s");
+                arguments.Add(string.Join(",", sourceDirectories));
             }
+
+            if (includes?.Any() == true)
+            {
+                arguments.Add("-i");
+                arguments.Add(string.Join(",", includes));
+            }
+
+            if (!autoDetection)
+            {
+                arguments.Add("-n");
+            }
+
+            await CommandLineParser.Parse(arguments.ToArray());
         }
 
-        public async Task GenerateCode(bool addPath, params string[] sourceDirectories)
+        public async Task GenerateCode(bool addPath, string[] sourceDirectories = null, string[] includes = null, bool autoDetection = true)
         {
+            List<string> arguments = new List<string>(new[] {"generate", "code"});
             if (addPath)
             {
-                if (sourceDirectories.Any())
-                {
-                    await CommandLineParser.Parse("generate", "code", "-p",
-                                                  fileSystemAbstraction.FileExists(
-                                                      $"{knownProjectName}/plcnext.proj", string.Empty)
-                                                      ? $"{knownProjectName}/plcnext.proj"
-                                                      : $"{knownProjectName}",
-                                                  "-s",
-                                                  string.Join(",", sourceDirectories));
-                }
-                else
-                {
-                    await CommandLineParser.Parse("generate", "code", "-p",
-                                                  fileSystemAbstraction.FileExists(
-                                                      $"{knownProjectName}/plcnext.proj", string.Empty)
-                                                      ? $"{knownProjectName}/plcnext.proj"
-                                                      : $"{knownProjectName}");
-                }
+                arguments.Add("-p");
+                arguments.Add(fileSystemAbstraction.FileExists($"{knownProjectName}/plcnext.proj", string.Empty)
+                                  ? $"{knownProjectName}/plcnext.proj"
+                                  : $"{knownProjectName}");
             }
-            else
+
+            if (sourceDirectories?.Any() == true)
             {
-                if (sourceDirectories.Any())
-                {
-                    await CommandLineParser.Parse("generate", "code",
-                                                  "-s",
-                                                  string.Join(",", sourceDirectories));
-                }
-                else
-                {
-                    await CommandLineParser.Parse("generate", "code");
-                }
+                arguments.Add("-s");
+                arguments.Add(string.Join(",", sourceDirectories));
             }
+
+            if (includes?.Any() == true)
+            {
+                arguments.Add("-i");
+                arguments.Add(string.Join(",", includes));
+            }
+
+            if (!autoDetection)
+            {
+                arguments.Add("-n");
+            }
+
+            await CommandLineParser.Parse(arguments.ToArray());
         }
 
         public async Task Build(bool addPath)
@@ -724,7 +725,8 @@ namespace Test.PlcNext.SystemTests.Tools
                     content.Should().NotContain("$(portName)", "portName should have been replaced");
                     foreach (string port in ports)
                     {
-                        content.Should().Contain($"dataInfoProvider.AddRoot(\"{port}\", this->{port});", $"port {port} should have been registered");
+                        content.Should().Contain($"dataInfoProvider.AddRoot(\"{port}\", this->{port});",
+                                                 $"port {port} should have been registered");
                     }
                 }
             }
@@ -1256,7 +1258,7 @@ namespace Test.PlcNext.SystemTests.Tools
         }
 
 
-        public void SetCodeModel(string projectName, params string[] externalLibs)
+        public void SetCodeModel(string projectName, string[] externalLibs = null, string[] includePaths = null)
         {
             string content = string.Empty;
 
@@ -1267,13 +1269,21 @@ namespace Test.PlcNext.SystemTests.Tools
             }
             content = content.Replace("{$name}", projectName);
 
-            string libs = externalLibs
-                .Aggregate(string.Empty, (current, s) => current == string.Empty ? $"\\\"{s}\\\"" : $"{current} \\\"{s}\\\"");
-            string searchPaths = externalLibs
-                .Aggregate(string.Empty, (current, s) => $"{current}{Path.GetDirectoryName(s).Replace("\\", "\\\\")}:");
+            string libs = externalLibs?
+                .Aggregate(string.Empty, (current, s) => current == string.Empty ? $"\\\"{s}\\\"" : $"{current} \\\"{s}\\\"")
+                ?? string.Empty;
+            string searchPaths = externalLibs?
+                .Aggregate(string.Empty, (current, s) => $"{current}{Path.GetDirectoryName(s).Replace("\\", "\\\\")}:")
+                                 ?? string.Empty;
+
+            string includes = includePaths != null
+                                  ?string.Join($",{Environment.NewLine}",
+                                                               includePaths.Select(p => $"{{ \"path\" : \"{p}\" }}"))
+                                  :string.Empty;
 
             content = content.Replace("{$externalLibs}", libs);
             content = content.Replace("{$searchPaths}", searchPaths);
+            content = content.Replace("{$includePaths}", includes);
 
             string separator = string.Concat(Path.DirectorySeparatorChar).Replace("\\", "\\\\");
             content = content.Replace("/", separator);

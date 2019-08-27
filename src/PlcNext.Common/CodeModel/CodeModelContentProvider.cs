@@ -200,7 +200,8 @@ namespace PlcNext.Common.CodeModel
             {
                 HashSet<IType> structures = new HashSet<IType>(GetAllPorts()
                                                               .SelectMany(f => f.DataType.PotentialFullNames)
-                                                              .Select(codeModel.Type)
+                                                              .Select(f => (IType) codeModel.Class(f) ??
+                                                                           codeModel.Structure(f))
                                                               .Where(s => s != null));
 
                 HashSet<IType> visited = new HashSet<IType>();
@@ -211,7 +212,8 @@ namespace PlcNext.Common.CodeModel
                         foreach (IField structureField in structure.Fields)
                         {
                             IType structureDataType = structureField.DataType.PotentialFullNames
-                                                           .Select(codeModel.Type)
+                                                           .Select(f => (IType)codeModel.Class(f) ??
+                                                                        codeModel.Structure(f))
                                                            .FirstOrDefault(s => s != null);
                             if (structureDataType != null)
                             {
@@ -455,7 +457,7 @@ namespace PlcNext.Common.CodeModel
                 }
 
                 ICodeModel rootCodeModel = dataSource.Root.Value<ICodeModel>();
-                bool isStruct = dataSourceField.DataType.PotentialFullNames.Any(n => rootCodeModel.Type(n) != null);
+                bool isStruct = dataSourceField.DataType.PotentialFullNames.Any(n => rootCodeModel.Class(n) != null || rootCodeModel.Structure(n) != null);
                 IEnum @enum = dataSourceField.DataType.PotentialFullNames.Select(n => rootCodeModel.Enum(n)).FirstOrDefault(e => e != null);
                 bool isArray = dataSourceField.Multiplicity.Any();
                 string arpName = "DataType::" + GetArpDataType(dataSourceField.DataType.Name);

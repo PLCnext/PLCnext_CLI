@@ -49,13 +49,18 @@ namespace PlcNext.Common.CodeModel
 
         private string GetRelativePath()
         {
+            if (ProjectRoot == null)
+            {
+                return CodeFile;
+            }
             string projectRoot =
                 ProjectRoot.FullName.EndsWith($"{Path.DirectorySeparatorChar}", StringComparison.Ordinal)
                     ? ProjectRoot.FullName
                     : $"{ProjectRoot.FullName}{Path.DirectorySeparatorChar}";
             Uri baseUri = new Uri(projectRoot, UriKind.Absolute);
             Uri specificUri = new Uri(CodeFile, UriKind.Absolute);
-            return baseUri.MakeRelativeUri(specificUri).ToString();
+            string relativePath = baseUri.MakeRelativeUri(specificUri).ToString();
+            return relativePath.StartsWith("..") ? CodeFile : relativePath;
         }
 
         private string GetMessage()

@@ -8,8 +8,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Tools;
 

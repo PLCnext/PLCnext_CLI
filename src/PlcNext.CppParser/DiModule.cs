@@ -13,6 +13,7 @@ using System.Text;
 using Autofac;
 using PlcNext.Common.CodeModel;
 using PlcNext.CppParser.CppRipper.CodeModel;
+using PlcNext.CppParser.CppRipper.CodeModel.Includes;
 
 namespace PlcNext.CppParser
 {
@@ -22,6 +23,9 @@ namespace PlcNext.CppParser
         {
             builder.RegisterType<CppRipper.CppRipper>().As<IParser>().InstancePerLifetimeScope();
             builder.RegisterType<CppCodeLanguage>().As<ICodeLanguage>().InstancePerLifetimeScope();
+            builder.RegisterType<CppFileParser>().As<IFileParser>().InstancePerLifetimeScope();
+            builder.RegisterType<CppIncludeManager>().As<IIncludeManager>().InstancePerLifetimeScope();
+            builder.RegisterType<JsonIncludeCache>().As<IIncludeCache>().InstancePerLifetimeScope();
         }
     }
 }

@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using PlcNext.Common.Build;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Commands;
 using PlcNext.Common.DataModel;
@@ -21,6 +22,7 @@ using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.SDK;
 
 namespace PlcNext.Common.Project
 {
@@ -31,14 +33,20 @@ namespace PlcNext.Common.Project
         private readonly IFileSystem fileSystem;
         private readonly IParser parser;
         private readonly ExecutionContext executionContext;
+        private readonly ITargetParser targetParser;
+        private readonly ISdkRepository sdkRepository;
+        private readonly IBuildInformationService informationService;
 
-        public RootEntityContentProvider(ITemplateRepository templateRepository, ITemplateIdentifierRepository identifierRepository, IFileSystem fileSystem, IParser parser, ExecutionContext executionContext)
+        public RootEntityContentProvider(ITemplateRepository templateRepository, ITemplateIdentifierRepository identifierRepository, IFileSystem fileSystem, IParser parser, ExecutionContext executionContext, ITargetParser targetParser, ISdkRepository sdkRepository, IBuildInformationService informationService)
         {
             this.templateRepository = templateRepository;
             this.identifierRepository = identifierRepository;
             this.fileSystem = fileSystem;
             this.parser = parser;
             this.executionContext = executionContext;
+            this.targetParser = targetParser;
+            this.sdkRepository = sdkRepository;
+            this.informationService = informationService;
         }
 
         public bool CanResolve(Entity owner, string key, bool fallback = false)
@@ -144,11 +152,27 @@ namespace PlcNext.Common.Project
                 
                 return CreateFallback();
 
-                ICodeModel ParseCodeModel(VirtualDirectory virtualDirectory)
+                ICodeModel ParseCodeModel(VirtualDirectory virtualDirectory, Entity root)
                 {
                     try
                     {
-                        return parser.Parse(GetSourceDirectories(virtualDirectory));
+                        ICodeModel model = parser.Parse(GetSourceDirectories(virtualDirectory),
+                                                        GetIncludeDirectories(virtualDirectory),
+                                                        out IEnumerable<CodeSpecificException> loggableExceptions);
+                        bool firstException = true;
+                        foreach (CodeSpecificException loggableException in loggableExceptions)
+                        {
+                            if (firstException)
+                            {
+                                executionContext.WriteInformation(
+                                    "The following code errors were found inside the parsed include files. " +
+                                    "Containing types cannot be used as port types.", false);
+                                firstException = false;
+                            }
+                            loggableException.CompleteCodeExceptions(virtualDirectory);
+                            executionContext.WriteError(loggableException.ToString(), false);
+                        }
+                        return model;
                     }
                     catch (Exception exception)
                     {
@@ -156,12 +180,78 @@ namespace PlcNext.Common.Project
                         throw;
                     }
 
-                    IEnumerable<VirtualDirectory> GetSourceDirectories(VirtualDirectory baseDirectory)
+                    ICollection<VirtualDirectory> GetIncludeDirectories(VirtualDirectory baseDirectory)
                     {
-                        IEnumerable<string> sources = owner.HasSourceDirectoriesCommandArgument()
-                                                          ? owner.GetSourceDirectoriesCommandArgument()
+                        IEnumerable<string> includes = HasIncludeDirectoriesCommandArgument(owner)
+                                                           ? GetIncludeDirectoriesCommandArgument(owner)
+                                                           : Enumerable.Empty<string>();
+                        Target[] projectTargets = GetProjectTargets();
+
+                        if (projectTargets.Any())
+                        {
+                            if (!includes.Any() && HasNoIncludeDetectionCommandArgument(owner) && !GetNoIncludeDetectionCommandArgument(owner))
+                            {
+                                includes = informationService.RetrieveBuildSystemProperties(root, projectTargets[0], executionContext.Observable).IncludePaths;
+                            }
+                        }
+                        else
+                        {
+                            executionContext.WriteWarning($"The project in {baseDirectory.FullName} does not contain a valid target. " +
+                                                          $"Without a valid target port structures from within the SDK can not be generated " +
+                                                          $"and automatic include detection will not work as well.");
+                        }
+                        includes = includes.Concat(new[]
+                        {
+                            Path.Combine(Constants.IntermediateFolderName, Constants.GeneratedCodeFolderName)
+                        });
+
+                        includes = includes.Concat(GetTargetIncludes());
+                        ICollection<VirtualDirectory> includeDirectories = includes.Select(GetIncludeDirectory)
+                                                                                   .Where(d => d != null)
+                                                                                 .ToArray();
+                        return includeDirectories;
+
+                        IEnumerable<string> GetTargetIncludes()
+                        {
+                            Sdk[] projectSdks = projectTargets.Select(sdkRepository.GetSdk)
+                                                              .Distinct()
+                                                              .ToArray();
+
+                            return projectSdks.SelectMany(s => s.IncludePaths.Concat(s.Compiler.IncludePaths));
+                        }
+
+                        VirtualDirectory GetIncludeDirectory(string path)
+                        {
+                            if (fileSystem.DirectoryExists(path, baseDirectory.FullName))
+                            {
+                                return fileSystem.GetDirectory(path, baseDirectory.FullName);
+                            }
+
+                            executionContext.WriteWarning($"The include path {path} was not found and will not be used.",false);
+                            return null;
+                        }
+
+                        Target[] GetProjectTargets()
+                        {
+                            ProjectEntity project = ProjectEntity.Decorate(root);
+                            TargetsResult targetsResult = targetParser.Targets(project, false);
+                            Target[] availableTargets = sdkRepository.GetAllTargets().ToArray();
+                            Target[] targets = targetsResult.ValidTargets
+                                                                   .Select(tr => availableTargets.FirstOrDefault(
+                                                                               t => t.Name == tr.Name &&
+                                                                                    t.LongVersion == tr.LongVersion))
+                                                                   .Where(t => t != null)
+                                                                   .ToArray();
+                            return targets;
+                        }
+                    }
+
+                    ICollection<VirtualDirectory> GetSourceDirectories(VirtualDirectory baseDirectory)
+                    {
+                        IEnumerable<string> sources = HasSourceDirectoriesCommandArgument(owner)
+                                                          ? GetSourceDirectoriesCommandArgument(owner)
                                                           : Enumerable.Empty<string>();
-                        IEnumerable<VirtualDirectory> sourceDirectories = sources.Select(s => fileSystem.DirectoryExists(s, baseDirectory.FullName)
+                        ICollection<VirtualDirectory> sourceDirectories = sources.Select(s => fileSystem.DirectoryExists(s, baseDirectory.FullName)
                                                                                                   ? fileSystem.GetDirectory(s, baseDirectory.FullName)
                                                                                                   : throw new FormattableException(
                                                                                                         $"The path {s} does not exist."))
@@ -175,12 +265,72 @@ namespace PlcNext.Common.Project
 
                         return sourceDirectories;
                     }
+
+                    IEnumerable<string> GetSourceDirectoriesCommandArgument(Entity entity)
+                    {
+                        return entity.Value<CommandDefinition>()
+                                    ?.Argument<MultipleValueArgument>(EntityKeys.SourceDirectoryKey)
+                                    ?.Values
+                               ?? entity.Value<CommandArgs>()
+                                       ?.PropertyValue<IEnumerable<string>>(EntityKeys.SourceDirectoryKey)
+                               ?? Enumerable.Empty<string>();
+                    }
+
+                    bool HasSourceDirectoriesCommandArgument(Entity entity)
+                    {
+                        return entity.Value<CommandDefinition>()
+                                    ?.Argument<MultipleValueArgument>(EntityKeys.SourceDirectoryKey)
+                               != null
+                               || entity.Value<CommandArgs>()
+                                       ?.HasPropertyValue(EntityKeys.SourceDirectoryKey, typeof(IEnumerable<string>))
+                               == true;
+                    }
+
+                    IEnumerable<string> GetIncludeDirectoriesCommandArgument(Entity entity)
+                    {
+                        return entity.Value<CommandDefinition>()
+                                    ?.Argument<MultipleValueArgument>(EntityKeys.IncludeDirectoryKey)
+                                    ?.Values
+                               ?? entity.Value<CommandArgs>()
+                                       ?.PropertyValue<IEnumerable<string>>(EntityKeys.IncludeDirectoryKey)
+                               ?? Enumerable.Empty<string>();
+                    }
+
+                    bool HasIncludeDirectoriesCommandArgument(Entity entity)
+                    {
+                        return entity.Value<CommandDefinition>()
+                                    ?.Argument<MultipleValueArgument>(EntityKeys.IncludeDirectoryKey)
+                               != null
+                               || entity.Value<CommandArgs>()
+                                       ?.HasPropertyValue(EntityKeys.IncludeDirectoryKey, typeof(IEnumerable<string>))
+                               == true;
+                    }
+
+                    bool GetNoIncludeDetectionCommandArgument(Entity entity)
+                    {
+                        return entity.Value<CommandDefinition>()
+                                    ?.Argument<BoolArgument>(Constants.NoIncludePathDetection)
+                                    ?.Value
+                               ?? entity.Value<CommandArgs>()
+                                       ?.PropertyValue<bool>(Constants.NoIncludePathDetection.ToPropertyName())
+                               ?? false;
+                    }
+
+                    bool HasNoIncludeDetectionCommandArgument(Entity entity)
+                    {
+                        return entity.Value<CommandDefinition>()
+                                    ?.Argument<BoolArgument>(Constants.NoIncludePathDetection)
+                               != null
+                               || entity.Value<CommandArgs>()
+                                       ?.HasPropertyValue(Constants.NoIncludePathDetection.ToPropertyName(), typeof(bool))
+                               == true;
+                    }
                 }
 
                 ICodeModel CreateCodeModel(Entity root)
                 {
                     VirtualDirectory rootDirectory = fileSystem.GetDirectory(root.Path);
-                    return ParseCodeModel(rootDirectory);
+                    return ParseCodeModel(rootDirectory, root);
                 }
 
                 Entity CreateFallback(VirtualDirectory baseDirectory = null)

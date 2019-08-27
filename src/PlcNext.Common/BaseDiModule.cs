@@ -74,7 +74,8 @@ namespace PlcNext.Common
             builder.RegisterType<AutomaticRollbackTransactionFactory>().As<ITransactionFactory>().InstancePerLifetimeScope();
             builder.RegisterType<StaticDatatypeConversion>().As<IDatatypeConversion>().InstancePerLifetimeScope();
             builder.RegisterType<SettingsBasedSdkRepository>().As<ISdkRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<CmakeExecuter>().As<IBuildExecuter>().InstancePerLifetimeScope();
+            builder.RegisterType<CmakeExecuter>().As<IBuildExecuter>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<CmakeBuildInformationService>().As<IBuildInformationService>().InstancePerLifetimeScope();
             builder.RegisterType<Builder>().As<IBuilder>().InstancePerLifetimeScope();
             builder.RegisterType<EngineeringLibraryBuilderExecuter>().As<ILibraryBuilderExecuter>().InstancePerLifetimeScope();
             builder.RegisterType<FileBasedSettingsProvider>()

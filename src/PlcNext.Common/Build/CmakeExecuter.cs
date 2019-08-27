@@ -61,29 +61,74 @@ namespace PlcNext.Common.Build
                 throw new FormattableException("CMake cannot be found. Please install a new version of CMake and ensure that it will be added to the search path settings.");
             }
 
+            (bool _, VirtualDirectory cmakeFolder) = EnsureConfigured(buildInformation, observable, true);
+
+            TouchMainCMakeFile();
+            CallCmake(cmakeFolder, "--build . --target install", true, true);
+
+            void TouchMainCMakeFile()
+            {
+                if (buildInformation.RootProjectEntity.Version > new Version(1, 0))
+                {
+                    //do not touch newer project version cmake file
+                    return;
+                }
+                if (!buildInformation.RootFileEntity.Directory.FileExists("CMakeLists.txt"))
+                {
+                    throw new CMakeFileNotFoundException();
+                }
+                VirtualFile cmakeFile = buildInformation.RootFileEntity.Directory.File("CMakeLists.txt");
+                cmakeFile.Touch();
+            }
+        }
+
+        private bool CallCmake(VirtualDirectory workingDirectory, string command, bool showOutput, bool throwOnError)
+        {
+            using (IProcess process = processManager.StartProcess(binariesLocator.GetExecutableCommand("cmake"), command, userInterface,
+                                                                  workingDirectory.FullName.Replace("\\", "/"),
+                                                                  showOutput: showOutput, showError: showOutput))
+            {
+                process.WaitForExit();
+                if (process.ExitCode != 0)
+                {
+                    if (throwOnError)
+                    {
+                        throw new FormattableException("cmake process exited with error");
+                    }
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public (bool, VirtualDirectory) EnsureConfigured(BuildInformation buildInformation, ChangeObservable observable = null, bool throwOnError = false,
+                                                         bool showMessagesToUser = true)
+        {
             if (!CmakeFileExists())
             {
                 GenerateCmakeFile();
             }
 
             VirtualDirectory cmakeFolder = CreateCmakeFolder();
-            
-            ConfigureCMake();
-            TouchMainCMakeFile();
-            CallCmake(cmakeFolder, "--build . --target install", true, true);
+
+            bool success = ConfigureCMake();
+
+            return (success, cmakeFolder);
+
+            void GenerateCmakeFile()
+            {
+                VirtualFile cMakeFile = buildInformation.RootFileEntity.Directory.File(Constants.CMakeFileName);
+                //TODO Generate cmakefile with template system
+                //TODO Set src folders in cmake file (consider foreign project structure)
+                CMakeFileGenerator.WriteCMakeFile(cMakeFile, buildInformation.RootEntity.Name);
+                observable?.OnNext(new Change(() => { /*Do not delete, because user need to make changes perhaps*/ }, $"Generated cmake file {cMakeFile.FullName}"));
+            }
 
             bool CmakeFileExists()
             {
                 return buildInformation.RootFileEntity.Directory.FileExists(Constants.CMakeFileName);
-            }
-
-            void GenerateCmakeFile()
-            {
-                VirtualFile CMakeFile = buildInformation.RootFileEntity.Directory.File(Constants.CMakeFileName);
-                //TODO Generate cmakefile with template system
-                //TODO Set src folders in cmake file (consider foreign project structure)
-                CMakeFileGenerator.WriteCMakeFile(CMakeFile, buildInformation.RootEntity.Name);
-                observable.OnNext(new Change(() => { /*Do not delete, because user need to make changes perhaps*/ }, $"Generated cmake file {CMakeFile.FullName}"));
             }
 
             VirtualDirectory CreateCmakeFolder()
@@ -104,78 +149,9 @@ namespace PlcNext.Common.Build
                 if (buildInformation.Configure && !buildInformation.NoConfigure)
                 {
                     result.Clear();
-                    observable.OnNext(new Change(() => result.UnClear(), $"Cleared cmake directory."));
+                    observable?.OnNext(new Change(() => result.UnClear(), $"Cleared cmake directory."));
                 }
                 return result;
-            }
-
-            void CallCmake(VirtualDirectory workingDirectory, string command, bool showOutput, bool checkForError)
-            {
-                using (IProcess process = processManager.StartProcess(binariesLocator.GetExecutableCommand("cmake"), command, userInterface,
-                                                                      workingDirectory.FullName.Replace("\\", "/"),
-                                                                      showOutput: showOutput, showError: showOutput))
-                {
-                    process.WaitForExit();
-                    if (process.ExitCode != 0 && checkForError)
-                    {
-                        throw new FormattableException("cmake process exited with error");
-                    }
-                }
-            }
-
-            string GenerateCmakeCommand(string target, string version, string shortVersion)
-            {
-                List<string> commandParts = new List<string>();
-                string sdkRoot = buildInformation.Sdk.Root.FullName.Replace("\\", "/");
-                if (!buildInformation.BuildProperties.Contains("-DCMAKE_TOOLCHAIN_FILE "))
-                {
-                    commandParts.Add(ToolchainFileOption.Replace("%SDK_ROOT%", sdkRoot));
-                }
-                if (!buildInformation.BuildProperties.Contains("-DARP_TOOLCHAIN_ROOT "))
-                {
-                    commandParts.Add(ToolchainRootOption.Replace("%SDK_ROOT%", sdkRoot));
-                }
-                if (!buildInformation.BuildProperties.Contains("-DCMAKE_BUILD_TYPE "))
-                {
-                    commandParts.Add(BuildTypeOption.Replace("%BUILD_TYPE%", GetRealBuildType()));
-                }
-                if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE "))
-                {
-                    commandParts.Add(DeviceOption.Replace("%TARGET%", $"\"{target}\""));
-                }
-                if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE_VERSION "))
-                {
-                    commandParts.Add(DeviceVersionOption.Replace("%VERSION%", $"\"{version}\""));
-                }
-                if (!buildInformation.BuildProperties.Contains("-DCMAKE_STAGING_PREFIX "))
-                {
-                    commandParts.Add(StagingPrefixOption.Replace("%STAGING_PREFIX%", GenerateStagingPrefixForTarget()));
-                }
-                if (!buildInformation.BuildProperties.Contains("-G "))
-                {
-                    commandParts.Add(GeneratorOption);
-                    if (buildInformation.Sdk.MakeFile != null && !buildInformation.BuildProperties.Contains("-DCMAKE_MAKE_PROGRAM "))
-                    {
-                        commandParts.Add(MakeFileOption.Replace("%MAKE_EXE%", $"\"{buildInformation.Sdk.MakeFile.FullName.Replace("\\", "/")}\""));
-                    }
-                }
-                if (!string.IsNullOrEmpty(buildInformation.BuildProperties))
-                {
-                    commandParts.Add(buildInformation.BuildProperties);
-                }
-                commandParts.Add($"\"{buildInformation.RootFileEntity.Directory.FullName.Replace("\\", "/")}\"");
-                return string.Join(" ", commandParts);
-
-                string GenerateStagingPrefixForTarget()
-                {
-                    string basePath = buildInformation.RootFileEntity.Directory.FullName;
-                    return buildInformation.RootProjectEntity.Version > new Version(1, 0)
-                               ? Path.Combine(basePath, Constants.LibraryFolderName, $"{target}_{shortVersion}",
-                                              GetRealBuildType())
-                                     .Replace(Path.DirectorySeparatorChar, '/')
-                               : Path.Combine(basePath, Constants.LibraryFolderName)
-                                     .Replace(Path.DirectorySeparatorChar, '/');
-                }
             }
 
             string GetRealBuildType()
@@ -186,9 +162,9 @@ namespace PlcNext.Common.Build
                 return buildType;
             }
 
-            void ConfigureCMake()
+            bool ConfigureCMake()
             {
-                userInterface.WriteInformation("Checking if CMake needs to be reconfigured...");
+                executionContext.WriteInformation("Checking if CMake needs to be reconfigured...", showMessagesToUser);
                 if ((!cmakeFolder.FileExists("CMakeCache.txt") ||
                      buildInformation.Configure ||
                      !IsCorrectlyConfigured()) &&
@@ -198,13 +174,76 @@ namespace PlcNext.Common.Build
                                                                buildInformation.Target.LongVersion,
                                                                buildInformation.Target.Version);
 
-                    CallCmake(cmakeFolder, cmakeCommand, true, true);
+                    if (!showMessagesToUser)
+                    {
+                        executionContext.WriteInformation("Configuring CMake...");
+                    }
+                    return CallCmake(cmakeFolder, cmakeCommand, showMessagesToUser, throwOnError);
                 }
-                else if (!string.IsNullOrEmpty(buildInformation.BuildProperties))
+
+                if (!string.IsNullOrEmpty(buildInformation.BuildProperties))
                 {
-                    userInterface.WriteWarning($"The specified build options will not be used, " +
-                                               $"because no reconfiguration is necessary. " +
-                                               $"To force a reconfiguration please use the '--configure' command option.");
+                    executionContext.WriteWarning($"The specified build options will not be used, " +
+                                                  $"because no reconfiguration is necessary. " +
+                                                  $"To force a reconfiguration please use the '--configure' command option.",
+                                                  showMessagesToUser);
+                }
+
+                return true;
+
+                string GenerateCmakeCommand(string target, string version, string shortVersion)
+                {
+                    List<string> commandParts = new List<string>();
+                    string sdkRoot = buildInformation.Sdk.Root.FullName.Replace("\\", "/");
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_TOOLCHAIN_FILE "))
+                    {
+                        commandParts.Add(ToolchainFileOption.Replace("%SDK_ROOT%", sdkRoot));
+                    }
+                    if (!buildInformation.BuildProperties.Contains("-DARP_TOOLCHAIN_ROOT "))
+                    {
+                        commandParts.Add(ToolchainRootOption.Replace("%SDK_ROOT%", sdkRoot));
+                    }
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_BUILD_TYPE "))
+                    {
+                        commandParts.Add(BuildTypeOption.Replace("%BUILD_TYPE%", GetRealBuildType()));
+                    }
+                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE "))
+                    {
+                        commandParts.Add(DeviceOption.Replace("%TARGET%", $"\"{target}\""));
+                    }
+                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE_VERSION "))
+                    {
+                        commandParts.Add(DeviceVersionOption.Replace("%VERSION%", $"\"{version}\""));
+                    }
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_STAGING_PREFIX "))
+                    {
+                        commandParts.Add(StagingPrefixOption.Replace("%STAGING_PREFIX%", GenerateStagingPrefixForTarget()));
+                    }
+                    if (!buildInformation.BuildProperties.Contains("-G "))
+                    {
+                        commandParts.Add(GeneratorOption);
+                        if (buildInformation.Sdk.MakeFile != null && !buildInformation.BuildProperties.Contains("-DCMAKE_MAKE_PROGRAM "))
+                        {
+                            commandParts.Add(MakeFileOption.Replace("%MAKE_EXE%", $"\"{buildInformation.Sdk.MakeFile.FullName.Replace("\\", "/")}\""));
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(buildInformation.BuildProperties))
+                    {
+                        commandParts.Add(buildInformation.BuildProperties);
+                    }
+                    commandParts.Add($"\"{buildInformation.RootFileEntity.Directory.FullName.Replace("\\", "/")}\"");
+                    return string.Join(" ", commandParts);
+
+                    string GenerateStagingPrefixForTarget()
+                    {
+                        string basePath = buildInformation.RootFileEntity.Directory.FullName;
+                        return buildInformation.RootProjectEntity.Version > new Version(1, 0)
+                                   ? Path.Combine(basePath, Constants.LibraryFolderName, $"{target}_{shortVersion}",
+                                                  GetRealBuildType())
+                                         .Replace(Path.DirectorySeparatorChar, '/')
+                                   : Path.Combine(basePath, Constants.LibraryFolderName)
+                                         .Replace(Path.DirectorySeparatorChar, '/');
+                    }
                 }
 
                 bool IsCorrectlyConfigured()
@@ -243,21 +282,6 @@ namespace PlcNext.Common.Build
                                aggregate.InnerExceptions.Any(e => e is TimeoutException);
                     }
                 }
-            }
-
-            void TouchMainCMakeFile()
-            {
-                if (buildInformation.RootProjectEntity.Version > new Version(1, 0))
-                {
-                    //do not touch newer project version cmake file
-                    return;
-                }
-                if (!buildInformation.RootFileEntity.Directory.FileExists("CMakeLists.txt"))
-                {
-                    throw new CMakeFileNotFoundException();
-                }
-                VirtualFile cmakeFile = buildInformation.RootFileEntity.Directory.File("CMakeLists.txt");
-                cmakeFile.Touch();
             }
         }
     }

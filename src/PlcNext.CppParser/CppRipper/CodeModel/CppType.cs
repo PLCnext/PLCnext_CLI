@@ -57,10 +57,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         }
 
         protected CppType(string ns, string name, string[] usings, ParseNode content, List<ParserMessage> messages,
-                          ParseNode typeDeclaration, string attributePrefix) : base(name, attributePrefix)
+                          ParseNode typeDeclaration, string attributePrefix, bool parseFields = true) : base(name, attributePrefix)
         {
             Namespace = ns;
-            ParseFields(ns, usings, content, messages, typeDeclaration, attributePrefix);
+            if (parseFields)
+            {
+                ParseFields(ns, usings, content, messages, typeDeclaration, attributePrefix);
+            }
 
             IEnumerable<string> baseTypeNames = typeDeclaration.GetBaseTypes();
             baseTypes.AddRange(baseTypeNames.Select(n => new CppDataType(n, usings, ns)));

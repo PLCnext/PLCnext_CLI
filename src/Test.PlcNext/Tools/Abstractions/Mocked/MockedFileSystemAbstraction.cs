@@ -132,6 +132,9 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                     printMessage?.Invoke($"{DateTime.Now:dd/MM/yyyy hh:mm:ss.fff}: Delete {currentDirectory}");
                     directoryContents.Remove(currentDirectory);
                 });
+                directoryContentResolver.CreatePath(null).ReturnsForAnyArgs(info => Path.Combine(info.Arg<string[]>()));
+                directoryContentResolver.SplitPath(null).ReturnsForAnyArgs(info => info.Arg<string>().Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar },
+                                                                                                            StringSplitOptions.RemoveEmptyEntries));
 
                 VirtualFile CreateFile(string fileName, string fileFullName)
                 {
@@ -157,6 +160,9 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                         fileContents[file] = new MemoryStream();
                         printMessage?.Invoke($"{DateTime.Now:dd/MM/yyyy hh:mm:ss.fff}: Undelete {file}");
                     });
+                    fileContentResolver.CreatePath(null).ReturnsForAnyArgs(info => Path.Combine(info.Arg<string[]>()));
+                    fileContentResolver.SplitPath(null).ReturnsForAnyArgs(info => info.Arg<string>().Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar },
+                                                                                                                StringSplitOptions.RemoveEmptyEntries));
                     return file;
                 }
             }
@@ -571,7 +577,15 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
             create = true;
         }
 
-        public IEnumerable<string> CreatedFiles => fileContents.Keys.Except(initialFiles).Select(f => f.Name);
+        public void LoadInto(string workspace, string destination)
+        {
+            VirtualDirectory destinationDirectory = FileSystem.GetDirectory(destination, CurrentDirectory.FullName);
+            Load(workspace, destinationDirectory);
+        }
+
+        public IEnumerable<string> CreatedFiles => fileContents.Keys.Except(initialFiles)
+                                                               .Where(f => f.FullName.StartsWith(CurrentDirectory.FullName))
+                                                               .Select(f => f.Name);
         public IEnumerable<string> ChangedFiles => changedFiles.Intersect(initialFiles).Select(f => f.Name);
         public IEnumerable<string> DeletedFiles => initialFiles.Except(fileContents.Keys).Select(f => f.Name);
         public void ThrowOnAccess(string path)

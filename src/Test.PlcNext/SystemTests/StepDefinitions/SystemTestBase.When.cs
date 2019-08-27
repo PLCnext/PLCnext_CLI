@@ -151,14 +151,33 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 	        await ScenarioContext.GenerateMeta(true);
 	    }
 
+        protected async Task When_I_generate_all_metafiles_without_auto_detection()
+	    {
+	        await ScenarioContext.GenerateMeta(true, autoDetection:false);
+	    }
+
 	    protected async Task When_I_generate_all_metafiles_with_the_source_directories(params string[] directories)
 	    {
 	        await ScenarioContext.GenerateMeta(true, directories);
         }
 
+        protected async Task When_I_generate_all_metafiles_with_includes(params string[] includes)
+        {
+            await ScenarioContext.GenerateMeta(true, includes: includes);
+        }
+
         protected async Task When_I_generate_all_codefiles()
         {
             await ScenarioContext.GenerateCode(true);
+        }
+
+        protected async Task When_I_generate_all_codefiles_without_auto_detection()
+        {
+            await ScenarioContext.GenerateCode(true, autoDetection:false);
+        }
+        protected async Task When_I_generate_all_codefiles_with_includes(params string[] includes)
+        {
+            await ScenarioContext.GenerateCode(true, includes:includes);
         }
         protected async Task When_I_generate_all_codefiles_from_inside_the_project_folder()
         {

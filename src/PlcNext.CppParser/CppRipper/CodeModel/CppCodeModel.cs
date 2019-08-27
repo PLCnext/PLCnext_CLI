@@ -24,6 +24,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         private readonly Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures;
         private readonly Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)> enums;
 
+        private Func<string, IType> findTypeInIncludes;
+
         public CppCodeModel(Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes,
                             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures,
                             Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)> enums)
@@ -50,26 +52,26 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         {
             return structures.TryGetValue(structureName, out (CppStructure structure, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.structure
-                       : null;
+                       : findTypeInIncludes?.Invoke(structureName) as IStructure;
         }
 
         public IClass Class(string className)
         {
             return classes.TryGetValue(className, out (CppClass cppClass, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.cppClass
-                       : null;
+                       : findTypeInIncludes?.Invoke(className) as IClass;
         }
 
-        public IEnum Enum(string className)
+        public IEnum Enum(string enumName)
         {
-            return enums.TryGetValue(className, out (CppEnum cppEnum, VirtualFile _, VirtualDirectory d) tuple)
+            return enums.TryGetValue(enumName, out (CppEnum cppEnum, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.cppEnum
-                       : null;
+                       : findTypeInIncludes?.Invoke(enumName) as IEnum;
         }
 
         public IType Type(string typeName)
         {
-            return (IType) Structure(typeName) ?? Class(typeName);
+            return Structure(typeName) ?? (IType) Class(typeName) ?? Enum(typeName);
         }
 
         public VirtualDirectory GetBaseDirectory(IType type)
@@ -79,6 +81,41 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                        : structures.TryGetValue(type.FullName, out (CppStructure s, VirtualFile _, VirtualDirectory baseDirectory) tuple2)
                            ? tuple2.baseDirectory
                            : null;
+        }
+
+        internal void RegisterIncludeTypeFinder(Func<string, IType> includeTypeFinder)
+        {
+            findTypeInIncludes = includeTypeFinder;
+        }
+
+        internal void AddType(IType type, VirtualFile file, VirtualDirectory directory)
+        {
+            switch (type)
+            {
+                case CppStructure structure:
+                    if (!structures.ContainsKey(structure.FullName))
+                    {
+                        structures.Add(structure.FullName, (structure, file, directory));
+                    }
+                    break;
+                case CppClass cppClass:
+                    if (!classes.ContainsKey(cppClass.FullName))
+                    {
+                        classes.Add(cppClass.FullName, (cppClass, file, directory));
+                    }
+
+                    break;
+                case CppEnum cppEnum:
+                    if (!enums.ContainsKey(cppEnum.FullName))
+                    {
+                        enums.Add(cppEnum.FullName, (cppEnum, file, directory));
+                    }
+
+                    break;
+                default:
+                    //do nothing
+                    break;
+            }
         }
     }
 }

@@ -21,5 +21,9 @@ namespace PlcNext.Common.Tools.FileSystem
         void Delete();
 
         void UnDelete();
+
+        string CreatePath(string[] parts);
+
+        string[] SplitPath(string path);
     }
 }

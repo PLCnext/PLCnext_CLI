@@ -159,7 +159,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("Standard"),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_the_library_files_are_generated()).RunAsyncWithTimeout();
+                _ => Then_the_library_files_are_generated_containing_the_components("MyComponent")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -168,7 +168,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("AcfProject"),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_the_library_files_are_generated()
+                _ => Then_the_library_files_are_generated_containing_the_components("AcfProjectComponent")
                 ).RunAsyncWithTimeout();
         }
 
@@ -349,6 +349,58 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Generate_library_meta_information_for_external_struct()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project_with_the_additional_library_in_the_directory("ExternalLibraryTest","lib","ExternalLibrary"),
+                _ => When_I_generate_all_codefiles_with_includes("lib/ExternalLibrary"),
+                _ => Then_the_typemeta_method_looks_like_NAME("ExternalLibraryTest.meta.cpp")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Do_not_generate_library_meta_information_for_external_struct_with_missing_library()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ExternalLibraryTest"),
+                _ => When_I_generate_all_codefiles_with_includes("lib/ExternalLibrary"),
+                _ => Then_the_user_was_informed_that_the_data_type_is_not_known()).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Do_not_generate_library_meta_information_for_external_struct_without_auto_detection()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project_with_the_additional_library_in_the_directory("ExternalLibraryTest", "lib", "ExternalLibrary"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_include_paths("ExternalLibraryTest", "lib/ExternalLibrary"),
+                _ => When_I_generate_all_codefiles_without_auto_detection(),
+                _ => Then_the_user_was_informed_that_the_data_type_is_not_known()).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_typemeta_information_for_external_struct_using_cmake()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project_with_the_additional_library_in_the_directory("ExternalLibraryTest","lib","ExternalLibrary"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_include_paths("ExternalLibraryTest", "lib/ExternalLibrary"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_typemeta_method_looks_like_NAME("ExternalLibraryTest.meta.cpp")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_struct_typemeta_information_for_external_struct()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project_with_the_additional_library_in_the_directory("ExternalLibraryTest", "lib", "ExternalLibrary"),
+                _ => When_I_generate_all_metafiles_with_includes("lib/ExternalLibrary"),
+                _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("ExternalStruct",
+                                                                                                         new[]
+                                                                                                         {
+                                                                                                             new TypeMember("Member1","int64"),
+                                                                                                             new TypeMember("Member2","int16"),
+                                                                                                         }))).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_library_meta_information_for_enums()
         {
             await Runner.AddSteps(
@@ -433,7 +485,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Standard"),
                 _ => Given_is_the_working_directory_PATH("Standard"),
                 _ => When_I_generate_all_codefiles_from_inside_the_project_folder(),
-                _ => Then_the_library_files_are_generated()).RunAsyncWithTimeout();
+                _ => Then_the_library_files_are_generated_containing_the_components("MyComponent")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -443,7 +495,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("MultipleNamespaces"),
                 _ => Given_is_the_working_directory_PATH("MultipleNamespaces"),
                 _ => When_I_generate_all_codefiles_with_the_source_directories("src","extern"),
-                _ => Then_the_library_files_are_generated()).RunAsyncWithTimeout();
+                _ => Then_the_library_files_are_generated_containing_the_components("MultipleNamespacesComponent")).RunAsyncWithTimeout();
         }
         [Scenario]
         public async Task Generate_struct_typemeta_information_for_other_namespace_structs()
@@ -483,7 +535,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("NoEntities"),
                 _ => Given_is_the_working_directory_PATH("NoEntities"),
                 _ => When_I_generate_all_codefiles_from_inside_the_project_folder(),
-                _ => Then_the_library_files_are_generated()).RunAsyncWithTimeout();
+                _ => Then_the_library_files_are_generated_containing_the_components()).RunAsyncWithTimeout();
         }
 
         [Scenario]

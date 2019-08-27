@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using PlcNext.Common.Tools.FileSystem;
@@ -61,32 +60,13 @@ namespace PlcNext.Common.Tools.Settings
             {
                 if(settingsPath == null)
                 {
-                    string path = ResolvePathNames(SettingsFilePath.CleanPath());
+                    string path = SettingsFilePath.CleanPath().ResolvePathName(environmentService.PathNames);
                     Uri pathUri = new Uri(path, UriKind.RelativeOrAbsolute);
                     if (!pathUri.IsAbsoluteUri)
                     {
                         path = Path.Combine(environmentService.AssemblyDirectory, path);
                     }
                     settingsPath = path;
-
-                    string ResolvePathNames(string unresolved)
-                    {
-                        string resolved = unresolved;
-                        Regex resolvePattern = new Regex(@"{(?<resolvable>\w+)}");
-                        Match resolveMatch = resolvePattern.Match(unresolved);
-                        while (resolveMatch.Success)
-                        {
-                            string key = resolveMatch.Groups["resolvable"].Value;
-                            if (environmentService.PathNames.ContainsKey(key))
-                            {
-                                resolved = resolved.Replace(resolveMatch.Value, environmentService.PathNames[key]);
-                            }
-
-                            resolveMatch = resolvePattern.Match(resolved);
-                        }
-
-                        return resolved;
-                    }
                 }
                 return settingsPath;
             }

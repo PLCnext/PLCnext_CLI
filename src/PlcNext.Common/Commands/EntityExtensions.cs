@@ -44,25 +44,5 @@ namespace PlcNext.Common.Commands
                            ?.HasPropertyValue(EntityKeys.PathKey, typeof(string))
                    == true;
         }
-
-        public static IEnumerable<string> GetSourceDirectoriesCommandArgument(this Entity entity)
-        {
-            return entity.Value<CommandDefinition>()
-                        ?.Argument<MultipleValueArgument>(EntityKeys.SourceDirectoryKey)
-                        ?.Values
-                   ?? entity.Value<CommandArgs>()
-                           ?.PropertyValue<IEnumerable<string>>(EntityKeys.SourceDirectoryKey)
-                   ?? Enumerable.Empty<string>();
-        }
-
-        public static bool HasSourceDirectoriesCommandArgument(this Entity entity)
-        {
-            return entity.Value<CommandDefinition>()
-                        ?.Argument<MultipleValueArgument>(EntityKeys.SourceDirectoryKey)
-                   != null
-                   || entity.Value<CommandArgs>()
-                           ?.HasPropertyValue(EntityKeys.SourceDirectoryKey, typeof(IEnumerable<string>))
-                   == true;
-        }
     }
 }

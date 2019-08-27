@@ -50,7 +50,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_the_file_system_throws_an_error_on_accessing_the_file(
                     Path.Combine("Standard", Constants.IntermediateFolderName,
                                  Constants.MetadataFolderName, "Standard.typemeta")),
-                _ => When_I_generate_all_metafiles(),
+                _ => When_I_generate_all_metafiles_without_auto_detection(),
                 _ => Then_no_files_were_changed_or_added_to_the_workspace()).RunAsyncWithTimeout();
         }
 
