@@ -40,6 +40,7 @@ namespace PlcNext.Common.Build
         private readonly ICMakeConversation cmakeConversation;
 
         private static readonly Regex LibrariesDecoder = new Regex("(?<path>\\\"[^\\\"]+\\\"|[^ |\\\"]+)", RegexOptions.Compiled);
+        private static readonly Regex LibrariesRPathDecoder = new Regex("-rpath(?:-link)?,(?<rpath>(?:\\\"[^\\\"]+\\\"|[^ |\\\"]+;?)*)", RegexOptions.Compiled);
 
         public EngineeringLibraryBuilderExecuter(IProcessManager processManager, IFileSystem fileSystem,
                                                  IGuidFactory guidFactory, IBinariesLocator binariesLocator,
@@ -287,17 +288,35 @@ namespace PlcNext.Common.Build
                                                            $"{projectTarget.ToString(Formatting.Indented)}");
                         }
 
+                        List<string> rPaths = new List<string>(new[] {binaryDirectory});
+                        List<(int, int)> rPathMatches = new List<(int, int)>();
+                        Match rPathMatch = LibrariesRPathDecoder.Match(linkLibraries);
+                        while (rPathMatch.Success)
+                        {
+                            rPathMatches.Add((rPathMatch.Index, rPathMatch.Index + rPathMatch.Length-1));
+                            rPaths.AddRange(rPathMatch.Groups["rpath"].Value.Split(';').Select(p => p.Trim('\\', '"')));
+                            rPathMatch = rPathMatch.NextMatch();
+                        }
+
                         Match match = LibrariesDecoder.Match(linkLibraries);
 
                         while (match.Success)
                         {
-                            string path = match.Groups["path"].Value;
+                            if (rPathMatches.All(((int start, int end) rMatch) =>
+                                                     match.Index + match.Length - 1 < rMatch.start ||
+                                                     match.Index > rMatch.end))
+                            {
+                                string path = match.Groups["path"].Value.Trim('\\', '"');
 
-                            if (fileSystem.FileExists(path, binaryDirectory) && IsNotSysrootPath(path)) { 
+                                string pathBase = rPaths.FirstOrDefault(p => fileSystem.FileExists(path, p));
+                                if (!string.IsNullOrEmpty(pathBase) && IsNotSysrootPath(path))
+                                {
 
-                               VirtualFile libFile = fileSystem.GetFile(path, binaryDirectory);
-                                externalLibs.Add((libFile, target));
+                                    VirtualFile libFile = fileSystem.GetFile(path, pathBase);
+                                    externalLibs.Add((libFile, target));
+                                }
                             }
+
                             match = match.NextMatch();
                         }
 
