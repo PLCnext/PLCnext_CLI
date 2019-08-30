@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using CommandLine;
 using CommandLine.Text;
+using PlcNext.Common.CommandLine;
 using PlcNext.Common.Tools;
 using TypeInfo = System.Reflection.TypeInfo;
 
@@ -23,6 +24,7 @@ namespace PlcNext.CommandLine
     {
         private readonly string name;
         private readonly string helpText;
+        private bool useChildVerbsAsCategory;
         private readonly List<Option> options = new List<Option>();
         private readonly List<Example> examples = new List<Example>();
         private Type baseType = typeof(DynamicVerb);
@@ -54,10 +56,16 @@ namespace PlcNext.CommandLine
             return this;
         }
 
-        public VerbTypeFactory AddOption(string name, char shortName, bool mandatory, string help,
-                                         OptionValueType optionValueType)
+        public VerbTypeFactory EnableUseChildVerbsAsCategory()
         {
-            options.Add(new Option(name, shortName, mandatory, help, optionValueType));
+            useChildVerbsAsCategory = true;
+            return this;
+        }
+
+        public VerbTypeFactory AddOption(string name, char shortName, bool mandatory, string help,
+                                         OptionValueType optionValueType, string setName)
+        {
+            options.Add(new Option(name, shortName, mandatory, help, optionValueType, setName));
             return this;
         }
 
@@ -82,6 +90,10 @@ namespace PlcNext.CommandLine
                 TypeBuilder typeBuilder = GetTypeBuilder();
                 typeBuilder.DefineDefaultConstructor(MethodAttributes.Public | MethodAttributes.SpecialName |
                                                      MethodAttributes.RTSpecialName);
+                if (useChildVerbsAsCategory)
+                {
+                    AddUseChildVerbsAsCategory();
+                }
                 AddVerbAttribute();
                 AddOptions();
                 AddExamples();
@@ -101,6 +113,13 @@ namespace PlcNext.CommandLine
                                                                   TypeAttributes.AutoLayout,
                                                                   baseType);
                     return result;
+                }
+
+                void AddUseChildVerbsAsCategory()
+                {
+                    Type childVerbsAsCategory = typeof(UseChildVerbsAsCategoryAttribute);
+                    ConstructorInfo constructor = childVerbsAsCategory.GetConstructor(new Type[0]);
+                    typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(constructor, new object[0]));
                 }
 
                 void AddVerbAttribute()
@@ -181,35 +200,30 @@ namespace PlcNext.CommandLine
                         PropertyInfo helpTextProperty = optionAttribute.GetProperty("HelpText");
                         PropertyInfo separatorProperty = optionAttribute.GetProperty("Separator");
                         PropertyInfo requiredProperty = optionAttribute.GetProperty("Required");
-                        CustomAttributeBuilder builder;
-                        if (option.ShortName != default(char))
+                        PropertyInfo setNameProperty = optionAttribute.GetProperty("SetName");
+                        ConstructorInfo constructor = optionAttribute.GetConstructor(
+                            option.ShortName != default(char)
+                                ? new[] {typeof(char), typeof(string)}
+                                : new[] {typeof(string)});
+                        object[] constructorArgs = option.ShortName != default(char)
+                                                       ? new object[] {option.ShortName, option.Name}
+                                                       : new object[] {option.Name};
+                        List<PropertyInfo> namedProperties = new List<PropertyInfo>(new[] { helpTextProperty, requiredProperty });
+                        List<object> propertiesValues = new List<object>(new object[] { option.Help, option.Mandatory });
+                        if (option.ValueType == OptionValueType.MultipleValue)
                         {
-                            ConstructorInfo constructor = optionAttribute.GetConstructor(new[] { typeof(char), typeof(string) });
-                            builder = option.ValueType == OptionValueType.MultipleValue
-                                          ? new CustomAttributeBuilder(
-                                              constructor,
-                                              new object[] {option.ShortName, option.Name},
-                                              new[] {helpTextProperty, requiredProperty, separatorProperty},
-                                              new object[] {option.Help, option.Mandatory, Constants.OptionsSeparator})
-                                          : new CustomAttributeBuilder(
-                                              constructor,
-                                              new object[] {option.ShortName, option.Name},
-                                              new[] {helpTextProperty, requiredProperty}, new object[] {option.Help, option.Mandatory });
+                            namedProperties.Add(separatorProperty);
+                            propertiesValues.Add(option.Separator);
                         }
-                        else
+
+                        if (!string.IsNullOrEmpty(option.SetName))
                         {
-                            ConstructorInfo constructor = optionAttribute.GetConstructor(new[] { typeof(string) });
-                            builder = option.ValueType == OptionValueType.MultipleValue
-                                          ? new CustomAttributeBuilder(
-                                              constructor,
-                                              new object[] {option.Name},
-                                              new[] {helpTextProperty, requiredProperty, separatorProperty},
-                                              new object[] {option.Help, option.Mandatory, Constants.OptionsSeparator})
-                                          : new CustomAttributeBuilder(
-                                              constructor,
-                                              new object[] {option.Name},
-                                              new[] {helpTextProperty, requiredProperty}, new object[] {option.Help, option.Mandatory });
+                            namedProperties.Add(setNameProperty);
+                            propertiesValues.Add(option.SetName);
                         }
+
+                        CustomAttributeBuilder builder = new CustomAttributeBuilder(constructor, constructorArgs, namedProperties.ToArray(),
+                                                                                    propertiesValues.ToArray());
                         propertyBuilder.SetCustomAttribute(builder);
                     }
 
@@ -268,6 +282,11 @@ namespace PlcNext.CommandLine
             }
         }
 
+        internal void AddOption(string name, char shortName, bool mandatory, string help, OptionValueType valueType, string setName, char separator)
+        {
+            options.Add(new Option(name, shortName, mandatory, help, valueType, setName, separator));
+        }
+
         public static void ClearStaticCaches()
         {
             moduleBuilder = null;
@@ -292,14 +311,23 @@ namespace PlcNext.CommandLine
             public bool Mandatory { get; }
             public string Help { get; }
             public OptionValueType ValueType { get; }
+            public string SetName { get; }
+            public char Separator { get; }
 
-            public Option(string name, char shortName, bool mandatory, string help, OptionValueType optionValueType)
+            public Option(string name, char shortName, bool mandatory, string help, OptionValueType optionValueType,
+                          string setName)
             {
                 Name = name;
                 ShortName = shortName;
                 Mandatory = mandatory;
                 Help = help;
                 ValueType = optionValueType;
+                SetName = setName;
+            }
+
+            public Option(string name, char shortName, bool mandatory, string help, OptionValueType optionValueType, string setName, char separator) : this(name, shortName, mandatory, help, optionValueType, setName)
+            {
+                Separator = separator;
             }
         }
     }

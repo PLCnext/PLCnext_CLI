@@ -50,7 +50,7 @@ namespace PlcNext.Common.Build
                 projectTargets.Errors.ThrowIfNotEmpty();
                 if (!projectTargets.ValidTargets.Any())
                 {
-                    throw new NoAssingedTargetsException(buildInfo.RootEntity.Name);
+                    throw new NoAssignedTargetsException(buildInfo.RootEntity.Name);
                 }
 
                 BuildProjectForTargets(buildInfo, observable, projectTargets.ValidTargets);

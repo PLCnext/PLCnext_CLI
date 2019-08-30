@@ -223,7 +223,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
 
             SetupLibraryBuilder();
 
-            Load("Templates", FileSystem.GetDirectory(AssemblyDirectory), ".meta");
+            Load("Templates", FileSystem.GetDirectory(AssemblyDirectory), ".meta", "._acf");
 
             create = true;
 
@@ -544,12 +544,12 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
 
             string Unescape(string part)
             {
-                part = part.Replace("._", ".");
-                part = part.Replace("_c_", ",");
                 for (int j = 0; j < unsplittables.Length; j++)
                 {
                     part = part.Replace($"unsplittables{j}", unsplittables[j]);
                 }
+                part = part.Replace("._", ".");
+                part = part.Replace("_c_", ",");
 
                 return part;
             }

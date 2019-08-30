@@ -16,24 +16,26 @@ namespace PlcNext.Common.Tools.DynamicCommands
 {
     public class CommandDefinition
     {
-        public CommandDefinition(string name, string help, IEnumerable<Argument> arguments,
+        public CommandDefinition(string name, string help, bool useChildVerbsAsCategory, IEnumerable<Argument> arguments,
                                  IEnumerable<CommandExample> examples)
         {
             Name = name;
             Help = help;
+            UseChildVerbsAsCategory = useChildVerbsAsCategory;
             Examples = examples;
             Arguments = new ArgumentCollection(arguments);
         }
 
-        public CommandDefinition(string name, string help, IEnumerable<Argument> arguments,
+        public CommandDefinition(string name, string help, bool useChildVerbsAsCategory, IEnumerable<Argument> arguments,
                                  IEnumerable<CommandExample> examples, CommandDefinition baseDefinition) 
-            : this(name, help, arguments, examples)
+            : this(name, help, useChildVerbsAsCategory, arguments, examples)
         {
             BaseDefinition = baseDefinition;
         }
 
         public string Name { get; }
         public string Help { get; }
+        public bool UseChildVerbsAsCategory { get; }
         public IEnumerable<CommandExample> Examples { get; }
         public ArgumentCollection Arguments { get; }
         public CommandDefinition BaseDefinition { get; }

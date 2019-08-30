@@ -8,6 +8,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using CommandLine;
@@ -43,7 +46,19 @@ namespace PlcNext.CommandLine
             UserInterface?.SetVerbosity(Verbose);
             UserInterface?.SetQuiet(Quiet);
 
+            checkForDeprecated();
+
             return await Execute(CommandManager);
+
+            void checkForDeprecated()
+            {
+                System.Reflection.TypeInfo info = this.GetType().GetTypeInfo();
+                IEnumerable<Attribute> attributes = info.GetCustomAttributes();
+                if(attributes.Any(a => a is DeprecatedAttribute))
+                {
+                    UserInterface?.WriteWarning("This verb is deprecated.");
+                }
+            }
         }
 
         protected abstract Task<int> Execute(ICommandManager commandManager);

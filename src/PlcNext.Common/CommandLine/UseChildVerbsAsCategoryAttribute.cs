@@ -10,15 +10,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PlcNext.Common.Tools.DynamicCommands;
 
 namespace PlcNext.Common.CommandLine
 {
-    public interface IDynamicVerbFactory
+    [AttributeUsage(AttributeTargets.Class)]
+    public class UseChildVerbsAsCategoryAttribute : Attribute
     {
-        IEnumerable<Type> GetDynamicVerbs(IEnumerable<string> path);
-
-        CommandDefinition GetCommandDefintionForVerb(Type dynamicVerb);
-        IEnumerable<Type> GetDynamicVerbs(Type currentVerb);
     }
 }

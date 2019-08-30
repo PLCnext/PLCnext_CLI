@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Templates.Description;
+using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
 
 namespace PlcNext.Common.Templates
@@ -27,7 +28,7 @@ namespace PlcNext.Common.Templates
             this.resolver = resolver;
         }
 
-        public CommandDefinition GenerateTemplateCommandDefinition(Entity templateEntity, TemplateDescription description,
+        public CommandDefinition GenerateNewCommandDefinition(Entity templateEntity, TemplateDescription description,
                                                                    CommandDefinition baseCommand,
                                                                    IEnumerable<TemplateDescription> otherTemplates)
         {
@@ -40,19 +41,7 @@ namespace PlcNext.Common.Templates
             List<char> shortNames = new List<char>(new []{'f'});
             foreach (templateArgumentDefinition argument in description.Arguments ?? Enumerable.Empty<templateArgumentDefinition>())
             {
-                ArgumentBuilder argumentBuilder = builder.CreateArgument()
-                                                         .SetName(argument.name)
-                                                         .SetArgumentType(GetArgumentType(argument))
-                                                         .SetHelp(resolver.Resolve(argument.help ?? string.Empty, templateEntity))
-                                                         .SetRestriction(new ArgumentRestriction(argument.ValueRestriction).Verify);
-                if (!string.IsNullOrEmpty(argument.shortname) && 
-                    !shortNames.Contains(argument.shortname[0]))
-                {
-                    argumentBuilder.SetShortName(argument.shortname[0]);
-                    shortNames.Add(argument.shortname[0]);
-                }
-
-                argumentBuilder.Build();
+                GenerateArgumentFromDefinition(templateEntity, builder, argument, shortNames);
             }
 
             foreach (templateRelationship relationship in description.Relationship??Enumerable.Empty<templateRelationship>())
@@ -125,6 +114,39 @@ namespace PlcNext.Common.Templates
                    .Build();
 
             return builder.Build();
+        }
+
+        private void GenerateArgumentFromDefinition(Entity templateEntity, CommandDefinitionBuilder builder,
+                                                    templateArgumentDefinition templateArgumentDefinition, List<char> shortNames,
+                                                    string setName = null)
+        {
+            ArgumentBuilder argumentBuilder = builder.CreateArgument()
+                                                     .SetName(templateArgumentDefinition.name)
+                                                     .SetArgumentType(GetArgumentType(templateArgumentDefinition))
+                                                     .SetHelp(resolver.Resolve(
+                                                                  templateArgumentDefinition.help ?? string.Empty,
+                                                                  templateEntity))
+                                                     .SetRestriction(
+                                                          new ArgumentRestriction(
+                                                              templateArgumentDefinition.ValueRestriction).Verify);
+            if (templateArgumentDefinition.separatorSpecified &&
+                !string.IsNullOrEmpty(templateArgumentDefinition.separator))
+            {
+                argumentBuilder.SetSeparator(templateArgumentDefinition.separator[0]);
+            }
+            if (!string.IsNullOrEmpty(templateArgumentDefinition.shortname) &&
+                !shortNames.Contains(templateArgumentDefinition.shortname[0]))
+            {
+                argumentBuilder.SetShortName(templateArgumentDefinition.shortname[0]);
+                shortNames.Add(templateArgumentDefinition.shortname[0]);
+            }
+
+            if (!string.IsNullOrEmpty(setName))
+            {
+                argumentBuilder.SetSetName(setName);
+            }
+
+            argumentBuilder.Build();
 
             ArgumentType GetArgumentType(templateArgumentDefinition argument)
             {
@@ -133,6 +155,181 @@ namespace PlcNext.Common.Templates
                                   ? ArgumentType.MultipleValue
                                   : ArgumentType.SingleValue)
                            : ArgumentType.Bool;
+            }
+        }
+
+        public CommandDefinition GenerateDeployCommandDefinition(Entity templateEntity, TemplateDescription currentRootTemplate,
+                                                                 CommandDefinition baseCommand, ICollection<TemplateDescription> allTemplates)
+        {
+            if (baseCommand == null)
+            {
+                return GenerateBaseCommand();
+            }
+
+            return GenerateChildCommand();
+
+            CommandDefinition GenerateBaseCommand()
+            {
+                List<char> shortNames = new List<char>();
+                return AddTemplateArguments(AddDefaultArguments(CommandDefinitionBuilder.Create()
+                                                                                        .SetName("deploy")
+                                                                                        .SetHelp(
+                                                                                             "Deploy files for production.")
+                                                                                        .EnableUseChildVerbsAsCategory(),
+                                                                allTemplates.Where(t => !t.isHidden & t.isRoot),
+                                                                shortNames),
+                                            allTemplates.Where(t => !t.isHidden & t.isRoot),
+                                            shortNames)
+                   .Build();
+            }
+
+            CommandDefinition GenerateChildCommand()
+            {
+                List<char> shortNames = new List<char>();
+                return AddTemplateArguments(AddDefaultArguments(CommandDefinitionBuilder.Create()
+                                                                                        .SetBaseDefintion(baseCommand)
+                                                                                        .SetName(currentRootTemplate
+                                                                                                    .name)
+                                                                                        .SetHelp(
+                                                                                             $"For {currentRootTemplate.name.Plural()}:"),
+                                                                new[] { currentRootTemplate },
+                                                                shortNames),
+                                            new[] { currentRootTemplate }, shortNames)
+                   .Build();
+            }
+
+            CommandDefinitionBuilder AddTemplateArguments(CommandDefinitionBuilder builder, IEnumerable<TemplateDescription> descriptions,
+                List<char> shortNames)
+            {
+
+                string[] defaultArguments =
+                {
+                    EntityKeys.PathKey.ToLowerInvariant(),
+                    Constants.OutputArgumentName.ToLowerInvariant(),
+                    Constants.FilesArgumentName.ToLowerInvariant(),
+                    Constants.TargetArgumentName.ToLowerInvariant(),
+                };
+                Dictionary<templateArgumentDefinition, string> argumentToStringDictionary = new Dictionary<templateArgumentDefinition, string>();
+                List<templateArgumentDefinition> setlessArguments = new List<templateArgumentDefinition>();
+                foreach (TemplateDescription description in descriptions)
+                {
+                    IEnumerable<templateArgumentDefinition> arguments = (description.DeployPostStep ?? Enumerable.Empty<templateDeployPostStep>())
+                       .SelectMany(d => d.Arguments);
+                    foreach (templateArgumentDefinition argument in arguments)
+                    {
+                        if (!defaultArguments.Contains(argument.name.ToLowerInvariant()))
+                        {
+                            templateArgumentDefinition existingDefinition = argumentToStringDictionary.Keys
+                                                                                                      .FirstOrDefault(d => d.name
+                                                                                                                            .Equals(argument.name, 
+                                                                                                                                    StringComparison.OrdinalIgnoreCase));
+                            if (existingDefinition != null)
+                            {
+                                if (argumentToStringDictionary[existingDefinition] != description.name)
+                                {
+                                    argumentToStringDictionary.Remove(existingDefinition);
+                                    setlessArguments.Add(existingDefinition);
+                                }
+                            }
+                            else
+                            {
+                                argumentToStringDictionary.Add(argument, description.name);
+                            }
+                        }
+                    }
+                }
+
+                foreach (templateArgumentDefinition argument in setlessArguments)
+                {
+                    GenerateArgumentFromDefinition(templateEntity, builder, argument, shortNames, null);
+                }
+
+                foreach (templateArgumentDefinition argument in argumentToStringDictionary.Keys)
+                {
+                    GenerateArgumentFromDefinition(templateEntity, builder, argument, shortNames, argumentToStringDictionary[argument]);
+                }
+                return builder;
+            }
+
+            CommandDefinitionBuilder AddDefaultArguments(CommandDefinitionBuilder builder, IEnumerable<TemplateDescription> descriptions, List<char> shortNames)
+            {
+                IEnumerable<templateArgumentDefinition> arguments = descriptions.SelectMany(x => (x.DeployPostStep ?? Enumerable.Empty<templateDeployPostStep>())
+                       .SelectMany(d => d.Arguments));
+
+                if (!ArgumentAvailableFromDescription(EntityKeys.PathKey))
+                {
+                    builder = builder.CreateArgument()
+                                              .SetName(EntityKeys.PathKey)
+                                              .SetShortName('p')
+                                              .SetHelp(
+                                                   "The path to the project settings file or the project root directory. " +
+                                                   "Default is the current directory.")
+                                              .SetArgumentType(ArgumentType.SingleValue)
+                                              .Build();
+                    shortNames.Add('p');
+                }
+
+
+                if (!ArgumentAvailableFromDescription(Constants.OutputArgumentName))
+                {
+                    builder = builder.CreateArgument()
+                                                      .SetName(Constants.OutputArgumentName)
+                                                      .SetShortName('o')
+                                                      .SetHelp("The path where the files will be deployed in. " +
+                                                               "Default is the 'bin/target/Release' directory. Relative paths are relative " +
+                                                               "to the directory defined with the '--path' option.")
+                                                      .SetArgumentType(ArgumentType.SingleValue)
+                                                      .Build();
+                    shortNames.Add('o');
+                }
+
+                if (!ArgumentAvailableFromDescription(Constants.FilesArgumentName))
+                {
+                    builder = builder.CreateArgument()
+                              .SetName(Constants.FilesArgumentName)
+                              .SetShortName('f')
+                              .SetHelp(
+                                   "Additional files to be deployed. Files are separated by ' '. Files need to be defined in the following format: " +
+                                   "path/to/source|path/to/destination(|target). The path/to/source file will be relative to the " +
+                                   $"root folder, defined with the '{EntityKeys.PathKey}' argument. The path/to/destination will be " +
+                                   $"relative to the output/targetname/Release directory, where output is defined with the '{Constants.OutputArgumentName}' argument. " +
+                                   "Optionally each file can have a target definition. Without the target definition the file is deployed to every target. " +
+                                   "Targets need to be defined in the following format: targetname(,targetversion). The version is optional and " +
+                                   "is only needed if there are multiple versions of a target in the project. The target must match one " +
+                                   $"of the targets of the project or one of the targets defined with the '{Constants.TargetArgumentName}' " +
+                                   "option, if it is defined.")
+                              .SetArgumentType(ArgumentType.MultipleValue)
+                              .SetSeparator(' ')
+                              .Build();
+                    shortNames.Add('f');
+                }
+
+                if (!ArgumentAvailableFromDescription(Constants.TargetArgumentName))
+                {
+                    builder = builder.CreateArgument()
+                              .SetName(Constants.TargetArgumentName)
+                              .SetShortName('t')
+                              .SetHelp(
+                                   "List of targets for which files are deployed. Targets are separated by ' '. " +
+                                   "Targets need to be defined in the following format: targetname(,targetversion). The version is optional and " +
+                                   "is only needed if there are multiple versions of a target in the registered SDKs. " +
+                                   "If used, this option overrides the targets defined in the project. Please consider, that the actual binaries " +
+                                   "are deployed in the build step. Therefore if they are not built for a specific target, neither are they built here.")
+                              .SetArgumentType(ArgumentType.MultipleValue)
+                              .SetSeparator(' ')
+                              .Build();
+                    shortNames.Add('t');
+                }
+                return builder;
+
+                bool ArgumentAvailableFromDescription(string argumentName)
+                {
+                    templateArgumentDefinition argument = arguments.Where(a => a.name.Equals(argumentName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    if (argument == null)
+                        return false;
+                    GenerateArgumentFromDefinition(templateEntity, builder, argument, shortNames);
+                    return true;
+                }
             }
         }
 

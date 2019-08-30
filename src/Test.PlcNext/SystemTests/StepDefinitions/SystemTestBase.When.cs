@@ -11,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.XUnit2;
+using Test.PlcNext.SystemTests.Features;
 using Test.PlcNext.SystemTests.Tools;
 using Test.PlcNext.Tools;
 
@@ -30,7 +31,7 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 
         protected async Task When_I_create_a_new_acfproject_with_componentname(string componentName)
         {
-            await ScenarioContext.CreateProject(componentName, acfproject: true);
+            await ScenarioContext.CreateProject("Project", componentName: componentName, acfproject: true);
         }
         protected async Task When_I_create_a_new_project_with_name_and_componentname(string name, string componentname)
         {
@@ -292,6 +293,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected async Task When_I_update_the_project_targets_with_downgrade_option()
         {
             await ScenarioContext.UpdateTargets(true);
+        }
+
+        protected async Task When_I_deploy(DeployCommandArgs args)
+        {
+            await ScenarioContext.Deploy(args);
         }
     }
 }

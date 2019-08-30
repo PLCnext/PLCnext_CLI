@@ -15,8 +15,8 @@ namespace PlcNext.Common.Tools.DynamicCommands
 {
     public class BoolArgument : Argument
     {
-        public BoolArgument(string name, char shortName, bool mandatory, string help) :
-            base(name, shortName, mandatory, null, help)
+        public BoolArgument(string name, char shortName, bool mandatory, string help, string setName) :
+            base(name, shortName, mandatory, null, help, setName)
         {
         }
 

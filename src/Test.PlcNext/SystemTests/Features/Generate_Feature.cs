@@ -329,16 +329,6 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Generate_acfconfig_on_generate_for_acfproject()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("AcfProject"),
-                _ => When_I_generate_all_metafiles(),
-                _ => Then_the_acfconfig_file_is_generated_with_the_components("AcfProject","AcfProjectComponent")
-                ).RunAsyncWithTimeout();
-        }
-
-        [Scenario]
         public async Task Generate_typemeta_information_in_method()
         {
             await Runner.AddSteps(

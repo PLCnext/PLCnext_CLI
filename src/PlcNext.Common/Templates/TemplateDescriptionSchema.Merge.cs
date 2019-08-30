@@ -305,6 +305,9 @@ namespace PlcNext.Common.Templates.Description
         public bool shortnameSpecified { get; set; }
 
         [XmlIgnore]
+        public bool separatorSpecified { get; set; }
+
+        [XmlIgnore]
         public bool ValueRestrictionSpecified { get; set; }
     }
 

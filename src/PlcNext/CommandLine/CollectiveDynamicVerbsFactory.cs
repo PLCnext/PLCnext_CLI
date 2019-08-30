@@ -10,6 +10,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using CommandLine;
 using PlcNext.Common.CommandLine;
 using PlcNext.Common.Tools.DynamicCommands;
 
@@ -47,7 +49,8 @@ namespace PlcNext.CommandLine
 
             List<Type> types = new List<Type>();
             Type baseType = null;
-            if (createdTypes.ContainsKey(path))
+            if (createdTypes.ContainsKey(path) &&
+                createdTypes[path].GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() == null)
             {
                 baseType = createdTypes[path];
             }
@@ -59,9 +62,15 @@ namespace PlcNext.CommandLine
                     builder.SetBaseType(baseType);
                 }
 
+                if (definition.UseChildVerbsAsCategory)
+                {
+                    builder.EnableUseChildVerbsAsCategory();
+                }
+
                 foreach (Argument argument in definition.Arguments)
                 {
                     OptionValueType valueType;
+                    char separator = default(char);
                     switch (argument)
                     {
                         case BoolArgument _:
@@ -70,13 +79,21 @@ namespace PlcNext.CommandLine
                         case SingleValueArgument _:
                             valueType = OptionValueType.SingleValue;
                             break;
-                        case MultipleValueArgument _:
+                        case MultipleValueArgument arg:
                             valueType = OptionValueType.MultipleValue;
+                            separator = arg.Separator;
                             break;
                         default:
                             throw new ArgumentException("Unkown value type.");
                     }
-                    builder.AddOption(argument.Name, argument.ShortName, argument.Mandatory, argument.Help, valueType);
+                    if(valueType == OptionValueType.MultipleValue)
+                    {
+                        builder.AddOption(argument.Name, argument.ShortName, argument.Mandatory, argument.Help, valueType, argument.SetName, separator);
+                    }
+                    else
+                    {
+                        builder.AddOption(argument.Name, argument.ShortName, argument.Mandatory, argument.Help, valueType, argument.SetName);
+                    }
                 }
 
                 foreach (CommandExample commandExample in definition.Examples)
@@ -96,6 +113,19 @@ namespace PlcNext.CommandLine
         public CommandDefinition GetCommandDefintionForVerb(Type dynamicVerb)
         {
             return typeDefintionMatch[dynamicVerb];
+        }
+
+        public IEnumerable<Type> GetDynamicVerbs(Type currentVerb)
+        {
+            IEnumerable<string> path = createdTypes.FirstOrDefault(kv => kv.Value == currentVerb).Key
+                                       ?? GetVerbPath();
+
+            IEnumerable<string> GetVerbPath()
+            {
+                return new[] {currentVerb.GetCustomAttribute<VerbAttribute>().Name};
+            }
+
+            return GetDynamicVerbs(path);
         }
 
         public void Dispose()

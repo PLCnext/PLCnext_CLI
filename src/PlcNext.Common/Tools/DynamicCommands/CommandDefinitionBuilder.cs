@@ -17,6 +17,7 @@ namespace PlcNext.Common.Tools.DynamicCommands
     {
         private string name = string.Empty;
         private string help = string.Empty;
+        private bool useChildVerbsAsCategory;
         private CommandDefinition baseDefinition = null;
         private readonly List<Argument> arguments = new List<Argument>();
         private readonly List<CommandExample> examples = new List<CommandExample>();
@@ -39,6 +40,12 @@ namespace PlcNext.Common.Tools.DynamicCommands
         public CommandDefinitionBuilder SetHelp(string help)
         {
             this.help = help;
+            return this;
+        }
+
+        public CommandDefinitionBuilder EnableUseChildVerbsAsCategory()
+        {
+            useChildVerbsAsCategory = true;
             return this;
         }
 
@@ -68,8 +75,8 @@ namespace PlcNext.Common.Tools.DynamicCommands
         public CommandDefinition Build()
         {
             return baseDefinition != null
-                       ? new CommandDefinition(name, help, arguments, examples, baseDefinition)
-                       : new CommandDefinition(name, help, arguments, examples);
+                       ? new CommandDefinition(name, help, useChildVerbsAsCategory, arguments, examples, baseDefinition)
+                       : new CommandDefinition(name, help, useChildVerbsAsCategory, arguments, examples);
         }
     }
 }

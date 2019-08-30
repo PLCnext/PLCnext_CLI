@@ -23,6 +23,8 @@ namespace PlcNext.Common.Tools.DynamicCommands
         private Func<string, (bool success, string message, string newValue)> restriction = null;
         private ArgumentType argumentType = ArgumentType.Bool;
         private object value = null;
+        private string setName = null;
+        private char separator = Constants.OptionsSeparator;
 
         private ArgumentBuilder(CommandDefinitionBuilder commandDefinitionBuilder)
         {
@@ -87,19 +89,25 @@ namespace PlcNext.Common.Tools.DynamicCommands
             return this;
         }
 
+        public ArgumentBuilder SetSetName(string setName)
+        {
+            this.setName = setName;
+            return this;
+        }
+
         public CommandDefinitionBuilder Build()
         {
             Argument argument;
             switch (argumentType)
             {
                 case ArgumentType.Bool:
-                    argument = new BoolArgument(name, shortName, mandatory, help);
+                    argument = new BoolArgument(name, shortName, mandatory, help, setName);
                     break;
                 case ArgumentType.SingleValue:
-                    argument = new SingleValueArgument(name, shortName, mandatory, restriction, help);
+                    argument = new SingleValueArgument(name, shortName, mandatory, restriction, help, setName);
                     break;
                 case ArgumentType.MultipleValue:
-                    argument = new MultipleValueArgument(name, shortName, mandatory, restriction, help);
+                    argument = new MultipleValueArgument(name, shortName, mandatory, restriction, help, setName, separator);
                     break;
                 default:
                     throw new ArgumentException("argumentType");
@@ -110,6 +118,12 @@ namespace PlcNext.Common.Tools.DynamicCommands
                 argument.SetValue(value);
             }
             return commandDefinitionBuilder.AddArgument(argument);
+        }
+
+        public ArgumentBuilder SetSeparator(char separator)
+        {
+            this.separator = separator;
+            return this;
         }
     }
 

@@ -129,6 +129,11 @@ namespace PlcNext.CommandLine
         //UpdateTargets
         public const string DowngradeOption = "downgrade";
         public const char DowngradeChar = 'd';
+
+        //DeployVerb
+        public const string DeployVerb = "deploy";
+        public const string FilesOption = "files";
+        public const char FilesChar = 'f';
     }
 
 }

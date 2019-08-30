@@ -81,7 +81,7 @@ namespace PlcNext.CommandLine
                 Type[] subTypes = subVerbsAttribute?.Types??new Type[0];
                 subTypes = subTypes.Concat(dynamicVerbFactory.GetDynamicVerbs(path)).ToArray();
 
-                if (subTypes.Any())
+                if (subTypes.Any() && type.GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() == null)
                 {
                     return ParseVerbs(parser, argsArray.Skip(1).ToArray(), dynamicVerbFactory, subTypes, path);
                 }

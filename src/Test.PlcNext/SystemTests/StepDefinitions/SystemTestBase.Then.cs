@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools.SDK;
+using System.Collections.Generic;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
@@ -157,9 +158,14 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfError(typeof(TargetNameNotFoundException));
         }
 
+        protected void Then_the_user_was_informed_that_the_target_version_was_not_found()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(TargetVersionNotFoundException));
+        }
+
         protected void Then_the_user_was_informed_that_the_project_does_not_contain_any_target()
         {
-            ScenarioContext.CheckUserInformedOfError(typeof(NoAssingedTargetsException));
+            ScenarioContext.CheckUserInformedOfError(typeof(NoAssignedTargetsException));
         }
 
         protected void Then_the_user_was_informed_that_the_component_option_is_missing()
@@ -218,9 +224,15 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckGeneratedLibmeta(components);
         }
 
-        protected void Then_the_acfconfig_file_is_generated_with_the_components(string ns, string componentname)
+        protected void Then_the_acfconfig_file_is_created_with_the_component(string ns, string componentname)
         {
-            ScenarioContext.CheckGeneratedAcfConfig(ns, componentname);
+            ScenarioContext.CheckCreatedAcfConfig(ns, componentname);
+        }
+
+        protected void Then_the_acfconfig_file_is_deployed_with_component_into_path(string ns,
+            string componentname, string path)
+        {
+            ScenarioContext.CheckDeployedAcfConfig(ns, componentname, path);
         }
 
         protected void Then_the_components_namespace_starts_with_namespace(string entityName, string ns)
@@ -444,6 +456,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_user_was_informed_that_the_data_type_is_not_known()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(UnknownDataTypeException));
+        }
+
+        protected void Then_the_files_exist_in_location(Dictionary<string, string> filesAndContent)
+        {
+            ScenarioContext.CheckFilesExistInLocation(filesAndContent);
         }
     }
 }

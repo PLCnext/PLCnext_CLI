@@ -126,7 +126,7 @@ namespace PlcNext.Common.Commands
                     return result;
                 }
 
-                throw new ContentProviderException(key, owner);
+                return string.Empty;
             }
 
             string ResolveValue(string value)
@@ -160,7 +160,7 @@ namespace PlcNext.Common.Commands
 
             bool TryGetTemplateDefault(string argumentName, out string value)
             {
-                TemplateDescription description = owner.Template();
+                TemplateDescription description = owner.HasTemplate() ? owner.Template() : null;
                 if (description != null)
                 {
                     templateArgumentDefinition templateArgument = description.Arguments.FirstOrDefault(a => a.name == argumentName);

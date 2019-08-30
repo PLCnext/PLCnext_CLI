@@ -17,8 +17,8 @@ namespace PlcNext.Common.Tools.DynamicCommands
     {
         private string value;
 
-        public SingleValueArgument(string name, char shortName, bool mandatory, Func<string, (bool, string, string)> restriction, string help)
-            : base(name, shortName, mandatory, restriction, help)
+        public SingleValueArgument(string name, char shortName, bool mandatory, Func<string, (bool, string, string)> restriction, string help, string setName)
+            : base(name, shortName, mandatory, restriction, help, setName)
         {
         }
 

@@ -35,6 +35,7 @@ using PlcNext.Common.Tools.UI;
 using PlcNext.NamedPipeServer.Communication;
 using PlcNext.NamedPipeServer.Tools;
 using Test.PlcNext.NamedPipe.Tools;
+using Test.PlcNext.SystemTests.Features;
 using Test.PlcNext.Tools;
 using Test.PlcNext.Tools.Abstractions;
 using Xunit;
@@ -881,11 +882,24 @@ namespace Test.PlcNext.SystemTests.Tools
             }
         }
 
-        public void CheckGeneratedAcfConfig(string ns, string componentname)
+        public void CheckCreatedAcfConfig(string ns, string componentname)
         {
-            string path = GetPathOfFile($"{ns}Library.acf.config", Constants.LibraryFolderName);
+            string path = GetPathOfFile($"{ns}Library.acf.config", Constants.SourceFolderName);
             using (Stream fileStream = fileSystemAbstraction.Open(path))
             using(StreamReader reader = new StreamReader(fileStream))
+            {
+                string content = reader.ReadToEnd();
+                content.Contains("<AcfConfigurationDocument").Should().BeTrue($"Content '<AcfConfigurationDocument' was expected to exist. Actual content{Environment.NewLine}{content}");
+                content.Contains($"<Component name=\"{ns}\" type=\"{ns.Split('.').Aggregate(string.Empty, (s1, s2) => s1 == string.Empty ? s2 : $"{s1}::{s2}")}::{componentname}\" library=\"{ns}")
+                    .Should().BeTrue($"Content '<Component name=\"{ns}\" type=\"{ns.Split('.').Aggregate(string.Empty, (s1, s2) => $"{s1}::{s2}")}{componentname}\" library=\"{ns}' was expected to exist. Actual content{Environment.NewLine}{content}");
+            }
+        }
+
+        public void CheckDeployedAcfConfig(string ns, string componentname, string deployPath)
+        {
+            string path = GetPathOfFile($"{ns}Library.acf.config", deployPath);
+            using (Stream fileStream = fileSystemAbstraction.Open(path))
+            using (StreamReader reader = new StreamReader(fileStream))
             {
                 string content = reader.ReadToEnd();
                 content.Contains("<AcfConfigurationDocument").Should().BeTrue($"Content '<AcfConfigurationDocument' was expected to exist. Actual content{Environment.NewLine}{content}");
@@ -1327,6 +1341,83 @@ namespace Test.PlcNext.SystemTests.Tools
                 args.Add("--downgrade");
             }
             await CommandLineParser.Parse(args.ToArray());
+        }
+
+        public async Task Deploy(DeployCommandArgs deployArgs)
+        {
+            List<string> args = new List<string>
+            {
+                "deploy"
+            };
+
+            if (!string.IsNullOrEmpty(deployArgs.Id))
+            {
+                args.Add("--id");
+                args.Add(deployArgs.Id);
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.LibraryLocation))
+            {
+                args.Add("-c");
+                args.Add(deployArgs.LibraryLocation);
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.MetaFileDirectory))
+            {
+                args.Add("-m");
+                args.Add(deployArgs.MetaFileDirectory);
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.OutputDirectory))
+            {
+                args.Add("--output");
+                args.Add(deployArgs.OutputDirectory);
+            }
+
+            if (deployArgs.Targets != null && deployArgs.Targets.Any())
+            {
+                args.Add("-t");
+                foreach (string target in deployArgs.Targets)
+                {
+                    args.Add(target);
+                }
+            }
+
+            if (deployArgs.ExternalLibraries != null && deployArgs.ExternalLibraries.Any())
+            {
+                args.Add("-e");
+                foreach (string lib in deployArgs.ExternalLibraries)
+                {
+                    args.Add(lib);
+                }
+            }
+
+            if (deployArgs.Files != null && deployArgs.Files.Any())
+            {
+                args.Add("-f");
+                foreach (string file in deployArgs.Files)
+                {
+                    args.Add(file);
+                }
+            }
+
+            await CommandLineParser.Parse(args.ToArray());
+        }
+
+        public void CheckFilesExistInLocation(Dictionary<string, string> filesAndContent)
+        {
+            foreach (KeyValuePair<string, string> entry in filesAndContent)
+            {
+                string path = GetPathOfFile(entry.Key);
+                using (Stream fileStream = fileSystemAbstraction.Open(path))
+                using (StreamReader reader = new StreamReader(fileStream))
+                {
+                    string content = reader.ReadToEnd();
+                    content.Contains(entry.Value).Should().BeTrue($"Content '{entry.Value}' was expected to exist." +
+                        $" Actual content{Environment.NewLine}{content}");
+
+                }
+            }
         }
     }
 }

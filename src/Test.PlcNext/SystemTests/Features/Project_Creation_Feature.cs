@@ -109,8 +109,18 @@ namespace Test.PlcNext.SystemTests.Features
         {
             await Runner.AddSteps(
                 _ => Given_is_an_empty_workspace(),
-                _ => When_I_create_a_new_acfproject_with_componentname("MyProject"),
+                _ => When_I_create_a_new_acfproject_with_componentname("MyProjectComponent"),
                 _ => Then_the_project_contains_an_acfcomponent_with_name("MyProjectComponent")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Create_acfconfig_on_new_acfproject()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_an_empty_workspace(),
+                _ => When_I_create_a_new_acfproject_with_componentname("MyAcfComponent"),
+                _ => Then_the_acfconfig_file_is_created_with_the_component("Project", "MyAcfComponent")
                 ).RunAsyncWithTimeout();
         }
 

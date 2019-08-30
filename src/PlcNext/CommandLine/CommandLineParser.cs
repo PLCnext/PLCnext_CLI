@@ -21,6 +21,7 @@ using PlcNext.Common.CommandLine;
 using PlcNext.Common.Commands;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.UI;
+using TypeInfo = CommandLine.TypeInfo;
 
 namespace PlcNext.CommandLine
 {
@@ -196,6 +197,7 @@ namespace PlcNext.CommandLine
 
         private string ConstructHelp(ParserResult<object> result, ParserTypeInfo typeInfo)
         {
+            List<string> helpText = new List<string>();
             IEnumerable<Error> errors = ((NotParsed<object>)result).Errors.ToArray();
 
             CopyrightInfo CreateCopyrightInfo()
@@ -213,87 +215,164 @@ namespace PlcNext.CommandLine
             }
 
             bool helpVerbRequested = errors.Any(e => e.Tag == ErrorType.HelpVerbRequestedError);
-
-            HelpText helpText = new HelpText
-            {
-                Heading = CreateHeadingInfo(),
-                Copyright = CreateCopyrightInfo(),
-                AdditionalNewLineAfterOption = true,
-                AddDashesToOption = true,
-                MaximumDisplayWidth = DisplayWidth
-            };
-
-            helpText = HelpText.DefaultParsingErrorsHandler(result, helpText);
-
             Assembly assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
-            string commandName = "plcnext";
-            if (assembly != null)
-            {
-                AssemblyLicenseAttribute licenseAttribute = assembly.GetCustomAttribute<AssemblyLicenseAttribute>();
-                licenseAttribute?.AddToHelpText(helpText);
 
-                commandName = assembly.GetName().Name.ToLowerInvariant();
-            }
+            GenerateHelpTextHeader();
 
-            PropertyInfo property = typeInfo.Current.GetProperties(BindingFlags.Public | BindingFlags.Static)
-                                            .FirstOrDefault(p => p.GetCustomAttribute<UsageAttribute>() != null &&
-                                                                 p.PropertyType ==
-                                                                 typeof(IEnumerable<UsageExample>));
-            IEnumerable<UsageExample> examples =
-                ((IEnumerable<UsageExample>) property?.GetValue(null) ?? Enumerable.Empty<UsageExample>())
-               .ToArray();
+            GenerateHelpTextBody();
 
-            if (examples.Any())
-            {
-                helpText.AddPostOptionsLine("Examples:");
-                helpText.AddPostOptionsLine(string.Empty);
-            }
+            GenerateHelpTextFooter();
 
-            foreach (UsageExample usageExample in examples)
-            {
-                helpText.AddPostOptionsLine(usageExample.HelpText.EndsWith(":")
-                                                ? usageExample.HelpText
-                                                : $"{usageExample.HelpText}:");
-                helpText.AddPostOptionsLine($@"{commandName} {usageExample.Command}");
-                helpText.AddPostOptionsLine(string.Empty);
-            }
+            string help = string.Join(Environment.NewLine, helpText);
+            return help;
 
-            bool removeVersion = false;
-            if ((helpVerbRequested && typeInfo.Choices.Any())
-                || errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError)
-                || errors.Any(e => e.Tag == ErrorType.BadVerbSelectedError))
+            void GenerateHelpTextHeader()
             {
-                helpText.AddDashesToOption = false;
-                helpText.AddVerbs(typeInfo.Choices.ToArray());
-                //direct base type == VerbBase means first level - show version option
-                removeVersion = typeInfo.Choices.Any() &&
-                                typeInfo.Choices.First().BaseType != typeof(VerbBase);
-            }
-            else
-            {
-                helpText.AddOptions(result);
-                removeVersion = true;
-            }
-
-            List<string> helpLines = new List<string>(helpText.ToString()
-                                                              .Split(new[] {Environment.NewLine},
-                                                                     StringSplitOptions.None));
-            if (removeVersion)
-            {
-                string versionLine = helpLines.FirstOrDefault(l => l.Trim().StartsWith("version") ||
-                                                                   l.Trim().StartsWith("--version"));
-                if (!string.IsNullOrEmpty(versionLine))
+                HelpText helpTextHeader = new HelpText
                 {
-                    int index = helpLines.IndexOf(versionLine);
-                    do
+                    Heading = CreateHeadingInfo(),
+                    Copyright = CreateCopyrightInfo(),
+                    AdditionalNewLineAfterOption = true,
+                    AddDashesToOption = true,
+                    MaximumDisplayWidth = DisplayWidth
+                };
+
+                helpTextHeader = HelpText.DefaultParsingErrorsHandler(result, helpTextHeader);
+
+                AssemblyLicenseAttribute licenseAttribute = assembly.GetCustomAttribute<AssemblyLicenseAttribute>();
+                licenseAttribute?.AddToHelpText(helpTextHeader);
+
+                helpText.AddRange(helpTextHeader.ToString().Split(new[] {Environment.NewLine}, StringSplitOptions.None));
+            }
+
+            void GenerateHelpTextBody()
+            {
+                if ((helpVerbRequested && typeInfo.Choices.Any())
+                    || errors.Any(e => e.Tag == ErrorType.NoVerbSelectedError)
+                    || errors.Any(e => e.Tag == ErrorType.BadVerbSelectedError))
+                {
+                    HelpText helpTextBody = new HelpText
                     {
-                        helpLines.RemoveAt(index - 1);
-                    } while (!string.IsNullOrEmpty(helpLines[index - 1]));
+                        AdditionalNewLineAfterOption = true,
+                        AddDashesToOption = true,
+                        MaximumDisplayWidth = DisplayWidth
+                    };
+
+                    helpTextBody.AddDashesToOption = false;
+                    helpTextBody.AddVerbs(typeInfo.Choices.ToArray());
+
+                    List<string> helpLines = new List<string>(helpTextBody.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None));
+
+                    //direct base type == VerbBase means first level - show version option
+                    if (typeInfo.Choices.Any() &&
+                        typeInfo.Choices.First().BaseType != typeof(VerbBase))
+                    {
+                        RemoveVersion(helpLines);
+                    }
+                    helpText.AddRange(helpLines);
+                }
+                else
+                {
+                    if (typeInfo.Current.GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() != null)
+                    {
+                        ChildVerbsAttribute childVerbs = typeInfo.Current.GetCustomAttribute<ChildVerbsAttribute>();
+                        IEnumerable<Type> childVerbTypes = (childVerbs?.Types ?? Enumerable.Empty<Type>())
+                           .Concat(dynamicVerbFactory.GetDynamicVerbs(typeInfo.Current));
+                        foreach (Type childVerbType in childVerbTypes)
+                        {
+                            HelpText helpTextBody = new HelpText
+                            {
+                                AdditionalNewLineAfterOption = true,
+                                AddDashesToOption = true,
+                                MaximumDisplayWidth = DisplayWidth
+                            };
+                            helpTextBody.AddPreOptionsLine(childVerbType.GetCustomAttribute<VerbAttribute>().HelpText);
+
+                            if (typeof(TypeInfo).GetMethod("Create", BindingFlags.NonPublic | BindingFlags.Static,
+                                                           null, new[] {typeof(Type)}, null)
+                                               ?.Invoke(null, new object[] {childVerbType}) is TypeInfo childTypeInfo &&
+                                typeof(Parsed<object>).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null,
+                                                                      new[]
+                                                                      {
+                                                                          typeof(object),
+                                                                          typeof(TypeInfo)
+                                                                      }, null)?.Invoke(new[] {null, childTypeInfo})
+                                    is ParserResult<object> childResult)
+                            {
+                                helpTextBody.AddOptions(childResult);
+                            }
+
+                            List<string> helpLines = new List<string>(helpTextBody.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None));
+                            RemoveVersion(helpLines);
+                            helpText.AddRange(helpLines);
+                        }
+                    }
+                    else
+                    {
+                        HelpText helpTextBody = new HelpText
+                        {
+                            AdditionalNewLineAfterOption = true,
+                            AddDashesToOption = true,
+                            MaximumDisplayWidth = DisplayWidth
+                        };
+                        helpTextBody.AddOptions(result);
+                        List<string> helpLines = new List<string>(helpTextBody.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None));
+                        RemoveVersion(helpLines);
+                        helpText.AddRange(helpLines);
+                    }
                 }
             }
 
-            string help = string.Join(Environment.NewLine, helpLines);
-            return help;
+            void RemoveVersion(List<string> list)
+            {
+                string versionLine = list.FirstOrDefault(l => l.Trim().StartsWith("version  ") ||
+                                                              l.Trim().StartsWith("--version  "));
+                if (!string.IsNullOrEmpty(versionLine))
+                {
+                    int index = list.IndexOf(versionLine);
+                    do
+                    {
+                        list.RemoveAt(index - 1);
+                    } while (!string.IsNullOrEmpty(list[index - 1]));
+                }
+            }
+
+            void GenerateHelpTextFooter()
+            {
+                PropertyInfo property = typeInfo.Current.GetProperties(BindingFlags.Public | BindingFlags.Static)
+                                                .FirstOrDefault(p => p.GetCustomAttribute<UsageAttribute>() != null &&
+                                                                     p.PropertyType ==
+                                                                     typeof(IEnumerable<UsageExample>));
+                IEnumerable<UsageExample> examples =
+                    ((IEnumerable<UsageExample>) property?.GetValue(null) ?? Enumerable.Empty<UsageExample>())
+                   .ToArray();
+
+                if (examples.Any())
+                {
+                    HelpText helpTextFooter = new HelpText
+                    {
+                        AdditionalNewLineAfterOption = true,
+                        AddDashesToOption = true,
+                        MaximumDisplayWidth = DisplayWidth
+                    };
+
+                    helpTextFooter.AddPostOptionsLine("Examples:");
+                    helpTextFooter.AddPostOptionsLine(string.Empty);
+
+                    string commandName = assembly.GetName().Name.ToLowerInvariant();
+
+                    foreach (UsageExample usageExample in examples)
+                    {
+                        helpTextFooter.AddPostOptionsLine(usageExample.HelpText.EndsWith(":")
+                                                              ? usageExample.HelpText
+                                                              : $"{usageExample.HelpText}:");
+                        helpTextFooter.AddPostOptionsLine($@"{commandName} {usageExample.Command}");
+                        helpTextFooter.AddPostOptionsLine(string.Empty);
+                    }
+
+                    helpText.AddRange(helpTextFooter.ToString().Split(new[] {Environment.NewLine}, StringSplitOptions.None));
+                }
+            }
         }
 
         private HeadingInfo CreateHeadingInfo()

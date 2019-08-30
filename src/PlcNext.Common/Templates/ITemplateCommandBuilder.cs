@@ -18,8 +18,13 @@ namespace PlcNext.Common.Templates
 {
     internal interface ITemplateCommandBuilder
     {
-        CommandDefinition GenerateTemplateCommandDefinition(Entity templateEntity, TemplateDescription template,
+        CommandDefinition GenerateNewCommandDefinition(Entity templateEntity, TemplateDescription template,
                                                             CommandDefinition baseCommand,
                                                             IEnumerable<TemplateDescription> otherTemplates);
+
+        CommandDefinition GenerateDeployCommandDefinition(Entity templateEntity, 
+                                                          TemplateDescription currentRootTemplate,
+                                                          CommandDefinition baseCommand,
+                                                          ICollection<TemplateDescription> allTemplates);
     }
 }

@@ -41,11 +41,17 @@ namespace PlcNext.Common.Tools
         //other
         public const string Tab = "    ";
         public const int StreamCopyBufferSize = 4096;
-        public const char OptionsSeparator = ',';
         public const int CMakeServerTimeout = 2000;
         public const string OutputArgumentName = "output";
         public const string NoIncludePathDetection = "no-include-path-detection";
+        public const string MetaPathArgumentName = "metapath";
+        public const string LibraryLocationArgumentName = "compilationpath";
+        public const string IdArgumentName = "id";
+        public const string TargetArgumentName = "target";
+        public const string ExternalLibrariesArgumentName = "externallibraries";
+        public const string FilesArgumentName = "files";
         public const int MaxIORetries = 10;
+        public const char OptionsSeparator = ',';
 
         //file names
         public const string PublicKeyFileName = "public_cli_repository_key.xml";

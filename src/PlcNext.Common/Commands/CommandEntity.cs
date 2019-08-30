@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.DataModel;
@@ -35,5 +36,15 @@ namespace PlcNext.Common.Commands
         }
 
         public string Output => this[EntityKeys.OutputKey].Value<string>();
+
+        public string GetSingleValueArgument(string argument)
+        {
+           return this[argument].Value<string>();
+        }
+
+        public IEnumerable<string> GetMultiValueArgument(string argument)
+        {
+            return this[argument].Select(t => t.Value<string>());
+        }
     }
 }

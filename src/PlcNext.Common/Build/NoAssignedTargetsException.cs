@@ -15,9 +15,9 @@ using PlcNext.Common.Tools;
 
 namespace PlcNext.Common.Build
 {
-    internal class NoAssingedTargetsException : FormattableException
+    internal class NoAssignedTargetsException : FormattableException
     {
-        public NoAssingedTargetsException(string projectName) : base(
+        public NoAssignedTargetsException(string projectName) : base(
             string.Format(CultureInfo.InvariantCulture, ExceptionTexts.NoAssignedTargets, projectName,
                           Environment.NewLine))
         {

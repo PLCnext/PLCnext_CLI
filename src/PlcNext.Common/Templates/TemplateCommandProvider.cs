@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlcNext.Common.DataModel;
+using PlcNext.Common.Deploy;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
@@ -28,17 +29,24 @@ namespace PlcNext.Common.Templates
         private readonly IEntityFactory entityFactory;
         private readonly ITemplateFileGenerator templateFileGenerator;
         private readonly IUserInterface userInterface;
+        private readonly IDeployService deployService;
+        private readonly IEnumerable<IDeployStep> deploySteps;
+        private readonly ExecutionContext executionContext;
 
         private CommandDefinition newCommand;
+        private CommandDefinition deployCommand;
         private readonly List<CommandDefinition> generateCommands = new List<CommandDefinition>();
 
-        public TemplateCommandProvider(ITemplateCommandBuilder templateCommandBuilder, ITemplateRepository repository, IEntityFactory entityFactory, ITemplateFileGenerator templateFileGenerator, IUserInterface userInterface)
+        public TemplateCommandProvider(ITemplateCommandBuilder templateCommandBuilder, ITemplateRepository repository, IEntityFactory entityFactory, ITemplateFileGenerator templateFileGenerator, IUserInterface userInterface, IDeployService deployService, IEnumerable<IDeployStep> deploySteps, ExecutionContext executionContext)
         {
             this.templateCommandBuilder = templateCommandBuilder;
             this.repository = repository;
             this.entityFactory = entityFactory;
             this.templateFileGenerator = templateFileGenerator;
             this.userInterface = userInterface;
+            this.deployService = deployService;
+            this.deploySteps = deploySteps;
+            this.executionContext = executionContext;
         }
 
         public IEnumerable<CommandDefinition> GetCommands(IEnumerable<string> context)
@@ -50,7 +58,8 @@ namespace PlcNext.Common.Templates
                                                      .SetName("new")
                                                      .SetHelp("Create new files / projects.")
                                                      .Build();
-                return new[] {newCommand};
+                deployCommand = templateCommandBuilder.GenerateDeployCommandDefinition(null, null, null,repository.Templates.ToArray());
+                return new[] {newCommand, deployCommand};
             }
 
             if (context.SequenceEqual(new[] {"new"}))
@@ -62,9 +71,30 @@ namespace PlcNext.Common.Templates
                     {
                         continue;
                     }
-                    Entity templateEnitity = entityFactory.Create(template.name);
-                    templateEnitity.SetMetaData(true, EntityKeys.IsTemplateOnly);
-                    commandDefinitions.Add(templateCommandBuilder.GenerateTemplateCommandDefinition(templateEnitity, template, newCommand, repository.Templates));
+                    Entity templateEntity = entityFactory.Create(template.name);
+                    templateEntity.SetMetaData(true, EntityKeys.IsTemplateOnly);
+                    commandDefinitions.Add(templateCommandBuilder.GenerateNewCommandDefinition(templateEntity, template, newCommand, repository.Templates));
+                }
+                return commandDefinitions;
+            }
+
+            if (context.SequenceEqual(new[] {"deploy"}))
+            {
+                List<CommandDefinition> commandDefinitions = new List<CommandDefinition>();
+                foreach (TemplateDescription template in repository.Templates)
+                {
+                    if (template.isHidden || 
+                        commandDefinitions.Any(d => d.Name == template.name) ||
+                        !template.isRoot)
+                    {
+                        continue;
+                    }
+                    Entity templateEntity = entityFactory.Create(template.name);
+                    templateEntity.SetMetaData(true, EntityKeys.IsTemplateOnly);
+                    commandDefinitions.Add(templateCommandBuilder.GenerateDeployCommandDefinition(templateEntity,
+                                                                                                  template,
+                                                                                                  deployCommand,
+                                                                                                  repository.Templates.ToArray()));
                 }
                 return commandDefinitions;
             }
@@ -170,7 +200,8 @@ namespace PlcNext.Common.Templates
         public bool CanExecute(CommandDefinition definition)
         {
             return definition.BaseDefinition == newCommand ||
-                   generateCommands.Contains(definition);
+                   generateCommands.Contains(definition) ||
+                   definition == deployCommand;
         }
 
         public async Task<int> Execute(CommandDefinition definition, ChangeObservable observable)
@@ -198,6 +229,33 @@ namespace PlcNext.Common.Templates
                                                    ? $"Successfully generated all files for {dataModel.Root.Path}."
                                                    : $"Successfully generated all files with the '{definition.Name}' " +
                                                      $"generator for {dataModel.Root.Path}.");
+            }
+
+            if (definition == deployCommand)
+            {
+                Entity dataModel = entityFactory.Create(definition.Name, definition);
+                
+                deployService.DeployFiles(dataModel);
+
+                Entity root = dataModel.Root;
+                TemplateDescription template = TemplateEntity.Decorate(root).Template;
+                foreach (templateDeployPostStep deployPostStep in template.DeployPostStep??Enumerable.Empty<templateDeployPostStep>())
+                {
+                    IDeployStep step = deploySteps.FirstOrDefault(s => s.Identifier == deployPostStep.identifier);
+                    if (step != null)
+                    {
+                        step.Execute(dataModel, observable);
+                    }
+                    else
+                    {
+                        executionContext.WriteWarning(
+                            $"Deploy post step '{deployPostStep.identifier}' could not be executed because there is no implementation. " +
+                            $"Available implementations are:{Environment.NewLine}" +
+                            $"{string.Join(Environment.NewLine, deploySteps.Select(d => d.Identifier))}");
+                    }
+                }
+
+                userInterface.WriteInformation($"Successfully deployed all files for {dataModel.Root.Path}.");
             }
 
             return 0;

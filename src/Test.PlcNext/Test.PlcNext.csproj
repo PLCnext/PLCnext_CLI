@@ -13,8 +13,10 @@
     <EmbeddedResource Remove="TestResults\**" />
     <None Remove="Deployment\StandardAppProject\**" />
     <None Remove="TestResults\**" />
+    <None Remove="Deployment\AcfProject\MySettings.txt" />
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.cpp" />
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.hpp" />
+    <None Remove="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
     <None Remove="Deployment\StandardAcfProject\CMakeLists.txt" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />
@@ -32,6 +34,8 @@
     <None Remove="Deployment\TestResults\GetProjectInformationMultipleSourcesReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationStandardReply.json" />
     <None Remove="Deployment\TestResults\GetProjectTargetsReply.json" />
+    <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
+    <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
     <EmbeddedResource Include="Deployment\StandardAcfProject\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
     <EmbeddedResource Include="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />

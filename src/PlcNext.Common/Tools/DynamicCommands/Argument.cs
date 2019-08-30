@@ -15,12 +15,14 @@ namespace PlcNext.Common.Tools.DynamicCommands
 {
     public abstract class Argument
     {
-        protected Argument(string name, char shortName, bool mandatory, Func<string, (bool, string, string)> restriction, string help)
+        protected Argument(string name, char shortName, bool mandatory, Func<string, (bool, string, string)> restriction, string help,
+                           string setName)
         {
             Name = name;
             ShortName = shortName;
             Restriction = restriction;
             Help = help;
+            SetName = setName;
             Mandatory = mandatory;
         }
 
@@ -29,6 +31,7 @@ namespace PlcNext.Common.Tools.DynamicCommands
         public char ShortName { get; }
         public Func<string,(bool success, string message, string newValue)> Restriction { get; }
         public string Help { get; }
+        public string SetName { get; }
         public abstract bool IsDefined { get; protected set; }
 
         public abstract void SetValue(object value);

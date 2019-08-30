@@ -29,6 +29,7 @@
           </xs:annotation>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="Example" type="templateExample"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="DeployPostStep" type="templateDeployPostStep"/>
       </xs:sequence>
       <xs:attribute name="name" type="templateName" use="required">
         <xs:annotation>
@@ -68,7 +69,7 @@
       <xs:attribute name="isHidden" type="xs:boolean" use="optional" default="false">
         <xs:annotation>
           <xs:documentation>
-            Marks the template as hiiden. Hidden templates can not be initiated, only used as base templates.
+            Marks the template as hidden. Hidden templates can not be initiated, only used as base templates.
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -121,6 +122,24 @@
         </xs:annotation>
       </xs:element>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="templateDeployPostStep">
+    <xs:annotation>
+      <xs:documentation>
+        Definition of a deploy step which is executed after the default deploy step.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Arguments" type="templateArgumentDefinitions"/>
+    </xs:sequence>
+    <xs:attribute name="identifier" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The identifier of the deploy step implementation.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="templateRelationshipBase">
@@ -291,6 +310,14 @@
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="separator" type="character" use="optional" default=",">
+          <xs:annotation>
+            <xs:documentation>
+              If multiplicity is set to OneOrMore this attribute defines the separator used to separate values.
+              Default is ','.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="has-value" type="xs:boolean" use="optional" default="false">
           <xs:annotation>
             <xs:documentation>
@@ -367,6 +394,14 @@
       <xs:annotation>
         <xs:documentation>
           The key used to reference this file in generator expressions with "template.files.key".
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="deployPath" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          The deploy path where the file will be copied to when deploying.
+          Path is relative to the output folder.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>

@@ -18,8 +18,9 @@ namespace PlcNext.Common.Tools.DynamicCommands
         private IEnumerable<string> values;
 
         public MultipleValueArgument(string name, char shortName, bool mandatory, Func<string, (bool, string, string)> restriction,
-                                     string help) : base(name, shortName, mandatory, restriction, help)
+                                     string help, string setName, char separator) : base(name, shortName, mandatory, restriction, help, setName)
         {
+            Separator = separator;
         }
 
         public IEnumerable<string> Values
@@ -52,6 +53,7 @@ namespace PlcNext.Common.Tools.DynamicCommands
         }
 
         public override bool IsDefined { get; protected set; }
+        public char Separator { get; }
 
         public override void SetValue(object obj)
         {

@@ -7,18 +7,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using PlcNext.Common.DataModel;
+using PlcNext.Common.Tools.Events;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PlcNext.Common.Tools.DynamicCommands;
 
-namespace PlcNext.Common.CommandLine
+namespace PlcNext.Common.Deploy
 {
-    public interface IDynamicVerbFactory
+    public interface IDeployStep
     {
-        IEnumerable<Type> GetDynamicVerbs(IEnumerable<string> path);
+        string Identifier { get; }
 
-        CommandDefinition GetCommandDefintionForVerb(Type dynamicVerb);
-        IEnumerable<Type> GetDynamicVerbs(Type currentVerb);
+        void Execute(Entity dataModel, ChangeObservable observable);
     }
 }
