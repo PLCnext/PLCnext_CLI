@@ -320,6 +320,16 @@ namespace PlcNext.Common.Templates
                               .Build();
                     shortNames.Add('t');
                 }
+
+                builder.AddExample("deploy --path MyAcfProject", "Deploy the acf.config for 'MyAcfProject'");
+                builder.AddExample("deploy --path MyPlmProject", "Deploy a .pcwlx library for 'MyPlmProject'");
+                builder.AddExample($"deploy --path Path/To/Project", "Deploy library for all targets supported by project");
+                builder.AddExample($"deploy --path Path/To/Project --target AXCF2152 RFC4072S", "Deploy library for targets AXCF2152 and RFC4072S");
+                builder.AddExample($"deploy --path Path/To/Project --target AXCF2152,2019.0,path/to/Project.so",
+                                    "Deploy library for target with compilation file in special location");
+                builder.AddExample($"deploy --path Path/To/Project " +
+                    $"--externalLibraries AXCF2152,2019.0,path/to/libforaxc.so,path/to/otherlib.so RFC4072S,path/to/libfornfc.so",
+                    "Deploy library with external libraries");
                 return builder;
 
                 bool ArgumentAvailableFromDescription(string argumentName)

@@ -380,7 +380,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("AcfProject"),
                 _ => When_I_deploy(new DeployCommandArgs { Targets = new[] { "axcf2152,19.0" } }),
                 _ => Then_the_acfconfig_file_is_deployed_with_component_into_path(
-                    "AcfProject", "AcfProjectComponent", "bin/AXCF2152_19.0.0.12345/Release/deploy")
+                    "AcfProject", "AcfProjectComponent", "bin/AXCF2152_19.0.0.12345/Release")
                 ).RunAsyncWithTimeout();
         }
 
