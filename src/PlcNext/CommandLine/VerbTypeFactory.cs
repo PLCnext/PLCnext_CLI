@@ -210,7 +210,7 @@ namespace PlcNext.CommandLine
                                                        : new object[] {option.Name};
                         List<PropertyInfo> namedProperties = new List<PropertyInfo>(new[] { helpTextProperty, requiredProperty });
                         List<object> propertiesValues = new List<object>(new object[] { option.Help, option.Mandatory });
-                        if (option.ValueType == OptionValueType.MultipleValue)
+                        if (option.ValueType == OptionValueType.MultipleValue && !option.Separator.Equals(' '))
                         {
                             namedProperties.Add(separatorProperty);
                             propertiesValues.Add(option.Separator);
