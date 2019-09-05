@@ -24,7 +24,6 @@ namespace PlcNext.Common.Build
         public ProjectEntity RootProjectEntity => ProjectEntity.Decorate(RootEntity);
         public Sdk Sdk { get; set; }
         public Target Target { get; set; }
-        public bool MultipleTargets { get; set; }
         public string BuildType { get; }
         public bool Configure { get; }
         public bool NoConfigure { get; }

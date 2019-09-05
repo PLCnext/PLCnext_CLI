@@ -133,15 +133,7 @@ namespace PlcNext.Common.Build
 
             VirtualDirectory CreateCmakeFolder()
             {
-                VirtualDirectory result = buildInformation.Output != null
-                                              ? buildInformation.MultipleTargets
-                                                    ? fileSystem.GetDirectory(buildInformation.Output,
-                                                                              buildInformation.RootFileEntity.Directory.FullName)
-                                                                .Directory(buildInformation.Target.GetFullName())
-                                                                .Directory(GetRealBuildType())
-                                                    : fileSystem.GetDirectory(buildInformation.Output,
-                                                                              buildInformation.RootFileEntity.Directory.FullName)
-                                              : buildInformation.RootFileEntity.Directory
+                VirtualDirectory result = buildInformation.RootFileEntity.Directory
                                                                 .Directory(Constants.IntermediateFolderName)
                                                                 .Directory(Constants.CmakeFolderName)
                                                                 .Directory(buildInformation.Target.GetFullName())
@@ -237,10 +229,10 @@ namespace PlcNext.Common.Build
                     string GenerateStagingPrefixForTarget()
                     {
                         string basePath = buildInformation.RootFileEntity.Directory.FullName;
-                        return buildInformation.RootProjectEntity.Version > new Version(1, 0)
-                                   ? Path.Combine(basePath, Constants.LibraryFolderName, $"{target}_{shortVersion}",
-                                                  GetRealBuildType())
-                                         .Replace(Path.DirectorySeparatorChar, '/')
+                        return buildInformation.Output != null
+                                   ? fileSystem.GetDirectory(buildInformation.Output,
+                                                             buildInformation.RootFileEntity.Directory.FullName)
+                                               .FullName
                                    : Path.Combine(basePath, Constants.LibraryFolderName)
                                          .Replace(Path.DirectorySeparatorChar, '/');
                     }

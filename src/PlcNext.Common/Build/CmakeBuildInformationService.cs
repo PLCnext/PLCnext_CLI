@@ -49,7 +49,6 @@ namespace PlcNext.Common.Build
                                      string.Empty,
                                      null)
                 {
-                    MultipleTargets = false,
                     Target = projectTarget,
                     Sdk = sdkRepository.GetSdk(projectTarget)
                 }, observable, showMessagesToUser: false);

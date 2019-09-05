@@ -185,9 +185,8 @@ namespace PlcNext.Common.Deploy
                 }
 
                 basePath = fileSystem.GetDirectory(command.GetSingleValueArgument(Constants.OutputArgumentName), basePath).FullName;
-                if (targets.Count() > 1)
-                    basePath = Path.Combine(basePath, target.GetFullName().Replace(',', '_'), Constants.ReleaseFolderName);
-                    
+                basePath = Path.Combine(basePath, target.GetFullName().Replace(',', '_'), Constants.ReleaseFolderName);
+
                 return fileSystem.GetDirectory(basePath);
             }
         }

@@ -43,13 +43,10 @@ namespace PlcNext.CommandLine
         [Option(CommandLineConstants.NoconfigureOption, HelpText = "Force CMake to do only a build", SetName = "NoConfigure")]
         public bool NoConfigure { get; set; }
 
-        [Option(CommandLineConstants.OutputChar, CommandLineConstants.OutputOption, HelpText = "Sets the directory in which CMake is executed. " +
+        [Option(CommandLineConstants.OutputChar, CommandLineConstants.OutputOption, HelpText = "Sets the directory in which the library is installed. " +
                                                      "The directory can be either absolute or relative to the project directory. " +
-                                                     "To set the directory in which the library is installed, " +
-                                                     "set the CMake option '-DCMAKE_STAGING_PREFIX'. " +
-                                                     "If the build will be executed for multiple targets, " +
-                                                     "the specified directory is used as the base directory with " +
-                                                     "subdirectories for each target.")]
+                                                     "This will use the '-DCMAKE_STAGING_PREFIX' option. If the '-DCMAKE_STAGING_PREFIX' option " +
+                                                     "is already specified this option will be ignored.")]
         public string Output
         {
             get => output;
@@ -79,7 +76,7 @@ namespace PlcNext.CommandLine
             new UsageExample("build project for target AXCF2152:", $"{CommandLineConstants.BuildVerb} --{CommandLineConstants.PathOption} Path/To/Project -{CommandLineConstants.TargetChar} AXCF2152"),
             new UsageExample("build project with additional options:",
                 $"{CommandLineConstants.BuildVerb} --{CommandLineConstants.PathOption} Path/To/Project -{CommandLineConstants.TargetChar} AXCF2152 --{CommandLineConstants.ConfigureOption} -- -G %22Unix Makefiles%22 -DCMAKE_MAKE_PROGRAM=%22mymakepath%22"),
-            new UsageExample("build with a specifal folder for library and CMake files:", $"{CommandLineConstants.BuildVerb} --{CommandLineConstants.OutputOption} build/cmake -- -DCMAKE_STAGING_PREFIX=Path/To/Project/build/install"),
+            new UsageExample("install into a special folder:", $"{CommandLineConstants.BuildVerb} --{CommandLineConstants.OutputOption} build/install"),
         };
         
         protected override async Task<int> Execute(ICommandManager commandManager)

@@ -82,7 +82,7 @@ namespace PlcNext.Common.Build
             {
                 throw new AggregateException(exceptions);
             }
-            buildInfo.MultipleTargets = targets.Count() > 1;
+
             userInterface.WriteInformation($"Requested build for targets {String.Join(", ", targets.Select(x => x.GetFullName()).ToArray())}");
             foreach (Sdk sdk in sdks.Keys)
             {
