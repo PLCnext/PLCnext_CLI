@@ -17,6 +17,7 @@ using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Templates.Field;
 using PlcNext.Common.Templates.Format;
 using PlcNext.Common.Templates.Templates;
+using PlcNext.Common.Templates.Type;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Settings;
@@ -42,6 +43,7 @@ namespace PlcNext.Common.Templates
             XmlSerializer templatesSerializer = new XmlSerializer(typeof(Templates.Templates));
             XmlSerializer templateDescriptionSerializer = new XmlSerializer(typeof(TemplateDescription));
             XmlSerializer fieldTemplateSerializer = new XmlSerializer(typeof(FieldTemplates));
+            XmlSerializer typeTemplateSerializer = new XmlSerializer(typeof(TypeTemplates));
             XmlSerializer formatTemplateSerializer = new XmlSerializer(typeof(FormatTemplates));
 
             foreach (string templateLocation in settingsProvider.Settings.TemplateLocations)
@@ -70,6 +72,11 @@ namespace PlcNext.Common.Templates
                             case includeType.Fields:
                                 result.Add(new TemplateLoaderResult(
                                                fieldTemplateSerializer.Deserialize(includeStream),
+                                               Path.GetDirectoryName(path)));
+                                break;
+                            case includeType.Types:
+                                result.Add(new TemplateLoaderResult(
+                                               typeTemplateSerializer.Deserialize(includeStream),
                                                Path.GetDirectoryName(path)));
                                 break;
                             case includeType.Format:

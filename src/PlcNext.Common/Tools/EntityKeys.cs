@@ -38,15 +38,21 @@ namespace PlcNext.Common.Tools
         public const string PortStructsKey = "portstructs";
         public const string PortEnumsKey = "portenums";
         public const string FieldsKey = "fields";
+        public const string AttributesKey = "attributes";
         public const string BaseTypeKey = "basetype";
         public const string FieldNameKey = "fieldname";
         public const string FieldArpDataTypeKey = "arpdatatype";
         public const string DataTypeKey = "datatype";
         public const string MultiplicityKey = "multiplicity";
         public const string TypeMetaDataFormatKey = "typemetadataformat";
+        public const string ExpandHiddenTypesFormatKey = "expandhiddentypes";
+        public const string FilterHiddenTypesFormatKey = "filterhiddentypes";
         public const string FileKey = "file";
         public const string PortAttributeKey = "port";
         public const string BaseDirectoryKey = "base-directory";
+        public const string ResolvedTypeKey = "__internalresolvedtype__";
+        public const string IsFieldKey = "isfield";
+        public const string IsTypeKey = "istype";
 
         //CppContentProvider
         public const string IncludeKey = "include";

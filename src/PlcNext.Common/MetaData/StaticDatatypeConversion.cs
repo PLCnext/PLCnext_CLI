@@ -32,10 +32,6 @@ namespace PlcNext.Common.MetaData
             {
                 return "boolean";
             }
-            else if (name.Equals("BasicString", StringComparison.OrdinalIgnoreCase))
-            {
-                return "String";
-            }
             return name;
         }
     }

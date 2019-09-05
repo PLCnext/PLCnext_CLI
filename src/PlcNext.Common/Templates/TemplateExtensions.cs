@@ -88,6 +88,54 @@ namespace PlcNext.Common.Templates
         }
 
         public static (bool success, string message, string newValue) Verify(
+            this Type.valueRestriction restriction, string value)
+        {
+            if (!int.TryParse(restriction.length, out int length))
+            {
+                length = -1;
+            }
+            if (!int.TryParse(restriction.length, out int minLength))
+            {
+                minLength = 0;
+            }
+            if (!int.TryParse(restriction.length, out int maxLength))
+            {
+                maxLength = -1;
+            }
+
+            if (!CheckLengths(value, length, minLength, maxLength,
+                              out (bool success, string message, string newValue) result))
+            {
+                return result;
+            }
+
+            if (restriction.Items?.Any() == true &&
+                !CheckRestriction(value, restriction.Items,
+                                  restriction.ItemsElementName[0] == Type.ItemsChoiceType.Pattern,
+                                  restriction.ignorecase,
+                                  out result))
+            {
+                return result;
+            }
+
+            string newValue = result.newValue;
+            switch (restriction.whitespace)
+            {
+                case Type.whitespace.Replace:
+                    newValue = Regex.Replace(newValue, @"\s", " ");
+                    break;
+                case Type.whitespace.Collapse:
+                    newValue = Regex.Replace(newValue, @"\s+", "");
+                    break;
+                default:
+                    //preserve
+                    break;
+            }
+
+            return (true, null, newValue);
+        }
+
+        public static (bool success, string message, string newValue) Verify(
             this Description.valueRestriction restriction, string value)
         {
             if (!int.TryParse(restriction.length, out int length))

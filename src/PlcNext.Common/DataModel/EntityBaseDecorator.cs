@@ -103,6 +103,7 @@ namespace PlcNext.Common.DataModel
 
         public bool HasPath => entityBase.HasPath;
         public Entity Origin => entityBase.Origin;
+        public Entity Base => entityBase.Base;
 
         public virtual Entity this[string key] => entityBase[key];
 

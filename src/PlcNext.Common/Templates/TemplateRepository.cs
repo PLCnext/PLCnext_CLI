@@ -14,6 +14,8 @@ using System.Text;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Templates.Field;
 using PlcNext.Common.Templates.Format;
+using PlcNext.Common.Templates.Type;
+using metaDataTemplate = PlcNext.Common.Templates.Field.metaDataTemplate;
 
 namespace PlcNext.Common.Templates
 {
@@ -24,6 +26,7 @@ namespace PlcNext.Common.Templates
         private Dictionary<TemplateDescription, string> templates;
         private FieldTemplates[] fieldTemplates;
         private FormatTemplates[] formatTemplates;
+        private TypeTemplates[] typeTemplates;
 
         public TemplateRepository(ITemplateLoader templateLoader)
         {
@@ -39,12 +42,21 @@ namespace PlcNext.Common.Templates
             }
         }
 
-        public IEnumerable<fieldTemplate> FieldTemplates
+        public IEnumerable<metaDataTemplate> FieldTemplates
         {
             get
             {
                 EnsureTemplates();
                 return fieldTemplates.SelectMany(t => t.FieldTemplate);
+            }
+        }
+
+        public IEnumerable<Type.metaDataTemplate> TypeTemplates
+        {
+            get
+            {
+                EnsureTemplates();
+                return typeTemplates.SelectMany(t => t.TypeTemplate);
             }
         }
 
@@ -79,6 +91,9 @@ namespace PlcNext.Common.Templates
                               .ToDictionary(r => (TemplateDescription)r.Template,r => r.TemplateLocation);
             fieldTemplates = result.Select(r => r.Template)
                                    .OfType<FieldTemplates>()
+                                   .ToArray();
+            typeTemplates = result.Select(r => r.Template)
+                                   .OfType<TypeTemplates>()
                                    .ToArray();
             formatTemplates = result.Select(r => r.Template)
                                     .OfType<FormatTemplates>()

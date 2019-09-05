@@ -24,6 +24,7 @@ namespace PlcNext.Common.DataModel
         bool HasName { get; }
         bool HasPath { get; }
         Entity Origin { get; }
+        Entity Base { get; }
         Entity this[string key] { get; }
         Entity this[int index] { get; }
         T MetaData<T>(string key = "");

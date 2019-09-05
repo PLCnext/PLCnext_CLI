@@ -35,6 +35,7 @@ namespace PlcNext.Common.DataModel
                       Entity owner = null)
         {
             (object dataSource, bool isLazy, Func<object> lazyFunc, Type dsType)[] sorted = values
+                                                   .Where(o => o != null)
                                                    .Select(ds => (ds, TryConvertToFunc(ds, out Func<object> creation, out Type dsType),
                                                                   creation, dsType))
                                                    .ToArray();
@@ -71,6 +72,8 @@ namespace PlcNext.Common.DataModel
                 return current;
             }
         }
+
+        public Entity Base => this;
 
         public bool HasName => HasContent(EntityKeys.NameKey);
 

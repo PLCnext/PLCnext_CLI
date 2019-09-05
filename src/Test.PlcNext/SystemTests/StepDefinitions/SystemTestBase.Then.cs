@@ -148,6 +148,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckTypemetaFile(typemetaStructures);
         }
 
+        protected void Then_the_typemeta_file_is_empty()
+        {
+            ScenarioContext.CheckTypemetaFile(null);
+        }
+
         protected void Then_the_error_is_shown(ErrorInformation error)
         {
             ScenarioContext.CheckForError(error);
@@ -456,6 +461,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_user_was_informed_that_the_data_type_is_not_known()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(UnknownDataTypeException));
+        }
+
+        protected void Then_the_user_was_informed_that_the_scope_of_a_used_attribute_does_not_match()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(CodeSpecificException));
         }
 
         protected void Then_the_files_exist_in_location(Dictionary<string, string> filesAndContent)

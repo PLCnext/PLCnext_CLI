@@ -51,6 +51,10 @@ namespace PlcNext.Common.CodeModel
                    owner.HasValue<ISymbol>() && CanResolveSymbol() ||
                    key == EntityKeys.FieldArpDataTypeKey && owner.Type == EntityKeys.FormatKey ||
                    key == EntityKeys.TypeMetaDataFormatKey && owner.Type == EntityKeys.FormatKey ||
+                   key == EntityKeys.ExpandHiddenTypesFormatKey && owner.All(e => e.HasValue<IField>()) ||
+                   key == EntityKeys.FilterHiddenTypesFormatKey && owner.All(e => e.HasValue<IType>()) ||
+                   key == EntityKeys.IsFieldKey ||
+                   key == EntityKeys.IsTypeKey ||
                    key == EntityKeys.BaseDirectoryKey && HasBaseDirectory(owner, out _);
 
             bool CanResolveSymbol()
@@ -66,13 +70,14 @@ namespace PlcNext.Common.CodeModel
 
             bool CanResolveField()
             {
-                fieldTemplate fieldTemplate = templateRepository.FieldTemplates
+                metaDataTemplate metaDataTemplate = templateRepository.FieldTemplates
                                                                 .FirstOrDefault(t => t.name.Equals(key,
                                                                                                    StringComparison.OrdinalIgnoreCase));
                 return key == EntityKeys.FieldNameKey ||
                        key == EntityKeys.DataTypeKey ||
                        key == EntityKeys.MultiplicityKey ||
-                       fieldTemplate != null;
+                       key == EntityKeys.ResolvedTypeKey ||
+                       metaDataTemplate != null;
             }
 
             bool CanResolveType()
@@ -83,10 +88,13 @@ namespace PlcNext.Common.CodeModel
                 }
                 IType type = owner.Value<IType>();
                 
-                fieldTemplate fieldTemplate = templateRepository.FieldTemplates
+                metaDataTemplate metaDataTemplate = templateRepository.FieldTemplates
                                                                 .FirstOrDefault(t => t.name.Plural().Equals(key,
                                                                                                             StringComparison
                                                                                                                .OrdinalIgnoreCase));
+
+                Templates.Type.metaDataTemplate typeMetaDataTemplate = templateRepository.TypeTemplates
+                                                                      .FirstOrDefault(t => t.name.Equals(key, StringComparison.OrdinalIgnoreCase));
 
                 templateRelationship[] relationships = owner.HasTemplate() ? owner.Template().Relationship : null;
                 templateRelationship relationship = relationships?.FirstOrDefault(r => r.name.Equals(key, StringComparison.OrdinalIgnoreCase))
@@ -97,7 +105,8 @@ namespace PlcNext.Common.CodeModel
                        key == EntityKeys.BaseTypeKey ||
                        key == EntityKeys.FileKey ||
                        type.HasPropertyValueEntity(key) ||
-                       fieldTemplate != null ||
+                       metaDataTemplate != null ||
+                       typeMetaDataTemplate != null ||
                        relationship != null && type.Attributes.Any(a => a.Name.Equals(relationship.name,
                                                                        StringComparison.OrdinalIgnoreCase));
             }
@@ -124,7 +133,6 @@ namespace PlcNext.Common.CodeModel
         public Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             TemplateEntity ownerTemplateEntity = TemplateEntity.Decorate(owner);
-
             if (key == EntityKeys.FieldArpDataTypeKey && owner.Type == EntityKeys.FormatKey)
             {
                 return ResolveArpDataType();
@@ -132,6 +140,22 @@ namespace PlcNext.Common.CodeModel
             if (key == EntityKeys.TypeMetaDataFormatKey && owner.Type == EntityKeys.FormatKey)
             {
                 return ResolveTypeMetaDataFormat();
+            }
+            if (key == EntityKeys.ExpandHiddenTypesFormatKey)
+            {
+                return ExpandHiddenTypes();
+            }
+            if (key == EntityKeys.FilterHiddenTypesFormatKey)
+            {
+                return FilterHiddenTypes();
+            }
+            if (key == EntityKeys.IsFieldKey)
+            {
+                return owner.Create(key, CodeEntity.Decorate(owner).AsField != null);
+            }
+            if (key == EntityKeys.IsTypeKey)
+            {
+                return owner.Create(key, CodeEntity.Decorate(owner).AsType != null);
             }
 
             ISymbol symbol = owner.Value<ISymbol>();
@@ -176,46 +200,44 @@ namespace PlcNext.Common.CodeModel
             }
             throw new ContentProviderException(key, owner);
 
-            IEnumerable<IType> GetPortEnums()
+            IEnumerable<CodeEntity> GetPortEnums()
             {
                 return GetAllPorts().Concat(GetPortStructures().SelectMany(p => p.Fields))
-                                    .SelectMany(f => f.DataType.PotentialFullNames)
-                                    .Select(codeModel.Enum)
-                                    .Where(e => e != null)
+                                    .Select(f => f.ResolvedType)
+                                    .Where(t => t.AsEnum != null)
                                     .Distinct();
             }
 
-            IEnumerable<IField> GetAllPorts()
+            IEnumerable<CodeEntity> GetAllPorts()
             {
-                bool IsPort(IField arg)
+                bool IsPort(CodeEntity fieldEntity)
                 {
-                    return arg.HasAttributeWithoutValue(EntityKeys.PortAttributeKey);
+                    return fieldEntity.AsField != null &&
+                           fieldEntity.AsField.HasAttributeWithoutValue(EntityKeys.PortAttributeKey);
                 }
 
-                return codeModel.Types.Keys
-                                .SelectMany(t => t.Fields.Where(IsPort));
+                return TemplateEntity.Decorate(owner).EntityHierarchy
+                              .Select(CodeEntity.Decorate)
+                              .SelectMany(c => c.Fields)
+                              .Where(IsPort);
             }
 
-            IEnumerable<IType> GetPortStructures()
+            IEnumerable<CodeEntity> GetPortStructures()
             {
-                HashSet<IType> structures = new HashSet<IType>(GetAllPorts()
-                                                              .SelectMany(f => f.DataType.PotentialFullNames)
-                                                              .Select(f => (IType) codeModel.Class(f) ??
-                                                                           codeModel.Structure(f))
-                                                              .Where(s => s != null));
+                HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetAllPorts()
+                                                              .Select(f => f.ResolvedType)
+                                                              .Where(t => t.AsType != null && 
+                                                                          t.AsEnum == null));
 
-                HashSet<IType> visited = new HashSet<IType>();
+                HashSet<CodeEntity> visited = new HashSet<CodeEntity>();
                 while (structures.Except(visited).Any())
                 {
-                    foreach (IType structure in structures.Except(visited).ToArray())
+                    foreach (CodeEntity structure in structures.Except(visited).ToArray())
                     {
-                        foreach (IField structureField in structure.Fields)
+                        foreach (CodeEntity structureField in structure.Fields)
                         {
-                            IType structureDataType = structureField.DataType.PotentialFullNames
-                                                           .Select(f => (IType)codeModel.Class(f) ??
-                                                                        codeModel.Structure(f))
-                                                           .FirstOrDefault(s => s != null);
-                            if (structureDataType != null)
+                            CodeEntity structureDataType = structureField.ResolvedType;
+                            if (structureDataType.AsType != null && structureDataType.AsEnum == null)
                             {
                                 structures.Add(structureDataType);
                             }
@@ -226,6 +248,82 @@ namespace PlcNext.Common.CodeModel
                 }
 
                 return structures;
+            }
+
+            Entity FilterHiddenTypes()
+            {
+                IEnumerable<IType> types = owner.Select(CodeEntity.Decorate)
+                                                .Where(c => !c.IsHidden())
+                                                .Select(c => c.AsType)
+                                                .ToArray();
+                string name = owner.FirstOrDefault()?.Name ?? string.Empty;
+                return owner.Create(key, types.Select(t => owner.Create(name, t.FullName, t)));
+            }
+
+            Entity ExpandHiddenTypes()
+            {
+                IEnumerable<CodeEntity> dataSourceFields = owner.Select(CodeEntity.Decorate);
+                dataSourceFields = ExpandHiddenStructureFields(dataSourceFields);
+                string name = owner.FirstOrDefault()?.Name ?? string.Empty;
+
+                return owner.Create(key, dataSourceFields.Select(e => e.AsField)
+                                                         .Select(f => owner.Create(name, f.Name, f)));
+
+                IEnumerable<CodeEntity> ExpandHiddenStructureFields(IEnumerable<CodeEntity> fields)
+                {
+                    foreach (CodeEntity hiddenField in fields)
+                    {
+                        CodeEntity hiddenType = hiddenField.ResolvedType;
+                        if (hiddenType == null || !hiddenType.IsHidden())
+                        {
+                            yield return hiddenField;
+                            continue;
+                        }
+
+                        foreach (CodeEntity hiddenTypeField in ExpandHiddenStructureFields(hiddenType.Fields))
+                        {
+                            yield return hiddenTypeField;
+                        }
+                    }
+                }
+            }
+
+            T ChooseMetaDataTemplate<T>(IEnumerable<(T template, string name, string context)> templates)
+            {
+                return templates.OrderByDescending(t => ContextComplexity(t.context??string.Empty))
+                                .FirstOrDefault(Matches)
+                                .template;
+
+                bool Matches((T template, string name, string context) template)
+                {
+                    if (!key.Equals(template.name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
+
+                    if (string.IsNullOrEmpty(template.context))
+                    {
+                        return true;
+                    }
+                    string[] contextPath = template.context.Split(new []{'/','\\'}, StringSplitOptions.RemoveEmptyEntries)
+                                                   .Reverse().ToArray();
+                    Entity current = owner;
+                    foreach (string part in contextPath)
+                    {
+                        current = current?.Owner;
+                        if (current?[$"is{part.ToLowerInvariant()}"].Value<bool>() != true)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                int ContextComplexity(string context)
+                {
+                    return context.Count(c => c == '/' || c == '\\');
+                }
             }
 
             Entity ResolveType()
@@ -253,41 +351,134 @@ namespace PlcNext.Common.CodeModel
                     }
                     default:
                     {
-                        Entity result = owner.PropertyValueEntity(key, type);
-                        if (result != null)
+                        if (TryResolveTypeTemplate(out Entity result))
                         {
                             return result;
                         }
-                        
-                        fieldTemplate fieldTemplate = templateRepository.FieldTemplates
-                                                                        .FirstOrDefault(t => t.name.Plural().Equals(key,
-                                                                                                                 StringComparison
-                                                                                                                    .OrdinalIgnoreCase));
-                        if (fieldTemplate != null)
+
+                        if (TryResolveProperty(out result))
                         {
-                            IEnumerable<IField> fields = type.Fields
-                                                             .Where(f => f.Attributes
-                                                                          .Any(a => a.Name
-                                                                                     .Equals(fieldTemplate.name,
-                                                                                             StringComparison.OrdinalIgnoreCase)));
-                            return owner.Create(key, fields.Select(f => owner.Create(fieldTemplate.name, f.Name, f)));
+                            return result;
                         }
 
-                        templateRelationship[] relationships = owner.Template().Relationship;
-                        templateRelationship relationship = relationships?.FirstOrDefault(r => r.name.Equals(key, StringComparison.OrdinalIgnoreCase))
-                                                            ?? relationships?.FirstOrDefault(r => r.name.Equals(key.Singular(), StringComparison.OrdinalIgnoreCase));
-                        TemplateDescription relationshipDescription = relationship != null ? templateRepository.Template(relationship.type) : null;
-                        if (relationshipDescription != null)
+                        if (TryResolveFields(out result))
                         {
-                            IEnumerable<string> names = type.Attributes
-                                                            .Where(a => a.Name.Equals(relationship.name,
-                                                                                      StringComparison.OrdinalIgnoreCase))
-                                                            .SelectMany(a => a.Values);
-                            return relationship.GetRelationship(relationshipDescription, owner, names.ToArray());
+                            return result;
+                        }
+
+                        if (TryResolveRelationship(out result))
+                        {
+                            return result;
                         }
 
                         throw new ContentProviderException(key, owner);
                     }
+                }
+
+                bool TryResolveTypeTemplate(out Entity result)
+                {
+                    Templates.Type.metaDataTemplate typeMetaDataTemplate = ChooseMetaDataTemplate(templateRepository.TypeTemplates
+                                                                                                                    .Select(t => (t,t.name,t.context)));
+                    if (typeMetaDataTemplate != null)
+                    {
+                        result = GetTypeTemplateEntity(typeMetaDataTemplate);
+                        return true;
+                    }
+
+                    result = null;
+                    return false;
+
+                    Entity GetTypeTemplateEntity(Templates.Type.metaDataTemplate metaDataTemplate)
+                    {
+                        if (!metaDataTemplate.hasvalue)
+                        {
+                            bool hasAttribute = type.HasAttributeWithoutValue(metaDataTemplate.name);
+                            return owner.Create(key, new Func<string>(hasAttribute.ToString), hasAttribute);
+                        }
+                        (string[] values, CodePosition position) = GetTypeTemplateValue();
+                        IEnumerable<string> formattedValues = VerifyValues().ToArray();
+
+                        return metaDataTemplate.multiplicity == Templates.Type.multiplicity.OneOrMore
+                                   ? owner.Create(key, formattedValues.Select(v => owner.Create(key.Singular(), v)))
+                                   : owner.Create(key, formattedValues.First());
+
+                        IEnumerable<string> VerifyValues()
+                        {
+                            return values.Select(VerifyValue);
+
+                            string VerifyValue(string arg)
+                            {
+                                (bool success, string message, string newValue) = metaDataTemplate.ValueRestriction.Verify(arg);
+                                if (!success)
+                                {
+                                    owner.AddCodeException(new FieldAttributeRestrictionException(metaDataTemplate.name, arg, message, position, type.GetFile(owner)));
+                                }
+
+                                return newValue;
+                            }
+                        }
+
+                        (string[], CodePosition) GetTypeTemplateValue()
+                        {
+                            IAttribute attribute = type.Attributes.LastOrDefault(a => a.Name.Equals(metaDataTemplate.name,
+                                                                                                      StringComparison.OrdinalIgnoreCase));
+                            string value = attribute?.Values.FirstOrDefault() ??
+                                           resolver.Resolve(metaDataTemplate.defaultvalue, owner);
+                            return (metaDataTemplate.multiplicity == Templates.Type.multiplicity.OneOrMore
+                                        ? value.Split(new[] { metaDataTemplate.split }, StringSplitOptions.RemoveEmptyEntries)
+                                        : new[] { value },
+                                    attribute?.Position ?? new CodePosition(0, 0));
+                        }
+                    }
+                }
+
+                bool TryResolveProperty(out Entity result)
+                {
+                    result = owner.PropertyValueEntity(key, type);
+                    return result != null;
+                }
+
+                bool TryResolveFields(out Entity result)
+                {
+                    metaDataTemplate metaDataTemplate = templateRepository.FieldTemplates
+                                                                    .FirstOrDefault(t => t.name.Plural().Equals(key,
+                                                                                                                StringComparison
+                                                                                                                   .OrdinalIgnoreCase));
+                    if (metaDataTemplate != null)
+                    {
+                        IEnumerable<IField> fields = type.Fields
+                                                         .Where(f => f.Attributes
+                                                                      .Any(a => a.Name
+                                                                                 .Equals(metaDataTemplate.name,
+                                                                                         StringComparison.OrdinalIgnoreCase)));
+                        result = owner.Create(key, fields.Select(f => owner.Create(metaDataTemplate.name, f.Name, f)));
+                        return true;
+                    }
+
+                    result = null;
+                    return false;
+
+                    
+                }
+
+                bool TryResolveRelationship(out Entity result)
+                {
+                    templateRelationship[] relationships = owner.Template().Relationship;
+                    templateRelationship relationship = relationships?.FirstOrDefault(r => r.name.Equals(key, StringComparison.OrdinalIgnoreCase))
+                                                        ?? relationships?.FirstOrDefault(r => r.name.Equals(key.Singular(), StringComparison.OrdinalIgnoreCase));
+                    TemplateDescription relationshipDescription = relationship != null ? templateRepository.Template(relationship.type) : null;
+                    if (relationshipDescription != null)
+                    {
+                        IEnumerable<string> names = type.Attributes
+                                                        .Where(a => a.Name.Equals(relationship.name,
+                                                                                  StringComparison.OrdinalIgnoreCase))
+                                                        .SelectMany(a => a.Values);
+                        result = relationship.GetRelationship(relationshipDescription, owner, names.ToArray());
+                        return true;
+                    }
+
+                    result = null;
+                    return false;
                 }
             }
 
@@ -304,18 +495,27 @@ namespace PlcNext.Common.CodeModel
                         IDataType fieldDataType = GetRealFieldDataType();
                         return owner.Create(key, fieldDataType.Name, fieldDataType);
                     }
+                    case EntityKeys.ResolvedTypeKey:
+                    {
+                        ICodeModel model = owner.Root.Value<ICodeModel>();
+                        IDataType fieldDataType = field.DataType;
+                        IType realType = fieldDataType.PotentialFullNames
+                                                      .Select(model.Type)
+                                                      .FirstOrDefault(t => t != null);
+                        return owner.Create(key, realType?.Name, realType);
+                    }
                     case EntityKeys.MultiplicityKey:
                     {
                         return owner.Create(key, field.Multiplicity.Select(m => owner.Create(key, new Func<string>(m.ToString), m)));
                     }
                     default:
                     {
-                        fieldTemplate fieldTemplate = templateRepository.FieldTemplates
+                        metaDataTemplate metaDataTemplate = templateRepository.FieldTemplates
                                                                         .FirstOrDefault(t => t.name.Equals(key,
                                                                                                            StringComparison.OrdinalIgnoreCase));
-                        if (fieldTemplate != null)
+                        if (metaDataTemplate != null)
                         {
-                            return GetFieldTemplateEntity(fieldTemplate);
+                            return GetFieldTemplateEntity(metaDataTemplate);
                         }
                         throw new ContentProviderException(key, owner);
                     }
@@ -334,17 +534,17 @@ namespace PlcNext.Common.CodeModel
                     return field.DataType;
                 }
 
-                Entity GetFieldTemplateEntity(fieldTemplate fieldTemplate)
+                Entity GetFieldTemplateEntity(metaDataTemplate metaDataTemplate)
                 {
-                    if (!fieldTemplate.hasvalue)
+                    if (!metaDataTemplate.hasvalue)
                     {
-                        bool hasAttribute = field.HasAttributeWithoutValue(fieldTemplate.name);
+                        bool hasAttribute = field.HasAttributeWithoutValue(metaDataTemplate.name);
                         return owner.Create(key, new Func<string>(hasAttribute.ToString), hasAttribute);
                     }
                     (string[] values, CodePosition position) = GetFieldTemplateValue();
                     IEnumerable<string> formattedValues = VerifyValues().ToArray();
 
-                    return fieldTemplate.multiplicity == multiplicity.OneOrMore
+                    return metaDataTemplate.multiplicity == multiplicity.OneOrMore
                                ? owner.Create(key, formattedValues.Select(v => owner.Create(key.Singular(), v)))
                                : owner.Create(key, formattedValues.First());
 
@@ -354,10 +554,10 @@ namespace PlcNext.Common.CodeModel
 
                         string VerifyValue(string arg)
                         {
-                            (bool success, string message, string newValue) = fieldTemplate.ValueRestriction.Verify(arg);
+                            (bool success, string message, string newValue) = metaDataTemplate.ValueRestriction.Verify(arg);
                             if (!success)
                             {
-                                owner.AddCodeException(new FieldAttributeRestrictionException(fieldTemplate.name, arg, message, position, field.GetFile(owner)));
+                                owner.AddCodeException(new FieldAttributeRestrictionException(metaDataTemplate.name, arg, message, position, field.GetFile(owner)));
                             }
 
                             return newValue;
@@ -366,12 +566,12 @@ namespace PlcNext.Common.CodeModel
 
                     (string[], CodePosition) GetFieldTemplateValue()
                     {
-                        IAttribute attribute = field.Attributes.LastOrDefault(a => a.Name.Equals(fieldTemplate.name,
+                        IAttribute attribute = field.Attributes.LastOrDefault(a => a.Name.Equals(metaDataTemplate.name,
                                                                                                   StringComparison.OrdinalIgnoreCase));
                         string value = attribute?.Values.FirstOrDefault() ??
-                                       resolver.Resolve(fieldTemplate.defaultvalue, owner);
-                        return (fieldTemplate.multiplicity == multiplicity.OneOrMore
-                                    ? value.Split(new[] {fieldTemplate.split}, StringSplitOptions.RemoveEmptyEntries)
+                                       resolver.Resolve(metaDataTemplate.defaultvalue, owner);
+                        return (metaDataTemplate.multiplicity == multiplicity.OneOrMore
+                                    ? value.Split(new[] {metaDataTemplate.split}, StringSplitOptions.RemoveEmptyEntries)
                                     : new[] {value},
                                 attribute?.Position ?? new CodePosition(0, 0));
                     }
@@ -384,11 +584,11 @@ namespace PlcNext.Common.CodeModel
                 {
                     case EntityKeys.PortStructsKey:
                     {
-                        return owner.Create(key, GetPortStructures().Select(t => owner.Create("type", t.FullName, t)));
+                        return owner.Create(key, GetPortStructures().Select(c => c.Base));
                     }
                     case EntityKeys.PortEnumsKey:
                     {
-                        return owner.Create(key, GetPortEnums().Select(t => owner.Create("type", t.FullName, t)));
+                        return owner.Create(key, GetPortEnums().Select(c => c.Base));
                     }
                     case EntityKeys.NamespaceKey:
                     {

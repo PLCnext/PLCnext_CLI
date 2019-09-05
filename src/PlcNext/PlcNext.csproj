@@ -58,6 +58,9 @@
     </None>
     <None Update="Templates\AcfProjectTemplate\acf.config">      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Templates\AcfProjectTemplate\Library.cpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Templates\AcfProjectTemplate\Library.meta.cpp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -83,6 +86,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Templates\BaseProjectTemplate\TemplateDescription.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\BaseTemplates\TypeTemplates.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Templates\ComponentTemplate\Component.compmeta">
@@ -115,16 +121,16 @@
     <None Update="Templates\ProgramTemplate\TemplateDescription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\ProjectTemplate\BaseTemplateDescription.xml">
+    <None Update="Templates\BaseTemplates\BaseTemplateDescription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\ProjectTemplate\CodeTemplateDescription.xml">
+    <None Update="Templates\BaseTemplates\CodeTemplateDescription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\ProjectTemplate\FieldTemplates.xml">
+    <None Update="Templates\BaseTemplates\FieldTemplates.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\ProjectTemplate\FormatTemplates.xml">
+    <None Update="Templates\BaseTemplates\FormatTemplates.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Templates\ProjectTemplate\Library.libmeta">

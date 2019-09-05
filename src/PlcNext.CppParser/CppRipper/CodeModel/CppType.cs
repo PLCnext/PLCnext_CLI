@@ -65,6 +65,25 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 ParseFields(ns, usings, content, messages, typeDeclaration, attributePrefix);
             }
 
+            Comments = GetComments();
+
+            IComment[] GetComments()
+            {
+                //ParseNode content = declaration.ChildrenSkipUnnamed().First(n => n.RuleType == "plus" && n.RuleName == "declaration_content");
+                return content.ChildrenSkipUnnamed()
+                              .Where(IsComment)
+                              .Where(c => !string.IsNullOrEmpty(c.ToString()))
+                              .Select(CppComment.Parse)
+                              .ToArray();
+
+                bool IsComment(ParseNode node)
+                {
+                    return node.RuleType == "sequence" && node.RuleName == "comment_set";
+                }
+            }
+
+            //content first is type dec // children is comment
+
             IEnumerable<string> baseTypeNames = typeDeclaration.GetBaseTypes();
             baseTypes.AddRange(baseTypeNames.Select(n => new CppDataType(n, usings, ns)));
         }

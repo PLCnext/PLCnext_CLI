@@ -19,8 +19,9 @@ namespace PlcNext.Common.Templates
     public interface ITemplateRepository
     {
         IEnumerable<TemplateDescription> Templates { get; }
-        IEnumerable<fieldTemplate> FieldTemplates { get; }
+        IEnumerable<metaDataTemplate> FieldTemplates { get; }
         IEnumerable<formatTemplate> FormatTemplates { get; }
+        IEnumerable<Type.metaDataTemplate> TypeTemplates { get; }
         TemplateDescription Template(string name);
         string GetTemplateBase(TemplateDescription template);
     }

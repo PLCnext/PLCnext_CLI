@@ -448,7 +448,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
 
         public VirtualDirectory CurrentDirectory => FileSystem.CurrentDirectory;
 
-        public bool FileExists(string path, string basePath)
+        public bool FileExists(string path, string basePath = "")
         {
             path = path.CleanPath();
             (VirtualDirectory directory, string fileName) = FindDirectory(path, basePath);

@@ -52,12 +52,29 @@ namespace PlcNext.Common.Templates
             }
 
             return owner.Any(e => e.Value<templateFile>() != null) ||
+                   IsCheck(owner, key) ||
+                   key.StartsWith("is", StringComparison.OrdinalIgnoreCase) && fallback ||
                    (owner.Value<templateFile>() != null &&
                     owner.Value<templateFile>().GetType().GetProperty(key) != null);
         }
 
+        bool IsCheck(Entity entity, string key)
+        {
+            if (!key.StartsWith("is", StringComparison.OrdinalIgnoreCase) ||
+                key.Length == 2)
+            {
+                return false;
+            }
+
+            return entity.Type.Equals(key.Substring(2), StringComparison.OrdinalIgnoreCase);
+        }
+
         public Entity Resolve(Entity owner, string key, bool fallback = false)
         {
+            if (key.StartsWith("is"))
+            {
+                return owner.Create(key, IsCheck(owner, key));
+            }
             switch (key)
             {
                 case EntityKeys.TemplateKey:

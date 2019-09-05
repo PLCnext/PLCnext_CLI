@@ -19,7 +19,7 @@ namespace Test.PlcNext.Tools.Abstractions
 
         VirtualDirectory CurrentDirectory { get; }
 
-        bool FileExists(string path, string basePath);
+        bool FileExists(string path, string basePath = "");
 
         void Load(string workspace);
         void Load(Stream content, string fileName);

@@ -373,10 +373,10 @@ namespace PlcNext.Common.Templates.Description
                 }
             }
 
-            IList MakeList(Type type)
+            IList MakeList(System.Type type)
             {
-                Type listType = typeof(List<>);
-                Type constructedListType = listType.MakeGenericType(type);
+                System.Type listType = typeof(List<>);
+                System.Type constructedListType = listType.MakeGenericType(type);
 
                 return (IList) Activator.CreateInstance(constructedListType);
             }

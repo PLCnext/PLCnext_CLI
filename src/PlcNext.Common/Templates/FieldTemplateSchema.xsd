@@ -16,70 +16,9 @@
                 </xs:documentation>
             </xs:annotation>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" name="FieldTemplate" type="fieldTemplate"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="FieldTemplate" type="metaDataTemplate"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-
-    <xs:complexType name="fieldTemplate">
-        <xs:annotation>
-            <xs:documentation>
-                Defines a field template. Field templates can be attached to any field in any class/struct/...
-                Field templates can than be accessed with two different methods.
-                1. On an element which is a type - e.g. by accessing a code template.
-                Usage: $(typeElement.[name]s) accesses all field which are marked with the [name] field template.
-                2. On an element which is a field - e.g. $(typeElement.Fields).
-                Usage: $(field.[name]) accesses the value/values of the [name] field template. If it has no value true/false is returned when the field is marked with the template.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element minOccurs="0" name="ValueRestriction" type="valueRestriction"/>
-        </xs:sequence>
-        <xs:attribute name="name" type="templateName" use="required">
-            <xs:annotation>
-                <xs:documentation>
-                    The name to access the template. Also the name to mark the field.
-                    Fields are marked with the comment //$(settings.AttributePrefix)[name].
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="has-value" type="xs:boolean" use="optional" default="false">
-            <xs:annotation>
-                <xs:documentation>
-                    The attribute shows whether the field template has a value or not.
-                    If it has a value the value is defined with the comment //$(settings.AttributePrefix)[name](value).
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-      <xs:attribute name="default-value" type="xs:string" use="optional" default="">
-        <xs:annotation>
-          <xs:documentation>
-            The attribute shows the default value when the field attribute is not present.
-            This value is ignored when 'has-value' is false.
-            If 'split' was used, the default value will be splitted too.
-            Generator expressions can be used here, the context will be the field.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-        <xs:attribute name="multiplicity" type="multiplicity" use="optional" default="One">
-            <xs:annotation>
-                <xs:documentation>
-                    If set to OneOrMore the value is interpreted as being multiple values.
-                    The split attribute is used to define the seperator.
-                    If has-value is false, this attribute is ignored.
-                    Default is One.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="split" type="xs:string" use="optional" default="|">
-            <xs:annotation>
-                <xs:documentation>
-                    If the multiplicity is OneOrMore this attribute defines the seperator of the values.
-                    If the multiplicity is One or has-value is false, this attribute is ignored.
-                    Default is '|'.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:complexType>
 
 </xs:schema>

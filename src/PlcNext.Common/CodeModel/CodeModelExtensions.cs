@@ -71,6 +71,11 @@ namespace PlcNext.Common.CodeModel
                                             !a.NamedValues.Any());
         }
 
+        public static bool IsHidden(this CodeEntity codeEntity)
+        {
+            return codeEntity.Attributes.Any(a => a.Equals("hidden", StringComparison.OrdinalIgnoreCase));
+        }
+
         public static bool HasAttributeWithoutValue(this IField field, string name)
         {
             return field.Attributes.Any(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase) &&

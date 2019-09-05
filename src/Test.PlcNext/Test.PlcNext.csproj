@@ -17,6 +17,16 @@
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.cpp" />
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.hpp" />
     <None Remove="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
+    <None Remove="Deployment\HiddenPlm\CMakeLists.txt" />
+    <None Remove="Deployment\HiddenPlm\src\HiddenPlmComponent.cpp" />
+    <None Remove="Deployment\HiddenPlm\src\HiddenPlmComponent.hpp" />
+    <None Remove="Deployment\HiddenPlm\src\HiddenPlmProgram.cpp" />
+    <None Remove="Deployment\HiddenPlm\src\HiddenPlmProgram.hpp" />
+    <None Remove="Deployment\ProgramWithHiddenStructPortProgram\CMakeLists.txt" />
+    <None Remove="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramComponent.cpp" />
+    <None Remove="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramComponent.hpp" />
+    <None Remove="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramProgram.cpp" />
+    <None Remove="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramProgram.hpp" />
     <None Remove="Deployment\StandardAcfProject\CMakeLists.txt" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />
@@ -34,8 +44,19 @@
     <None Remove="Deployment\TestResults\GetProjectInformationMultipleSourcesReply.json" />
     <None Remove="Deployment\TestResults\GetProjectInformationStandardReply.json" />
     <None Remove="Deployment\TestResults\GetProjectTargetsReply.json" />
+    <None Remove="Deployment\TestResults\HiddenPlm.meta.cpp" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
+    <EmbeddedResource Include="Deployment\HiddenPlm\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmComponent.cpp" />
+    <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmComponent.hpp" />
+    <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmProgram.cpp" />
+    <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramProgram.hpp" />
     <EmbeddedResource Include="Deployment\StandardAcfProject\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
     <EmbeddedResource Include="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />
@@ -343,6 +364,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseTemplates\BaseTemplateDescription.xml" Link="Deployment\Templates\BaseTemplates\BaseTemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseTemplates\CodeTemplateDescription.xml" Link="Deployment\Templates\BaseTemplates\CodeTemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseTemplates\FieldTemplates.xml" Link="Deployment\Templates\BaseTemplates\FieldTemplates.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseTemplates\FormatTemplates.xml" Link="Deployment\Templates\BaseTemplates\FormatTemplates.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseTemplates\TypeTemplates.xml" Link="Deployment\Templates\BaseTemplates\TypeTemplates.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="..\PlcNext\Templates\BaseComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\BaseComponentTemplate\TemplateDescription.xml" />
   </ItemGroup>
 
@@ -355,10 +384,6 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\ComponentTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\AcfComponentTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProgramTemplate\TemplateDescription.xml" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\BaseTemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\BaseTemplateDescription.xml" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\CodeTemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\CodeTemplateDescription.xml" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FieldTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FieldTemplates.xml" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FormatTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FormatTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\AcfProjectTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\Templates.xml" Link="Deployment\Templates\Templates.xml" />
@@ -660,6 +685,7 @@
     <EmbeddedResource Include="Deployment\Standard\src\Standard\MyComponent\MyProgram.hpp" />
     <EmbeddedResource Include="Deployment\TestResults\EnumTestLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\EsmLibrary.meta.cpp" />
+    <EmbeddedResource Include="Deployment\TestResults\HiddenPlm.meta.cpp" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponent._meta.cpp" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponentProgramProvider.cpp" />
@@ -710,6 +736,8 @@
     <EmbeddedResource Include="..\PlcNext\Templates\BaseComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\BaseComponentTemplate\Component.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.cpp" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\HiddenPlm\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget3\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget2\plcnext.proj" />
@@ -768,6 +796,7 @@
     <Folder Include="Deployment\Templates\AcfComponentTemplate\" />
     <Folder Include="Deployment\Templates\BaseProjectTemplate\" />
     <Folder Include="Deployment\Templates\BaseComponentTemplate\" />
+    <Folder Include="Deployment\Templates\BaseTemplates\" />
     <Folder Include="Deployment\Templates\ProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProgramTemplate\" />
   </ItemGroup>

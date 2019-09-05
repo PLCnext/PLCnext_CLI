@@ -39,6 +39,7 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="Template"/>
       <xs:enumeration value="Fields"/>
+      <xs:enumeration value="Types"/>
       <xs:enumeration value="Format"/>
     </xs:restriction>
   </xs:simpleType>

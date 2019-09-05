@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This schema file describes the structure of the type templates file. -->
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/clitemplates"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           id="fieldTemplates" targetNamespace="http://www.phoenixcontact.com/schema/clitemplates"
+           version="1.0">
+
+  <xs:include schemaLocation="TemplateBaseSchema.xsd"/>
+
+  <xs:element name="TypeTemplates">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+          Root element for the type templates file.
+          It contains a list of type templates.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="TypeTemplate" type="metaDataTemplate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

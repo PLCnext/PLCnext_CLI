@@ -23,22 +23,6 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         public CppClass(string ns, string name, string[] usings, ParseNode content, ParseNode classDeclaration,
                         List<ParserMessage> messages, string attributePrefix) : base(ns, name, usings, content, messages, classDeclaration, attributePrefix)
         {
-            Comments = GetComments();
-
-            IComment[] GetComments()
-            {
-                //ParseNode content = declaration.ChildrenSkipUnnamed().First(n => n.RuleType == "plus" && n.RuleName == "declaration_content");
-                return content.ChildrenSkipUnnamed()
-                              .Where(IsComment)
-                              .Where(c => !string.IsNullOrEmpty(c.ToString()))
-                              .Select(CppComment.Parse)
-                              .ToArray();
-
-                bool IsComment(ParseNode node)
-                {
-                    return node.RuleType == "sequence" && node.RuleName == "comment_set";
-                }
-            }
         }
     }
 }

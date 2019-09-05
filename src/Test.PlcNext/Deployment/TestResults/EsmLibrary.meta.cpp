@@ -48,7 +48,8 @@ using namespace Arp::Plc::Commons::Meta;
                         { "MaxTaskActivationDelay", offsetof(::Arp::Plc::Esm::Data::TaskInfo, MaxTaskActivationDelay), DataType::Int64, "", sizeof(int64), alignof(int64), {  }, StandardAttribute::None },
                         { "ExecutionTimeThreshold", offsetof(::Arp::Plc::Esm::Data::TaskInfo, ExecutionTimeThreshold), DataType::Int64, "", sizeof(int64), alignof(int64), {  }, StandardAttribute::None },
                         { "ExecutionTimeThresholdCount", offsetof(::Arp::Plc::Esm::Data::TaskInfo, ExecutionTimeThresholdCount), DataType::UInt32, "", sizeof(uint32), alignof(uint32), {  }, StandardAttribute::None },
-                        { "TaskName", offsetof(::Arp::Plc::Esm::Data::TaskInfo, TaskName), DataType::StaticString | DataType::Array, CTN<StaticString<80>>(), sizeof(StaticString<80>), alignof(StaticString<80>), { 2 }, StandardAttribute::None },
+                        { "TaskName", offsetof(::Arp::Plc::Esm::Data::TaskInfo, TaskName), DataType::StaticString | DataType::Array, "", sizeof(StaticString<80>), alignof(StaticString<80>), { 2 }, StandardAttribute::None },
+                        { "TaskName2", offsetof(::Arp::Plc::Esm::Data::TaskInfo, TaskName2), DataType::StaticString, "", sizeof(StaticString<100>), alignof(StaticString<100>), {  }, StandardAttribute::None },
                     }
                 },
                 {   // ProgramDefinition: Arp::Plc::Esm::MyComponent::MyProgram

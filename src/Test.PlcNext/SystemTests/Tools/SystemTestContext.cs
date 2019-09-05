@@ -567,6 +567,13 @@ namespace Test.PlcNext.SystemTests.Tools
                 MetaConfigurationDocument document = (MetaConfigurationDocument)serializer.Deserialize(fileStream);
                 TypesDefinition typesDefinition = document.Item as TypesDefinition;
                 typesDefinition.Should().NotBeNull("metadata content should be a TypesDefinition");
+
+                if (typemetaStructures == null)
+                {
+                    typesDefinition?.Items.Should().BeNullOrEmpty($"no structure definition was expected.");
+                    return;
+                }
+
                 foreach (StructTypemetaStructure structure in typemetaStructures.OfType<StructTypemetaStructure>())
                 {
                     StructTypeDefinition definition = typesDefinition?.Items?.OfType<StructTypeDefinition>()
@@ -886,26 +893,19 @@ namespace Test.PlcNext.SystemTests.Tools
         {
             string path = GetPathOfFile($"{ns}Library.acf.config", Constants.SourceFolderName);
             using (Stream fileStream = fileSystemAbstraction.Open(path))
-            using(StreamReader reader = new StreamReader(fileStream))
+            using (StreamReader reader = new StreamReader(fileStream))
             {
                 string content = reader.ReadToEnd();
                 content.Contains("<AcfConfigurationDocument").Should().BeTrue($"Content '<AcfConfigurationDocument' was expected to exist. Actual content{Environment.NewLine}{content}");
-                content.Contains($"<Component name=\"{ns}\" type=\"{ns.Split('.').Aggregate(string.Empty, (s1, s2) => s1 == string.Empty ? s2 : $"{s1}::{s2}")}::{componentname}\" library=\"{ns}")
-                    .Should().BeTrue($"Content '<Component name=\"{ns}\" type=\"{ns.Split('.').Aggregate(string.Empty, (s1, s2) => $"{s1}::{s2}")}{componentname}\" library=\"{ns}' was expected to exist. Actual content{Environment.NewLine}{content}");
+                content.Contains($"<Component name=\"{componentname}1\" type=\"{string.Join("::", ns.Split('.'))}::{componentname}\" library=\"{ns}")
+                    .Should().BeTrue($"Content '<Component name=\"{componentname}1\" type=\"{string.Join("::", ns.Split('.'))}{componentname}\" library=\"{ns}' was expected to exist. Actual content{Environment.NewLine}{content}");
             }
         }
 
         public void CheckDeployedAcfConfig(string ns, string componentname, string deployPath)
         {
             string path = GetPathOfFile($"{ns}Library.acf.config", deployPath);
-            using (Stream fileStream = fileSystemAbstraction.Open(path))
-            using (StreamReader reader = new StreamReader(fileStream))
-            {
-                string content = reader.ReadToEnd();
-                content.Contains("<AcfConfigurationDocument").Should().BeTrue($"Content '<AcfConfigurationDocument' was expected to exist. Actual content{Environment.NewLine}{content}");
-                content.Contains($"<Component name=\"{ns}\" type=\"{ns.Split('.').Aggregate(string.Empty, (s1, s2) => s1 == string.Empty ? s2 : $"{s1}::{s2}")}::{componentname}\" library=\"{ns}")
-                    .Should().BeTrue($"Content '<Component name=\"{ns}\" type=\"{ns.Split('.').Aggregate(string.Empty, (s1, s2) => $"{s1}::{s2}")}{componentname}\" library=\"{ns}' was expected to exist. Actual content{Environment.NewLine}{content}");
-            }
+            fileSystemAbstraction.FileExists(path).Should().BeTrue($"acf.config expected in {path}");
         }
 
         public void CheckTypemetaMethod(string compareFile)

@@ -53,6 +53,7 @@ public: // fields
     int64               ExecutionTimeThreshold = 0;
     uint32              ExecutionTimeThresholdCount = 0;
     StaticString<80>    TaskName[2] = { "HollaDieWaldfee", "Das wird lustig!" };
+    StaticString<100>    TaskName2;
 
 private: // static fields
 

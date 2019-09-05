@@ -95,6 +95,9 @@ namespace PlcNext.Common.Templates.Templates {
         Fields,
         
         /// <remarks/>
+        Types,
+        
+        /// <remarks/>
         Format,
     }
 }

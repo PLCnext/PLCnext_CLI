@@ -10,6 +10,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LightBDD.Framework;
@@ -329,6 +330,51 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Do_not_allow_hidden_structures_inside_programs()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ProgramWithHiddenStructPortProgram"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_user_was_informed_that_the_scope_of_a_used_attribute_does_not_match()).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_port_information_for_hidden_struct_port()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("HiddenPlm"),
+                _ => Given_is_the_working_directory_PATH("HiddenPlm"),
+                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => Then_there_are_compmeta_files_with_the_following_content(new CompmetaData("HiddenPlmComponent",
+                                                                                               new[] { "HiddenPlmComponent" },
+                                                                                               new[]
+                                                                                               {
+                                                                                                   new Portmeta("value1","int32","Input"),
+                                                                                                   new Portmeta("NamedPort","boolean","Output|Opc"),
+                                                                                               },
+                                                                                        new[]{"HiddenPlmProgram"}))).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Do_not_generate_typemeta_for_hidden_types()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("HiddenPlm"),
+                _ => Given_is_the_working_directory_PATH("HiddenPlm"),
+                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => Then_the_typemeta_file_is_empty()).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_typemeta_library_information_for_hidden_types()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("HiddenPlm"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_typemeta_method_looks_like_NAME("HiddenPlm.meta.cpp")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_typemeta_information_in_method()
         {
             await Runner.AddSteps(
@@ -417,7 +463,8 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                        new TypeMember("MaxTaskActivationDelay","int64"),
                                                                                                        new TypeMember("ExecutionTimeThreshold","int64"),
                                                                                                        new TypeMember("ExecutionTimeThresholdCount","uint32"),
-                                                                                                       new TypeMember("TaskName","StaticString[80]",2),
+                                                                                                       new TypeMember("TaskName","StaticString",2),
+                                                                                                       new TypeMember("TaskName2","StaticString100",0),
                                                                                                    }))).RunAsyncWithTimeout();
         }
 

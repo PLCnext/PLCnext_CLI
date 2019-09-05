@@ -40,7 +40,9 @@ namespace PlcNext
 
         private static async Task<int> MainAsync(string[] args)
         {
-            if (args.Any() && args[0].ToLowerInvariant() == CommandLineConstants.MigrateCliVerb)
+            if (args.Any() && 
+                args[0].ToLowerInvariant() == CommandLineConstants.MigrateCliVerb &&
+                !args.Any(a => a.TrimEnd().EndsWith("help")))
             {
                 return Migrate() ? 0 : 1;
             }
