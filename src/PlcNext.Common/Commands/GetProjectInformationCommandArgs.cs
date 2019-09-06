@@ -16,13 +16,15 @@ namespace PlcNext.Common.Commands
     public class GetProjectInformationCommandArgs : CommandArgs
     {
 
-        public GetProjectInformationCommandArgs(string path, IEnumerable<string> sources)
+        public GetProjectInformationCommandArgs(string path, IEnumerable<string> sources, bool noIncludePathDetection)
         {
             Path = path;
             Sources = sources;
+            NoIncludePathDetection = noIncludePathDetection;
         }
 
         public string Path { get; }
         public IEnumerable<string> Sources { get; }
+        public bool NoIncludePathDetection { get; }
     }
 }

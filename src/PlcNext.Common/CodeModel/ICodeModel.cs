@@ -23,5 +23,6 @@ namespace PlcNext.Common.CodeModel
         IEnum Enum(string enumName);
         IType Type(string typeName);
         VirtualDirectory GetBaseDirectory(IType type);
+        IEnumerable<VirtualDirectory> IncludeDirectories { get; }
     }
 }

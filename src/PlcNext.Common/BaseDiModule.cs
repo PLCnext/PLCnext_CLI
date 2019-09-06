@@ -117,6 +117,7 @@ namespace PlcNext.Common
             builder.RegisterType<CollectiveEntityContentProvider>().As<IEntityContentProvider>().InstancePerLifetimeScope();
             builder.RegisterType<DeployService>().As<IDeployService>().InstancePerLifetimeScope();
             builder.RegisterType<EngineeringLibraryBuilderDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
+            builder.RegisterType<ProjectPropertiesProvider>().As<IProjectPropertiesProvider>().InstancePerLifetimeScope();
             if (activateAutoComponents)
             {
                 AddAutoActivatedComponents(builder, noSdkExploration);

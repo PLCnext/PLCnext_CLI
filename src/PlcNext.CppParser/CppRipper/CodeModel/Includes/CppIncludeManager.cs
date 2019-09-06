@@ -49,6 +49,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
 
             UpdateCache();
 
+            codeModel.IncludeDirectories = parameter.IncludeDirectories;
+
             codeModel.RegisterIncludeTypeFinder(FindIncludeType);
             this.codeModel = codeModel;
 

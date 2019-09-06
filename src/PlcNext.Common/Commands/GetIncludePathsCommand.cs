@@ -36,6 +36,8 @@ namespace PlcNext.Common.Commands
 
         protected override CommandResult ExecuteDetailed(GetIncludePathsCommandArgs args, ChangeObservable observable)
         {
+            ExecutionContext.WriteWarning("This command is deprecated. Use 'get project-information' instead.", false);
+            
             ProjectEntity project = ProjectEntity.Decorate(entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root);
             TargetsResult targetsResult = targetParser.Targets(project);
             IEnumerable<string> paths = targetsResult.ValidTargets

@@ -18,13 +18,15 @@ namespace PlcNext.Common.Commands.CommandResults
     {
         public ProjectInformationCommandResult(string name, string ns, string type,
                                                IEnumerable<TargetResult> targets,
-                                               IEnumerable<EntityResult> entities)
+                                               IEnumerable<EntityResult> entities,
+                                               IEnumerable<Path> includePaths)
         {
             Name = name;
             Namespace = ns;
             Type = type;
             Targets = targets;
             Entities = entities;
+            IncludePaths = includePaths;
         }
 
         [JsonProperty(PropertyName = "name")]
@@ -41,6 +43,9 @@ namespace PlcNext.Common.Commands.CommandResults
 
         [JsonProperty(PropertyName = "entities")]
         public IEnumerable<EntityResult> Entities { get; }
+
+        [JsonProperty(PropertyName = "includePaths")]
+        public IEnumerable<Path> IncludePaths { get; }
 
     }
 

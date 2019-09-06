@@ -32,9 +32,14 @@ namespace PlcNext.CommandLine
             Separator = ',')]
         public IEnumerable<string> SourceDirectories { get; set; }
 
+        
+        [Option('n', Constants.NoIncludePathDetection, HelpText = "Disables the automatic include path detection using CMake." +
+                                                                  " The system paths defined by the SDK are still used.")]
+        public bool NoIncludePathDetection { get; set; }
+
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(new GetProjectInformationCommandArgs(Path, SourceDirectories));
+            return await commandManager.Execute(new GetProjectInformationCommandArgs(Path, SourceDirectories, NoIncludePathDetection));
         }
     }
 }
