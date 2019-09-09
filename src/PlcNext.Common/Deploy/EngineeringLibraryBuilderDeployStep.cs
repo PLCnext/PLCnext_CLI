@@ -42,6 +42,8 @@ namespace PlcNext.Common.Deploy
 
             string outputDirectory = command.GetSingleValueArgument(Constants.OutputArgumentName);
 
+            string buildType = command.GetSingleValueArgument(Constants.BuildTypeArgumentName);
+
             if (command.IsCommandArgumentSpecified(Constants.IdArgumentName) 
                 && !Guid.TryParse(command.GetSingleValueArgument(Constants.IdArgumentName), out Guid realGuid))
             {
@@ -52,7 +54,7 @@ namespace PlcNext.Common.Deploy
 
             IEnumerable<string> externalLibraries = command.GetMultiValueArgument(Constants.ExternalLibrariesArgumentName);
 
-            builder.BuildLibraryForProject(dataModel.Root, observable, metaFilesDirectory, libraryLocation, outputDirectory, realGuid, targets, externalLibraries);            
+            builder.BuildLibraryForProject(dataModel.Root, observable, metaFilesDirectory, libraryLocation, outputDirectory, realGuid, targets, externalLibraries, buildType);            
         }
     }
 }

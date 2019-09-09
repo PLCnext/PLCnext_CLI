@@ -50,6 +50,7 @@ namespace PlcNext.Common.Tools
         public const string TargetArgumentName = "target";
         public const string ExternalLibrariesArgumentName = "externallibraries";
         public const string FilesArgumentName = "files";
+        public const string BuildTypeArgumentName = "buildtype";
         public const int MaxIORetries = 10;
         public const char OptionsSeparator = ',';
 

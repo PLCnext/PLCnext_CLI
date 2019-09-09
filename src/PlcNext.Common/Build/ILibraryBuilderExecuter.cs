@@ -22,6 +22,7 @@ namespace PlcNext.Common.Build
     {
         int Execute(ProjectEntity project, string metaFilesDirectory, string libraryLocation, string outputDirectory,
                     ChangeObservable changeObservable, IUserInterface userInterface, Guid libraryGuid,
-                    IEnumerable<(Target, string)> targets, Dictionary<Target, IEnumerable<VirtualFile>> externalLibraries);
+                    IEnumerable<(Target, string)> targets,
+                    Dictionary<Target, IEnumerable<VirtualFile>> externalLibraries, string buildType);
     }
 }

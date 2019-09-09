@@ -175,19 +175,31 @@ namespace PlcNext.Common.Deploy
 
             VirtualDirectory GetOutputDirectory(Target target)
             {
-
+                string buildTypeFolder = command.IsCommandArgumentSpecified(Constants.BuildTypeArgumentName)
+                                             ? FormatBuildType(command.GetSingleValueArgument(Constants.BuildTypeArgumentName))
+                                             : Constants.ReleaseFolderName;
                 string basePath = project.Path;
                 if (!command.IsCommandArgumentSpecified(Constants.OutputArgumentName))
                 {
 
                     return fileSystem.GetDirectory(Path.Combine(basePath, Constants.LibraryFolderName, target.GetFullName().Replace(',', '_'),
-                        Constants.ReleaseFolderName));
+                                                                buildTypeFolder));
                 }
 
                 basePath = fileSystem.GetDirectory(command.GetSingleValueArgument(Constants.OutputArgumentName), basePath).FullName;
-                basePath = Path.Combine(basePath, target.GetFullName().Replace(',', '_'), Constants.ReleaseFolderName);
+                basePath = Path.Combine(basePath, target.GetFullName().Replace(',', '_'), buildTypeFolder);
 
                 return fileSystem.GetDirectory(basePath);
+
+                string FormatBuildType(string buildType)
+                {
+                    if (string.IsNullOrEmpty(buildType))
+                    {
+                        return Constants.ReleaseFolderName;
+                    }
+
+                    return buildType.Substring(0, 1).ToUpperInvariant() + buildType.Substring(1);
+                }
             }
         }
 

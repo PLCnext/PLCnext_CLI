@@ -409,6 +409,31 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Deploy_files_deploys_the_files_in_correct_location_with_build_type()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AcfProject"),
+                _ => Given_is_the_working_directory_PATH("AcfProject"),
+                _ => When_I_deploy(new DeployCommandArgs
+                {
+                    Targets = new[] { "axcf2152,19.0" },
+                    Files = new[] { "MySettings.txt|deploy/settings", "MySettings.txt|." },
+                    BuildType = "Debug"
+                }),
+                _ => Then_the_files_exist_in_location(new Dictionary<string, string>
+                    {
+                        { "bin/AXCF2152_19.0.0.12345/Debug/deploy/settings/MySettings.txt",
+                            "Here are some settings..."
+                        },
+                        {
+                            "bin/AXCF2152_19.0.0.12345/Debug/MySettings.txt",
+                            "Here are some settings..."
+                        }
+                    })
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Deploy_files_for_missing_target_throws_error()
         {
             await Runner.AddSteps(
@@ -434,6 +459,7 @@ namespace Test.PlcNext.SystemTests.Features
         public string OutputDirectory { get; internal set; }
 
         public string Id { get; internal set; }
+        public string BuildType { get; internal set; }
 
         public IEnumerable<string> Targets { get; internal set; }
 

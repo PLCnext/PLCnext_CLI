@@ -321,6 +321,18 @@ namespace PlcNext.Common.Templates
                     shortNames.Add('t');
                 }
 
+                if (!ArgumentAvailableFromDescription(Constants.BuildTypeArgumentName))
+                {
+                    builder = builder.CreateArgument()
+                              .SetName(Constants.BuildTypeArgumentName)
+                              .SetShortName('b')
+                              .SetHelp(
+                                   "Build type for which the deploy should be executed. Default is 'Release'")
+                              .SetArgumentType(ArgumentType.SingleValue)
+                              .Build();
+                    shortNames.Add('b');
+                }
+
                 builder.AddExample("deploy --path MyAcfProject", "Deploy the acf.config for 'MyAcfProject'");
                 builder.AddExample("deploy --path MyPlmProject", "Deploy a .pcwlx library for 'MyPlmProject'");
                 builder.AddExample($"deploy --path Path/To/Project", "Deploy library for all targets supported by project");

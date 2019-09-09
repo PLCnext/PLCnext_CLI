@@ -100,7 +100,8 @@ namespace PlcNext.Common.Build
 
         public int BuildLibraryForProject(Entity project, ChangeObservable observable,
                                           string metaFilesDirectory, string libraryLocation, string outputDirectory,
-                                          Guid libraryGuid, IEnumerable<string> targets, IEnumerable<string> externalLibraries)
+                                          Guid libraryGuid, IEnumerable<string> targets,
+                                          IEnumerable<string> externalLibraries, string buildType)
         {
             userInterface.WriteInformation("Starting library generation...");
 
@@ -134,7 +135,7 @@ namespace PlcNext.Common.Build
                                                                 fileSystem, targetsSet.Select(t => t.Item1));
              
             int result = libraryBuilderExecuter.Execute(projectEntity, metaFilesDirectory, libraryLocation,
-                outputDirectory, observable, userInterface, libraryGuid, targetsSet, externalLibs);
+                outputDirectory, observable, userInterface, libraryGuid, targetsSet, externalLibs, buildType);
             if (result == 0)
             {
                 userInterface.WriteInformation("Successfully generated library!");

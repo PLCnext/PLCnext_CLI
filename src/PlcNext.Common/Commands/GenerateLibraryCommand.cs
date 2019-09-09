@@ -38,7 +38,7 @@ namespace PlcNext.Common.Commands
 
             Entity project = entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root;
             return builder.BuildLibraryForProject(project, observable, args.MetaFilesDirectory, args.LibraryLocation,
-                                           args.OutputDirectory, realGuid, args.Targets, args.ExternalLibraries);
+                                           args.OutputDirectory, realGuid, args.Targets, args.ExternalLibraries, null);
         }
     }
 }

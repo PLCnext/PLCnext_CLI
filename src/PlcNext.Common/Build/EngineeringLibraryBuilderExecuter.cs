@@ -57,8 +57,11 @@ namespace PlcNext.Common.Build
                            string outputDirectory,
                            ChangeObservable observable, IUserInterface userInterface, Guid libraryGuid,
                            IEnumerable<(Target, string)> targets,
-                           Dictionary<Target, IEnumerable<VirtualFile>> externalLibraries)
+                           Dictionary<Target, IEnumerable<VirtualFile>> externalLibraries, string buildType)
         {
+            buildType = string.IsNullOrEmpty(buildType)
+                            ? Constants.ReleaseFolderName
+                            : buildType.Substring(0, 1).ToUpperInvariant() + buildType.Substring(1);
             FileEntity projectFileEntity = FileEntity.Decorate(project);
             CodeEntity projectCodeEntity = CodeEntity.Decorate(project);
             TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
@@ -158,7 +161,7 @@ namespace PlcNext.Common.Build
                                                     .Directory(target.Item1.GetFullName().Replace(",", "_"))
                                                     .Files("*.so", true)
                                                     .OrderByDescending(f => f.Name.Equals($"lib{projectName}.so"))
-                                                    .ThenByDescending(f => f.FullName.Contains(Constants.ReleaseFolderName))
+                                                    .ThenByDescending(f => f.FullName.Contains(buildType))
                                                     .ThenByDescending(f => f.LastWriteTime)
                                                     .FirstOrDefault()
                                                     ?.FullName;
@@ -177,7 +180,7 @@ namespace PlcNext.Common.Build
                                 libFile = fileSystem.GetDirectory(libFile)
                                                     .Files("*.so", true)
                                                     .OrderByDescending(f => f.Name.Equals($"lib{projectName}.so"))
-                                                    .ThenByDescending(f => f.FullName.Contains(Constants.ReleaseFolderName))
+                                                    .ThenByDescending(f => f.FullName.Contains(buildType))
                                                     .ThenByDescending(f => f.LastWriteTime)
                                                     .FirstOrDefault()
                                                     ?.FullName;
@@ -190,12 +193,16 @@ namespace PlcNext.Common.Build
                         throw new LibraryNotFoundException(libFile);
                     }
 
-                    string buildType = Constants.ReleaseFolderName;
-                    if (libFile.Contains(Constants.DebugFolderName))
+                    string libraryBuildType = buildType;
+                    string directoryName = Path.GetDirectoryName(libFile)?? Constants.ReleaseFolderName;
+                    directoryName = Path.GetFileName(directoryName);
+                    if (!directoryName.Equals(buildType, StringComparison.OrdinalIgnoreCase))
                     {
-                        buildType = Constants.DebugFolderName;
+                        libraryBuildType = directoryName.Equals(Constants.DebugFolderName, StringComparison.OrdinalIgnoreCase)
+                                               ? Constants.DebugFolderName
+                                               : Constants.ReleaseFolderName;
                     }
-                    targetToBuildTypeDictionary.Add(target.Item1, buildType);
+                    targetToBuildTypeDictionary.Add(target.Item1, libraryBuildType);
 
 
                     VirtualFile renamedLibrary = tempDirectory.Directory(target.Item1.GetFullName().Replace(",", "_")).File("lib" + projectName + Path.GetExtension(libFile));
@@ -244,16 +251,16 @@ namespace PlcNext.Common.Build
 
                 void GetLibsFromCMakeServer(Target target){
 
-                    string buildType = Constants.ReleaseFolderName;
+                    string libraryBuildType = buildType;
                     if (targetToBuildTypeDictionary.ContainsKey(target))
                     {
-                        buildType = targetToBuildTypeDictionary[target];
+                        libraryBuildType = targetToBuildTypeDictionary[target];
                     }
 
                     string binaryDirectory = Path.Combine(projectFileEntity.Directory.FullName, Constants.IntermediateFolderName,
                                                                                      Constants.CmakeFolderName,
                                                                                      target.GetFullName(),
-                                                                                     buildType);
+                                                                                     libraryBuildType);
                     if (!fileSystem.DirectoryExists(binaryDirectory))
                     {
                         throw new CMakeBuildSystemNotFoundException(binaryDirectory);

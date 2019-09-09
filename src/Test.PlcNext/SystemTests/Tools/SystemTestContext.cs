@@ -1374,6 +1374,12 @@ namespace Test.PlcNext.SystemTests.Tools
                 args.Add(deployArgs.OutputDirectory);
             }
 
+            if (!string.IsNullOrEmpty(deployArgs.BuildType))
+            {
+                args.Add("--buildtype");
+                args.Add(deployArgs.BuildType);
+            }
+
             if (deployArgs.Targets != null && deployArgs.Targets.Any())
             {
                 args.Add("-t");

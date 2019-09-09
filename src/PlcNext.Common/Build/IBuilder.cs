@@ -21,6 +21,6 @@ namespace PlcNext.Common.Build
 
         int BuildLibraryForProject(Entity project, ChangeObservable observable, string metaFilesDirectory,
                                    string libraryLocation, string outputDirectory, Guid libraryGuid,
-                                   IEnumerable<string> targets, IEnumerable<string> externalLibraries);
+                                   IEnumerable<string> targets, IEnumerable<string> externalLibraries, string buildType);
     }
 }
