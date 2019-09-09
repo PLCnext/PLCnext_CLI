@@ -732,13 +732,12 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
 	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\acf.config" Link="Deployment\Templates\AcfProjectTemplate\acf.config" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\Library.cpp" Link="Deployment\Templates\BaseProjectTemplate\Library.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\Library.hpp" Link="Deployment\Templates\BaseProjectTemplate\Library.hpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\BaseComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\BaseComponentTemplate\Component.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\ComponentTemplate\Component.meta.cpp" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
     <EmbeddedResource Include="Deployment\HiddenPlm\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\plcnext.proj" />
@@ -801,6 +800,7 @@
     <Folder Include="Deployment\Templates\BaseProjectTemplate\" />
     <Folder Include="Deployment\Templates\BaseComponentTemplate\" />
     <Folder Include="Deployment\Templates\BaseTemplates\" />
+    <Folder Include="Deployment\Templates\ComponentTemplate\" />
     <Folder Include="Deployment\Templates\ProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProgramTemplate\" />
   </ItemGroup>

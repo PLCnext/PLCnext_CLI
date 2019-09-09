@@ -116,7 +116,7 @@ namespace PlcNext.Common.Templates
                         continue;
                     }
 
-                    foreach (string generator in template.GeneratedFile.Select(g => g.generator.ToLowerInvariant()))
+                    foreach (string generator in template.GeneratedFile?.Select(g => g.generator.ToLowerInvariant())??Enumerable.Empty<string>())
                     {
                         generators.Add(generator);
                     }
