@@ -364,6 +364,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\How_to_deploy.txt" Link="Deployment\Templates\AcfProjectTemplate\How_to_deploy.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="..\PlcNext\Templates\BaseTemplates\BaseTemplateDescription.xml" Link="Deployment\Templates\BaseTemplates\BaseTemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseTemplates\CodeTemplateDescription.xml" Link="Deployment\Templates\BaseTemplates\CodeTemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseTemplates\FieldTemplates.xml" Link="Deployment\Templates\BaseTemplates\FieldTemplates.xml" />

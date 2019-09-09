@@ -1415,6 +1415,12 @@ namespace Test.PlcNext.SystemTests.Tools
             foreach (KeyValuePair<string, string> entry in filesAndContent)
             {
                 string path = GetPathOfFile(entry.Key);
+                if (entry.Value == null)
+                {
+                    fileSystemAbstraction.FileExists(entry.Key).Should()
+                                         .BeTrue($"file {entry.Key} was expected to exist.");
+                    continue;
+                }
                 using (Stream fileStream = fileSystemAbstraction.Open(path))
                 using (StreamReader reader = new StreamReader(fileStream))
                 {

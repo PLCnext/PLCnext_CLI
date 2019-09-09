@@ -58,6 +58,9 @@
     </None>
     <None Update="Templates\AcfProjectTemplate\acf.config">      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Templates\AcfProjectTemplate\How_to_deploy.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Templates\AcfProjectTemplate\Library.cpp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -152,7 +155,6 @@
 
   <ItemGroup>
     <Folder Include="Templates\AcfComponentTemplate\" />
-    <Folder Include="Templates\AcfProjectTemplate\" />
   </ItemGroup>
 
 </Project>

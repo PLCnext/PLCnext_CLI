@@ -385,6 +385,17 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Deploy_for_acfproject_deploys_how_to_deploy_file()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AcfProject"),
+                _ => Given_is_the_working_directory_PATH("AcfProject"),
+                _ => When_I_deploy(new DeployCommandArgs { Targets = new[] { "axcf2152,19.0" } }),
+                _ => Then_the_files_exist_in_location("bin/AXCF2152_19.0.0.12345/Release/How_to_deploy.txt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Deploy_files_deploys_the_files_in_correct_location()
         {
             await Runner.AddSteps(

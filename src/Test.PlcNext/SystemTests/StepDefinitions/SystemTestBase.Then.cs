@@ -27,6 +27,7 @@ using PlcNext.Common.CodeModel;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools.SDK;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
@@ -471,6 +472,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_files_exist_in_location(Dictionary<string, string> filesAndContent)
         {
             ScenarioContext.CheckFilesExistInLocation(filesAndContent);
+        }
+
+        protected void Then_the_files_exist_in_location(params string[] files)
+        {
+            ScenarioContext.CheckFilesExistInLocation(files.ToDictionary(f => f, f => (string)null));
         }
     }
 }
