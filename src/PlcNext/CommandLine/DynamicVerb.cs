@@ -21,7 +21,7 @@ namespace PlcNext.CommandLine
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
             AddDefinitionContent();
-            return await commandManager.Execute(new DynamicCommandArgs(Defintion));
+            return await commandManager.Execute(AddDeprecatedInformation(new DynamicCommandArgs(Defintion)));
 
             void AddDefinitionContent()
             {

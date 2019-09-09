@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PlcNext.Common.Commands;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.UI;
 using PlcNext.NamedPipeServer.Data;
@@ -222,7 +223,7 @@ namespace PlcNext.NamedPipeServer.CommandLine
                 return new NopDisposable();
             }
 
-            public void Visualize(object result)
+            public void Visualize(object result, CommandArgs args)
             {
                 CommandResult = JObject.FromObject(result, JsonSerializer.Create(new JsonSerializerSettings
                 {

@@ -17,8 +17,8 @@ using PlcNext.Common.Tools;
 
 namespace PlcNext.CommandLine
 {
-    [Deprecated]
-    [Verb(CommandLineConstants.LibraryVerb, HelpText = "Deprecated. Generates a .pcwlx library.")]
+    [DeprecatedVerb("deploy")]
+    [Verb(CommandLineConstants.LibraryVerb, Hidden = true, HelpText = "Deprecated. Generates a .pcwlx library.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     internal class GenerateLibraryVerb : GenerateVerb
     {
@@ -74,8 +74,8 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(new 
-                GenerateLibraryCommandArgs(Path, MetaFilesDirectory, LibraryLocation, OutputDirectory, LibraryGuid, Targets, ExternalLibraries, SourceDirectories));
+            return await commandManager.Execute(AddDeprecatedInformation(new 
+                GenerateLibraryCommandArgs(Path, MetaFilesDirectory, LibraryLocation, OutputDirectory, LibraryGuid, Targets, ExternalLibraries, SourceDirectories)));
         }
     }
 }

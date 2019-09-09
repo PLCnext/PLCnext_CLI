@@ -7,10 +7,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using PlcNext.Common.Commands;
+
 namespace PlcNext.Common.Tools.UI
 {
     public interface ICommandResultVisualizer
     {
-        void Visualize(object result);
+        void Visualize(object result, CommandArgs args);
     }
 }

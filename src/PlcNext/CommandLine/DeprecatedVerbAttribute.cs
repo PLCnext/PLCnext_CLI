@@ -14,7 +14,13 @@ using System.Text;
 namespace PlcNext.CommandLine
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class DeprecatedAttribute : Attribute
+    public class DeprecatedVerbAttribute : Attribute
     {
+        public DeprecatedVerbAttribute(string alternativeVerb)
+        {
+            AlternativeVerb = alternativeVerb;
+        }
+
+        public string AlternativeVerb { get; }
     }
 }

@@ -9,6 +9,8 @@
 
 using System.Reflection;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using PlcNext.Common.Commands;
 
 namespace PlcNext.Common.Tools.UI
 {
@@ -21,22 +23,26 @@ namespace PlcNext.Common.Tools.UI
             this.executionContext = executionContext;
         }
 
-        public void Visualize(object result)
+        public void Visualize(object result, CommandArgs args)
         {
             if (result.GetType().GetCustomAttribute<CustomFormatDataStructureAttribute>() != null)
             {
                 executionContext.WriteInformation(result.ToString());
+                executionContext.WriteWarning($"This command is deprecated. Please use '{args.DeprecatedAlternative}' instead.");
             }
             else
             {
-                executionContext.WriteInformation(JsonConvert.SerializeObject(
-                                                      result, Formatting.Indented,
-                                                      new JsonSerializerSettings
-                                                      {
-                                                          NullValueHandling = NullValueHandling.Include,
-                                                          ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                                                          StringEscapeHandling = StringEscapeHandling.EscapeHtml
-                                                      }));
+                JObject formattedObject = JObject.FromObject(result, new JsonSerializer
+                {
+                    NullValueHandling = NullValueHandling.Include,
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    StringEscapeHandling = StringEscapeHandling.EscapeHtml
+                });
+                if (args.Deprecated)
+                {
+                    formattedObject.Add("deprecated",new JValue($"This command is deprecated. Please use '{args.DeprecatedAlternative}' instead."));
+                }
+                executionContext.WriteInformation(formattedObject.ToString(Formatting.Indented));
             }
         }
     }

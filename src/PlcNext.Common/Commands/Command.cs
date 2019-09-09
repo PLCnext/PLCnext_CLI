@@ -43,6 +43,7 @@ namespace PlcNext.Common.Commands
         public async Task<int> Execute(CommandArgs args)
         {
             int result = -1;
+            bool visualized = false;
             using (ITransaction transaction = transactionFactory.StartTransaction(out ChangeObservable observable))
             using (ExecutionContext.RegisterObservable(observable))
             {
@@ -54,8 +55,10 @@ namespace PlcNext.Common.Commands
                     result = commandResult.ExternalResult;
                     if (commandResult.DetailedResult != null)
                     {
-                        commandResultVisualizer.Visualize(commandResult.DetailedResult);
+                        commandResultVisualizer.Visualize(commandResult.DetailedResult, args);
+                        visualized = true;
                     }
+
                     commandResult.Exceptions.ThrowIfNotEmpty();
                     transaction.OnCompleted();
                 }
@@ -65,7 +68,15 @@ namespace PlcNext.Common.Commands
                     {
                         throw;
                     }
+
                     result = -1;
+                }
+                finally
+                {
+                    if (!visualized && args.Deprecated)
+                    {
+                        ExecutionContext.WriteWarning($"This command is deprecated. Please use '{args.DeprecatedAlternative}' instead.");
+                    }
                 }
             }
 

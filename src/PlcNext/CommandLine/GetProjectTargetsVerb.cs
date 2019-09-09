@@ -16,7 +16,8 @@ using PlcNext.Common.Commands;
 
 namespace PlcNext.CommandLine
 {
-    [Verb(CommandLineConstants.ProjectTargetsVerb, HelpText = "Deprecated. Use 'get project-information' instead. Lists all targets supported by the given project.")]
+    [DeprecatedVerb("get project-information")]
+    [Verb(CommandLineConstants.ProjectTargetsVerb, Hidden = true, HelpText = "Deprecated. Use 'get project-information' instead. Lists all targets supported by the given project.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     internal class GetProjectTargetsVerb : GetVerb
     {
@@ -35,7 +36,7 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(new GetTargetsCommandArgs(Path, false, Short));
+            return await commandManager.Execute(AddDeprecatedInformation(new GetTargetsCommandArgs(Path, false, Short)));
         }
     }
 }

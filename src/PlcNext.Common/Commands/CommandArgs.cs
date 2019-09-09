@@ -15,5 +15,7 @@ namespace PlcNext.Common.Commands
 {
     public class CommandArgs
     {
+        public bool Deprecated { get; set; }
+        public string DeprecatedAlternative { get; set; }
     }
 }

@@ -41,7 +41,7 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(new InstallSdkCommandArgs(Sdk, Destination, Force)); 
+            return await commandManager.Execute(AddDeprecatedInformation(new InstallSdkCommandArgs(Sdk, Destination, Force))); 
         }
     }
 }

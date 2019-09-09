@@ -39,7 +39,7 @@ namespace PlcNext.CommandLine
 
         protected override Task<int> Execute(ICommandManager commandManager)
         {
-            return commandManager.Execute(new UpdateTargetsCommandArgs(Path, Downgrade));
+            return commandManager.Execute(AddDeprecatedInformation(new UpdateTargetsCommandArgs(Path, Downgrade)));
         }
     }
 }

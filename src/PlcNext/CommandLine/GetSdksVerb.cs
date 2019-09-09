@@ -29,7 +29,7 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(new GetSdksCommandArgs(string.Empty, true));
+            return await commandManager.Execute(AddDeprecatedInformation(new GetSdksCommandArgs(string.Empty, true)));
         }
     }
 }

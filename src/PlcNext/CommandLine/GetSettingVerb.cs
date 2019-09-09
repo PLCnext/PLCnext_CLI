@@ -39,7 +39,7 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(new GetSettingsCommandArgs(Key??string.Empty, All));
+            return await commandManager.Execute(AddDeprecatedInformation(new GetSettingsCommandArgs(Key??string.Empty, All)));
         }
     }
 }

@@ -46,19 +46,21 @@ namespace PlcNext.CommandLine
             UserInterface?.SetVerbosity(Verbose);
             UserInterface?.SetQuiet(Quiet);
 
-            checkForDeprecated();
-
             return await Execute(CommandManager);
+        }
 
-            void checkForDeprecated()
+        protected T AddDeprecatedInformation<T>(T commandArgs)
+        where T : CommandArgs
+        {
+            DeprecatedVerbAttribute attribute = this.GetType().GetCustomAttribute<DeprecatedVerbAttribute>();
+            if (attribute == null)
             {
-                System.Reflection.TypeInfo info = this.GetType().GetTypeInfo();
-                IEnumerable<Attribute> attributes = info.GetCustomAttributes();
-                if(attributes.Any(a => a is DeprecatedAttribute))
-                {
-                    UserInterface?.WriteWarning("This verb is deprecated.");
-                }
+                return commandArgs;
             }
+
+            commandArgs.Deprecated = true;
+            commandArgs.DeprecatedAlternative = attribute.AlternativeVerb;
+            return commandArgs;
         }
 
         protected abstract Task<int> Execute(ICommandManager commandManager);
