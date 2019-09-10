@@ -191,7 +191,17 @@ namespace PlcNext.Common.Project
                         {
                             if (!includes.Any() && HasNoIncludeDetectionCommandArgument(owner) && !GetNoIncludeDetectionCommandArgument(owner))
                             {
-                                includes = informationService.RetrieveBuildSystemProperties(root, projectTargets[0], executionContext.Observable).IncludePaths;
+                                try
+                                {
+                                    includes = informationService.RetrieveBuildSystemProperties(root, projectTargets[0], executionContext.Observable).IncludePaths;
+                                }
+                                catch (Exception e)
+                                {
+                                    if (e is FormattableException || e is AggregateException)
+                                        executionContext.WriteWarning($"Automatic include detection via cmake could not be executed. See log for details.");
+                                    else
+                                        throw e;
+                                }
                             }
                         }
                         else

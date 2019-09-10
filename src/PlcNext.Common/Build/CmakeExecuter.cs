@@ -166,7 +166,7 @@ namespace PlcNext.Common.Build
                                                                buildInformation.Target.LongVersion,
                                                                buildInformation.Target.Version);
 
-                    if (!showMessagesToUser)
+                    if (showMessagesToUser)
                     {
                         executionContext.WriteInformation("Configuring CMake...");
                     }
