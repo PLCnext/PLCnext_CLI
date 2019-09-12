@@ -174,7 +174,7 @@ namespace PlcNext.Common.Templates
                 return AddTemplateArguments(AddDefaultArguments(CommandDefinitionBuilder.Create()
                                                                                         .SetName("deploy")
                                                                                         .SetHelp(
-                                                                                             "Deploy files for production.")
+                                                                                             "Deploys files for production.")
                                                                                         .EnableUseChildVerbsAsCategory(),
                                                                 allTemplates.Where(t => !t.isHidden & t.isRoot),
                                                                 shortNames),

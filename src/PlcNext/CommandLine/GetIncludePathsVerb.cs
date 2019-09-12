@@ -16,7 +16,8 @@ using PlcNext.Common.Commands;
 
 namespace PlcNext.CommandLine
 {
-    [Verb(CommandLineConstants.IncludepathsVerb, HelpText = "Deprecated. Use 'get project-information' instead. Lists all include paths which are relevant for this project.")]
+    [DeprecatedVerb("get project-information")]
+    [Verb(CommandLineConstants.IncludepathsVerb, Hidden = true, HelpText = "Deprecated. Use 'get project-information' instead. Lists all include paths which are relevant for this project.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     internal class GetIncludePathsVerb : GetVerb
     {

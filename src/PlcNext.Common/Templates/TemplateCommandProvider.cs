@@ -56,7 +56,7 @@ namespace PlcNext.Common.Templates
             {
                 newCommand = CommandDefinitionBuilder.Create()
                                                      .SetName("new")
-                                                     .SetHelp("Create new files / projects.")
+                                                     .SetHelp("Creates new files / projects.")
                                                      .Build();
                 deployCommand = templateCommandBuilder.GenerateDeployCommandDefinition(null, null, null,repository.Templates.ToArray());
                 return new[] {newCommand, deployCommand};
