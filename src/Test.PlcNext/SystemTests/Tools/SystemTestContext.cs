@@ -119,7 +119,8 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 if (commandLineParser == null)
                 {
-                    commandLineParser = new VerboseCommandLineParser(Host.Resolve<ICommandLineParser>());
+                    commandLineParser = new VerboseCommandLineParser(Host.Resolve<ICommandLineParser>(),
+                                                                     Host.Resolve<IExceptionHandler>());
                 }
 
                 return commandLineParser;
@@ -247,10 +248,16 @@ namespace Test.PlcNext.SystemTests.Tools
             message.Should().HaveCount(2, "project was expected to be created twice");
         }
 
-        internal void CheckUserInformedOfError(Type excpetionType)
+        internal void CheckUserInformedOfError(Type exceptionType)
         {
-            exceptionHandlerAbstraction.WasExceptionThrown(excpetionType).Should()
-                                       .BeTrue($"reported error {excpetionType} was expected.");
+            exceptionHandlerAbstraction.WasExceptionThrown(exceptionType).Should()
+                                       .BeTrue($"reported error {exceptionType} was expected.");
+        }
+
+        internal void CheckUserInformedOfError(string searchstring, string reason)
+        {
+            string message = userInterfaceAbstraction.Errors.FirstOrDefault(s => s.ToLowerInvariant().Contains(searchstring.ToLowerInvariant()));
+            message.Should().NotBeNull(reason);
         }
 
         internal void CheckUserInformed(string searchstring, string reason)

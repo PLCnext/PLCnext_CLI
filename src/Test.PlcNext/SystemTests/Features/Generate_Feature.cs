@@ -604,6 +604,8 @@ namespace Test.PlcNext.SystemTests.Features
             new object[] {new ErrorInformation("MyComponentImpl.hpp", 15, 19, "ARP0001"), "ProgramWithWrongPortAttributes" },
             new object[] {new ErrorInformation("MyComponentImpl.hpp", 52, 19, "ARP0001"), "ProgramWithWrongPortAttributes" },
             new object[] {new ErrorInformation("PortNameErrorProgram.hpp", 35, 16, "ARP0001"), "PortNameError" },
+            new object[] {new ErrorInformation("PortNameTooShortProgram.hpp", 35, 18, "ARP0001"), "PortNameTooShort" },
+            new object[] {new ErrorInformation("PortNameTooLongProgram.hpp", 35, 18, "ARP0001"), "PortNameTooLong" },
         };
 
         public IEnumerator<object[]> GetEnumerator() => data.GetEnumerator();

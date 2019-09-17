@@ -13,6 +13,7 @@ using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.StepDefinitions;
+using Test.PlcNext.Tools;
 using Xunit.Abstractions;
 
 #pragma warning disable 4014
@@ -106,6 +107,30 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_entity_was_created_in_default_namespace("RootComponent")).RunAsyncWithTimeout();
         }
 
+        [Scenario]
+        public async Task Error_on_creating_component_with_too_short_name()
+        {
+            await Runner.AddSteps(
+               _ => Given_is_the_project("Standard"),
+                _ => Given_is_the_working_directory_PATH("Standard"),
+                _ => When_I_create_a_new_component_with_name("C", false),
+                _ => Then_the_user_was_informed_that_the_name_is_too_short()
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Error_on_creating_component_with_too_long_name()
+        {
+            await Runner.AddSteps(
+               _ => Given_is_the_project("Standard"),
+                _ => Given_is_the_working_directory_PATH("Standard"),
+                _ => When_I_create_a_new_component_with_name("VeryLongNameVeryLongNameVeryLongNameVeryLongName" +
+                "VeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongName" +
+                "VeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongName" +
+                "VeryLongNameVeryLongNameVeryLongName", false),
+                _ => Then_the_user_was_informed_that_the_name_is_too_long()
+                ).RunAsyncWithTimeout();
+        }
         public Component_Creation_Feature(ITestOutputHelper helper) : base(helper)
         {
         }

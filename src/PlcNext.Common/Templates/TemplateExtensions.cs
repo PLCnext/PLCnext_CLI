@@ -46,11 +46,11 @@ namespace PlcNext.Common.Templates
             {
                 length = -1;
             }
-            if (!int.TryParse(restriction.length, out int minLength))
+            if (!int.TryParse(restriction.minlength, out int minLength))
             {
                 minLength = 0;
             }
-            if (!int.TryParse(restriction.length, out int maxLength))
+            if (!int.TryParse(restriction.maxlength, out int maxLength))
             {
                 maxLength = -1;
             }
@@ -94,11 +94,11 @@ namespace PlcNext.Common.Templates
             {
                 length = -1;
             }
-            if (!int.TryParse(restriction.length, out int minLength))
+            if (!int.TryParse(restriction.minlength, out int minLength))
             {
                 minLength = 0;
             }
-            if (!int.TryParse(restriction.length, out int maxLength))
+            if (!int.TryParse(restriction.maxlength, out int maxLength))
             {
                 maxLength = -1;
             }
@@ -142,11 +142,11 @@ namespace PlcNext.Common.Templates
             {
                 length = -1;
             }
-            if (!int.TryParse(restriction.length, out int minLength))
+            if (!int.TryParse(restriction.minlength, out int minLength))
             {
                 minLength = 0;
             }
-            if (!int.TryParse(restriction.length, out int maxLength))
+            if (!int.TryParse(restriction.maxlength, out int maxLength))
             {
                 maxLength = -1;
             }
@@ -244,7 +244,7 @@ namespace PlcNext.Common.Templates
             {
                 result = (false,
                               $"The value {value} has the length {value.Length}, " +
-                              $"but a minimal length of {length} was required for this value.",
+                              $"but a minimal length of {minLength} was required for this value.",
                               value);
                 return false;
             }
@@ -253,7 +253,7 @@ namespace PlcNext.Common.Templates
             {
                 result = (false,
                               $"The value {value} has the length {value.Length}, " +
-                              $"but only a maximal length of {length} was allowed for this value.",
+                              $"but only a maximal length of {maxLength} was allowed for this value.",
                               value);
                 return false;
             }

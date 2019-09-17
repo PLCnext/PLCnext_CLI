@@ -28,6 +28,7 @@ using PlcNext.Common.Templates;
 using PlcNext.Common.Tools.SDK;
 using System.Collections.Generic;
 using System.Linq;
+using PlcNext.Common.Tools.DynamicCommands;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
@@ -477,6 +478,18 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_files_exist_in_location(params string[] files)
         {
             ScenarioContext.CheckFilesExistInLocation(files.ToDictionary(f => f, f => (string)null));
+        }
+
+        protected void Then_the_user_was_informed_that_the_name_is_too_short()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(ArgumentRestrictionException));
+            ScenarioContext.CheckUserInformedOfError("but a minimal length of", "message of too short argument was expected");
+        }
+
+        protected void Then_the_user_was_informed_that_the_name_is_too_long()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(ArgumentRestrictionException));
+            ScenarioContext.CheckUserInformedOfError("but only a maximal length of", "message of too long argument was expected");
         }
     }
 }

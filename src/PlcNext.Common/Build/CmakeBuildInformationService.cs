@@ -51,7 +51,7 @@ namespace PlcNext.Common.Build
                 {
                     Target = projectTarget,
                     Sdk = sdkRepository.GetSdk(projectTarget)
-                }, observable, showMessagesToUser: false);
+                }, showWarningsToUser: true, observable, showMessagesToUser: false);
             JArray codeModel = cMakeConversation.GetCodeModelFromServer(fileSystem.GetTemporaryDirectory(),
                                                                         FileEntity.Decorate(rootEntity).Directory,
                                                                         cmakeFolder);

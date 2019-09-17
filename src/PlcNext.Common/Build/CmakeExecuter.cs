@@ -84,9 +84,14 @@ namespace PlcNext.Common.Build
 
         private bool CallCmake(VirtualDirectory workingDirectory, string command, bool showOutput, bool throwOnError)
         {
+            return CallCmake(workingDirectory, command, showOutput, throwOnError, showOutput);
+        }
+
+            private bool CallCmake(VirtualDirectory workingDirectory, string command, bool showOutput, bool throwOnError, bool showWarnings)
+        {
             using (IProcess process = processManager.StartProcess(binariesLocator.GetExecutableCommand("cmake"), command, userInterface,
                                                                   workingDirectory.FullName.Replace("\\", "/"),
-                                                                  showOutput: showOutput, showError: showOutput))
+                                                                  showOutput: showOutput, showError: showWarnings))
             {
                 process.WaitForExit();
                 if (process.ExitCode != 0)
@@ -105,6 +110,12 @@ namespace PlcNext.Common.Build
 
         public (bool, VirtualDirectory) EnsureConfigured(BuildInformation buildInformation, ChangeObservable observable = null, bool throwOnError = false,
                                                          bool showMessagesToUser = true)
+        {
+            return EnsureConfigured(buildInformation, showMessagesToUser, observable, throwOnError, showMessagesToUser);
+        }
+
+        public (bool, VirtualDirectory) EnsureConfigured(BuildInformation buildInformation, bool showWarningsToUser, ChangeObservable observable = null,
+                                                         bool throwOnError = false, bool showMessagesToUser = true)
         {
             if (!CmakeFileExists())
             {
@@ -170,7 +181,7 @@ namespace PlcNext.Common.Build
                     {
                         executionContext.WriteInformation("Configuring CMake...");
                     }
-                    return CallCmake(cmakeFolder, cmakeCommand, showMessagesToUser, throwOnError);
+                    return CallCmake(cmakeFolder, cmakeCommand, showMessagesToUser, throwOnError, showWarningsToUser);
                 }
 
                 if (!string.IsNullOrEmpty(buildInformation.BuildProperties))
