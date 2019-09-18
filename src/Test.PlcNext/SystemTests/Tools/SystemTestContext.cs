@@ -1356,6 +1356,7 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 "deploy"
             };
+            List<string> files = new List<string>();
 
             if (!string.IsNullOrEmpty(deployArgs.Id))
             {
@@ -1365,14 +1366,21 @@ namespace Test.PlcNext.SystemTests.Tools
 
             if (!string.IsNullOrEmpty(deployArgs.LibraryLocation))
             {
-                args.Add("-c");
-                args.Add(deployArgs.LibraryLocation);
+                VirtualDirectory directory = fileSystemAbstraction.FileSystem.GetDirectory(deployArgs.LibraryLocation);
+                foreach (VirtualFile file in directory.Files(searchRecursive:true))
+                {
+                    string destinationFolder = Path.GetDirectoryName(file.GetRelativePath(directory));
+                    if (string.IsNullOrEmpty(destinationFolder))
+                    {
+                        destinationFolder = ".";
+                    }
+                    files.Add($"{file.FullName}|{destinationFolder}");
+                }
             }
 
             if (!string.IsNullOrEmpty(deployArgs.MetaFileDirectory))
             {
-                args.Add("-m");
-                args.Add(deployArgs.MetaFileDirectory);
+                files.Add($"{deployArgs.MetaFileDirectory}/*|.");
             }
 
             if (!string.IsNullOrEmpty(deployArgs.OutputDirectory))
@@ -1398,23 +1406,37 @@ namespace Test.PlcNext.SystemTests.Tools
 
             if (deployArgs.ExternalLibraries != null && deployArgs.ExternalLibraries.Any())
             {
-                args.Add("-e");
                 foreach (string lib in deployArgs.ExternalLibraries)
                 {
-                    args.Add(lib);
+                    files.Add(FormatExternalLibraryFilesConvert(lib));
                 }
             }
 
-            if (deployArgs.Files != null && deployArgs.Files.Any())
+            if ((deployArgs.Files != null && deployArgs.Files.Any()) ||
+                files.Any())
             {
                 args.Add("-f");
-                foreach (string file in deployArgs.Files)
+                foreach (string file in files.Concat(deployArgs.Files??Enumerable.Empty<string>()))
                 {
                     args.Add(file);
                 }
             }
 
             await CommandLineParser.Parse(args.ToArray());
+
+            string FormatExternalLibraryFilesConvert(string lib)
+            {
+                int indexOfQuotes = lib.IndexOf('\"');
+                int lastIndex = indexOfQuotes < 0
+                                    ? lib.LastIndexOf(',')
+                                    : lib.LastIndexOf(',', 0, indexOfQuotes);
+                if (lastIndex >= 0)
+                {
+                    return $"{lib.Substring(lastIndex + 1)}|.|{lib.Substring(0, lastIndex)}";
+                }
+
+                return $"{lib}|.";
+            }
         }
 
         public void CheckFilesExistInLocation(Dictionary<string, string> filesAndContent)

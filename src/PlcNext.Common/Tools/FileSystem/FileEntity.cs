@@ -32,5 +32,7 @@ namespace PlcNext.Common.Tools.FileSystem
         public VirtualFile File => HasValue<VirtualFile>()
                                        ? Value<VirtualFile>()
                                        : null;
+
+        public VirtualDirectory TempDirectory => this[EntityKeys.InternalTempDirectoryKey].Value<VirtualDirectory>();
     }
 }

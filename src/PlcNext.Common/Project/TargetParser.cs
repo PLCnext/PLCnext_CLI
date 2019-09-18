@@ -12,17 +12,87 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using PlcNext.Common.Commands;
+using PlcNext.Common.DataModel;
+using PlcNext.Common.Tools.Priority;
 using PlcNext.Common.Tools.SDK;
 
 namespace PlcNext.Common.Project
 {
-    internal class TargetParser : ITargetParser
+    internal class TargetParser : PriorityContentProvider, ITargetParser
     {
-        private readonly Regex targetVersionParser = new Regex(@"^(?<name>[^,]+),(?<version>.+)$", RegexOptions.IgnoreCase);
+        private readonly Regex targetVersionParser = new Regex(@"^(?<name>[^,]+)(?:,(?<version>.+))?$", RegexOptions.IgnoreCase);
         private readonly Regex targetVersionLocationParser = new Regex(@"^(?<name>[^,]+),(?<version>[^,]+),(?<location>.+)$", RegexOptions.IgnoreCase);
 
         private readonly ISdkRepository sdkRepository;
         private readonly ExecutionContext executionContext;
+
+        public override bool CanResolve(Entity owner, string key, bool fallback = false)
+        {
+            return (owner.IsRoot() &&
+                    key == EntityKeys.TargetsKey) ||
+                   (key == EntityKeys.TargetFullNameKey &&
+                    owner.HasValue<Target>()) ||
+                   (key == EntityKeys.TargetShortFullNameKey &&
+                    owner.HasValue<Target>()) ||
+                   (key == EntityKeys.TargetEngineerVersionKey &&
+                    owner.HasValue<Target>()) ||
+                   (key == EntityKeys.NameKey &&
+                    owner.HasValue<Target>());
+        }
+
+        public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
+
+        public override Entity Resolve(Entity owner, string key, bool fallback = false)
+        {
+            switch (key)
+            {
+                case EntityKeys.TargetFullNameKey:
+                    return owner.Create(key, owner.Value<Target>().GetFullName());
+                case EntityKeys.TargetShortFullNameKey:
+                    return owner.Create(key, owner.Value<Target>().GetShortFullName());
+                case EntityKeys.TargetEngineerVersionKey:
+                    return owner.Create(key, EngineerVersion(owner.Value<Target>()));
+                case EntityKeys.NameKey:
+                    return owner.Create(key, owner.Value<Target>().Name);
+                default:
+                    return GetTargets();
+            }
+
+            Entity GetTargets()
+            {
+                CommandEntity commandEntity = CommandEntity.Decorate(owner.Origin);
+                if (commandEntity.IsCommandArgumentSpecified(Constants.TargetArgumentName))
+                {
+                    IEnumerable<string> targets = commandEntity.GetMultiValueArgument(Constants.TargetArgumentName);
+                    IEnumerable<Target> targetsSet = GetSpecificTargets(targets, false, false).Select(t => t.Item1);
+                    return owner.Create(key, targetsSet.Select(t => owner.Create(key.Singular(), t.Name, t)));
+                }
+                ProjectEntity project = ProjectEntity.Decorate(owner);
+                TargetsResult result = Targets(project, false);
+                return owner.Create(key, result.ValidTargets.Select(t => owner.Create(key.Singular(), t.Name, t)));
+            }
+
+            string EngineerVersion(Target target)
+            {
+                string possibleVersion = target.LongVersion.Trim().Split(' ')[0];
+                if (Version.TryParse(possibleVersion, out Version version))
+                {
+                    int parts = possibleVersion.Split('.').Length;
+                    if (parts == 2)
+                    {
+                        return $"{version.ToString(2)}.0";
+                    }
+
+                    if (parts > 2)
+                    {
+                        return version.ToString(3);
+                    }
+                }
+
+                return target.ShortVersion;
+            }
+        }
 
         public TargetParser(ISdkRepository sdkRepository, ExecutionContext executionContext)
         {
@@ -205,7 +275,7 @@ namespace PlcNext.Common.Project
             return realTarget;
         }
 
-        public IEnumerable<(Target, string)> GetSpecificTargets(IEnumerable<string> targets, bool validate = true)
+        public IEnumerable<(Target, string)> GetSpecificTargets(IEnumerable<string> targets, bool validate = true, bool parseLocation = true)
         {
             HashSet<(Target, string)> result = new HashSet<(Target, string)>();
             foreach (string target in targets)
@@ -215,16 +285,20 @@ namespace PlcNext.Common.Project
                 string location = null;
 
                 Match match = targetVersionLocationParser.Match(target);
-                if (match.Success)
+                if (match.Success && parseLocation)
                 {
                     name = match.Groups["name"].Value;
                     version = match.Groups["version"].Value;
                     location = match.Groups["location"].Value;
                 }
-                else if ((match = targetVersionParser.Match(target)).Success)
+                else if (!match.Success && (match = targetVersionParser.Match(target)).Success)
                 {
                     name = match.Groups["name"].Value;
-                    version = match.Groups["version"].Value;
+                    version = match.Groups["version"].Success ? match.Groups["version"].Value : string.Empty;
+                }
+                else
+                {
+                    throw new TargetFormatMismatchException(target, parseLocation);
                 }
 
                 if (string.IsNullOrEmpty(target))

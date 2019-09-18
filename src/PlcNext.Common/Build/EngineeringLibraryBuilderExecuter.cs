@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PlcNext.Common.CodeModel;
+using PlcNext.Common.Commands;
+using PlcNext.Common.Deploy;
 using PlcNext.Common.Project;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
@@ -38,19 +40,291 @@ namespace PlcNext.Common.Build
         private readonly IGuidFactory guidFactory;
         private readonly IBinariesLocator binariesLocator;
         private readonly ICMakeConversation cmakeConversation;
+        private readonly ExecutionContext executionContext;
 
         private static readonly Regex LibrariesDecoder = new Regex("(?<path>\\\"[^\\\"]+\\\"|[^ |\\\"]+)", RegexOptions.Compiled);
         private static readonly Regex LibrariesRPathDecoder = new Regex("-rpath(?:-link)?,(?<rpath>(?:\\\"[^\\\"]+\\\"|[^ |\\\"]+;?)*)", RegexOptions.Compiled);
 
         public EngineeringLibraryBuilderExecuter(IProcessManager processManager, IFileSystem fileSystem,
                                                  IGuidFactory guidFactory, IBinariesLocator binariesLocator,
-                                                 ICMakeConversation cmakeConversation)
+                                                 ICMakeConversation cmakeConversation, ExecutionContext executionContext)
         {
             this.processManager = processManager;
             this.fileSystem = fileSystem;
             this.guidFactory = guidFactory;
             this.binariesLocator = binariesLocator;
             this.cmakeConversation = cmakeConversation;
+            this.executionContext = executionContext;
+        }
+
+        public int Execute(Entity dataModel)
+        {
+            ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
+            CodeEntity projectCodeEntity = CodeEntity.Decorate(project);
+            string projectName = projectCodeEntity.Namespace;
+            IEnumerable<Entity> targets = project.Targets.ToArray();
+            if (!targets.Any())
+            {
+                throw new FormattableException("Please use --target to specify for which targets the library shall be generated.");
+            }
+            Dictionary<Entity, VirtualFile> projectLibraries = targets.ToDictionary(t => t, FindLibrary);
+            foreach (Entity target in targets)
+            {
+                CopyExternalLibrariesToOutputDirectory(target);
+            }
+            CheckMetaFiles(targets.First());
+
+            string commandOptionsFile = GenerateCommandOptions(project, projectLibraries);
+            return ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project);
+
+            VirtualFile FindLibrary(Entity target)
+            {
+                VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
+
+                string libFile = deployDirectory.Files("*.so", true)
+                                    .OrderByDescending(f => f.Name.Equals($"lib{projectName}.so"))
+                                    .ThenByDescending(f => f.LastWriteTime)
+                                    .FirstOrDefault()
+                                   ?.FullName;
+                if (string.IsNullOrEmpty(libFile))
+                {
+                    throw new LibraryNotFoundException(deployDirectory.FullName);
+                }
+
+                VirtualFile file = fileSystem.GetFile(libFile);
+                return file;
+            }
+
+            void CopyExternalLibrariesToOutputDirectory(Entity target)
+            {
+                VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
+                VirtualDirectory externalDirectory = deployDirectory.Directory("auto-deployed-external-libraries");
+                externalDirectory.Clear();
+                executionContext.Observable.OnNext(new Change(() => externalDirectory.UnClear(),
+                                                              "Cleared automatic copied external libraries."));
+
+                if (deployDirectory.Files("*.so", true).Except(projectLibraries.Values).Any())
+                {
+                    //external libraries where copied by user; no further action is required
+                    return;
+                }
+
+                BuildEntity buildEntity = BuildEntity.Decorate(target);
+                if (!buildEntity.HasBuildSystem)
+                {
+                    TargetEntity targetEntity = TargetEntity.Decorate(target);
+                    executionContext.WriteWarning(new CMakeBuildSystemNotFoundException(targetEntity.FullName, buildEntity.BuildType).Message);
+                    return;
+                }
+
+                foreach (string externalLibrary in buildEntity.BuildSystem.ExternalLibraries)
+                {
+                    VirtualFile newFile = fileSystem.GetFile(externalLibrary).CopyTo(deployDirectory);
+                    executionContext.Observable.OnNext(new Change(() => newFile.Delete(), $"Copied {externalLibrary} to {newFile.FullName}."));
+                }
+            }
+
+            void CheckMetaFiles(Entity target)
+            {
+                TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
+                VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
+
+                if (!fileSystem.FileExists(Path.Combine(deployDirectory.FullName, $"{projectName}.libmeta")))
+                {
+                    throw new MetaLibraryNotFoundException(deployDirectory.FullName);
+                }
+                IEnumerable<VirtualFile> metaFiles = deployDirectory.Files(searchRecursive: true);
+
+                IEnumerable<Entity> componentsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
+                                                                                     .Where(e => e.Type.Equals("component", StringComparison.OrdinalIgnoreCase))
+                                                                                     .Where(c => !metaFiles.Any(f => f.Name.Equals($"{c.Name}.{Constants.CompmetaExtension}")))
+                                                                                     .ToArray();
+                if (componentsWithoutMetaFile.Any())
+                {
+                    throw new MetaFileNotFoundException(deployDirectory.FullName, $"{componentsWithoutMetaFile.First().Name}.{Constants.CompmetaExtension}");
+                }
+
+                IEnumerable<Entity> programsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
+                                                                                   .Where(e => e.Type.Equals("program", StringComparison.OrdinalIgnoreCase))
+                                                                                   .Where(p => !metaFiles.Any(f => f.Name.Equals($"{p.Name}.{Constants.ProgmetaExtension}")))
+                                                                                   .ToArray();
+                if (programsWithoutMetaFile.Any())
+                {
+                    throw new MetaFileNotFoundException(deployDirectory.FullName, $"{programsWithoutMetaFile.First().Name}.{Constants.ProgmetaExtension}");
+                }
+            }
+        }
+
+        private string GenerateCommandOptions(ProjectEntity project, Dictionary<Entity, VirtualFile> projectLibraries)
+        {
+            FileEntity projectFileEntity = FileEntity.Decorate(project);
+            VirtualFile commandOptions = projectFileEntity.TempDirectory.File("CommandOptions.txt");
+            CommandEntity commandOrigin = CommandEntity.Decorate(project.Origin);
+            VirtualDirectory outputRoot = fileSystem.GetDirectory(commandOrigin.Output, project.Path, false);
+            List<string> processedMetaFiles = new List<string>();
+            executionContext.Observable.OnNext(new Change(() => { }, $"Create command options file {commandOptions.FullName}"));
+
+            using (Stream stream = commandOptions.OpenWrite())
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                writer.WriteLine($"{Constants.OutputOption} \"{MakeRelative(Path.Combine(outputRoot.FullName, project.Name))}.{Constants.EngineeringLibraryExtension}\"");
+                writer.WriteLine($"{Constants.GuidOption} {project.Id:D}");
+
+                RenameAndWriteLibraryFile(writer);
+                WriteMetadata(writer);
+                AddAdditionalFiles(writer);
+            }
+
+            return commandOptions.FullName;
+
+            void RenameAndWriteLibraryFile(StreamWriter writer)
+            {
+                foreach (TargetEntity target in projectLibraries.Keys.Select(TargetEntity.Decorate))
+                {
+                    VirtualFile renamedLibrary = projectFileEntity
+                                                .TempDirectory.Directory(target.FullName.Replace(",", "_"))
+                                                .File("lib" + project.Name +
+                                                      Path.GetExtension(projectLibraries[target.Base].Name));
+                    executionContext.Observable.OnNext(new Change(() => { }, $"Rename library file to {renamedLibrary.FullName}"));
+                    using (Stream source = projectLibraries[target.Base].OpenRead(true))
+                    using (Stream destination = renamedLibrary.OpenWrite())
+                    {
+                        source.CopyTo(destination);
+                    }
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.PlcnextNativeLibraryOptionPattern,
+                                                   renamedLibrary.Parent.FullName,
+                                                   target.Name,
+                                                   target.EngineerVersion,
+                                                   guidFactory.Create().ToString("D"),
+                                                   target.ShortFullName.Replace(",", "_")));
+                }
+            }
+
+            void AddAdditionalFiles(StreamWriter writer)
+            {
+                foreach (Entity target in projectLibraries.Keys)
+                {
+                    VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
+                    IEnumerable<VirtualFile> files = deployDirectory
+                                                    .Files(searchRecursive: true).Except(projectLibraries.Values)
+                                                    .Where(f => !processedMetaFiles.Contains(f.GetRelativePath(deployDirectory)));
+                    foreach (VirtualFile file in files)
+                    {
+                        writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                       "/file \":{0}:{1}\"",
+                                                       file.GetRelativeOrAbsolutePath(projectFileEntity.Directory),
+                                                       TargetEntity.Decorate(target).ShortFullName.Replace(",", "_")));
+                    }
+                }
+            }
+
+            void WriteMetadata(StreamWriter writer)
+            {
+                VirtualDirectory deployDirectory = DeployEntity.Decorate(projectLibraries.Keys.First()).DeployDirectory;
+                HashSet<VirtualDirectory> createDirectories = new HashSet<VirtualDirectory>();
+                foreach (VirtualFile metaFile in deployDirectory.Files(searchRecursive: true))
+                {
+                    string destinationPath;
+                    string fileType;
+                    switch (Path.GetExtension(metaFile.Name)?.ToLowerInvariant() ?? string.Empty)
+                    {
+                        case ".libmeta":
+                            destinationPath = string.Empty;
+                            fileType = Constants.LibmetaFileType;
+                            break;
+                        case ".typemeta":
+                            destinationPath = string.Empty;
+                            fileType = Constants.TypemetaFileType;
+                            break;
+                        case ".compmeta":
+                            CreateComponentDirectory(metaFile.Parent);
+                            destinationPath = metaFile.Parent.Name;
+                            fileType = Constants.CompmetaFileType;
+                            break;
+                        case ".progmeta":
+                            CreateProgramDirectory(metaFile.Parent);
+                            destinationPath = $"{metaFile.Parent.Parent.Name}/{metaFile.Parent.Name}";
+                            fileType = Constants.ProgmetaFileType;
+                            break;
+                        default:
+                            //do nothing all other files are not interesting
+                            continue;
+                    }
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.FileOptionPattern,
+                                                   fileType,
+                                                   MakeRelative(metaFile.FullName),
+                                                   guidFactory.Create().ToString("D"),
+                                                   destinationPath));
+                    processedMetaFiles.Add(metaFile.GetRelativePath(deployDirectory));
+                }
+
+                void CreateComponentDirectory(VirtualDirectory componentDirectory)
+                {
+                    if (createDirectories.Contains(componentDirectory))
+                    {
+                        return;
+                    }
+
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.DirectoryOptionPattern,
+                                                   $"Logical Elements/{componentDirectory.Name}",
+                                                   Constants.ComponentFolderType,
+                                                   guidFactory.Create().ToString("D")));
+                    createDirectories.Add(componentDirectory);
+                }
+
+                void CreateProgramDirectory(VirtualDirectory programDirectory)
+                {
+                    if (createDirectories.Contains(programDirectory))
+                    {
+                        return;
+                    }
+
+                    CreateComponentDirectory(programDirectory.Parent);
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.DirectoryOptionPattern,
+                                                   $"Logical Elements/{programDirectory.Parent.Name}/{programDirectory.Name}",
+                                                   Constants.ProgramFolderType,
+                                                   guidFactory.Create().ToString("D")));
+                    createDirectories.Add(programDirectory);
+                }
+            }
+
+            string MakeRelative(string path)
+            {
+                return path.GetRelativePath(projectFileEntity.Directory.FullName);
+            }
+        }
+
+        private int ExecuteLibraryBuilderWithCommandOptions(string commandOptionsFile, ProjectEntity project)
+        {
+            FileEntity projectFileEntity = FileEntity.Decorate(project);
+            string libraryBuilderName = FindLibraryBuilder();
+            using (IProcess process = processManager.StartProcess(libraryBuilderName,
+                                                                  $"{Constants.CommandFileOption} \"{commandOptionsFile}\"", executionContext,
+                                                                  projectFileEntity.Directory.FullName))
+            {
+                process.WaitForExit();
+                if (process.ExitCode == 0)
+                {
+                    //Only on success delete directory.
+                    projectFileEntity.TempDirectory.Delete();
+                }
+                return process.ExitCode;
+            }
+
+            string FindLibraryBuilder()
+            {
+                string command = binariesLocator.GetExecutableCommand("EngineeringLibraryBuilder");
+                if (string.IsNullOrEmpty(command))
+                {
+                    throw new LibraryBuilderNotFoundException();
+                }
+
+                return command;
+            }
         }
 
         public int Execute(ProjectEntity project, string metaFilesDirectory, string libraryLocation,
@@ -61,7 +335,7 @@ namespace PlcNext.Common.Build
         {
             buildType = string.IsNullOrEmpty(buildType)
                             ? Constants.ReleaseFolderName
-                            : buildType.Substring(0, 1).ToUpperInvariant() + buildType.Substring(1);
+                            : buildType.Substring(0, 1).ToUpperInvariant() + buildType.Substring(1).ToLowerInvariant();
             FileEntity projectFileEntity = FileEntity.Decorate(project);
             CodeEntity projectCodeEntity = CodeEntity.Decorate(project);
             TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);

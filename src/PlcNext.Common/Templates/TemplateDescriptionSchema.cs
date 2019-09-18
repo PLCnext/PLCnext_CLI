@@ -541,6 +541,8 @@ namespace PlcNext.Common.Templates.Description {
         
         private templateArgumentDefinition[] argumentsField;
         
+        private templateExample[] exampleField;
+        
         private string identifierField;
         
         /// <remarks/>
@@ -551,6 +553,17 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.argumentsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Example")]
+        public templateExample[] Example {
+            get {
+                return this.exampleField;
+            }
+            set {
+                this.exampleField = value;
             }
         }
         

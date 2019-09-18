@@ -17,10 +17,11 @@ using PlcNext.Common.DataModel;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.Priority;
 
 namespace PlcNext.Common.Templates
 {
-    internal class TemplateContentProvider : IEntityContentProvider
+    internal class TemplateContentProvider : PriorityContentProvider
     {
         private readonly ITemplateRepository templateRepository;
 
@@ -29,7 +30,9 @@ namespace PlcNext.Common.Templates
             this.templateRepository = templateRepository;
         }
 
-        public bool CanResolve(Entity owner, string key, bool fallback = false)
+        public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
+
+        public override bool CanResolve(Entity owner, string key, bool fallback = false)
         {
             if (key == EntityKeys.TemplateKey ||
                 key == EntityKeys.HiearchyKey ||
@@ -69,7 +72,7 @@ namespace PlcNext.Common.Templates
             return entity.Type.Equals(key.Substring(2), StringComparison.OrdinalIgnoreCase);
         }
 
-        public Entity Resolve(Entity owner, string key, bool fallback = false)
+        public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             if (key.StartsWith("is"))
             {

@@ -18,6 +18,17 @@ namespace PlcNext.Common.Tools.FileSystem
 {
     public static class FileSystemExtensions
     {
+        public static string GetRelativeOrAbsolutePath(this VirtualFile file, VirtualDirectory directory)
+        {
+            string result = file.GetRelativePath(directory);
+            if (result.StartsWith(".."))
+            {
+                return file.FullName;
+            }
+
+            return result;
+        }
+
         public static Exception Format(this Exception exception)
         {
             switch (exception)

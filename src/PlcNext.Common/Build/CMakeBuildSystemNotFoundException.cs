@@ -22,5 +22,11 @@ namespace PlcNext.Common.Build
         {
 
         }
+
+        public CMakeBuildSystemNotFoundException(string target, string buildType) 
+        :base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.CMakeBuildSystemNotFoundWithoutPath, target, buildType))
+        {
+            
+        }
     }
 }

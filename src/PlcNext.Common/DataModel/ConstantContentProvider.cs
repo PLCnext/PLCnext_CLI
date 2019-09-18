@@ -16,7 +16,7 @@ using PlcNext.Common.Tools.FileSystem;
 
 namespace PlcNext.Common.DataModel
 {
-    internal class ConstantContentProvider : IEntityContentProvider
+    internal class ConstantContentProvider : PriorityContentProvider
     {
         private readonly IFileSystem fileSystem;
 
@@ -25,7 +25,8 @@ namespace PlcNext.Common.DataModel
             EntityKeys.NewlineKey,
             EntityKeys.ActiveDirectoryKey,
             EntityKeys.IsRootedKey,
-            EntityKeys.InternalDirectoryKey
+            EntityKeys.InternalDirectoryKey,
+            EntityKeys.InternalTempDirectoryKey
         };
 
         public ConstantContentProvider(IFileSystem fileSystem)
@@ -33,7 +34,10 @@ namespace PlcNext.Common.DataModel
             this.fileSystem = fileSystem;
         }
 
-        public bool CanResolve(Entity owner, string key, bool fallback = false)
+        private VirtualDirectory tempDirectory;
+        private VirtualDirectory TempDirectory => tempDirectory ?? (tempDirectory = fileSystem.GetTemporaryDirectory());
+
+        public override bool CanResolve(Entity owner, string key, bool fallback = false)
         {
             return Resolvables.Contains(key) ||
                    (key == EntityKeys.InternalDirectoryKey && owner.HasPath) ||
@@ -52,7 +56,7 @@ namespace PlcNext.Common.DataModel
             return key;
         }
 
-        public Entity Resolve(Entity owner, string key, bool fallback = false)
+        public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             VirtualFile file = owner.Value<VirtualFile>();
             if (file != null)
@@ -62,7 +66,10 @@ namespace PlcNext.Common.DataModel
                     return owner.Create(key, file.Parent.FullName);
                 }
 
-                return owner.PropertyValueEntity(MapFileAccessKey(key), file, key);
+                if (file.HasPropertyValueEntity(MapFileAccessKey(key)))
+                {
+                    return owner.PropertyValueEntity(MapFileAccessKey(key), file, key);
+                }
             }
 
             VirtualDirectory directory = owner.Value<VirtualDirectory>();
@@ -73,7 +80,10 @@ namespace PlcNext.Common.DataModel
                     return owner.Create(key, directory.FullName);
                 }
 
-                return owner.PropertyValueEntity(MapFileAccessKey(key), directory, key);
+                if (directory.HasPropertyValueEntity(MapFileAccessKey(key)))
+                {
+                    return owner.PropertyValueEntity(MapFileAccessKey(key), directory, key);
+                }
             }
 
             switch (key)
@@ -86,7 +96,13 @@ namespace PlcNext.Common.DataModel
                     bool isRooted = fileSystem.IsRooted(owner.Value<string>());
                     return owner.Create(key, isRooted.ToString(), isRooted);
                 case EntityKeys.InternalDirectoryKey:
-                    return owner.Create(key, fileSystem.GetDirectory(owner.Path, createNew: false));
+                    string path = owner.HasValue<string>() &&
+                                  fileSystem.DirectoryExists(owner.Value<string>())
+                                      ? owner.Value<string>()
+                                      : owner.Path;
+                    return owner.Create(key, fileSystem.GetDirectory(path, createNew: false));
+                case EntityKeys.InternalTempDirectoryKey:
+                    return owner.Create(key, TempDirectory);
                 default:
                     throw new ContentProviderException(key, owner);
             }

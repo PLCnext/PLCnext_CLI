@@ -29,6 +29,7 @@ using PlcNext.Common.Tools.SDK;
 using System.Collections.Generic;
 using System.Linq;
 using PlcNext.Common.Tools.DynamicCommands;
+using PlcNext.Common.Deploy;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
@@ -163,6 +164,16 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_user_was_informed_that_the_target_was_not_found()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(TargetNameNotFoundException));
+        }
+
+        protected void Then_the_user_was_informed_that_the_target_is_wrongly_formatted()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(TargetFormatMismatchException));
+        }
+
+        protected void Then_the_user_was_informed_that_no_target_is_available()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(NoTargetSpecifiedException));
         }
 
         protected void Then_the_user_was_informed_that_the_target_version_was_not_found()
@@ -388,15 +399,23 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckLibraryCreation(content);
         }
 
+        protected void Then_the_library_was_generated_with_the_following_command_arguments(string argumentsFile)
+        {
+            ScenarioContext.CheckLibraryCreation($"TestResults.{argumentsFile}");
+        }
+
         protected void Then_the_library_was_generated()
         {
             ScenarioContext.CheckLibraryCreation();
         }
-
-
+        
         protected void Then_the_user_was_informed_that_the_library_was_not_found()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(LibraryNotFoundException));
+        }
+        protected void Then_the_user_was_informed_that_the_deployment_file_was_not_found()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(DeployFileNotFoundException));
         }
 
         protected void Then_the_user_was_informed_that_the_meta_files_were_not_found()

@@ -124,6 +124,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find cmake build system for the target {0} and build type {1}. No external libraries will be added to library. Libraries can be added manually via option --files..
+        /// </summary>
+        internal static string CMakeBuildSystemNotFoundWithoutPath {
+            get {
+                return ResourceManager.GetString("CMakeBuildSystemNotFoundWithoutPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to While exploring the SDK &apos;{0}&apos; an error occured..
         /// </summary>
         internal static string CMakeExploration {
@@ -183,6 +192,15 @@ namespace PlcNext.Common {
         internal static string Cycle {
             get {
                 return ResourceManager.GetString("Cycle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No deployment source file was found with {0}. Please specify only existing files or paths..
+        /// </summary>
+        internal static string DeploymentFileNotFound {
+            get {
+                return ResourceManager.GetString("DeploymentFileNotFound", resourceCulture);
             }
         }
         
@@ -394,6 +412,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no target specified for the project. Please use --target to specify for which targets the deploy shall be executed..
+        /// </summary>
+        internal static string NoTargetSpecified {
+            get {
+                return ResourceManager.GetString("NoTargetSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No project was found inside the directory {0}..
         /// </summary>
         internal static string ProjectMissing {
@@ -570,6 +597,24 @@ namespace PlcNext.Common {
         internal static string TargetArchitectureNotFound {
             get {
                 return ResourceManager.GetString("TargetArchitectureNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The target {0} does not have the correct format. Expected is the format &lt;target&gt;,&lt;version&gt;..
+        /// </summary>
+        internal static string TargetFormatMismatch {
+            get {
+                return ResourceManager.GetString("TargetFormatMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The target {0} does not have the correct format. Expected is the format &lt;target&gt;,&lt;version&gt;(,&lt;file&gt;)..
+        /// </summary>
+        internal static string TargetFormatMismatchWithFile {
+            get {
+                return ResourceManager.GetString("TargetFormatMismatchWithFile", resourceCulture);
             }
         }
         

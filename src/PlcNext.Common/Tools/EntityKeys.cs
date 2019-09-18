@@ -30,6 +30,7 @@ namespace PlcNext.Common.Tools
         public const string ActiveDirectoryKey = "active-directory";
         public const string IsRootedKey = "isrooted";
         public const string InternalDirectoryKey = "__internaldirectory__";
+        public const string InternalTempDirectoryKey = "__internaltempdirectory__";
 
         //SettingsContentProvider
         public const string SettingsKey = "settings";
@@ -60,6 +61,21 @@ namespace PlcNext.Common.Tools
         //ProjectSettingsProvider
         public const string ProjectSettingsKey = "__internalprojectsettings__";
         public const string ProjectVersionKey = "__internalprojectversion__";
+        public const string ProjectIdKey = "__internalprojectid__";
+        public const string TargetsKey = "targets";
+
+        //DeployCommandContentProvider
+        public const string InternalDeployPathKey = "__internaldeploypath__";
+
+        //CMakeBuildContentProvider
+        public const string BuildTypeKey = "buildtype";
+        public const string InternalBuildSystemKey = "__internalbuildsystem__";
+        public const string InternalExternalLibrariesKey = "__internalexternallibraries__";
+
+        //TargetParser
+        public const string TargetFullNameKey = "targetfullname";
+        public const string TargetShortFullNameKey = "targetshortfullname";
+        public const string TargetEngineerVersionKey = "__internaltargetengineerversion__";
 
         //General keys
         public const string PathKey = "path";

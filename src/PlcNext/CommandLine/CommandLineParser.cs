@@ -339,13 +339,7 @@ namespace PlcNext.CommandLine
 
             void GenerateHelpTextFooter()
             {
-                PropertyInfo property = typeInfo.Current.GetProperties(BindingFlags.Public | BindingFlags.Static)
-                                                .FirstOrDefault(p => p.GetCustomAttribute<UsageAttribute>() != null &&
-                                                                     p.PropertyType ==
-                                                                     typeof(IEnumerable<UsageExample>));
-                IEnumerable<UsageExample> examples =
-                    ((IEnumerable<UsageExample>) property?.GetValue(null) ?? Enumerable.Empty<UsageExample>())
-                   .ToArray();
+                UsageExample[] examples = GetExamplesFromVerb(typeInfo.Current);
 
                 if (examples.Any())
                 {
@@ -363,14 +357,52 @@ namespace PlcNext.CommandLine
 
                     foreach (UsageExample usageExample in examples)
                     {
-                        helpTextFooter.AddPostOptionsLine(usageExample.HelpText.EndsWith(":")
-                                                              ? usageExample.HelpText
-                                                              : $"{usageExample.HelpText}:");
-                        helpTextFooter.AddPostOptionsLine($@"{commandName} {usageExample.Command}");
-                        helpTextFooter.AddPostOptionsLine(string.Empty);
+                        PrintExample(helpTextFooter, usageExample, commandName);
+                    }
+
+                    if (typeInfo.Current.GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() != null)
+                    {
+                        ChildVerbsAttribute childVerbs = typeInfo.Current.GetCustomAttribute<ChildVerbsAttribute>();
+                        IEnumerable<Type> childVerbTypes = (childVerbs?.Types ?? Enumerable.Empty<Type>())
+                           .Concat(dynamicVerbFactory.GetDynamicVerbs(typeInfo.Current));
+                        IEnumerable<(string verbName, UsageExample[] examples)> childExamples = childVerbTypes.Select(t => (t.GetCustomAttribute<VerbAttribute>().Name,
+                                                                                                                                       GetExamplesFromVerb(t)))
+                                                                                                              .Where(e => e.Item2.Any());
+                        foreach ((string verbName, UsageExample[] usageExamples) in childExamples)
+                        {
+                            helpTextFooter.AddPostOptionsLine(string.Empty);
+                            helpTextFooter.AddPostOptionsLine($"For {verbName}s:");
+                            helpTextFooter.AddPostOptionsLine(string.Empty);
+
+                            foreach (UsageExample usageExample in usageExamples)
+                            {
+                                PrintExample(helpTextFooter, usageExample, commandName);
+                            }
+                        }
                     }
 
                     helpText.AddRange(helpTextFooter.ToString().Split(new[] {Environment.NewLine}, StringSplitOptions.None));
+                }
+
+                void PrintExample(HelpText helpTextFooter, UsageExample usageExample, string commandName)
+                {
+                    helpTextFooter.AddPostOptionsLine(usageExample.HelpText.EndsWith(":")
+                                                          ? usageExample.HelpText
+                                                          : $"{usageExample.HelpText}:");
+                    helpTextFooter.AddPostOptionsLine($@"{commandName} {usageExample.Command}");
+                    helpTextFooter.AddPostOptionsLine(string.Empty);
+                }
+
+                UsageExample[] GetExamplesFromVerb(Type verbType)
+                {
+                    PropertyInfo property = verbType.GetProperties(BindingFlags.Public | BindingFlags.Static)
+                                                    .FirstOrDefault(p => p.GetCustomAttribute<UsageAttribute>() != null &&
+                                                                         p.PropertyType ==
+                                                                         typeof(IEnumerable<UsageExample>));
+                    UsageExample[] verbExamples =
+                        ((IEnumerable<UsageExample>) property?.GetValue(null) ?? Enumerable.Empty<UsageExample>())
+                       .ToArray();
+                    return verbExamples;
                 }
             }
         }

@@ -10,6 +10,7 @@
 using System;
 using PlcNext.Common.Tools;
 using System.Collections.Generic;
+using PlcNext.Common.DataModel;
 using PlcNext.Common.Project;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.UI;
@@ -24,5 +25,7 @@ namespace PlcNext.Common.Build
                     ChangeObservable changeObservable, IUserInterface userInterface, Guid libraryGuid,
                     IEnumerable<(Target, string)> targets,
                     Dictionary<Target, IEnumerable<VirtualFile>> externalLibraries, string buildType);
+
+        int Execute(Entity dataModel);
     }
 }

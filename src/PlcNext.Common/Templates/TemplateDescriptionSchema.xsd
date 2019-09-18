@@ -132,6 +132,7 @@
     </xs:annotation>
     <xs:sequence>
       <xs:element minOccurs="0" name="Arguments" type="templateArgumentDefinitions"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Example" type="templateExample"/>
     </xs:sequence>
     <xs:attribute name="identifier" type="xs:string" use="required">
       <xs:annotation>

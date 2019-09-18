@@ -22,11 +22,12 @@ using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.Priority;
 using PlcNext.Common.Tools.SDK;
 
 namespace PlcNext.Common.Project
 {
-    internal class RootEntityContentProvider : IEntityContentProvider
+    internal class RootEntityContentProvider : PriorityContentProvider
     {
         private readonly ITemplateRepository templateRepository;
         private readonly ITemplateIdentifierRepository identifierRepository;
@@ -49,13 +50,15 @@ namespace PlcNext.Common.Project
             this.informationService = informationService;
         }
 
-        public bool CanResolve(Entity owner, string key, bool fallback = false)
+        public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
+
+        public override bool CanResolve(Entity owner, string key, bool fallback = false)
         {
             return key == EntityKeys.RootKey ||
                    key == EntityKeys.EscapeProjectNameFormatKey && owner.Type == EntityKeys.FormatKey;
         }
 
-        public Entity Resolve(Entity owner, string key, bool fallback = false)
+        public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             if (key == EntityKeys.EscapeProjectNameFormatKey && 
                 owner.Type == EntityKeys.FormatKey)

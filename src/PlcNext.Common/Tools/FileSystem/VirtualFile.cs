@@ -75,5 +75,22 @@ namespace PlcNext.Common.Tools.FileSystem
 
             return FullName;
         }
+
+        public VirtualFile CopyTo(VirtualDirectory destinationDirectory)
+        {
+            if (destinationDirectory.FileExists(Name))
+            {
+                throw new FormattableIoException($"File {Name} already exists in {destinationDirectory.FullName}");
+            }
+
+            VirtualFile result = destinationDirectory.File(Name);
+            using (Stream readStream = OpenRead())
+            using(Stream writeStream = result.OpenWrite())
+            {
+                readStream.CopyTo(writeStream);
+            }
+
+            return result;
+        }
     }
 }

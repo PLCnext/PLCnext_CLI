@@ -23,9 +23,9 @@ namespace PlcNext.Common.Deploy
 {
     internal class EngineeringLibraryBuilderDeployStep : IDeployStep
     {
-        private readonly IBuilder builder;
+        private readonly ILibraryBuilderExecuter builder;
 
-        public EngineeringLibraryBuilderDeployStep(IBuilder builder)
+        public EngineeringLibraryBuilderDeployStep(ILibraryBuilderExecuter builder)
         {
             this.builder = builder;
         }
@@ -34,27 +34,7 @@ namespace PlcNext.Common.Deploy
 
         public void Execute(Entity dataModel, ChangeObservable observable)
         {
-            CommandEntity command = CommandEntity.Decorate(dataModel);
-
-            string metaFilesDirectory = command.GetSingleValueArgument(Constants.MetaPathArgumentName);
-
-            string libraryLocation = command.GetSingleValueArgument(Constants.LibraryLocationArgumentName);
-
-            string outputDirectory = command.GetSingleValueArgument(Constants.OutputArgumentName);
-
-            string buildType = command.GetSingleValueArgument(Constants.BuildTypeArgumentName);
-
-            if (command.IsCommandArgumentSpecified(Constants.IdArgumentName) 
-                && !Guid.TryParse(command.GetSingleValueArgument(Constants.IdArgumentName), out Guid realGuid))
-            {
-                throw new LibraryIdMalformattedException(command.GetSingleValueArgument(Constants.IdArgumentName));
-            }
-
-            IEnumerable<string> targets = command.GetMultiValueArgument(Constants.TargetArgumentName);
-
-            IEnumerable<string> externalLibraries = command.GetMultiValueArgument(Constants.ExternalLibrariesArgumentName);
-
-            builder.BuildLibraryForProject(dataModel.Root, observable, metaFilesDirectory, libraryLocation, outputDirectory, realGuid, targets, externalLibraries, buildType);            
+            builder.Execute(dataModel);
         }
     }
 }

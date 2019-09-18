@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PlcNext.Common.Tools.DynamicCommands
@@ -59,8 +60,11 @@ namespace PlcNext.Common.Tools.DynamicCommands
         {
             if (obj is IEnumerable<string> stringValues)
             {
-                IsDefined = true;
-                Values = stringValues;
+                if (stringValues.Any())
+                {
+                    IsDefined = true;
+                    Values = stringValues;
+                }
             }
             else if(obj != null)
             {

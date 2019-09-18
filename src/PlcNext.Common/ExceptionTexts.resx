@@ -346,4 +346,19 @@
   <data name="NoHigherTargetAvailable" xml:space="preserve">
     <value>No higher target available for target '{0}'. Use --downgrade option, remove project-target via set setting or install higher target version. </value>
   </data>
+  <data name="CMakeBuildSystemNotFoundWithoutPath" xml:space="preserve">
+    <value>Could not find cmake build system for the target {0} and build type {1}. No external libraries will be added to library. Libraries can be added manually via option --files.</value>
+  </data>
+  <data name="DeploymentFileNotFound" xml:space="preserve">
+    <value>No deployment source file was found with {0}. Please specify only existing files or paths.</value>
+  </data>
+  <data name="NoTargetSpecified" xml:space="preserve">
+    <value>There is no target specified for the project. Please use --target to specify for which targets the deploy shall be executed.</value>
+  </data>
+  <data name="TargetFormatMismatch" xml:space="preserve">
+    <value>The target {0} does not have the correct format. Expected is the format &lt;target&gt;,&lt;version&gt;.</value>
+  </data>
+  <data name="TargetFormatMismatchWithFile" xml:space="preserve">
+    <value>The target {0} does not have the correct format. Expected is the format &lt;target&gt;,&lt;version&gt;(,&lt;file&gt;).</value>
+  </data>
 </root>

@@ -15,10 +15,11 @@ using System.Text.RegularExpressions;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Templates.Format;
 using PlcNext.Common.Tools;
+using PlcNext.Common.Tools.Priority;
 
 namespace PlcNext.Common.Templates
 {
-    internal class FormatTemplateContentProvider : IEntityContentProvider
+    internal class FormatTemplateContentProvider : PriorityContentProvider
     {
         private readonly ITemplateRepository templateRepository;
         private readonly ITemplateResolver resolver;
@@ -29,7 +30,9 @@ namespace PlcNext.Common.Templates
             this.resolver = resolver;
         }
 
-        public bool CanResolve(Entity owner, string key, bool fallback = false)
+        public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
+
+        public override bool CanResolve(Entity owner, string key, bool fallback = false)
         {
             return key == EntityKeys.FormatKey ||
                    owner.Values<formatTemplate>().Any(t => t.name.Equals(key, StringComparison.OrdinalIgnoreCase)) ||
@@ -38,7 +41,7 @@ namespace PlcNext.Common.Templates
                     owner.Value<FormatValueAccess>() != null);
         }
 
-        public Entity Resolve(Entity owner, string key, bool fallback = false)
+        public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             if (key == EntityKeys.FormatKey)
             {

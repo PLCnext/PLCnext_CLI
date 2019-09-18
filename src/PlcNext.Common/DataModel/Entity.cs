@@ -103,7 +103,8 @@ namespace PlcNext.Common.DataModel
                         return contentProvider.Resolve(this, key);
                     }
 
-                    cache.Add(key, contentProvider.Resolve(this, key));
+                    Entity result = contentProvider.Resolve(this, key);
+                    cache[key] = result;
                 }
                 return cache[key];
             }

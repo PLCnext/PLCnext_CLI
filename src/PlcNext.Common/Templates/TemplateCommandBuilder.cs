@@ -77,31 +77,7 @@ namespace PlcNext.Common.Templates
             foreach (templateExample example in description.Example??Enumerable.Empty<templateExample>())
             {
                 StringBuilder command = new StringBuilder($"new {description.name.ToLowerInvariant()}");
-                foreach (templateArgumentInstance argumentInstance in example.Arguments??Enumerable.Empty<templateArgumentInstance>())
-                {
-                    if (description.Arguments?.Any(a => a.name == argumentInstance.name) != true)
-                    {
-                        throw new ArgumentNotFoundException(argumentInstance.name, description.name);
-                    }
-                    string value = argumentInstance.value.Contains(' ')
-                                       ? $"\"{argumentInstance.value}\""
-                                       : argumentInstance.value;
-                    command.Append(argumentInstance.valueSpecified
-                                       ? $" --{argumentInstance.name.ToLowerInvariant()} {value}"
-                                       : $" --{argumentInstance.name.ToLowerInvariant()}");
-                }
-
-                foreach (templateRelationshipInstance relationshipInstance in example.Relationship??Enumerable.Empty<templateRelationshipInstance>())
-                {
-                    if (description.Relationship?.Any(r => r.name == relationshipInstance.name) != true)
-                    {
-                        throw new RelationshipNotFoundException(relationshipInstance.name, description.name);
-                    }
-                    string value = relationshipInstance.value.Contains(' ')
-                                       ? $"\"{relationshipInstance.value}\""
-                                       : relationshipInstance.value;
-                    command.Append($" --{relationshipInstance.name.ToLowerInvariant()} {value}");
-                }
+                ParseExample(description, example, command);
 
                 builder.AddExample(command.ToString(), example.Description ?? string.Empty);
             }
@@ -114,6 +90,39 @@ namespace PlcNext.Common.Templates
                    .Build();
 
             return builder.Build();
+        }
+
+        private static void ParseExample(TemplateDescription description, templateExample example, StringBuilder command, bool checkExample = true)
+        {
+            foreach (templateArgumentInstance argumentInstance in example.Arguments ??
+                                                                  Enumerable.Empty<templateArgumentInstance>())
+            {
+                if (checkExample && description.Arguments?.Any(a => a.name == argumentInstance.name) != true)
+                {
+                    throw new ArgumentNotFoundException(argumentInstance.name, description.name);
+                }
+
+                string value = argumentInstance.value.Contains(' ')
+                                   ? $"\"{argumentInstance.value}\""
+                                   : argumentInstance.value;
+                command.Append(argumentInstance.valueSpecified
+                                   ? $" --{argumentInstance.name.ToLowerInvariant()} {value}"
+                                   : $" --{argumentInstance.name.ToLowerInvariant()}");
+            }
+
+            foreach (templateRelationshipInstance relationshipInstance in example.Relationship ??
+                                                                          Enumerable.Empty<templateRelationshipInstance>())
+            {
+                if (checkExample && description.Relationship?.Any(r => r.name == relationshipInstance.name) != true)
+                {
+                    throw new RelationshipNotFoundException(relationshipInstance.name, description.name);
+                }
+
+                string value = relationshipInstance.value.Contains(' ')
+                                   ? $"\"{relationshipInstance.value}\""
+                                   : relationshipInstance.value;
+                command.Append($" --{relationshipInstance.name.ToLowerInvariant()} {value}");
+            }
         }
 
         private void GenerateArgumentFromDefinition(Entity templateEntity, CommandDefinitionBuilder builder,
@@ -175,11 +184,14 @@ namespace PlcNext.Common.Templates
                                                                                         .SetName("deploy")
                                                                                         .SetHelp(
                                                                                              "Deploys files for production.")
-                                                                                        .EnableUseChildVerbsAsCategory(),
+                                                                                        .EnableUseChildVerbsAsCategory()
+                .AddExample($"deploy --path Path/To/Project", "Deploy files for all targets supported by project")
+                .AddExample($"deploy --path Path/To/Project --files doc/HelpText.txt|doc", "Deploy doc/HelpText.txt to the doc directory in the deploy directory aditonally to the normally deployed files.")
+                .AddExample($"deploy --path Path/To/Project --target AXCF2152 RFC4072S", "Deploy library for targets AXCF2152 and RFC4072S"),
                                                                 allTemplates.Where(t => !t.isHidden & t.isRoot),
                                                                 shortNames),
                                             allTemplates.Where(t => !t.isHidden & t.isRoot),
-                                            shortNames)
+                                            shortNames, false)
                    .Build();
             }
 
@@ -194,14 +206,13 @@ namespace PlcNext.Common.Templates
                                                                                              $"For {currentRootTemplate.name.Plural()}:"),
                                                                 new[] { currentRootTemplate },
                                                                 shortNames),
-                                            new[] { currentRootTemplate }, shortNames)
+                                            new[] { currentRootTemplate }, shortNames, true)
                    .Build();
             }
 
             CommandDefinitionBuilder AddTemplateArguments(CommandDefinitionBuilder builder, IEnumerable<TemplateDescription> descriptions,
-                List<char> shortNames)
+                List<char> shortNames, bool addExamples)
             {
-
                 string[] defaultArguments =
                 {
                     EntityKeys.PathKey.ToLowerInvariant(),
@@ -236,6 +247,20 @@ namespace PlcNext.Common.Templates
                                 argumentToStringDictionary.Add(argument, description.name);
                             }
                         }
+                    }
+
+                    if (!addExamples)
+                    {
+                        continue;
+                    }
+                    IEnumerable<templateExample> examples = (description.DeployPostStep ?? Enumerable.Empty<templateDeployPostStep>())
+                                                            .SelectMany(d => d.Example);
+                    foreach (templateExample example in examples)
+                    {
+                        StringBuilder command = new StringBuilder("deploy");
+                        ParseExample(description, example, command, false);
+
+                        builder.AddExample(command.ToString(), example.Description ?? string.Empty);
                     }
                 }
 
@@ -291,7 +316,9 @@ namespace PlcNext.Common.Templates
                               .SetHelp(
                                    "Additional files to be deployed. Files are separated by ' '. Files need to be defined in the following format: " +
                                    "path/to/source|path/to/destination(|target). The path/to/source file will be relative to the " +
-                                   $"root folder, defined with the '{EntityKeys.PathKey}' argument. The path/to/destination will be " +
+                                   $"root folder, defined with the '{EntityKeys.PathKey}' argument. It can contain the wildcard '*' " +
+                                   $"at the end of the path. In this case all files from the directory and all sub-directories will " +
+                                   $"be deployed. The sub-directories will be recreated in the deployment directory. The path/to/destination will be " +
                                    $"relative to the output/targetname/Release directory, where output is defined with the '{Constants.OutputArgumentName}' argument. " +
                                    "Optionally each file can have a target definition. Without the target definition the file is deployed to every target. " +
                                    "Targets need to be defined in the following format: targetname(,targetversion). The version is optional and " +
@@ -333,15 +360,6 @@ namespace PlcNext.Common.Templates
                     shortNames.Add('b');
                 }
 
-                builder.AddExample("deploy --path MyAcfProject", "Deploy the acf.config for 'MyAcfProject'");
-                builder.AddExample("deploy --path MyPlmProject", "Deploy a .pcwlx library for 'MyPlmProject'");
-                builder.AddExample($"deploy --path Path/To/Project", "Deploy library for all targets supported by project");
-                builder.AddExample($"deploy --path Path/To/Project --target AXCF2152 RFC4072S", "Deploy library for targets AXCF2152 and RFC4072S");
-                builder.AddExample($"deploy --path Path/To/Project --target AXCF2152,2019.0,path/to/Project.so",
-                                    "Deploy library for target with compilation file in special location");
-                builder.AddExample($"deploy --path Path/To/Project " +
-                    $"--externalLibraries AXCF2152,2019.0,path/to/libforaxc.so,path/to/otherlib.so RFC4072S,path/to/libfornfc.so",
-                    "Deploy library with external libraries");
                 return builder;
 
                 bool ArgumentAvailableFromDescription(string argumentName)

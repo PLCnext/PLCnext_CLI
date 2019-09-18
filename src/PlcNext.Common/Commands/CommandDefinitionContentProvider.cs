@@ -18,10 +18,11 @@ using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.Priority;
 
 namespace PlcNext.Common.Commands
 {
-    internal class CommandDefinitionContentProvider : IEntityContentProvider
+    internal class CommandDefinitionContentProvider : PriorityContentProvider
     {
         private readonly IFileSystem fileSystem;
         private readonly ITemplateResolver templateResolver;
@@ -36,7 +37,9 @@ namespace PlcNext.Common.Commands
             this.codeLanguage = codeLanguage;
         }
 
-        public bool CanResolve(Entity owner, string key, bool fallback = false)
+        public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
+
+        public override bool CanResolve(Entity owner, string key, bool fallback = false)
         {
             return owner.Value<CommandDefinition>() != null &&
                    key != EntityKeys.TemplateKey &&
@@ -61,7 +64,7 @@ namespace PlcNext.Common.Commands
             }
         }
 
-        public Entity Resolve(Entity owner, string key, bool fallback = false)
+        public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             templateRelationship[] relationships = owner.HasTemplate() ? owner.Template().Relationship : null;
             templateRelationship relationship = relationships?.FirstOrDefault(r => r.name.Equals(key, StringComparison.OrdinalIgnoreCase))
@@ -119,8 +122,7 @@ namespace PlcNext.Common.Commands
                     return ResolveValue(singleValueArgument.Value);
                 }
 
-                if (
-                    (arg != null && arg.Name != argumentName && TryGetTemplateDefault(arg.Name, out string result))||
+                if ((arg != null && arg.Name != argumentName && TryGetTemplateDefault(arg.Name, out string result))||
                     TryGetTemplateDefault(argumentName, out result))
                 {
                     return result;

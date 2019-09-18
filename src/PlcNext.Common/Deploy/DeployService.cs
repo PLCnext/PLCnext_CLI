@@ -33,11 +33,13 @@ namespace PlcNext.Common.Deploy
         private readonly IFileSystem fileSystem;
         private readonly ITemplateResolver resolver;
         private readonly ITargetParser targetParser;
-        public DeployService(IFileSystem fileSystem, ITemplateResolver resolver, ITargetParser targetParser)
+        private readonly ExecutionContext executionContext;
+        public DeployService(IFileSystem fileSystem, ITemplateResolver resolver, ITargetParser targetParser, ExecutionContext executionContext)
         {
             this.fileSystem = fileSystem;
             this.resolver = resolver;
             this.targetParser = targetParser;
+            this.executionContext = executionContext;
         }
 
         public void DeployFiles(Entity dataModel)
@@ -70,8 +72,7 @@ namespace PlcNext.Common.Deploy
             }
             if (!targets.Any())
             {
-                throw new FormattableException
-                    ("Please use --target to specify for which targets the deploy shall be executed.");
+                throw new NoTargetSpecifiedException();
             }
 
 
@@ -100,37 +101,74 @@ namespace PlcNext.Common.Deploy
                 string to = match.Groups["destination"].Value;
                 string rawTarget = match.Groups["target"].Value;
 
-                if (!fileSystem.FileExists(from, project.Path))
-                    throw new FormattableException($"The source file {from} does not exist.");
-
-                if (!string.IsNullOrEmpty(rawTarget))
+                VirtualDirectory baseDirectory = null;
+                string relativePath = null;
+                bool recreateStructure = false;
+                string[] path = fileSystem.GetPath(from);
+                int firstWildCard = path.TakeWhile(p => !p.Contains('*') && !p.Contains('?')).Count();
+                if (firstWildCard != path.Length)
                 {
-                    DeployFileForRawTarget(rawTarget);
+                    baseDirectory = fileSystem.GetDirectory(Path.Combine(path.Take(firstWildCard).ToArray()), project.Path, false);
+                    relativePath = Path.Combine(path.Skip(firstWildCard).ToArray());
+                    recreateStructure = true;
+                }
+
+                if (recreateStructure)
+                {
+                    IEnumerable<VirtualFile> deployFiles = baseDirectory.Files(relativePath, true).ToArray();
+                    if (!deployFiles.Any())
+                    {
+                        throw new DeployFileNotFoundException(@from);
+                    }
+                    foreach (VirtualFile deployFile in deployFiles)
+                    {
+                        string structure = Path.GetDirectoryName(deployFile.GetRelativePath(baseDirectory));
+                        string fileDestination = string.IsNullOrEmpty(structure) ? to : Path.Combine(to, structure);
+                        DeployFile(deployFile.FullName, fileDestination);
+                    }
+                }
+                else if (fileSystem.FileExists(from, project.Path))
+                {
+                    DeployFile(from, to);
                 }
                 else
                 {
-                    foreach (Target target in targets)
+                    throw new DeployFileNotFoundException(@from);
+                }
+
+                void DeployFile(string sourceFile, string destinationDirectory)
+                {
+                    if (!string.IsNullOrEmpty(rawTarget))
                     {
-                        DeployFileForTarget(target);
+                        DeployFileForRawTarget(rawTarget, sourceFile, destinationDirectory);
+                    }
+                    else
+                    {
+                        foreach (Target target in targets)
+                        {
+                            DeployFileForTarget(target, sourceFile, destinationDirectory);
+                        }
                     }
                 }
 
-                void DeployFileForRawTarget(string target)
+                void DeployFileForRawTarget(string target, string sourceFile, string destinationDirectory)
                 {
                     Target parsedTarget = targetParser.ParseTarget(target, null, targets);
-                    DeployFileForTarget(parsedTarget);
+                    DeployFileForTarget(parsedTarget, sourceFile, destinationDirectory);
                 }
 
-                void DeployFileForTarget(Target target)
+                void DeployFileForTarget(Target target, string sourceFile, string destinationDirectory)
                 {
-                    VirtualFile fileToCopy = fileSystem.GetFile(from, project.Path);
-                    VirtualFile copiedFile = fileSystem.GetDirectory(to, GetOutputDirectory(target).FullName).File(fileToCopy.Name);
+                    VirtualFile fileToCopy = fileSystem.GetFile(sourceFile, project.Path);
+                    VirtualFile copiedFile = fileSystem.GetDirectory(destinationDirectory, GetOutputDirectory(target).FullName).File(fileToCopy.Name);
 
                     using (Stream source = fileToCopy.OpenRead(true))
                     using (Stream destination = copiedFile.OpenWrite())
                     {
                         destination.SetLength(0);
                         source.CopyTo(destination);
+
+                        executionContext.WriteVerbose($"Deployed file {fileToCopy.FullName} to {copiedFile.FullName}.");
                     }
                 }
             }
@@ -145,11 +183,40 @@ namespace PlcNext.Common.Deploy
 
                 foreach (templateFile file in template.File)
                 {
-                    if (file.deployPath == null)
+                    if (!file.deployPathSpecified)
                         continue;
 
-                    VirtualFile deployableFile = GetFile(deployableEntity, file, dataModel.Root.Path);
+                    VirtualFile deployableFile = GetFile(file, dataModel.Root.Path, false, out string path);
 
+                    DeployFile(file, deployableFile, path);
+                }
+
+                foreach (templateGeneratedFile generatedFile in template.GeneratedFile??Enumerable.Empty<templateGeneratedFile>())
+                {
+                    if (!generatedFile.deployPathSpecified)
+                        continue;
+
+                    VirtualFile deployableFile = GetFile(generatedFile, dataModel.Root.Path, true, out string path);
+
+                    DeployFile(generatedFile, deployableFile, path);
+                }
+
+                VirtualFile GetDestination(templateFile file, Target target, string name)
+                {
+                    string basePath = GetOutputDirectory(target).FullName;
+                    string path = resolver.Resolve(file.deployPath ?? string.Empty, deployableEntity);
+
+                    VirtualFile destination = fileSystem.GetFile(Path.Combine(path, name), basePath);
+                    return destination;
+                }
+
+                void DeployFile(templateFile file, VirtualFile deployableFile, string filePath)
+                {
+                    if (deployableFile == null)
+                    {
+                        executionContext.WriteVerbose($"Could not find file {filePath} in {dataModel.Root.Path}, the file will not be deployed.");
+                        return;
+                    }
                     foreach (Target target in targets)
                     {
                         VirtualFile destination = GetDestination(file, target, deployableFile.Name);
@@ -160,16 +227,33 @@ namespace PlcNext.Common.Deploy
                             dest.SetLength(0);
                             source.CopyTo(dest);
                         }
+
+                        executionContext.WriteVerbose($"Deployed file {deployableFile.FullName} to {destination.FullName}.");
                     }
                 }
-                VirtualFile GetDestination(templateFile file, Target target, string name)
+
+                VirtualFile GetFile(templateFile file, string basePath, bool isGeneratedFile, out string realFilePath)
                 {
-                    string basePath = GetOutputDirectory(target).FullName;
-                    string path = resolver.Resolve(file.deployPath ?? string.Empty, dataModel);
+                    string path = resolver.Resolve(file.path ?? string.Empty, deployableEntity);
+                    string name = resolver.Resolve(file.name, deployableEntity);
 
-                    VirtualFile destination = fileSystem.GetFile(Path.Combine(path, name), basePath);
+                    if (isGeneratedFile && file is templateGeneratedFile generatedFile)
+                    {
+                        realFilePath = Path.Combine(path, name);
+                        if (!Path.IsPathRooted(realFilePath))
+                        {
+                            realFilePath = Path.Combine(Constants.IntermediateFolderName, generatedFile.generator?.ToLowerInvariant() ?? string.Empty, realFilePath);
+                        }
+                    }
+                    else
+                    {
+                        realFilePath = Path.Combine(path, name);
+                    }
+
+                    VirtualFile destination = fileSystem.FileExists(realFilePath, basePath)
+                                                  ? fileSystem.GetFile(realFilePath, basePath)
+                                                  : null;
                     return destination;
-
                 }
             }
 
@@ -198,18 +282,9 @@ namespace PlcNext.Common.Deploy
                         return Constants.ReleaseFolderName;
                     }
 
-                    return buildType.Substring(0, 1).ToUpperInvariant() + buildType.Substring(1);
+                    return buildType.Substring(0, 1).ToUpperInvariant() + buildType.Substring(1).ToLowerInvariant();
                 }
             }
-        }
-
-        private VirtualFile GetFile(Entity dataModel, templateFile file, string basePath)
-        {
-            string path = resolver.Resolve(file.path ?? string.Empty, dataModel);
-            string name = resolver.Resolve(file.name, dataModel);
-
-            VirtualFile destination = fileSystem.GetFile(Path.Combine(path, name), basePath);
-            return destination;
         }
     }
 }

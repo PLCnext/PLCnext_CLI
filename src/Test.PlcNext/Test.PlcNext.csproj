@@ -46,6 +46,12 @@
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.cpp" />
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
     <None Remove="Deployment\ExternalLibrary\ExternalStruct.hpp" />
+    <None Remove="Deployment\TestResults\DemoLibraryCommandArgs.txt" />
+    <None Remove="Deployment\TestResults\DemoLibraryCommandArgsWithSpecificId.txt" />
+    <None Remove="Deployment\TestResults\DemoLibraryDifferentPathsCommandArgs.txt" />
+    <None Remove="Deployment\TestResults\DemoLibraryWithExternalLibs.txt" />
+    <None Remove="Deployment\TestResults\DemoLibraryWithExternalLibsMultibinary.txt" />
+    <None Remove="Deployment\TestResults\DemoWithMultibinaryLibraryCommandArgs.txt" />
     <None Remove="Deployment\TestResults\ExternalLibraryTest.meta.cpp" />
     <None Remove="Deployment\TestResults\GetComponentsReply.json" />
     <None Remove="Deployment\TestResults\GetProgramsReply.json" />
@@ -91,6 +97,12 @@
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.hpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.cpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\DemoLibraryCommandArgs.txt" />
+    <EmbeddedResource Include="Deployment\TestResults\DemoLibraryCommandArgsWithSpecificId.txt" />
+    <EmbeddedResource Include="Deployment\TestResults\DemoLibraryDifferentPathsCommandArgs.txt" />
+    <EmbeddedResource Include="Deployment\TestResults\DemoLibraryWithExternalLibs.txt" />
+    <EmbeddedResource Include="Deployment\TestResults\DemoLibraryWithExternalLibsMultibinary.txt" />
+    <EmbeddedResource Include="Deployment\TestResults\DemoWithMultibinaryLibraryCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\ExternalLibraryTest.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\GetAllSettingsReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetCompilerSpecsPartialErrorReply.json" />

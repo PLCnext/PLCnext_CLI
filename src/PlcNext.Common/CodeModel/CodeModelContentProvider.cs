@@ -20,11 +20,12 @@ using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Templates.Field;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.Priority;
 using multiplicity = PlcNext.Common.Templates.Field.multiplicity;
 
 namespace PlcNext.Common.CodeModel
 {
-    internal class CodeModelContentProvider : IEntityContentProvider
+    internal class CodeModelContentProvider : PriorityContentProvider
     {
         private readonly ITemplateRepository templateRepository;
         private readonly ITemplateResolver resolver;
@@ -39,7 +40,9 @@ namespace PlcNext.Common.CodeModel
             this.datatypeConversion = datatypeConversion;
         }
 
-        public bool CanResolve(Entity owner, string key, bool fallback = false)
+        public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
+
+        public override bool CanResolve(Entity owner, string key, bool fallback = false)
         {
             return owner.HasValue<ICodeModel>() &&
                    (key == EntityKeys.NamespaceKey ||
@@ -130,7 +133,7 @@ namespace PlcNext.Common.CodeModel
             return false;
         }
 
-        public Entity Resolve(Entity owner, string key, bool fallback = false)
+        public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             TemplateEntity ownerTemplateEntity = TemplateEntity.Decorate(owner);
             if (key == EntityKeys.FieldArpDataTypeKey && owner.Type == EntityKeys.FormatKey)

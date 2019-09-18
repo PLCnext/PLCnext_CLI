@@ -8,6 +8,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Tools;
 
@@ -41,5 +43,11 @@ namespace PlcNext.Common.Project
                                       : HasContent(EntityKeys.ProjectVersionKey)
                                           ? this[EntityKeys.ProjectVersionKey].Value<Version>()
                                           : new Version(1, 0);
+
+        public IEnumerable<Entity> Targets => HasContent(EntityKeys.TargetsKey)
+                                                  ? this[EntityKeys.TargetsKey]
+                                                  : Enumerable.Empty<Entity>();
+
+        public Guid Id => this[EntityKeys.ProjectIdKey].Value<Guid>();
     }
 }

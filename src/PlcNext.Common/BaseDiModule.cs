@@ -27,6 +27,7 @@ using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.IO;
+using PlcNext.Common.Tools.Priority;
 using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.Security;
 using PlcNext.Common.Tools.Settings;
@@ -53,6 +54,7 @@ namespace PlcNext.Common
             builder.Register(_ => CancellationToken.None).AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<ExecutionContext>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
+            builder.RegisterType<PriorityHell>().As<IPriorityMaster>().InstancePerLifetimeScope();
             builder.RegisterType<BuildCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<DynamicCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GenerateLibraryCommand>().As<ICommand>().InstancePerLifetimeScope();
@@ -71,7 +73,7 @@ namespace PlcNext.Common
             builder.RegisterType<SetTargetsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateCliCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateTargetsCommand>().As<ICommand>().InstancePerLifetimeScope();
-            builder.RegisterType<TargetParser>().As<ITargetParser>().InstancePerLifetimeScope();
+            builder.RegisterType<TargetParser>().As<ITargetParser>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<AutomaticRollbackTransactionFactory>().As<ITransactionFactory>().InstancePerLifetimeScope();
             builder.RegisterType<StaticDatatypeConversion>().As<IDatatypeConversion>().InstancePerLifetimeScope();
             builder.RegisterType<SettingsBasedSdkRepository>().As<ISdkRepository>().InstancePerLifetimeScope();
@@ -101,13 +103,14 @@ namespace PlcNext.Common
             builder.RegisterType<PropertiesFileSdkContainer>().As<ISdkContainer>().InstancePerLifetimeScope();
             builder.RegisterType<EntityFactory>().As<IEntityFactory>().InstancePerLifetimeScope();
             builder.Register(c => c.ResolveNamed<IEnumerable<IEntityContentProvider>>("Implementation")).As<IEnumerable<IEntityContentProvider>>().InstancePerLifetimeScope();
-            builder.RegisterType<CMakeContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
+            builder.RegisterType<CMakeBuildContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<CodeModelContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<CommandDefinitionContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<ConstantContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<FormatTemplateContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<RootEntityContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<SettingsContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
+            builder.RegisterType<DeployCommandContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<TemplateContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<CppContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<ProjectSettingsProvider>()

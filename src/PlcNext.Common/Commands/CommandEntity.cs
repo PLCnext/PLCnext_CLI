@@ -37,14 +37,22 @@ namespace PlcNext.Common.Commands
 
         public string Output => this[EntityKeys.OutputKey].Value<string>();
 
+        public string CommandName => Value<CommandDefinition>()?.Name ?? string.Empty;
+
         public string GetSingleValueArgument(string argument)
         {
-           return this[argument].Value<string>();
+            return Value<CommandDefinition>()?.Argument<SingleValueArgument>(argument)?.Value ??
+                   (HasContent(argument)
+                       ? this[argument].Value<string>()
+                       : string.Empty);
         }
 
         public IEnumerable<string> GetMultiValueArgument(string argument)
         {
-            return this[argument].Select(t => t.Value<string>());
+            return Value<CommandDefinition>()?.Argument<MultipleValueArgument>(argument)?.Values ??
+                   (HasContent(argument)
+                        ? this[argument].Select(t => t.Value<string>())
+                        : Enumerable.Empty<string>());
         }
     }
 }

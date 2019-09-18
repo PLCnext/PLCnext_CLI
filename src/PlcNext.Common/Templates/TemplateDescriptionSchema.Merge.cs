@@ -137,6 +137,9 @@ namespace PlcNext.Common.Templates.Description
         [XmlIgnore]
         public bool templateSpecified { get; set; }
 
+        [XmlIgnore]
+        public bool deployPathSpecified { get; set; }
+
         public bool Equals(templateFile other)
         {
             if (ReferenceEquals(null, other)) return false;

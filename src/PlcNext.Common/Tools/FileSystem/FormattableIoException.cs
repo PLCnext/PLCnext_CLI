@@ -14,6 +14,10 @@ namespace PlcNext.Common.Tools.FileSystem
 {
     public class FormattableIoException : FormattableException
     {
+        public FormattableIoException(string message) : base(message)
+        {
+        }
+
         public FormattableIoException(IOException exception) : base(exception.Message, exception)
         {
 

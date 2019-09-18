@@ -13,10 +13,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using PlcNext.Common.DataModel;
+using PlcNext.Common.Tools.Priority;
 
 namespace PlcNext.Common.Tools.Settings
 {
-    internal class SettingsContentProvider : IEntityContentProvider
+    internal class SettingsContentProvider : PriorityContentProvider
     {
         private readonly ISettingsProvider settingsProvider;
 
@@ -25,12 +26,14 @@ namespace PlcNext.Common.Tools.Settings
             this.settingsProvider = settingsProvider;
         }
 
-        public bool CanResolve(Entity owner, string key, bool fallback = false)
+        public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
+
+        public override bool CanResolve(Entity owner, string key, bool fallback = false)
         {
             return key == EntityKeys.SettingsKey || owner.Value<Settings>() != null;
         }
 
-        public Entity Resolve(Entity owner, string key, bool fallback = false)
+        public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             if (key == EntityKeys.SettingsKey)
             {

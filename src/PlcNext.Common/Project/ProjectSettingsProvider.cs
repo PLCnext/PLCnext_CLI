@@ -13,19 +13,22 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using PlcNext.Common.Build;
 using PlcNext.Common.Commands;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.Priority;
 using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.Common.Project
 {
-    internal class ProjectSettingsProvider : ITemplateIdentifier, IEntityContentProvider
+    internal class ProjectSettingsProvider : PriorityContentProvider, ITemplateIdentifier
     {
         private readonly ExecutionContext executionContext;
+        private readonly IGuidFactory guidFactory;
         public string IdentifierKey => "ProjectSettingsIdentifier";
 
         private readonly IFileSystem fileSystem;
@@ -35,15 +38,20 @@ namespace PlcNext.Common.Project
             EntityKeys.PathKey,
             EntityKeys.NameKey,
             EntityKeys.ProjectSettingsKey,
-            EntityKeys.ProjectVersionKey,
+            EntityKeys.ProjectVersionKey
         };
 
-        public ProjectSettingsProvider(IFileSystem fileSystem, ExecutionContext executionContext)
+        public override SubjectIdentifier HigherPrioritySubject { get; } = new SubjectIdentifier(nameof(CommandDefinitionContentProvider));
+
+        public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
+
+        public ProjectSettingsProvider(IFileSystem fileSystem, ExecutionContext executionContext, IGuidFactory guidFactory)
         {
             this.fileSystem = fileSystem;
             this.executionContext = executionContext;
+            this.guidFactory = guidFactory;
         }
-        
+
         public IEnumerable<Entity> FindAllEntities(string entityName, Entity owner)
         {
             if (!owner.HasPathCommandArgument())
@@ -85,14 +93,15 @@ namespace PlcNext.Common.Project
             return Enumerable.Empty<Entity>();
         }
 
-        public bool CanResolve(Entity owner, string key, bool fallback = false)
+        public override bool CanResolve(Entity owner, string key, bool fallback = false)
         {
             return owner.IsRoot() &&
-                   AvailableProjectValues.Contains(key) &&
-                   owner.HasValue<ProjectDescription>();
+                   ((AvailableProjectValues.Contains(key) &&
+                     owner.HasValue<ProjectDescription>()) ||
+                    key == EntityKeys.ProjectIdKey);
         }
 
-        public Entity Resolve(Entity owner, string key, bool fallback = false)
+        public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             switch (key)
             {
@@ -104,8 +113,43 @@ namespace PlcNext.Common.Project
                     return GetProjectSettings();
                 case EntityKeys.ProjectVersionKey:
                     return GetProjectVersion();
+                case EntityKeys.ProjectIdKey:
+                    return GetProjectId();
                 default:
                     throw new ContentProviderException(key, owner);
+            }
+
+            Entity GetProjectId()
+            {
+                CommandEntity command = CommandEntity.Decorate(owner.Origin);
+                if (command.IsCommandArgumentSpecified(Constants.IdArgumentName))
+                {
+                    string id = command.GetSingleValueArgument(Constants.IdArgumentName);
+                    if (!Guid.TryParse(id, out Guid guid))
+                    {
+                        throw new LibraryIdMalformattedException(id);
+                    }
+
+                    return owner.Create(key, guid, guid.ToString("D"));
+                }
+
+                ProjectEntity project = ProjectEntity.Decorate(owner);
+                if (!project.Settings.IsPersistent)
+                {
+                    executionContext.WriteWarning("The id for the library will change for each generation please use the --id option to set the id.");
+                    Guid id = guidFactory.Create();
+                    return owner.Create(key, id, id.ToString("D"));
+                }
+
+                string storedId = project.Settings.Value.Id;
+                if (string.IsNullOrEmpty(storedId))
+                {
+                    storedId = guidFactory.Create().ToString("D");
+                    project.Settings.SetId(storedId);
+                }
+
+                Guid result = Guid.Parse(storedId);
+                return owner.Create(key, result, result.ToString("D"));
             }
 
             Entity GetProjectPath()

@@ -33,6 +33,10 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         {
             await ScenarioContext.CreateProject("Project", componentName: componentName, acfproject: true);
         }
+        protected async Task When_I_create_a_new_acfproject_with_name(string name)
+        {
+            await ScenarioContext.CreateProject(name, acfproject: true);
+        }
         protected async Task When_I_create_a_new_project_with_name_and_componentname(string name, string componentname)
         {
             await ScenarioContext.CreateProject(name, componentname);
