@@ -64,6 +64,9 @@
     <None Update="Templates\AcfProjectTemplate\Library.cpp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Templates\AcfProjectTemplate\Library.hpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Templates\AcfProjectTemplate\TemplateDescription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -76,10 +79,10 @@
     <None Update="Templates\BaseProjectTemplate\CMakeLists.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\BaseProjectTemplate\Library.cpp">
+    <None Update="Templates\ProjectTemplate\Library.cpp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\BaseProjectTemplate\Library.hpp">
+    <None Update="Templates\ProjectTemplate\Library.hpp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Templates\BaseProject\Library.meta.cpp">
