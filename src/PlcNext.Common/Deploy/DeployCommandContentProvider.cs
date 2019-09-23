@@ -47,7 +47,7 @@ namespace PlcNext.Common.Deploy
                 BuildEntity buildEntity = BuildEntity.Decorate(owner);
                 Entity project = owner.Root;
                 CommandEntity commandOrigin = CommandEntity.Decorate(owner.Origin);
-                VirtualDirectory outputRoot = fileSystem.GetDirectory(commandOrigin.Output, project.Path, false);
+                VirtualDirectory outputRoot = fileSystem.GetDirectory(commandOrigin.Output, project.Path);
                 VirtualDirectory deployRoot = outputRoot.Directory(targetEntity.FullName.Replace(',', '_'),
                                                                    buildEntity.BuildType);
                 return owner.Create(key, deployRoot.FullName, deployRoot);
