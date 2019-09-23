@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Text;
 using PlcNext.Common.Project;
 using PlcNext.Common.Tools.FileSystem;
@@ -22,6 +23,8 @@ namespace PlcNext.Common.Build
         public Entity RootEntity { get; }
         public FileEntity RootFileEntity => FileEntity.Decorate(RootEntity);
         public ProjectEntity RootProjectEntity => ProjectEntity.Decorate(RootEntity);
+        public BuildEntity BuildEntity => BuildEntity.Decorate(RootProjectEntity.ValidatedTargets.FirstOrDefault(e => e.Value<Target>() == Target)??
+                                                               RootProjectEntity.Targets.FirstOrDefault(e => e.Value<Target>() == Target));
         public Sdk Sdk { get; set; }
         public Target Target { get; set; }
         public string BuildType { get; }

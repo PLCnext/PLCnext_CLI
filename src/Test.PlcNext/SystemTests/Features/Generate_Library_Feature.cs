@@ -32,7 +32,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("Demo"),
                 _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets_and_type("Release", "AXCF2152,19.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(),
@@ -46,7 +46,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("Demo"),
                 _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets_and_type("Release", "AXCF2152,19.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs { LibraryId = "3125fbc7-77b1-47c4-b5f9-39872cd6df9c" }),
@@ -93,7 +93,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("DemoWithDifferentPaths"),
                 _ => Given_is_the_working_directory_PATH("DemoWithDifferentPaths"),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,1.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets_and_type("Release", "AXCF2152,1.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs{LibraryLocation = "foo", MetaFileDirectory = Path.Combine("ba","Meta"), OutputDirectory = "out"}),
@@ -108,7 +108,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Demo"),
                 _ => Given_is_the_working_directory_PATH("Demo"),
                 _ => Given_is_a_different_library_builder_location(),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets_and_type("Release", "AXCF2152,19.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(),
@@ -134,7 +134,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("DemoWithMultibinary"),
                 _ => Given_is_the_working_directory_PATH("DemoWithMultibinary"),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,1.0.0.12345", "AXCF2152,2.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets_and_type("Release", "AXCF2152,1.0.0.12345", "AXCF2152,2.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs {Targets = new[] { "axcf2152,1.0", "axcf2152,2"} }),
@@ -148,7 +148,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("DemoWithDifferentPaths"),
                 _ => Given_is_the_working_directory_PATH("DemoWithDifferentPaths"),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,1.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets_and_type("Release", "AXCF2152,1.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs
@@ -179,7 +179,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Demo"),
                 _ => Given_is_the_working_directory_PATH("Demo"),
                 _ => Given_are_settings_with_the_cleared_setting_KEY("SdkPaths"),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets_and_type("Release", "AXCF2152,19.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(),
@@ -194,7 +194,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("DemoWithDifferentPaths"),
                 _ => Given_is_the_working_directory_PATH("DemoWithDifferentPaths"),
                 _ => Given_are_settings_with_the_cleared_setting_KEY("SdkPaths"),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("axcf2152,1.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets_and_type("Release", "axcf2152,1.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_generate_the_library(new LibraryCommandArgs
@@ -213,7 +213,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("Demo"),
                 _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets_and_type("Release", "AXCF2152,19.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_is_that_the_file_exists("intermediate/cmake/AXCF2152,19.0.0.12345/Debug/Some/Path/T,o/Some.so"),
                 // if path which is returned by cmake server is relative, it is always relative to cmake build system

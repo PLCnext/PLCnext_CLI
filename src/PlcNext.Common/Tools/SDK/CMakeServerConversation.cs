@@ -171,14 +171,13 @@ namespace PlcNext.Common.Tools.SDK
 
     public abstract class CMakeMessage
     {
-        public static T Parse<T>(string message, ILog log) where T : CMakeMessage
+        public static T Parse<T>(string message, IUserInterface userInterface = null) where T : CMakeMessage
         {
             try
             {
                 CMakeMessage cMakeMessage;
                 JObject content = JObject.Parse(message, new JsonLoadSettings { LineInfoHandling = LineInfoHandling.Ignore });
-                log.LogVerbose($"Recieved message from server:{Environment.NewLine}" +
-                               $"{content.ToString(Formatting.Indented)}");
+                userInterface?.WriteVerbose(content.ToString(Formatting.Indented));
                 switch (content["type"].Value<string>())
                 {
                     case "hello":
@@ -194,7 +193,7 @@ namespace PlcNext.Common.Tools.SDK
                         cMakeMessage = CMakeMessageMessage.Create(content);
                         break;
                     case "signal":
-                        log.LogInformation("Signal messages are ignored.");
+                        userInterface?.WriteInformation("Signal messages are ignored.");
                         return null;
                     default:
                         throw new FormattableException($"Unkown message type {content["type"].Value<string>()}.{Environment.NewLine}" +
@@ -219,15 +218,15 @@ namespace PlcNext.Common.Tools.SDK
         private readonly IProcess serverProcess;
         private readonly NamedPipeClientStream clientStream;
         private readonly CMakeServerStream serverStream;
-        private readonly ILog log;
+        private readonly IUserInterface userInterface;
         private string cookie;
 
-        private CMakeConversation(IProcess serverProcess, NamedPipeClientStream clientStream, CMakeServerStream serverStream, ILog log)
+        private CMakeConversation(IProcess serverProcess, NamedPipeClientStream clientStream, CMakeServerStream serverStream, IUserInterface userInterface)
         {
             this.serverProcess = serverProcess;
             this.clientStream = clientStream;
             this.serverStream = serverStream;
-            this.log = log;
+            this.userInterface = userInterface;
         }
 
         private async Task Handshake(string sourceDirectory, string buildDirectory,
@@ -277,7 +276,7 @@ namespace PlcNext.Common.Tools.SDK
             do
             {
                 //Expect at least a progress message after default timeout
-                message = CMakeMessage.Parse<CMakeMessage>(await serverStream.ReadMessage().TimeoutAfter(CMakeServerTimeout), log);
+                message = CMakeMessage.Parse<CMakeMessage>(await serverStream.ReadMessage().TimeoutAfter(CMakeServerTimeout), userInterface);
                 progressMessage = message as CMakeProgressMessage;
                 messageMessage = message as CMakeMessageMessage;
                 if (messageMessage != null)
@@ -321,6 +320,7 @@ namespace PlcNext.Common.Tools.SDK
 
         public static async Task<CMakeConversation> Start(IProcessManager processManager,
                                                           IBinariesLocator binariesLocator,
+                                                          IOutputFormatterPool formatterPool,
                                                           VirtualDirectory tempDirectory, bool isWindowsSystem,
                                                           ExecutionContext executionContext,
                                                           VirtualDirectory sourceDirectory,
@@ -336,8 +336,7 @@ namespace PlcNext.Common.Tools.SDK
                 string serverCommand = isWindowsSystem
                                            ? $"-E server --experimental --pipe=\"\\\\?\\pipe\\{pipeName}\""
                                            : $"-E server --experimental --pipe={pipeName}";
-                process = processManager.StartProcess(binariesLocator.GetExecutableCommand("cmake"), serverCommand, executionContext, showOutput: false,
-                                                      showError: false, killOnDispose: true);
+                process = processManager.StartProcess(binariesLocator.GetExecutableCommand("cmake"), serverCommand, executionContext);
                 pipeClient = new NamedPipeClientStream(".", pipeName,
                                                        PipeDirection.InOut, PipeOptions.Asynchronous,
                                                        TokenImpersonationLevel.Impersonation);
@@ -347,11 +346,15 @@ namespace PlcNext.Common.Tools.SDK
                     throw new FormattableException("Could not connect to server");
                 }
 
+                FormatterParameters parameters = new FormatterParameters();
+                parameters.Add("cmake-json",MessageFormat);
+                IUserInterface jsonCmakeInterface = formatterPool.GetFormatter(parameters, executionContext);
+
                 CMakeServerStream serverStream = new CMakeServerStream(pipeClient, executionContext);
                 CMakeHelloMessage hello;
                 do
                 {
-                    hello = CMakeMessage.Parse<CMakeHelloMessage>(await serverStream.ReadMessage().TimeoutAfter(CMakeServerTimeout), executionContext);
+                    hello = CMakeMessage.Parse<CMakeHelloMessage>(await serverStream.ReadMessage().TimeoutAfter(CMakeServerTimeout), jsonCmakeInterface);
                 } while (hello == null);
 
                 if (hello.SupportedProtocolVersions.All(v => v.Major != 1))
@@ -360,7 +363,7 @@ namespace PlcNext.Common.Tools.SDK
                                                         $"Supported versions are {string.Join(", ", hello.SupportedProtocolVersions)}");
                 }
 
-                CMakeConversation conversation = new CMakeConversation(process, pipeClient, serverStream, executionContext);
+                CMakeConversation conversation = new CMakeConversation(process, pipeClient, serverStream, jsonCmakeInterface);
 
                 await conversation.Handshake(sourceDirectory.FullName.Replace('\\', '/'),
                                              binaryDirectory.FullName.Replace('\\', '/'));

@@ -48,6 +48,10 @@ namespace PlcNext.Common.Project
                                                   ? this[EntityKeys.TargetsKey]
                                                   : Enumerable.Empty<Entity>();
 
+        public IEnumerable<Entity> ValidatedTargets => HasContent(EntityKeys.ValidatedTargetsKey)
+                                                  ? this[EntityKeys.ValidatedTargetsKey]
+                                                  : Enumerable.Empty<Entity>();
+
         public Guid Id => this[EntityKeys.ProjectIdKey].Value<Guid>();
     }
 }

@@ -63,6 +63,7 @@ namespace PlcNext.Common.Tools
         public const string ProjectVersionKey = "__internalprojectversion__";
         public const string ProjectIdKey = "__internalprojectid__";
         public const string TargetsKey = "targets";
+        public const string ValidatedTargetsKey = "validatedtargets";
 
         //DeployCommandContentProvider
         public const string InternalDeployPathKey = "__internaldeploypath__";
@@ -70,6 +71,7 @@ namespace PlcNext.Common.Tools
         //CMakeBuildContentProvider
         public const string BuildTypeKey = "buildtype";
         public const string InternalBuildSystemKey = "__internalbuildsystem__";
+        public const string InternalBuildSystemDirectoryKey = "__internalbuildsystemdirectory__";
         public const string InternalExternalLibrariesKey = "__internalexternallibraries__";
 
         //TargetParser

@@ -26,11 +26,13 @@ namespace PlcNext.Common.Tools.Process
         private readonly IEnvironmentService environmentService;
         private readonly ExecutionContext executionContext;
         private readonly CancellationToken cancellationToken;
+        private readonly IOutputFormatterPool formatterPool;
 
-        public ProcessManager(IEnvironmentService environmentService, ExecutionContext executionContext, CancellationToken cancellationToken)
+        public ProcessManager(IEnvironmentService environmentService, ExecutionContext executionContext, CancellationToken cancellationToken, IOutputFormatterPool formatterPool)
         {
             this.environmentService = environmentService;
             this.cancellationToken = cancellationToken;
+            this.formatterPool = formatterPool;
             this.executionContext = executionContext;
         }
 
@@ -39,7 +41,13 @@ namespace PlcNext.Common.Tools.Process
                                      string workingDirectory = null, bool showOutput = true, bool showError = true,
                                      bool killOnDispose = true)
         {
-            return new ProcessFacade(fileName, arguments, workingDirectory, executionContext.RedirectOutput(userInterface), showOutput, showError, killOnDispose,
+            FormatterParameters parameters = new FormatterParameters();
+            parameters.Add(fileName,Constants.CommandKey);
+            parameters.Add(arguments,Constants.CommandArgumentsKey);
+            IUserInterface formatterUserInterface = formatterPool.GetFormatter(parameters, userInterface);
+            ExecutionContext redirectedContext = executionContext.RedirectOutput(formatterUserInterface);
+
+            return new ProcessFacade(fileName, arguments, workingDirectory, redirectedContext, showOutput, showError, killOnDispose,
                 environmentService.Platform, cancellationToken);
         }
 

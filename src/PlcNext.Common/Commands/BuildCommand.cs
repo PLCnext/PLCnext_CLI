@@ -37,7 +37,7 @@ namespace PlcNext.Common.Commands
             Entity rootEntity = entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root;
 
             BuildInformation buildInfo = new BuildInformation(rootEntity, args.BuildType, args.Configure, args.NoConfigure, buildProperties, args.Output);
-            builder.Build(buildInfo, observable, args.Targets);
+            builder.Build(buildInfo, observable, args.Target);
 
             return 0;
 

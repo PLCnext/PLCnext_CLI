@@ -41,20 +41,19 @@ namespace PlcNext.Common.Build
         public BuildSystemProperties RetrieveBuildSystemProperties(Entity rootEntity, Target projectTarget,
                                                                    ChangeObservable observable)
         {
+            BuildInformation buildInformation = new BuildInformation(rootEntity,
+                                                                     null,
+                                                                     false,
+                                                                     false,
+                                                                     string.Empty,
+                                                                     null)
+            {
+                Target = projectTarget,
+                Sdk = sdkRepository.GetSdk(projectTarget)
+            };
             (bool success, VirtualDirectory cmakeFolder) = cmakeExecuter.EnsureConfigured(
-                new BuildInformation(rootEntity,
-                                     null,
-                                     false,
-                                     false,
-                                     string.Empty,
-                                     null)
-                {
-                    Target = projectTarget,
-                    Sdk = sdkRepository.GetSdk(projectTarget)
-                }, showWarningsToUser: true, observable, showMessagesToUser: false);
-            JArray codeModel = cMakeConversation.GetCodeModelFromServer(fileSystem.GetTemporaryDirectory(),
-                                                                        FileEntity.Decorate(rootEntity).Directory,
-                                                                        cmakeFolder);
+                buildInformation, showWarningsToUser: true, observable, showMessagesToUser: false);
+            JArray codeModel = buildInformation.BuildEntity.BuildSystem.Value<JArray>();
             IEnumerable<string> includePaths = GetIncludePathsFromCodeModel();
             return new BuildSystemProperties(includePaths);
 

@@ -1314,11 +1314,12 @@ namespace Test.PlcNext.SystemTests.Tools
             
         }
 
-        public void CreateCMakeBuildSystem(params string[] targets)
+        public void CreateCMakeBuildSystem(string[] targets, string type = "Debug")
         {
-
             foreach (string target in targets)
-                CreateFile(Path.Combine("intermediate", "cmake", target, "Debug", "CMakeCache.txt"));
+            {
+                CreateFile(Path.Combine("intermediate", "cmake", target, type, "CMakeCache.txt"));
+            }
         }
 
         public void WithOtherProgramInstance(int processId)

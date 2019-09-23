@@ -34,6 +34,46 @@ namespace PlcNext.Common.Tools.UI
         private readonly List<(string, TraceSeverity)> storedMessages = new List<(string, TraceSeverity)>();
         private readonly ILog log;
 
+        private static readonly Dictionary<ConsoleColor, ConsoleColor> ErrorColors = new Dictionary<ConsoleColor, ConsoleColor>
+        {
+            { ConsoleColor.DarkBlue,ConsoleColor.Red},
+            { ConsoleColor.DarkMagenta,ConsoleColor.Red}, //should be DarkCyan but for some reason Powershell reports default DarkBlue as DarkMagenta
+            { ConsoleColor.DarkCyan,ConsoleColor.DarkRed},
+            { ConsoleColor.DarkGray,ConsoleColor.DarkRed},
+            { ConsoleColor.DarkGreen,ConsoleColor.Magenta},
+            { ConsoleColor.DarkRed,ConsoleColor.DarkCyan},
+            { ConsoleColor.DarkYellow,ConsoleColor.DarkRed},
+            { ConsoleColor.Black,ConsoleColor.Red},
+            { ConsoleColor.Cyan,ConsoleColor.Red},
+            { ConsoleColor.Blue,ConsoleColor.DarkRed},
+            { ConsoleColor.Gray,ConsoleColor.Red},
+            { ConsoleColor.Green,ConsoleColor.Red},
+            { ConsoleColor.Magenta,ConsoleColor.DarkCyan},
+            { ConsoleColor.Red,ConsoleColor.DarkMagenta},
+            { ConsoleColor.White,ConsoleColor.Red},
+            { ConsoleColor.Yellow,ConsoleColor.Red},
+        };
+
+        private static readonly Dictionary<ConsoleColor, ConsoleColor> WarningColors = new Dictionary<ConsoleColor, ConsoleColor>
+        {
+            { ConsoleColor.DarkBlue,ConsoleColor.Yellow},
+            { ConsoleColor.DarkMagenta,ConsoleColor.Yellow},
+            { ConsoleColor.DarkCyan,ConsoleColor.Yellow},
+            { ConsoleColor.DarkGray,ConsoleColor.Yellow},
+            { ConsoleColor.DarkGreen,ConsoleColor.Yellow},
+            { ConsoleColor.DarkRed,ConsoleColor.Yellow},
+            { ConsoleColor.DarkYellow,ConsoleColor.Yellow},
+            { ConsoleColor.Black,ConsoleColor.Yellow},
+            { ConsoleColor.Cyan,ConsoleColor.Yellow},
+            { ConsoleColor.Blue,ConsoleColor.Yellow},
+            { ConsoleColor.Gray,ConsoleColor.Yellow},
+            { ConsoleColor.Green,ConsoleColor.Yellow},
+            { ConsoleColor.Magenta,ConsoleColor.Yellow},
+            { ConsoleColor.Red,ConsoleColor.Yellow},
+            { ConsoleColor.White,ConsoleColor.DarkYellow},
+            { ConsoleColor.Yellow,ConsoleColor.DarkYellow},
+        };
+
         public ConsoleUserInterface(ISettingsProvider settingsProvider, IEnvironmentService environmentService, IFileSystem fileSystem, ILog log)
         {
             this.log = log;
@@ -144,15 +184,49 @@ namespace PlcNext.Common.Tools.UI
                     Console.WriteLine(message.message);
                     break;
                 case TraceSeverity.Error:
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    SwitchColorsToError();
                     Console.Error.WriteLine(message.message);
                     Console.ResetColor();
                     break;
                 case TraceSeverity.Warning:
+                    SwitchColorsToWarning();
                     Console.Error.WriteLine(message.message);
+                    Console.ResetColor();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            void SwitchColorsToError()
+            {
+                ConsoleColor foreground = ErrorColors.ContainsKey(Console.BackgroundColor)
+                                              ? ErrorColors[Console.BackgroundColor]
+                                              : ConsoleColor.Red;
+                if (foreground == Console.ForegroundColor)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.BackgroundColor = ConsoleColor.Red;
+                }
+                else
+                {
+                    Console.ForegroundColor = foreground;
+                }
+            }
+
+            void SwitchColorsToWarning()
+            {
+                ConsoleColor foreground = WarningColors.ContainsKey(Console.BackgroundColor)
+                                              ? WarningColors[Console.BackgroundColor]
+                                              : ConsoleColor.Red;
+                if (foreground == Console.ForegroundColor)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                }
+                else
+                {
+                    Console.ForegroundColor = foreground;
+                }
             }
         }
     }

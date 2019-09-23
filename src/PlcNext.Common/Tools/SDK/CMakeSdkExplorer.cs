@@ -33,16 +33,18 @@ namespace PlcNext.Common.Tools.SDK
         private readonly IProcessManager processManager;
         private readonly IBinariesLocator binariesLocator;
         private readonly ExecutionContext executionContext;
+        private readonly IOutputFormatterPool formatterPool;
         private static readonly Regex MakroDefinition = new Regex(@"#define (?<name>\S*)(?<value> \S*)?");
         private readonly HashSet<string> exploredPaths = new HashSet<string>();
 
-        public CMakeSdkExplorer(IFileSystem fileSystem, IEnvironmentService environmentService, IProcessManager processManager, IBinariesLocator binariesLocator, ExecutionContext executionContext)
+        public CMakeSdkExplorer(IFileSystem fileSystem, IEnvironmentService environmentService, IProcessManager processManager, IBinariesLocator binariesLocator, ExecutionContext executionContext, IOutputFormatterPool formatterPool)
         {
             this.fileSystem = fileSystem;
             this.environmentService = environmentService;
             this.processManager = processManager;
             this.binariesLocator = binariesLocator;
             this.executionContext = executionContext;
+            this.formatterPool = formatterPool;
         }
 
         public async Task<SdkSchema> ExploreSdk(string sdkRootPath, bool forceExploration = false)
@@ -92,6 +94,7 @@ namespace PlcNext.Common.Tools.SDK
                         {
                             using (CMakeConversation conversation = await CMakeConversation.Start(processManager,
                                                                                                   binariesLocator,
+                                                                                                  formatterPool,
                                                                                                   temporaryDirectory,
                                                                                                   environmentService.Platform == OSPlatform.Windows,
                                                                                                   executionContext,

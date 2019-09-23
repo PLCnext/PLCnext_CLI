@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Tools;
+using PlcNext.Common.Tools.FileSystem;
 
 namespace PlcNext.Common.Build
 {
@@ -30,6 +31,7 @@ namespace PlcNext.Common.Build
         public string BuildType => this[EntityKeys.BuildTypeKey].Value<string>();
         public bool HasBuildSystem => HasContent(EntityKeys.InternalBuildSystemKey);
         public BuildEntity BuildSystem => Decorate(this[EntityKeys.InternalBuildSystemKey]);
+        public VirtualDirectory BuildSystemDirectory => this[EntityKeys.InternalBuildSystemDirectoryKey].Value<VirtualDirectory>();
         public IEnumerable<string> ExternalLibraries => this[EntityKeys.InternalExternalLibrariesKey].Select(e => e.Value<string>());
     }
 }

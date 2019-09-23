@@ -98,5 +98,10 @@ namespace PlcNext.Common.Tools
         public const string CompmetaFileType = "MetaComponent";
         public const string ComponentFolderType = "MetaComponentFolder";
         public const string ProgramFolderType = "MetaProgramFolder";
+
+        //Output formatter
+        public const string CommandKey = "command";
+        public const string CommandArgumentsKey = "command-arguments";
+        public const string MessageFormat = "message-format";
     }
 }

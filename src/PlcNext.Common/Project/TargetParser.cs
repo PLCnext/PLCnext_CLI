@@ -31,6 +31,8 @@ namespace PlcNext.Common.Project
         {
             return (owner.IsRoot() &&
                     key == EntityKeys.TargetsKey) ||
+                   (owner.IsRoot() &&
+                    key == EntityKeys.ValidatedTargetsKey) ||
                    (key == EntityKeys.TargetFullNameKey &&
                     owner.HasValue<Target>()) ||
                    (key == EntityKeys.TargetShortFullNameKey &&
@@ -56,20 +58,20 @@ namespace PlcNext.Common.Project
                 case EntityKeys.NameKey:
                     return owner.Create(key, owner.Value<Target>().Name);
                 default:
-                    return GetTargets();
+                    return GetTargets(key == EntityKeys.ValidatedTargetsKey);
             }
 
-            Entity GetTargets()
+            Entity GetTargets(bool validate)
             {
                 CommandEntity commandEntity = CommandEntity.Decorate(owner.Origin);
                 if (commandEntity.IsCommandArgumentSpecified(Constants.TargetArgumentName))
                 {
                     IEnumerable<string> targets = commandEntity.GetMultiValueArgument(Constants.TargetArgumentName);
-                    IEnumerable<Target> targetsSet = GetSpecificTargets(targets, false, false).Select(t => t.Item1);
+                    IEnumerable<Target> targetsSet = GetSpecificTargets(targets, validate, false).Select(t => t.Item1);
                     return owner.Create(key, targetsSet.Select(t => owner.Create(key.Singular(), t.Name, t)));
                 }
                 ProjectEntity project = ProjectEntity.Decorate(owner);
-                TargetsResult result = Targets(project, false);
+                TargetsResult result = Targets(project, validate);
                 return owner.Create(key, result.ValidTargets.Select(t => owner.Create(key.Singular(), t.Name, t)));
             }
 

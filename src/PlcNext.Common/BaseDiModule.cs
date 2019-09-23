@@ -54,6 +54,8 @@ namespace PlcNext.Common
             builder.Register(_ => CancellationToken.None).AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<ExecutionContext>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
+            builder.RegisterType<OutputFormatterPool>().As<IOutputFormatterPool>().InstancePerLifetimeScope();
+            builder.RegisterType<CMakeServerFormatter>().As<IOutputFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<PriorityHell>().As<IPriorityMaster>().InstancePerLifetimeScope();
             builder.RegisterType<BuildCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<DynamicCommand>().As<ICommand>().InstancePerLifetimeScope();

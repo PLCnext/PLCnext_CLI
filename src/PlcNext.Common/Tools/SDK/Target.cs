@@ -7,11 +7,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System;
 using System.Text.RegularExpressions;
 
 namespace PlcNext.Common.Tools.SDK
 {
-    public class Target
+    public class Target : IEquatable<Target>
     {
         private static readonly Regex VersionNumber = new Regex(@"\((?<version>\d+\.\d+\.\d+\.\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex ShortVersionNumber = new Regex(@"\((?<shortversion>\d+\.\d+\.\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -74,6 +75,58 @@ namespace PlcNext.Common.Tools.SDK
         public string GetLongFullName()
         {
             return string.IsNullOrEmpty(LongVersion) ? Name : $"{Name},{LongVersion}";
+        }
+        public bool Equals(Target other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Name == other.Name && LongVersion == other.LongVersion;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return Equals((Target)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ (LongVersion != null ? LongVersion.GetHashCode() : 0);
+            }
+        }
+
+        public static bool operator ==(Target left, Target right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Target left, Target right)
+        {
+            return !Equals(left, right);
         }
     }
 }

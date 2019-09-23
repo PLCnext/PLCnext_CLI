@@ -123,6 +123,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CreateCMakeBuildSystem(targets);
         }
 
+        protected void Given_is_that_the_cmake_build_system_exists_for_targets_and_type(string type, params string[] targets)
+        {
+            ScenarioContext.CreateCMakeBuildSystem(targets, type);
+        }
+
         protected void Given_is_that_the_directory_exists(string relativeDirectoryPath)
         {
             ScenarioContext.CreateDirectory(relativeDirectoryPath);

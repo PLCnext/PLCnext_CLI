@@ -34,6 +34,7 @@ namespace PlcNext.Common.Build
         private readonly IFileSystem fileSystem;
         private readonly IEnvironmentService environmentService;
         private readonly ExecutionContext executionContext;
+        private readonly IOutputFormatterPool formatterPool;
 
         private const string ToolchainFileOption = "-DCMAKE_TOOLCHAIN_FILE=\"%SDK_ROOT%/toolchain.cmake\"";
         private const string GeneratorOption = "-G \"Unix Makefiles\"";
@@ -44,7 +45,7 @@ namespace PlcNext.Common.Build
         private const string StagingPrefixOption = "-DCMAKE_STAGING_PREFIX=\"%STAGING_PREFIX%\"";
         private const string MakeFileOption = "-DCMAKE_MAKE_PROGRAM=%MAKE_EXE%";
 
-        public CmakeExecuter(IProcessManager processManager, IUserInterface userInterface, IBinariesLocator binariesLocator, IFileSystem fileSystem, IEnvironmentService environmentService, ExecutionContext executionContext)
+        public CmakeExecuter(IProcessManager processManager, IUserInterface userInterface, IBinariesLocator binariesLocator, IFileSystem fileSystem, IEnvironmentService environmentService, ExecutionContext executionContext, IOutputFormatterPool formatterPool)
         {
             this.processManager = processManager;
             this.userInterface = userInterface;
@@ -52,6 +53,7 @@ namespace PlcNext.Common.Build
             this.fileSystem = fileSystem;
             this.environmentService = environmentService;
             this.executionContext = executionContext;
+            this.formatterPool = formatterPool;
         }
 
         public void ExecuteBuild(BuildInformation buildInformation, ChangeObservable observable)
@@ -144,11 +146,8 @@ namespace PlcNext.Common.Build
 
             VirtualDirectory CreateCmakeFolder()
             {
-                VirtualDirectory result = buildInformation.RootFileEntity.Directory
-                                                                .Directory(Constants.IntermediateFolderName)
-                                                                .Directory(Constants.CmakeFolderName)
-                                                                .Directory(buildInformation.Target.GetFullName())
-                                                                .Directory(GetRealBuildType());
+                
+                VirtualDirectory result = buildInformation.BuildEntity.BuildSystemDirectory;
                 if (buildInformation.Configure && !buildInformation.NoConfigure)
                 {
                     result.Clear();
@@ -251,28 +250,17 @@ namespace PlcNext.Common.Build
 
                 bool IsCorrectlyConfigured()
                 {
-                    for (int i = 0; i < 3; i++)
+                    try
                     {
-                        try
+                        return buildInformation.BuildEntity.HasBuildSystem &&
+                               buildInformation.BuildEntity.BuildSystem != null;
+                    }
+                    catch (Exception e)
+                    {
+                        if (!IsTimeout(e))
                         {
-                            Task<CMakeConversation> task = CMakeConversation.Start(processManager,
-                                                               binariesLocator,
-                                                               fileSystem.GetTemporaryDirectory(),
-                                                               environmentService.Platform == OSPlatform.Windows,
-                                                               executionContext,
-                                                               buildInformation.RootFileEntity.Directory,
-                                                               cmakeFolder);
-                            task.Wait();
-                            task.Result.Dispose();
-                            return true;
-                        }
-                        catch (Exception e)
-                        {
-                            if (!IsTimeout(e))
-                            {
-                                executionContext.WriteVerbose($"The project is not correctly configured:{Environment.NewLine}{e}");
-                                return false;
-                            }
+                            executionContext.WriteVerbose($"The project is not correctly configured:{Environment.NewLine}{e}");
+                            return false;
                         }
                     }
 

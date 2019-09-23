@@ -49,21 +49,24 @@ namespace PlcNext.Common.Build
                 GetBuildSystemDirectory(owner) != null) ||
                 (key == EntityKeys.InternalExternalLibrariesKey &&
                  owner.HasValue<JArray>() &&
-                 owner.Type.Equals(EntityKeys.InternalBuildSystemKey, StringComparison.OrdinalIgnoreCase));
+                 owner.Type.Equals(EntityKeys.InternalBuildSystemKey, StringComparison.OrdinalIgnoreCase)) ||
+                   key == EntityKeys.InternalBuildSystemDirectoryKey;
         }
 
-        private VirtualDirectory GetBuildSystemDirectory(Entity owner)
+        private VirtualDirectory GetBuildSystemDirectory(Entity owner, bool validateExist = true)
         {
             TargetEntity targetEntity = TargetEntity.Decorate(owner);
             if (!targetEntity.HasFullName)
             {
-                return null;
+                return validateExist
+                           ? (VirtualDirectory) null
+                           : throw new InvalidOperationException("Need to use a target entity as base.");
             }
             string binaryDirectory = Path.Combine(owner.Root.Path, Constants.IntermediateFolderName,
                                                   Constants.CmakeFolderName,
                                                   targetEntity.FullName,
                                                   GetBuildType(owner));
-            if (!fileSystem.DirectoryExists(binaryDirectory))
+            if (!fileSystem.DirectoryExists(binaryDirectory) && validateExist)
             {
                 return null;
             }
@@ -92,6 +95,9 @@ namespace PlcNext.Common.Build
                 case EntityKeys.BuildTypeKey:
                     string buildType = GetBuildType(owner);
                     return owner.Create(key, buildType);
+                case EntityKeys.InternalBuildSystemDirectoryKey:
+                    VirtualDirectory directory = GetBuildSystemDirectory(owner, false);
+                    return owner.Create(key, directory);
                 case EntityKeys.InternalBuildSystemKey:
                     VirtualDirectory buildSystemDirectory = GetBuildSystemDirectory(owner);
                     JArray codeModel = GetCodeModel(owner, buildSystemDirectory);

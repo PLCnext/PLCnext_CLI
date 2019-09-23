@@ -32,7 +32,11 @@ namespace PlcNext.Common.Commands
         public bool IsCommandArgumentSpecified(string argument)
         {
             return Value<CommandDefinition>()?.Argument<Argument>(argument)
-                                             ?.IsDefined == true;
+                                             ?.IsDefined == true ||
+                   (Value<CommandArgs>()?.HasPropertyValue(argument, typeof(string)) == true &&
+                    !string.IsNullOrEmpty(Value<CommandArgs>().PropertyValue<string>(argument)))||
+                   (Value<CommandArgs>()?.HasPropertyValue(argument, typeof(IEnumerable<string>)) == true &&
+                    Value<CommandArgs>().PropertyValue<IEnumerable<string>>(argument).Any());
         }
 
         public string Output => this[EntityKeys.OutputKey].Value<string>();
@@ -42,6 +46,7 @@ namespace PlcNext.Common.Commands
         public string GetSingleValueArgument(string argument)
         {
             return Value<CommandDefinition>()?.Argument<SingleValueArgument>(argument)?.Value ??
+                   Value<CommandArgs>()?.PropertyValue<string>(argument) ??
                    (HasContent(argument)
                        ? this[argument].Value<string>()
                        : string.Empty);
@@ -50,6 +55,7 @@ namespace PlcNext.Common.Commands
         public IEnumerable<string> GetMultiValueArgument(string argument)
         {
             return Value<CommandDefinition>()?.Argument<MultipleValueArgument>(argument)?.Values ??
+                   Value<CommandArgs>()?.PropertyValue<IEnumerable<string>>(argument) ??
                    (HasContent(argument)
                         ? this[argument].Select(t => t.Value<string>())
                         : Enumerable.Empty<string>());

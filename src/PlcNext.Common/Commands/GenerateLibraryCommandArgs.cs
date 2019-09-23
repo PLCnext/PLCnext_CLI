@@ -16,7 +16,7 @@ namespace PlcNext.Common.Commands
     public class GenerateLibraryCommandArgs : CommandArgs
     {
         public GenerateLibraryCommandArgs(string path, string metaFilesDirectory, string libraryLocation,
-                                          string outputDirectory, string libraryGuid, IEnumerable<string> targets, IEnumerable<string> externalLibraries,
+                                          string outputDirectory, string libraryGuid, IEnumerable<string> target, IEnumerable<string> externalLibraries,
                                           IEnumerable<string> sources)
         {
             Path = path;
@@ -24,7 +24,7 @@ namespace PlcNext.Common.Commands
             LibraryLocation = libraryLocation;
             OutputDirectory = outputDirectory;
             LibraryGuid = libraryGuid;
-            Targets = targets;
+            Target = target;
             Sources = sources;
             ExternalLibraries = externalLibraries;
         }
@@ -39,7 +39,7 @@ namespace PlcNext.Common.Commands
 
         public string LibraryGuid { get; }
 
-        public IEnumerable<string> Targets { get; }
+        public IEnumerable<string> Target { get; }
         public IEnumerable<string> Sources { get; }
 
         public IEnumerable<string> ExternalLibraries { get; }

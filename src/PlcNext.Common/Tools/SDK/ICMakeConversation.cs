@@ -33,13 +33,15 @@ namespace PlcNext.Common.Tools.SDK
         private readonly IProcessManager processManager;
         private readonly IBinariesLocator binariesLocator;
         private readonly IEnvironmentService environmentService;
+        private readonly IOutputFormatterPool formatterPool;
 
-        public CMakeConversationExecuter(ExecutionContext executionContext, IProcessManager processManager, IBinariesLocator binariesLocator, IEnvironmentService environmentService)
+        public CMakeConversationExecuter(ExecutionContext executionContext, IProcessManager processManager, IBinariesLocator binariesLocator, IEnvironmentService environmentService, IOutputFormatterPool formatterPool)
         {
             this.executionContext = executionContext;
             this.processManager = processManager;
             this.binariesLocator = binariesLocator;
             this.environmentService = environmentService;
+            this.formatterPool = formatterPool;
         }
 
         public JArray GetCodeModelFromServer(VirtualDirectory tempDirectory,
@@ -57,7 +59,7 @@ namespace PlcNext.Common.Tools.SDK
                 {
                     try
                     {
-                        using (CMakeConversation conversation = await CMakeConversation.Start(processManager, binariesLocator,
+                        using (CMakeConversation conversation = await CMakeConversation.Start(processManager, binariesLocator, formatterPool,
                                                                                               tempDirectory, environmentService.Platform == OSPlatform.Windows,
                                                                                               executionContext, sourceDirectory, binaryDirectory))
                         {
