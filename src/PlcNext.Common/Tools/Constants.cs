@@ -41,7 +41,7 @@ namespace PlcNext.Common.Tools
         //other
         public const string Tab = "    ";
         public const int StreamCopyBufferSize = 4096;
-        public const int CMakeServerTimeout = 2000;
+        public const int CMakeServerTimeout = 6000;
         public const string OutputArgumentName = "output";
         public const string NoIncludePathDetection = "no-include-path-detection";
         public const string MetaPathArgumentName = "metapath";

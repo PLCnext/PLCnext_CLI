@@ -33,7 +33,7 @@ namespace PlcNext
         static int Main(string[] args)
         {
             Task<int> mainTask = MainAsync(args);
-            mainTask.Wait();
+            mainTask.ConfigureAwait(false).GetAwaiter().GetResult();
             //Console.ReadKey();
             return mainTask.Result;
         }

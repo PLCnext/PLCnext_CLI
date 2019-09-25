@@ -56,7 +56,7 @@ namespace PlcNext.Common.Tools.SDK
             
             foreach (string path in cleanedPaths)
             {
-                sdkRepository.Update(path.CleanPath()).Wait();
+                sdkRepository.Update(path.CleanPath()).ConfigureAwait(false).GetAwaiter().GetResult();
             }
 
             foreach (string removablePath in sdkRepository.SdkPaths.Except(cleanedPaths).ToArray())
@@ -100,7 +100,7 @@ namespace PlcNext.Common.Tools.SDK
 
             foreach (string path in e.SplitValue)
             {
-                sdkRepository.Update(path.CleanPath()).Wait();
+                sdkRepository.Update(path.CleanPath()).ConfigureAwait(false).GetAwaiter().GetResult();
             }
         }
 

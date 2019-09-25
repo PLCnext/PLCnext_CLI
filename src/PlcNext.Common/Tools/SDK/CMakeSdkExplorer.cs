@@ -88,39 +88,19 @@ namespace PlcNext.Common.Tools.SDK
                 {
                     VirtualDirectory sourceDirectory = temporaryDirectory;
                     VirtualDirectory binaryDirectory = temporaryDirectory.Directory("cache");
-                    for (int i = 0; i < 3; i++)
-                    {
-                        try
-                        {
-                            using (CMakeConversation conversation = await CMakeConversation.Start(processManager,
-                                                                                                  binariesLocator,
-                                                                                                  formatterPool,
-                                                                                                  temporaryDirectory,
-                                                                                                  environmentService.Platform == OSPlatform.Windows,
-                                                                                                  executionContext,
-                                                                                                  sourceDirectory,
-                                                                                                  binaryDirectory))
-                            {
-                                JArray cache = await conversation.GetCache();
-                                JArray codeModel = await conversation.GetCodeModel();
-                                return ExploreCMakeOutput(cache, codeModel);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            if (!IsTimeout(e))
-                            {
-                                throw;
-                            }
-                        }
-                    }
-                    throw new TimeoutException();
 
-                    bool IsTimeout(Exception exception)
+                    using (CMakeConversation conversation = await CMakeConversation.Start(processManager,
+                                                                                          binariesLocator,
+                                                                                          formatterPool,
+                                                                                          temporaryDirectory,
+                                                                                          environmentService.Platform == OSPlatform.Windows,
+                                                                                          executionContext,
+                                                                                          sourceDirectory,
+                                                                                          binaryDirectory))
                     {
-                        return exception is TimeoutException ||
-                               exception is AggregateException aggregate &&
-                               aggregate.InnerExceptions.Any(e => e is TimeoutException);
+                        JArray cache = await conversation.GetCache();
+                        JArray codeModel = await conversation.GetCodeModel();
+                        return ExploreCMakeOutput(cache, codeModel);
                     }
 
                     SdkSchema ExploreCMakeOutput(JArray cache, JArray codeModel)

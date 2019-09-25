@@ -49,39 +49,17 @@ namespace PlcNext.Common.Tools.SDK
                                              VirtualDirectory binaryDirectory)
         {
             JArray codeModel = null;
-            StartCMakeConversation().Wait();
+            StartCMakeConversation().ConfigureAwait(false).GetAwaiter().GetResult();
             return codeModel;
 
 
             async Task StartCMakeConversation()
             {
-                for (int i = 0; i < 3; i++)
+                using (CMakeConversation conversation = await CMakeConversation.Start(processManager, binariesLocator, formatterPool,
+                                                                                      tempDirectory, environmentService.Platform == OSPlatform.Windows,
+                                                                                      executionContext, sourceDirectory, binaryDirectory))
                 {
-                    try
-                    {
-                        using (CMakeConversation conversation = await CMakeConversation.Start(processManager, binariesLocator, formatterPool,
-                                                                                              tempDirectory, environmentService.Platform == OSPlatform.Windows,
-                                                                                              executionContext, sourceDirectory, binaryDirectory))
-                        {
-                            codeModel = await conversation.GetCodeModel();
-                            return;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        if (!IsTimeout(e))
-                        {
-                            throw;
-                        }
-                    }
-                }
-                throw new TimeoutException();
-
-                bool IsTimeout(Exception exception)
-                {
-                    return exception is TimeoutException ||
-                           exception is AggregateException aggregate &&
-                           aggregate.InnerExceptions.Any(e => e is TimeoutException);
+                    codeModel = await conversation.GetCodeModel();
                 }
             }
         }
