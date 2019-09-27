@@ -43,11 +43,11 @@ namespace PlcNext.Common.Tools.Settings
 
             VirtualFile executable = GetExecutable();
 
-            IEnumerable<string> availableSettings = (await GetAvailableSettings()).ToArray();
+            IEnumerable<string> availableSettings = (await GetAvailableSettings().ConfigureAwait(false)).ToArray();
             string[] migratableSettings = availableSettings.Where(settingsProvider.HasSetting)
                                                            .ToArray();
 
-            await Migrate();
+            await Migrate().ConfigureAwait(false);
 
             string[] nonMigratableSettings = settingsProvider.GetSettingKeys()
                                                              .Except(availableSettings)
@@ -69,11 +69,11 @@ namespace PlcNext.Common.Tools.Settings
                         string value = settingsProvider.GetSettingValue(setting);
                         if (string.IsNullOrEmpty(value))
                         {
-                            await ExecuteCommand($"set setting \"{setting}\" --clear --no-sdk-exploration");
+                            await ExecuteCommand($"set setting \"{setting}\" --clear --no-sdk-exploration").ConfigureAwait(false);
                         }
                         else
                         {
-                            await ExecuteCommand($"set setting \"{setting}\" \"{settingsProvider.GetSettingValue(setting)}\" --no-sdk-exploration");
+                            await ExecuteCommand($"set setting \"{setting}\" \"{settingsProvider.GetSettingValue(setting)}\" --no-sdk-exploration").ConfigureAwait(false);
                         }
                     }
                 }
@@ -94,7 +94,7 @@ namespace PlcNext.Common.Tools.Settings
             async Task<IEnumerable<string>> GetAvailableSettings()
             {
                 string command = "get setting --all";
-                StringBuilderUserInterface userInterface = await ExecuteCommand(command);
+                StringBuilderUserInterface userInterface = await ExecuteCommand(command).ConfigureAwait(false);
                 JObject settings = JObject.Parse(userInterface.Information);
                 IEnumerable<string> result = settings.Properties().Select(p => p.Name);
                 return result;
@@ -104,7 +104,7 @@ namespace PlcNext.Common.Tools.Settings
             {
                 StringBuilderUserInterface ui = new StringBuilderUserInterface(executionContext, writeInformation: true, writeError: true);
                 IProcess process = processManager.StartProcess(executable.FullName, executableCommand, ui);
-                await process.WaitForExitAsync();
+                await process.WaitForExitAsync().ConfigureAwait(false);
                 string error = ui.Error;
                 if (!string.IsNullOrEmpty(error))
                 {

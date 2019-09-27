@@ -20,8 +20,13 @@ namespace PlcNext.Common.Tools.FileSystem
     {
         public static string GetRelativeOrAbsolutePath(this VirtualFile file, VirtualDirectory directory)
         {
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
             string result = file.GetRelativePath(directory);
-            if (result.StartsWith(".."))
+            if (result.StartsWith("..", StringComparison.Ordinal))
             {
                 return file.FullName;
             }

@@ -23,6 +23,11 @@ namespace PlcNext.Common.Project
 
         public static ProjectEntity Decorate(IEntityBase rootEntity)
         {
+            if (rootEntity == null)
+            {
+                throw new ArgumentNullException(nameof(rootEntity));
+            }
+
             if (!rootEntity.IsRoot())
             {
                 throw new InvalidOperationException("This decorator can only decorate root entities.");

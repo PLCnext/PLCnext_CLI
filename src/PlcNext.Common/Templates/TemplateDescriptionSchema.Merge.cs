@@ -40,7 +40,7 @@ namespace PlcNext.Common.Templates.Description
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(nameField, other.nameField);
+            return string.Equals(nameField, other.nameField, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)
@@ -66,7 +66,7 @@ namespace PlcNext.Common.Templates.Description
             return !Equals(left, right);
         }
 
-        protected override string[] Unmergables => new[]
+        protected override IReadOnlyCollection<string> Unmergables => new[]
         {
             nameof(basedOn),
             nameof(isHidden),
@@ -91,7 +91,7 @@ namespace PlcNext.Common.Templates.Description
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(templateField, other.templateField);
+            return string.Equals(templateField, other.templateField, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)
@@ -117,7 +117,7 @@ namespace PlcNext.Common.Templates.Description
             return !Equals(left, right);
         }
 
-        protected override string[] Unmergables => new[]
+        protected override IReadOnlyCollection<string> Unmergables => new[]
         {
             nameof(template),
         };
@@ -144,7 +144,7 @@ namespace PlcNext.Common.Templates.Description
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(nameField, other.nameField);
+            return string.Equals(nameField, other.nameField, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)
@@ -170,7 +170,7 @@ namespace PlcNext.Common.Templates.Description
             return !Equals(left, right);
         }
 
-        protected override string[] Unmergables => new[]
+        protected override IReadOnlyCollection<string> Unmergables => new[]
         {
             nameof(name),
         };
@@ -185,7 +185,7 @@ namespace PlcNext.Common.Templates.Description
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(nameField, other.nameField);
+            return string.Equals(nameField, other.nameField, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)
@@ -211,7 +211,7 @@ namespace PlcNext.Common.Templates.Description
             return !Equals(left, right);
         }
 
-        protected override string[] Unmergables => new[]
+        protected override IReadOnlyCollection<string> Unmergables => new[]
         {
             nameof(name),
         };
@@ -246,7 +246,7 @@ namespace PlcNext.Common.Templates.Description
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(nameField, other.nameField);
+            return string.Equals(nameField, other.nameField, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)
@@ -272,7 +272,7 @@ namespace PlcNext.Common.Templates.Description
             return !Equals(left, right);
         }
 
-        protected override string[] Unmergables => new[]
+        protected override IReadOnlyCollection<string> Unmergables => new[]
         {
             nameof(name),
         };
@@ -322,7 +322,7 @@ namespace PlcNext.Common.Templates.Description
 
     public abstract class MergableElement
     {
-        protected abstract string[] Unmergables { get; }
+        protected abstract IReadOnlyCollection<string> Unmergables { get; }
 
         public void Merge(MergableElement baseElement)
         {
@@ -366,7 +366,7 @@ namespace PlcNext.Common.Templates.Description
                         result.Add(additional);
                     }
 
-                    property.SetValue(this, result.GetType().GetMethod("ToArray")?.Invoke(result,new object[0]));
+                    property.SetValue(this, result.GetType().GetMethod("ToArray")?.Invoke(result, Array.Empty<object>()));
                 }
                 else
                 {

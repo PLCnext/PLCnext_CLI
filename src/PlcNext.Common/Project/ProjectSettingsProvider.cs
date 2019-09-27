@@ -9,9 +9,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using PlcNext.Common.Build;
 using PlcNext.Common.Commands;
@@ -77,10 +79,11 @@ namespace PlcNext.Common.Project
             try
             {
                 using (Stream fileStream = file.OpenRead())
+                using (XmlReader reader = XmlReader.Create(fileStream))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(ProjectSettings));
-                    ProjectSettings settings = (ProjectSettings)serializer.Deserialize(fileStream);
-                    if(settings.Type != null && settings.Type.Equals(entityName))
+                    ProjectSettings settings = (ProjectSettings)serializer.Deserialize(reader);
+                    if(settings.Type != null && settings.Type.Equals(entityName, StringComparison.Ordinal))
                         return new[] { owner.Create(entityName, new ProjectDescription(settings, file.Parent, file)) };
                 }
             }
@@ -130,7 +133,7 @@ namespace PlcNext.Common.Project
                         throw new LibraryIdMalformattedException(id);
                     }
 
-                    return owner.Create(key, guid, guid.ToString("D"));
+                    return owner.Create(key, guid, guid.ToString("D", CultureInfo.InvariantCulture));
                 }
 
                 ProjectEntity project = ProjectEntity.Decorate(owner);
@@ -138,18 +141,18 @@ namespace PlcNext.Common.Project
                 {
                     executionContext.WriteWarning("The id for the library will change for each generation please use the --id option to set the id.");
                     Guid id = guidFactory.Create();
-                    return owner.Create(key, id, id.ToString("D"));
+                    return owner.Create(key, id, id.ToString("D", CultureInfo.InvariantCulture));
                 }
 
                 string storedId = project.Settings.Value.Id;
                 if (string.IsNullOrEmpty(storedId))
                 {
-                    storedId = guidFactory.Create().ToString("D");
+                    storedId = guidFactory.Create().ToString("D", CultureInfo.InvariantCulture);
                     project.Settings.SetId(storedId);
                 }
 
                 Guid result = Guid.Parse(storedId);
-                return owner.Create(key, result, result.ToString("D"));
+                return owner.Create(key, result, result.ToString("D", CultureInfo.InvariantCulture));
             }
 
             Entity GetProjectPath()

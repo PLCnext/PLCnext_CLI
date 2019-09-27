@@ -38,7 +38,7 @@ namespace PlcNext.Common.Tools.IO
         /// Delegate for handling large buffer discard reports.
         /// </summary>
         /// <param name="reason">Reason the buffer was discarded.</param>
-        public delegate void LargeBufferDiscardedEventHandler(Events.MemoryStreamDiscardReason reason);
+        public delegate void LargeBufferDiscardedEventHandler(MemoryStreamEvents.MemoryStreamDiscardReason reason);
 
         /// <summary>
         /// Delegate for handling reports of stream size when streams are allocated
@@ -149,7 +149,7 @@ namespace PlcNext.Common.Tools.IO
                 largePools[i] = new ConcurrentStack<byte[]>();
             }
 
-            Events.Write.MemoryStreamManagerInitialized(blockSize, largeBufferMultiple, maximumBufferSize);
+            MemoryStreamEvents.Write.MemoryStreamManagerInitialized(blockSize, largeBufferMultiple, maximumBufferSize);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace PlcNext.Common.Tools.IO
                 // We'll add this back to the pool when the stream is disposed
                 // (unless our free pool is too large)
                 block = new byte[BlockSize];
-                Events.Write.MemoryStreamNewBlockCreated(smallPoolInUseSize);
+                MemoryStreamEvents.Write.MemoryStreamNewBlockCreated(smallPoolInUseSize);
                 ReportBlockCreated();
             }
             else
@@ -289,7 +289,7 @@ namespace PlcNext.Common.Tools.IO
                 {
                     buffer = new byte[requiredSize];
 
-                    Events.Write.MemoryStreamNewLargeBufferCreated(requiredSize, LargePoolInUseSize);
+                    MemoryStreamEvents.Write.MemoryStreamNewLargeBufferCreated(requiredSize, LargePoolInUseSize);
                     ReportLargeBufferCreated();
                 }
                 else
@@ -313,7 +313,7 @@ namespace PlcNext.Common.Tools.IO
                     // Grab the stack -- we want to know who requires such large buffers
                     callStack = Environment.StackTrace;
                 }
-                Events.Write.MemoryStreamNonPooledLargeBufferCreated(requiredSize, tag, callStack);
+                MemoryStreamEvents.Write.MemoryStreamNonPooledLargeBufferCreated(requiredSize, tag, callStack);
                 ReportLargeBufferCreated();
             }
 
@@ -365,9 +365,9 @@ namespace PlcNext.Common.Tools.IO
                 }
                 else
                 {
-                    Events.Write.MemoryStreamDiscardBuffer(Events.MemoryStreamBufferType.Large, tag,
-                                                           Events.MemoryStreamDiscardReason.EnoughFree);
-                    ReportLargeBufferDiscarded(Events.MemoryStreamDiscardReason.EnoughFree);
+                    MemoryStreamEvents.Write.MemoryStreamDiscardBuffer(MemoryStreamEvents.MemoryStreamBufferType.Large, tag,
+                                                           MemoryStreamEvents.MemoryStreamDiscardReason.EnoughFree);
+                    ReportLargeBufferDiscarded(MemoryStreamEvents.MemoryStreamDiscardReason.EnoughFree);
                 }
             }
             else
@@ -376,9 +376,9 @@ namespace PlcNext.Common.Tools.IO
                 // analysis. We have space in the inuse array for this.
                 poolIndex = largeBufferInUseSize.Length - 1;
 
-                Events.Write.MemoryStreamDiscardBuffer(Events.MemoryStreamBufferType.Large, tag,
-                                                       Events.MemoryStreamDiscardReason.TooLarge);
-                ReportLargeBufferDiscarded(Events.MemoryStreamDiscardReason.TooLarge);
+                MemoryStreamEvents.Write.MemoryStreamDiscardBuffer(MemoryStreamEvents.MemoryStreamBufferType.Large, tag,
+                                                       MemoryStreamEvents.MemoryStreamDiscardReason.TooLarge);
+                ReportLargeBufferDiscarded(MemoryStreamEvents.MemoryStreamDiscardReason.TooLarge);
             }
 
             Interlocked.Add(ref largeBufferInUseSize[poolIndex], -buffer.Length);
@@ -421,8 +421,8 @@ namespace PlcNext.Common.Tools.IO
                 }
                 else
                 {
-                    Events.Write.MemoryStreamDiscardBuffer(Events.MemoryStreamBufferType.Small, tag,
-                                                           Events.MemoryStreamDiscardReason.EnoughFree);
+                    MemoryStreamEvents.Write.MemoryStreamDiscardBuffer(MemoryStreamEvents.MemoryStreamBufferType.Small, tag,
+                                                           MemoryStreamEvents.MemoryStreamDiscardReason.EnoughFree);
                     ReportBlockDiscarded();
                     break;
                 }
@@ -447,7 +447,7 @@ namespace PlcNext.Common.Tools.IO
             LargeBufferCreated?.Invoke();
         }
 
-        internal void ReportLargeBufferDiscarded(Events.MemoryStreamDiscardReason reason)
+        internal void ReportLargeBufferDiscarded(MemoryStreamEvents.MemoryStreamDiscardReason reason)
         {
             LargeBufferDiscarded?.Invoke(reason);
         }

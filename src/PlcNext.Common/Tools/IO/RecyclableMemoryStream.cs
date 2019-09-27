@@ -46,7 +46,7 @@ namespace PlcNext.Common.Tools.IO
     {
         private const long MaxStreamLength = Int32.MaxValue;
         
-        private static readonly byte[] emptyArray = new byte[0];
+        private static readonly byte[] emptyArray = Array.Empty<byte>();
 
         /// <summary>
         /// All of these blocks must be the same size
@@ -127,7 +127,7 @@ namespace PlcNext.Common.Tools.IO
         /// </summary>
         /// <param name="memoryManager">The memory manager</param>
         public RecyclableMemoryStream(RecyclableMemoryStreamManager memoryManager)
-            : this(memoryManager, null, 0, null)
+            : this(memoryManager??throw new ArgumentNullException(nameof(memoryManager)), null, 0, null)
         {
         }
 
@@ -137,7 +137,7 @@ namespace PlcNext.Common.Tools.IO
         /// <param name="memoryManager">The memory manager</param>
         /// <param name="tag">A string identifying this stream for logging and debugging purposes</param>
         public RecyclableMemoryStream(RecyclableMemoryStreamManager memoryManager, string tag)
-            : this(memoryManager, tag, 0, null)
+            : this(memoryManager ?? throw new ArgumentNullException(nameof(memoryManager)), tag, 0, null)
         {
         }
 
@@ -148,7 +148,7 @@ namespace PlcNext.Common.Tools.IO
         /// <param name="tag">A string identifying this stream for logging and debugging purposes</param>
         /// <param name="requestedSize">The initial requested size to prevent future allocations</param>
         public RecyclableMemoryStream(RecyclableMemoryStreamManager memoryManager, string tag, int requestedSize)
-            : this(memoryManager, tag, requestedSize, null)
+            : this(memoryManager ?? throw new ArgumentNullException(nameof(memoryManager)), tag, requestedSize, null)
         {
         }
 
@@ -186,7 +186,7 @@ namespace PlcNext.Common.Tools.IO
                 allocationStack = Environment.StackTrace;
             }
 
-            RecyclableMemoryStreamManager.Events.Write.MemoryStreamCreated(id, this.tag, requestedSize);
+            MemoryStreamEvents.Write.MemoryStreamCreated(id, this.tag, requestedSize);
             this.memoryManager.ReportStreamCreated();
         }
         #endregion
@@ -216,11 +216,11 @@ namespace PlcNext.Common.Tools.IO
                     doubleDisposeStack = Environment.StackTrace;
                 }
 
-                RecyclableMemoryStreamManager.Events.Write.MemoryStreamDoubleDispose(id, tag, allocationStack, disposeStack, doubleDisposeStack);
+                MemoryStreamEvents.Write.MemoryStreamDoubleDispose(id, tag, allocationStack, disposeStack, doubleDisposeStack);
                 return;
             }
             
-            RecyclableMemoryStreamManager.Events.Write.MemoryStreamDisposed(id, tag);
+            MemoryStreamEvents.Write.MemoryStreamDisposed(id, tag);
 
             if (memoryManager.GenerateCallStacks)
             {
@@ -237,7 +237,7 @@ namespace PlcNext.Common.Tools.IO
             {
                 // We're being finalized.
 
-                RecyclableMemoryStreamManager.Events.Write.MemoryStreamFinalized(id, tag, allocationStack);
+                MemoryStreamEvents.Write.MemoryStreamFinalized(id, tag, allocationStack);
 
                 if (AppDomain.CurrentDomain.IsFinalizingForUnload())
                 {
@@ -345,12 +345,12 @@ namespace PlcNext.Common.Tools.IO
                 CheckDisposed();
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException("value", "value must be non-negative");
+                    throw new ArgumentOutOfRangeException(nameof(value), "value must be non-negative");
                 }
 
                 if (value > MaxStreamLength)
                 {
-                    throw new ArgumentOutOfRangeException("value", "value cannot be more than " + MaxStreamLength);
+                    throw new ArgumentOutOfRangeException(nameof(value), "value cannot be more than " + MaxStreamLength);
                 }
 
                 position = (int)value;
@@ -434,7 +434,7 @@ namespace PlcNext.Common.Tools.IO
 
             InternalRead(newBuffer, 0, length, 0);
             string stack = memoryManager.GenerateCallStacks ? Environment.StackTrace : null;
-            RecyclableMemoryStreamManager.Events.Write.MemoryStreamToArray(id, tag, stack, 0);
+            MemoryStreamEvents.Write.MemoryStreamToArray(id, tag, stack, 0);
             memoryManager.ReportStreamToArray();
 
             return newBuffer;
@@ -800,7 +800,7 @@ namespace PlcNext.Common.Tools.IO
         {
             if (newCapacity > memoryManager.MaximumStreamCapacity && memoryManager.MaximumStreamCapacity > 0)
             {
-                RecyclableMemoryStreamManager.Events.Write.MemoryStreamOverCapacity(newCapacity, memoryManager.MaximumStreamCapacity, tag, allocationStack);
+                MemoryStreamEvents.Write.MemoryStreamOverCapacity(newCapacity, memoryManager.MaximumStreamCapacity, tag, allocationStack);
                 throw new InvalidOperationException("Requested capacity is too large: " + newCapacity + ". Limit is " + memoryManager.MaximumStreamCapacity);
             }
 

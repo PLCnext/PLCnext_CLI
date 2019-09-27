@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,8 +62,8 @@ namespace PlcNext.CommandLine
             {
                 ICliServer server = serverHost.Resolve<ICliServer>();
                 server.Disconnected += ServerOnDisconnected;
-                context.WriteInformation(string.Format(MessageResources.StartingServerMessage, ServerName));
-                bool result = await server.Start(ServerName, HeartbeatEnabled);
+                context.WriteInformation(string.Format(CultureInfo.InvariantCulture, MessageResources.StartingServerMessage, ServerName));
+                bool result = await server.Start(ServerName, HeartbeatEnabled).ConfigureAwait(false);
                 if (!result)
                 {
                     return -1;

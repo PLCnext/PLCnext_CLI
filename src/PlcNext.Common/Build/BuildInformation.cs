@@ -25,7 +25,7 @@ namespace PlcNext.Common.Build
         public ProjectEntity RootProjectEntity => ProjectEntity.Decorate(RootEntity);
         public BuildEntity BuildEntity => BuildEntity.Decorate(RootProjectEntity.ValidatedTargets.FirstOrDefault(e => e.Value<Target>() == Target)??
                                                                RootProjectEntity.Targets.FirstOrDefault(e => e.Value<Target>() == Target));
-        public Sdk Sdk { get; set; }
+        public SdkInformation SdkInformation { get; set; }
         public Target Target { get; set; }
         public string BuildType { get; }
         public bool Configure { get; }

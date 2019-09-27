@@ -41,7 +41,7 @@ namespace PlcNext.NamedPipeServer.Communication
                        environmentInformation.InterProcessServerNameBase +
                        $"{otherInstanceProcessId:D}", 
                        streamFactory, messageSenderContainer,
-                       log, cancellationToken);
+                       log, cancellationToken).ConfigureAwait(false);
         }
     }
 }

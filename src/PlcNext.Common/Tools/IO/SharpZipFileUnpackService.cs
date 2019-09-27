@@ -46,26 +46,26 @@ namespace PlcNext.Common.Tools.IO
         public async Task Unpack(VirtualFile file, VirtualDirectory destination,
                                  IProgressNotifier parentProgress = null, ChangeObservable observable = null)
         {
-            if (Path.GetExtension(file.Name)?.ToLowerInvariant() == ".zip")
+            if (Path.GetExtension(file.Name)?.Equals(".zip", StringComparison.OrdinalIgnoreCase) == true)
             {
-                await UnpackZipFile();
+                await UnpackZipFile().ConfigureAwait(false);
             }
-            else if (file.Name.ToLowerInvariant().EndsWith(".tar.xz"))
+            else if (file.Name.EndsWith(".tar.xz", StringComparison.OrdinalIgnoreCase))
             {
                 UnpackTarXzFile(file);
             }
-            else if (Path.GetExtension(file.Name)?.ToLowerInvariant() == ".xz")
+            else if (Path.GetExtension(file.Name)?.Equals(".xz", StringComparison.OrdinalIgnoreCase) == true)
             {
                 UnpackXzFile(file);
             }
-            else if (Path.GetExtension(file.Name)?.ToLowerInvariant() == ".tar")
+            else if (Path.GetExtension(file.Name)?.Equals(".tar", StringComparison.OrdinalIgnoreCase)==true)
             {
                 UnpackTarFile(file);
             }
-            else if (Path.GetExtension(file.Name)?.ToLowerInvariant() == ".sh" &&
+            else if (Path.GetExtension(file.Name)?.Equals(".sh", StringComparison.OrdinalIgnoreCase) == true &&
                      environmentService.Platform != OSPlatform.Windows)
             {
-                await UnpackSelfExtractingShellScript();
+                await UnpackSelfExtractingShellScript().ConfigureAwait(false);
             }
             else
             {
@@ -81,7 +81,7 @@ namespace PlcNext.Common.Tools.IO
                     using (parentProgress?.SpawnInfiniteProgress("Executing the shell script."))
                     using (IProcess process = processManager.StartProcess(file.FullName, $"-y -d \"{destination.FullName}\"", userInterface))
                     {
-                        await process.WaitForExitAsync();
+                        await process.WaitForExitAsync().ConfigureAwait(false);
                         if (process.ExitCode != 0)
                         {
                             throw new UnsupportedArchiveFormatException(file.FullName,
@@ -162,7 +162,7 @@ namespace PlcNext.Common.Tools.IO
                                 throw new UnsupportedArchiveFormatException(
                                     file.FullName, new FormattableException(archiveResultBuilder.ToString()));
                             }
-                        });
+                        }).ConfigureAwait(false);
                     }
 
                     double increment = (double)Constants.ProgressMaxResolution / zipFile.Count + 1;
@@ -204,7 +204,7 @@ namespace PlcNext.Common.Tools.IO
                 using (parentProgress?.SpawnInfiniteProgress($"Extracting {packedFile.Name}..."))
                 {
                     string[] path = fileSystem.GetPath(packedFile.FullName);
-                    string relativeFilePath = path.Last().Substring(0, path.Last().LastIndexOf(".xz"));
+                    string relativeFilePath = path.Last().Substring(0, path.Last().LastIndexOf(".xz", StringComparison.OrdinalIgnoreCase));
                     if (destination.FileExists(relativeFilePath))
                     {
                         destination.File(relativeFilePath).Delete();

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Templates.Description;
@@ -100,25 +101,25 @@ namespace PlcNext.Common.Templates
 
             string ResolveControlSequence(string sequence, string parameter, string content)
             {
-                switch (sequence.ToLowerInvariant())
+                switch (sequence.ToUpperInvariant())
                 {
-                    case "if-exist":
+                    case "IF-EXIST":
                         return IfSequence(IfExistCondition);
-                    case "if-specified":
+                    case "IF-SPECIFIED":
                         return IfSequence(IfSpecifiedCondition);
-                    case "foreach":
+                    case "FOREACH":
                         return ForeachSequence();
-                    case "no-dublicate-lines":
-                        return RemoveDublicateLinesSequence();
+                    case "NO-DUPLICATE-LINES":
+                        return RemoveDuplicateLinesSequence();
                     default:
                         throw new UnrecognizedControlSequenceException(sequence);
                 }
 
-                string RemoveDublicateLinesSequence()
+                string RemoveDuplicateLinesSequence()
                 {
                     if (!string.IsNullOrEmpty(parameter))
                     {
-                        throw new NoDublicateLinesParameterMismatchException();
+                        throw new NoDuplicateLinesParameterMismatchException();
                     }
 
                     string[] lines = (Resolve(content, dataSource)).Split(new[] {'\r', '\n'},
@@ -184,8 +185,10 @@ namespace PlcNext.Common.Templates
                 string ForeachSequence()
                 {
                     StringBuilder foreachResult = new StringBuilder();
-                    if ((content.StartsWith("\n") || content.StartsWith("\r\n")) &&
-                        (content.EndsWith("\n") || content.EndsWith("\r\n")))
+                    if ((content.StartsWith("\n", StringComparison.Ordinal) || 
+                         content.StartsWith("\r\n", StringComparison.Ordinal)) &&
+                        (content.EndsWith("\n", StringComparison.Ordinal) || 
+                         content.EndsWith("\r\n", StringComparison.Ordinal)))
                     {
                         //This would leads to unwanted empty lines
                         content = content.TrimStart('\r').TrimStart('\n');
@@ -198,10 +201,10 @@ namespace PlcNext.Common.Templates
                     }
 
                     string elementName = nameSplit[0].Trim();
-                    string[] oftypeSplit =
+                    string[] ofTypeSplit =
                         nameSplit[1].Split(new[] {"[of-type]"}, StringSplitOptions.RemoveEmptyEntries);
-                    string collection = oftypeSplit[0].Trim();
-                    string filter = oftypeSplit.Length == 2 ? oftypeSplit[1].Trim() : string.Empty;
+                    string collection = ofTypeSplit[0].Trim();
+                    string filter = ofTypeSplit.Length == 2 ? ofTypeSplit[1].Trim() : string.Empty;
 
                     string[] path = collection.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
                     IEnumerable<Entity> data = ResolveRecursively(path);
@@ -279,8 +282,9 @@ namespace PlcNext.Common.Templates
 
         Task<string> ITemplateResolver.ResolveAsync(string stringToResolve, IEntityBase dataSource)
         {
-            return Task.Factory.StartNew(() => Resolve(stringToResolve, dataSource), 
-                                         TaskCreationOptions.LongRunning);
+            return Task.Factory.StartNew(() => Resolve(stringToResolve, dataSource),
+                                         CancellationToken.None, TaskCreationOptions.LongRunning,
+                                         TaskScheduler.Default);
         }
 
         private string ResolveTextControlSequences(string value)

@@ -14,7 +14,7 @@ using PlcNext.Common.Commands;
 
 namespace PlcNext.Common.Tools.UI
 {
-    public class JsonCommandResultVisualizer : ICommandResultVisualizer
+    internal class JsonCommandResultVisualizer : ICommandResultVisualizer
     {
         private readonly ExecutionContext executionContext;
 

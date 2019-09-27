@@ -21,7 +21,6 @@ namespace PlcNext.Common.Build
 {
     internal class ExternalLibrariesParser
     {
-        private static readonly Regex TargetVersionLocationParser = new Regex(@"^(?<name>[^,]+),(?<version>[^,]+),(?<libraries>.+)$", RegexOptions.Compiled);
         private static readonly Regex LibrariesDecoder = new Regex("(?<element>\"[^\"]+\"|[^,]+)", RegexOptions.Compiled);
 
         public static Dictionary<Target, IEnumerable<VirtualFile>> ParseExternalLibraries(IEnumerable<string> rawExternalLibraries, ITargetParser targetParser, 

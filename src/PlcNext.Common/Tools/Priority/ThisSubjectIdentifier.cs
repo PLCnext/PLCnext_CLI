@@ -19,6 +19,6 @@ namespace PlcNext.Common.Tools.Priority
         {
         }
 
-        public static ThisSubjectIdentifier From(IPrioritySubject subject) => new ThisSubjectIdentifier(subject.GetType());
+        public static ThisSubjectIdentifier From(IPrioritySubject subject) => new ThisSubjectIdentifier(subject?.GetType());
     }
 }

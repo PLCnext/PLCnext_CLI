@@ -74,9 +74,9 @@ namespace PlcNext.Common.Templates
             return Templates.FirstOrDefault(t => t.name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
-        public string GetTemplateBase(TemplateDescription template)
+        public string GetTemplateBase(TemplateDescription templateDescription)
         {
-            return templates[template];
+            return templates[templateDescription];
         }
 
         private void EnsureTemplates()

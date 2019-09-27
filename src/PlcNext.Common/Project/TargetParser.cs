@@ -105,7 +105,7 @@ namespace PlcNext.Common.Project
         public TargetsResult Targets(ProjectEntity project, bool validateTargets = true)
         {
             if (validateTargets)
-                return ParseTargets(project.Settings.Value.Target ?? new string[0]);
+                return ParseTargets(project.Settings.Value.Target ?? Array.Empty<string>());
             else
                 return new TargetsResult(GetProjectTargets(project), Enumerable.Empty<Exception>());
 
@@ -137,15 +137,15 @@ namespace PlcNext.Common.Project
 
             return targets.Select(FormatTargetLongVersion).ToArray();
         }
-        private string FormatTarget(Target target)
+        private static string FormatTarget(Target target)
         {
             return FormatTarget(target.Name, target.Version);
         }
-        private string FormatTargetLongVersion(Target target)
+        private static string FormatTargetLongVersion(Target target)
         {
             return FormatTarget(target.Name, target.LongVersion);
         }
-        private string FormatTarget(string name, string version)
+        private static string FormatTarget(string name, string version)
         {
             return $"{name},{version}";
         }
@@ -172,7 +172,10 @@ namespace PlcNext.Common.Project
             }
             if (!string.IsNullOrEmpty(version))
             {
-                IEnumerable<Target> versionTarget = possibleTargets.Where(t => t.Version.StartsWith(version) || t.LongVersion.StartsWith(version))
+                IEnumerable<Target> versionTarget = possibleTargets.Where(t => t.Version.StartsWith(version,
+                                                                                   StringComparison.Ordinal) || 
+                                                                               t.LongVersion.StartsWith(version,
+                                                                                   StringComparison.Ordinal))
                                                                    .ToArray();
                 if (!versionTarget.Any())
                 {
@@ -237,7 +240,7 @@ namespace PlcNext.Common.Project
         {
             List<Target> projectTargets = new List<Target>();
             List<string> removableTargets = new List<string>();
-            foreach (string targetEntry in project.Settings.Value.Target ?? new string[0])
+            foreach (string targetEntry in project.Settings.Value.Target ?? Array.Empty<string>())
             {
                 Match match = targetVersionParser.Match(targetEntry);
                 if (match.Success)
@@ -265,7 +268,7 @@ namespace PlcNext.Common.Project
         {
             Target realTarget = GetSpecificTarget(target, version);
             string formattedTarget = FormatTargetLongVersion(realTarget);
-            if ((project.Settings.Value.Target ?? new string[0])
+            if ((project.Settings.Value.Target ?? Array.Empty<string>())
                .Any(x => x.Equals(formattedTarget, StringComparison.OrdinalIgnoreCase)
                          || x.Equals(FormatTarget(realTarget), StringComparison.OrdinalIgnoreCase)))
             {

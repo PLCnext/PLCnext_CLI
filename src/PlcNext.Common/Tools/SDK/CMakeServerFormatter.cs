@@ -90,12 +90,12 @@ namespace PlcNext.Common.Tools.SDK
                 CMakeMessage parsed = CMakeMessage.Parse<CMakeMessage>(message);
                 if (parsed is CMakeMessageMessage messageMessage)
                 {
-                    if (messageMessage.Title.ToLowerInvariant().Contains("warning"))
+                    if (messageMessage.Title.Contains("warning", StringComparison.OrdinalIgnoreCase))
                     {
                         wrappedUserInterface.WriteWarning(messageMessage.Message);
                     }
-                    else if(messageMessage.Title.ToLowerInvariant().Contains("error") ||
-                            messageMessage.Title.ToLowerInvariant().Contains("exception"))
+                    else if(messageMessage.Title.Contains("error", StringComparison.OrdinalIgnoreCase) ||
+                            messageMessage.Title.Contains("exception", StringComparison.OrdinalIgnoreCase))
                     {
                         wrappedUserInterface.WriteError(messageMessage.Message);
                     }

@@ -18,11 +18,11 @@ namespace PlcNext.Common.Commands
         {
             Path = path;
             All = all;
-            Short = shortVersion;
+            ShortVersion = shortVersion;
         }
 
         public string Path { get; }
         public bool All { get; }
-        public bool Short { get; }
+        public bool ShortVersion { get; }
     }
 }

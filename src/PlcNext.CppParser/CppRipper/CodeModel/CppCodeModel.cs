@@ -50,21 +50,21 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         public IEnumerable<VirtualDirectory> IncludeDirectories { get; internal set; }
 
-        public IStructure Structure(string structureName)
+        public IStructure GetStructure(string structureName)
         {
             return structures.TryGetValue(structureName, out (CppStructure structure, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.structure
                        : findTypeInIncludes?.Invoke(structureName) as IStructure;
         }
 
-        public IClass Class(string className)
+        public IClass GetClass(string className)
         {
             return classes.TryGetValue(className, out (CppClass cppClass, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.cppClass
                        : findTypeInIncludes?.Invoke(className) as IClass;
         }
 
-        public IEnum Enum(string enumName)
+        public IEnum GetEnum(string enumName)
         {
             return enums.TryGetValue(enumName, out (CppEnum cppEnum, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.cppEnum
@@ -73,7 +73,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         public IType Type(string typeName)
         {
-            return Structure(typeName) ?? (IType) Class(typeName) ?? Enum(typeName);
+            return GetStructure(typeName) ?? (IType) GetClass(typeName) ?? GetEnum(typeName);
         }
 
         public VirtualDirectory GetBaseDirectory(IType type)

@@ -60,7 +60,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
             }
         }
 
-        private JsonSerializer CreateSerializer()
+        private static JsonSerializer CreateSerializer()
         {
             return new JsonSerializer {Formatting = Formatting.Indented};
         }

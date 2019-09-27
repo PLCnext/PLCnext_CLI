@@ -16,7 +16,7 @@ using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.NamedPipeServer.Communication
 {
-    public class NamedPipeInstanceCommunicationChannel : ITemporaryCommunicationChannel
+    internal class NamedPipeInstanceCommunicationChannel : ITemporaryCommunicationChannel
     {
         private readonly ILifetimeScope lifetimeScope;
 
@@ -34,8 +34,7 @@ namespace PlcNext.NamedPipeServer.Communication
             {
                 protocol = await NamedPipeCommunicationProtocol.Connect(serverAddress, streamFactory,
                                                                channelLog,
-                                                               cancellationToken: linkedSource.Token,
-                                                               actAsClient: true);
+                                                               actAsClient: true, cancellationToken: linkedSource.Token).ConfigureAwait(false);
                 protocol.Start();
             }
             channelLog.LogVerbose($"Successfully connected to other instance server {serverAddress}.");

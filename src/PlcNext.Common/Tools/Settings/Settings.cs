@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace PlcNext.Common.Tools.Settings
@@ -20,7 +21,7 @@ namespace PlcNext.Common.Tools.Settings
         public const string CliRepositorySignatureFileNameDefault = "repository.xml.cer";
         public const string HttpProxyDefault = "";
         public static readonly string[] TemplateLocationsDefault = new[] { "./Templates/Templates.xml" };
-        public static readonly string[] SdkPathsDefault = new string[0];
+        public static readonly string[] SdkPathsDefault = System.Array.Empty<string>();
         public const bool UseSystemCommandsDefault = false;
 
         public Settings(string attributePrefix, string[] sdkPaths, string cliRepositoryRoot, string cliRepositoryFileName, string cliRepositorySignatureFileName, string httpProxy, string logFilePath, string[] templateLocations, bool useSystemCommands)
@@ -49,9 +50,9 @@ namespace PlcNext.Common.Tools.Settings
             UseSystemCommands = UseSystemCommandsDefault;
         }
 
-        public string[] SdkPaths { get; }
+        public IReadOnlyCollection<string> SdkPaths { get; }
 
-        public string[] TemplateLocations { get; }
+        public IReadOnlyCollection<string> TemplateLocations { get; }
 
         public string AttributePrefix { get; }
 

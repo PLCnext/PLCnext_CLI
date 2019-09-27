@@ -10,6 +10,7 @@
 using PlcNext.Common.Tools;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace PlcNext.Common.Build
@@ -17,7 +18,7 @@ namespace PlcNext.Common.Build
     internal class MalformedExternalLibrariesOptionException : FormattableException
     {
         public MalformedExternalLibrariesOptionException(string element, string type, string exceptionText) 
-            : base(string.Format(ExceptionTexts.MalformedExternalLibrariesOption, element, type, exceptionText))
+            : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.MalformedExternalLibrariesOption, element, type, exceptionText))
         {
 
         }

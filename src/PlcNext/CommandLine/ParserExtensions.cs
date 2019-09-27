@@ -33,12 +33,12 @@ namespace PlcNext.CommandLine
     /// <summary>
     /// Extension methods to allow multi level verb parsing.
     /// </summary>
-    public static class ParserVerbExtensions
+    internal static class ParserVerbExtensions
     {
         public static ParserResult<object> ParseVerbs(this Parser parser, IEnumerable<string> args, IDynamicVerbFactory dynamicVerbFactory, params Type[] types)
         {
             string[] argsArray = ModifyArgs();
-            return ParseVerbs(parser, argsArray, dynamicVerbFactory, types.Concat(dynamicVerbFactory.GetDynamicVerbs(new string[0])).ToArray(), new List<string>());
+            return ParseVerbs(parser, argsArray, dynamicVerbFactory, types.Concat(dynamicVerbFactory.GetDynamicVerbs(Array.Empty<string>())).ToArray(), new List<string>());
 
             string[] ModifyArgs()
             {
@@ -62,7 +62,7 @@ namespace PlcNext.CommandLine
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
             
-            if (argsArray.Length == 0 || argsArray[0].StartsWith("-"))
+            if (argsArray.Length == 0 || argsArray[0].StartsWith("-", StringComparison.Ordinal))
             {
                 return parser.ParseArguments(argsArray, types);
             }
@@ -78,7 +78,7 @@ namespace PlcNext.CommandLine
                 
                 path.Add(verb);
                 var subVerbsAttribute = type.GetCustomAttribute<ChildVerbsAttribute>();
-                Type[] subTypes = subVerbsAttribute?.Types??new Type[0];
+                Type[] subTypes = subVerbsAttribute?.Types?? Array.Empty<Type>();
                 subTypes = subTypes.Concat(dynamicVerbFactory.GetDynamicVerbs(path)).ToArray();
 
                 if (subTypes.Any() && type.GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() == null)
@@ -126,7 +126,7 @@ namespace PlcNext.CommandLine
         }
     }
 
-    public static class AttributeExtensions
+    internal static class AttributeExtensions
     {
         public static void AddToHelpText(this MultilineTextAttribute textAttribute, HelpText helpText)
         {

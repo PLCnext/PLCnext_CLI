@@ -26,23 +26,23 @@ namespace PlcNext.Common.Tools.Web
         public static async Task DownloadAsync(this HttpClient client, Uri requestUri, Stream destination, IProgressNotifier progress = null)
         {
             // Get the http headers first to examine the content length
-            using (HttpResponseMessage response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead))
+            using (HttpResponseMessage response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
             {
                 long? contentLength = response.Content.Headers.ContentLength;
 
-                using (Stream download = await response.Content.ReadAsStreamAsync())
+                using (Stream download = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
 
                     // Ignore progress reporting when no progress reporter was 
                     // passed or when the content length is unknown
                     if (progress == null || !contentLength.HasValue)
                     {
-                        await download.CopyToAsync(destination);
+                        await download.CopyToAsync(destination).ConfigureAwait(false);
                         return;
                     }
                     
                     // Use extension method to report progress while downloading
-                    await download.CopyToAsync(destination, Report);
+                    await download.CopyToAsync(destination, Report).ConfigureAwait(false);
 
                     // Convert absolute progress (bytes downloaded) into relative progress (0% - 100%)
                     void Report(long totalBytesCompleted) => progress.Tick((double)totalBytesCompleted / contentLength.Value);

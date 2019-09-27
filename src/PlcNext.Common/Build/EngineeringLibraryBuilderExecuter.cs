@@ -82,7 +82,7 @@ namespace PlcNext.Common.Build
                 VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
 
                 string libFile = deployDirectory.Files("*.so", true)
-                                    .OrderByDescending(f => f.Name.Equals($"lib{projectName}.so"))
+                                    .OrderByDescending(f => f.Name.Equals($"lib{projectName}.so", StringComparison.OrdinalIgnoreCase))
                                     .ThenByDescending(f => f.LastWriteTime)
                                     .FirstOrDefault()
                                    ?.FullName;
@@ -137,7 +137,8 @@ namespace PlcNext.Common.Build
 
                 IEnumerable<Entity> componentsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
                                                                                      .Where(e => e.Type.Equals("component", StringComparison.OrdinalIgnoreCase))
-                                                                                     .Where(c => !metaFiles.Any(f => f.Name.Equals($"{c.Name}.{Constants.CompmetaExtension}")))
+                                                                                     .Where(c => !metaFiles.Any(f => f.Name.Equals($"{c.Name}.{Constants.CompmetaExtension}", 
+                                                                                                                                   StringComparison.Ordinal)))
                                                                                      .ToArray();
                 if (componentsWithoutMetaFile.Any())
                 {
@@ -146,7 +147,8 @@ namespace PlcNext.Common.Build
 
                 IEnumerable<Entity> programsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
                                                                                    .Where(e => e.Type.Equals("program", StringComparison.OrdinalIgnoreCase))
-                                                                                   .Where(p => !metaFiles.Any(f => f.Name.Equals($"{p.Name}.{Constants.ProgmetaExtension}")))
+                                                                                   .Where(p => !metaFiles.Any(f => f.Name.Equals($"{p.Name}.{Constants.ProgmetaExtension}", 
+                                                                                                                                 StringComparison.Ordinal)))
                                                                                    .ToArray();
                 if (programsWithoutMetaFile.Any())
                 {
@@ -196,7 +198,7 @@ namespace PlcNext.Common.Build
                                                    renamedLibrary.Parent.FullName,
                                                    target.Name,
                                                    target.EngineerVersion,
-                                                   guidFactory.Create().ToString("D"),
+                                                   guidFactory.Create().ToString("D", CultureInfo.InvariantCulture),
                                                    target.ShortFullName.Replace(",", "_")));
                 }
             }
@@ -255,7 +257,7 @@ namespace PlcNext.Common.Build
                                                    Constants.FileOptionPattern,
                                                    fileType,
                                                    MakeRelative(metaFile.FullName),
-                                                   guidFactory.Create().ToString("D"),
+                                                   guidFactory.Create().ToString("D", CultureInfo.InvariantCulture),
                                                    destinationPath));
                     processedMetaFiles.Add(metaFile.GetRelativePath(deployDirectory));
                 }
@@ -271,7 +273,7 @@ namespace PlcNext.Common.Build
                                                    Constants.DirectoryOptionPattern,
                                                    $"Logical Elements/{componentDirectory.Name}",
                                                    Constants.ComponentFolderType,
-                                                   guidFactory.Create().ToString("D")));
+                                                   guidFactory.Create().ToString("D", CultureInfo.InvariantCulture)));
                     createDirectories.Add(componentDirectory);
                 }
 
@@ -287,7 +289,7 @@ namespace PlcNext.Common.Build
                                                    Constants.DirectoryOptionPattern,
                                                    $"Logical Elements/{programDirectory.Parent.Name}/{programDirectory.Name}",
                                                    Constants.ProgramFolderType,
-                                                   guidFactory.Create().ToString("D")));
+                                                   guidFactory.Create().ToString("D", CultureInfo.InvariantCulture)));
                     createDirectories.Add(programDirectory);
                 }
             }
@@ -326,7 +328,7 @@ namespace PlcNext.Common.Build
                 return command;
             }
         }
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Build", "CA1308:In method 'Execute', replace the call to 'ToLowerInvariant' with 'ToUpperInvariant'.", Justification = "Lower case is not used as comparsion but as value.")]
         public int Execute(ProjectEntity project, string metaFilesDirectory, string libraryLocation,
                            string outputDirectory,
                            ChangeObservable observable, IUserInterface userInterface, Guid libraryGuid,
@@ -335,7 +337,8 @@ namespace PlcNext.Common.Build
         {
             buildType = string.IsNullOrEmpty(buildType)
                             ? Constants.ReleaseFolderName
-                            : buildType.Substring(0, 1).ToUpperInvariant() + buildType.Substring(1).ToLowerInvariant();
+                            : buildType.Substring(0, 1).ToUpperInvariant() + 
+                              buildType.Substring(1).ToLowerInvariant();
             FileEntity projectFileEntity = FileEntity.Decorate(project);
             CodeEntity projectCodeEntity = CodeEntity.Decorate(project);
             TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
@@ -402,7 +405,7 @@ namespace PlcNext.Common.Build
 
                     IEnumerable<Entity> componentsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
                         .Where(e => e.Type.Equals("component", StringComparison.OrdinalIgnoreCase))
-                        .Where(c => !metaFiles.Any(f => f.Name.Equals($"{c.Name}.{Constants.CompmetaExtension}")));
+                        .Where(c => !metaFiles.Any(f => f.Name.Equals($"{c.Name}.{Constants.CompmetaExtension}", StringComparison.Ordinal)));
                     if (componentsWithoutMetaFile.Any())
                     {
                         throw new MetaFileNotFoundException(metaFilesDirectory, $"{componentsWithoutMetaFile.First().Name}.{Constants.CompmetaExtension}");
@@ -410,7 +413,7 @@ namespace PlcNext.Common.Build
 
                     IEnumerable<Entity> programsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
                         .Where(e => e.Type.Equals("program", StringComparison.OrdinalIgnoreCase))
-                        .Where(p => !metaFiles.Any(f => f.Name.Equals($"{p.Name}.{Constants.ProgmetaExtension}")));
+                        .Where(p => !metaFiles.Any(f => f.Name.Equals($"{p.Name}.{Constants.ProgmetaExtension}", StringComparison.Ordinal)));
                     if (programsWithoutMetaFile.Any())
                     {
                         throw new MetaFileNotFoundException(metaFilesDirectory, $"{programsWithoutMetaFile.First().Name}.{Constants.ProgmetaExtension}");
@@ -424,7 +427,7 @@ namespace PlcNext.Common.Build
 
                 targets = targets
                     .GroupBy(t => t.Item1.GetShortFullName())
-                    .Select(g => g.Where(x => x.Item1.Version == g.Select(z => z.Item1.Version).Max()).FirstOrDefault());
+                    .Select(g => g.FirstOrDefault(x => x.Item1.Version == g.Select(z => z.Item1.Version).Max()));
 
                 foreach ((Target, string) target in targets)
                 {
@@ -434,7 +437,7 @@ namespace PlcNext.Common.Build
                         libFile = fileSystem.GetDirectory(libraryLocation)
                                                     .Directory(target.Item1.GetFullName().Replace(",", "_"))
                                                     .Files("*.so", true)
-                                                    .OrderByDescending(f => f.Name.Equals($"lib{projectName}.so"))
+                                                    .OrderByDescending(f => f.Name.Equals($"lib{projectName}.so", StringComparison.OrdinalIgnoreCase))
                                                     .ThenByDescending(f => f.FullName.Contains(buildType))
                                                     .ThenByDescending(f => f.LastWriteTime)
                                                     .FirstOrDefault()
@@ -453,7 +456,7 @@ namespace PlcNext.Common.Build
                             {
                                 libFile = fileSystem.GetDirectory(libFile)
                                                     .Files("*.so", true)
-                                                    .OrderByDescending(f => f.Name.Equals($"lib{projectName}.so"))
+                                                    .OrderByDescending(f => f.Name.Equals($"lib{projectName}.so", StringComparison.OrdinalIgnoreCase))
                                                     .ThenByDescending(f => f.FullName.Contains(buildType))
                                                     .ThenByDescending(f => f.LastWriteTime)
                                                     .FirstOrDefault()
@@ -496,7 +499,7 @@ namespace PlcNext.Common.Build
             {
                 HashSet<(VirtualFile, Target)> externalLibs = new HashSet<(VirtualFile, Target)>();
 
-                if (externalLibraries == null || externalLibraries.Count() == 0)
+                if (externalLibraries == null || !externalLibraries.Any())
                 {
                     try
                     {
@@ -640,7 +643,7 @@ namespace PlcNext.Common.Build
                                                    libraryFile.Parent.FullName,
                                                    target.Name,
                                                    DeviceVersion(target),
-                                                   guidFactory.Create().ToString("D"),
+                                                   guidFactory.Create().ToString("D", CultureInfo.InvariantCulture),
                                                    target.GetShortFullName().Replace(",", "_")));
                     }
 
@@ -658,22 +661,22 @@ namespace PlcNext.Common.Build
                     {
                         string destinationPath;
                         string fileType;
-                        switch (Path.GetExtension(metaFile.Name)?.ToLowerInvariant() ?? string.Empty)
+                        switch (Path.GetExtension(metaFile.Name)?.ToUpperInvariant() ?? string.Empty)
                         {
-                            case ".libmeta":
+                            case ".LIBMETA":
                                 destinationPath = string.Empty;
                                 fileType = Constants.LibmetaFileType;
                                 break;
-                            case ".typemeta":
+                            case ".TYPEMETA":
                                 destinationPath = string.Empty;
                                 fileType = Constants.TypemetaFileType;
                                 break;
-                            case ".compmeta":
+                            case ".COMPMETA":
                                 CreateComponentDirectory(metaFile.Parent, createDirectories, writer);
                                 destinationPath = metaFile.Parent.Name;
                                 fileType = Constants.CompmetaFileType;
                                 break;
-                            case ".progmeta":
+                            case ".PROGMETA":
                                 CreateProgramDirectory(metaFile.Parent, createDirectories, writer);
                                 destinationPath = $"{metaFile.Parent.Parent.Name}/{metaFile.Parent.Name}";
                                 fileType = Constants.ProgmetaFileType;
@@ -686,7 +689,7 @@ namespace PlcNext.Common.Build
                                                        Constants.FileOptionPattern,
                                                        fileType,
                                                        MakeRelative(metaFile.FullName),
-                                                       guidFactory.Create().ToString("D"),
+                                                       guidFactory.Create().ToString("D", CultureInfo.InvariantCulture),
                                                        destinationPath));
                     }
                     
@@ -729,7 +732,7 @@ namespace PlcNext.Common.Build
                     string storedId = project.Settings.Value.Id;
                     if (string.IsNullOrEmpty(storedId))
                     {
-                        storedId = guidFactory.Create().ToString("D");
+                        storedId = guidFactory.Create().ToString("D", CultureInfo.InvariantCulture);
                         project.Settings.SetId(storedId);
                     }
                     return Guid.Parse(storedId);
@@ -747,7 +750,7 @@ namespace PlcNext.Common.Build
                                                    Constants.DirectoryOptionPattern,
                                                    $"Logical Elements/{componentDirectory.Name}",
                                                    Constants.ComponentFolderType,
-                                                   guidFactory.Create().ToString("D")));
+                                                   guidFactory.Create().ToString("D", CultureInfo.InvariantCulture)));
                     createDirectories.Add(componentDirectory);
                 }
 
@@ -764,7 +767,7 @@ namespace PlcNext.Common.Build
                                                    Constants.DirectoryOptionPattern,
                                                    $"Logical Elements/{programDirectory.Parent.Name}/{programDirectory.Name}",
                                                    Constants.ProgramFolderType,
-                                                   guidFactory.Create().ToString("D")));
+                                                   guidFactory.Create().ToString("D", CultureInfo.InvariantCulture)));
                     createDirectories.Add(programDirectory);
                 }
 

@@ -78,6 +78,11 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public VirtualFile CopyTo(VirtualDirectory destinationDirectory)
         {
+            if (destinationDirectory == null)
+            {
+                throw new ArgumentNullException(nameof(destinationDirectory));
+            }
+
             if (destinationDirectory.FileExists(Name))
             {
                 throw new FormattableIoException($"File {Name} already exists in {destinationDirectory.FullName}");

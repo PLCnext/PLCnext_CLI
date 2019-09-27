@@ -45,7 +45,7 @@ namespace PlcNext.Common.Installation.SDK
 
                 using (IProgressNotifier progressNotifier = Console.IsInputRedirected || Console.IsOutputRedirected ? null : progressVisualizer.Spawn(1, "Install SDK.", null))
                 {
-                    await fileUnpackService.Unpack(packedSdk, destination, progressNotifier, observable);
+                    await fileUnpackService.Unpack(packedSdk, destination, progressNotifier, observable).ConfigureAwait(false);
                 }
 
                 editableSettings.AddSetting(Constants.SdkPathsKey, $"{destination.FullName}");

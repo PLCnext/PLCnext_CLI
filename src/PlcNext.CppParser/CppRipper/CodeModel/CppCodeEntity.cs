@@ -21,8 +21,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
     internal abstract class CppCodeEntity : ICodeEntity
     {
         private bool reparseAttributes;
-        private IComment[] comments = new IComment[0];
-        private IAttribute[] attributes = new IAttribute[0];
+        private IComment[] comments = Array.Empty<IComment>();
+        private IAttribute[] attributes = Array.Empty<IAttribute>();
         private readonly Regex attributeRegex;
 
         protected CppCodeEntity(string name, string attributePrefix)
@@ -34,17 +34,17 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         public string Name { get; protected set; }
 
-        public IComment[] Comments
+        public IReadOnlyCollection<IComment> Comments
         {
             get => comments;
             protected set
             {
-                comments = value;
+                comments = value.ToArray();
                 reparseAttributes = true;
             }
         }
 
-        public IAttribute[] Attributes
+        public IReadOnlyCollection<IAttribute> Attributes
         {
             get
             {

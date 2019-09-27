@@ -34,7 +34,7 @@ namespace PlcNext.Common.Commands
         protected override async Task<int> ExecuteAsync(DynamicCommandArgs args, ChangeObservable observable)
         {
             IDynamicCommandProvider commandProvider = commandProviders.First(p => p.CanExecute(args.Definition));
-            return await commandProvider.Execute(args.Definition, observable);
+            return await commandProvider.Execute(args.Definition, observable).ConfigureAwait(false);
         }
     }
 }

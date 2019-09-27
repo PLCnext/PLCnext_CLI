@@ -20,6 +20,11 @@ namespace PlcNext.Common.Tools.Events
 
         public IDisposable Subscribe(IObserver<Change> observer)
         {
+            if (observer == null)
+            {
+                throw new ArgumentNullException(nameof(observer));
+            }
+
             if (unnoticedChanges.Any())
             {
                 foreach (Change unnoticedChange in unnoticedChanges)

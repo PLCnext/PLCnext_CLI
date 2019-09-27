@@ -41,8 +41,8 @@ namespace PlcNext
         private static async Task<int> MainAsync(string[] args)
         {
             if (args.Any() && 
-                args[0].ToLowerInvariant() == CommandLineConstants.MigrateCliVerb &&
-                !args.Any(a => a.TrimEnd().EndsWith("help")))
+                args[0].Equals(CommandLineConstants.MigrateCliVerb, StringComparison.OrdinalIgnoreCase) &&
+                !args.Any(a => a.TrimEnd().EndsWith("help", StringComparison.OrdinalIgnoreCase)))
             {
                 return Migrate() ? 0 : 1;
             }
@@ -51,7 +51,7 @@ namespace PlcNext
 #endif
             try
             {
-                bool noSdkExploration = args.Any(a => a.Contains("--no-sdk-exploration"));
+                bool noSdkExploration = args.Any(a => a.Contains("--no-sdk-exploration", StringComparison.Ordinal));
                 ILog log = CreateLog();
                 ContainerBuilder builder = new ContainerBuilder();
                 builder.RegisterInstance(log);
@@ -66,7 +66,7 @@ namespace PlcNext
                         Console.WriteLine($@"Startup timer {stopwatch.Elapsed}");
                         Console.WriteLine($@"Arguments: {args.Aggregate(string.Empty, (s, s1) => s + "_" + s1)}");
 #endif
-                        int result =  await commandLineParser.Parse(args);
+                        int result =  await commandLineParser.Parse(args).ConfigureAwait(false);
                         return result;
                     }
                     catch (Exception e)

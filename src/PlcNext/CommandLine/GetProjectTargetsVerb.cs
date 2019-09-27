@@ -36,7 +36,8 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(AddDeprecatedInformation(new GetTargetsCommandArgs(Path, false, Short)));
+            return await commandManager.Execute(AddDeprecatedInformation(new GetTargetsCommandArgs(Path, false, Short)))
+                                       .ConfigureAwait(false);
         }
     }
 }

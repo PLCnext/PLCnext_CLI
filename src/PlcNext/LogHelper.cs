@@ -38,6 +38,11 @@ namespace PlcNext
 
         public static void AddInitialLog(this ILog log, string[] args)
         {
+            if (log == null)
+            {
+                throw new ArgumentNullException(nameof(log));
+            }
+
             try
             {
                 Assembly executingAssembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();

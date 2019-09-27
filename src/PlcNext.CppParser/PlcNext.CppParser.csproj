@@ -6,6 +6,11 @@
     <Antlr4UseCSharpGenerator>True</Antlr4UseCSharpGenerator>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
   <ItemGroup>
     <Antlr4 Include="**/*.g4">
       <Listener>false</Listener>
@@ -20,5 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PlcNext.Common\PlcNext.Common.csproj" />
   </ItemGroup>
+
+  <Import Project="..\_Build_\CodeAnalysis.targets" Condition="Exists('..\_Build_\CodeAnalysis.targets')" />
 
 </Project>

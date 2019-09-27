@@ -48,7 +48,7 @@ namespace PlcNext.Common.Project
             targets = targets.ToArray();
             if (targets.Any())
             {
-                SetTargets((Value.Target ?? new string[0]).Concat(targets));
+                SetTargets((Value.Target ?? Array.Empty<string>()).Concat(targets));
             }
         }
 
@@ -59,42 +59,20 @@ namespace PlcNext.Common.Project
 
         public int RemoveTargets(IEnumerable<string> targets)
         {
-            IEnumerable<string> existingTargets = (Value.Target ?? new string[0]).Intersect(targets)
+            IEnumerable<string> existingTargets = (Value.Target ?? Array.Empty<string>()).Intersect(targets)
                                                                                  .ToArray();
             if (!existingTargets.Any())
             {
                 return 0;
             }
-            SetTargets((Value.Target ?? new string[0]).Except(existingTargets));
+            SetTargets((Value.Target ?? Array.Empty<string>()).Except(existingTargets));
             return existingTargets.Count();
-        }
-
-        public void ClearTargets()
-        {
-            SetTargets(new string[0]);
         }
 
         public void SetTargets(IEnumerable<string> targets)
         {
             Value.Target = targets.ToArray();
             UpdateProjectSettingsFile("Update project targets.");
-        }
-
-        public void AddExtension(extension extension)
-        {
-            Value.Extension = Value.Extension.Concat(new[] {extension}).ToArray();
-            UpdateProjectSettingsFile($"Add extension {extension.name}");
-        }
-
-        public void RemoveExtension(extension extension)
-        {
-            Value.Extension = Value.Extension.Except(new[] { extension }).ToArray();
-            UpdateProjectSettingsFile($"Remove extension {extension.name}");
-        }
-
-        public void UpdateExtension(extension extension)
-        {
-            UpdateProjectSettingsFile($"Update extension {extension.name}");
         }
 
         public void SetId(string id)
@@ -112,30 +90,17 @@ namespace PlcNext.Common.Project
                 //do not persist changes
                 return;
             }
-            MemoryStream revertStream = RecyclableMemoryStreamManager.Instance.GetStream();
-            using (Stream fileStream = projectFile.OpenRead())
-            {
-                fileStream.CopyTo(revertStream);
-                revertStream.Seek(0, SeekOrigin.Begin);
-            }
             using (Stream fileStream = projectFile.OpenWrite())
             {
                 //if an existing file content is longer than the new content, the xml is corrupted
-                //set the stream legth to 0 to avoid this
+                //set the stream length to 0 to avoid this
                 fileStream.SetLength(0);
                 XmlSerializer serializer = new XmlSerializer(typeof(ProjectSettings));
                 serializer.Serialize(fileStream, Value);
             }
             executionContext.Observable.OnNext(new ProjectSettingChange(() =>
             {
-                using (revertStream)
-                using (Stream fileStream = projectFile.OpenWrite())
-                {
-                    //if an existing file content is longer than the new content, the xml is corrupted
-                    //set the stream legth to 0 to avoid this
-                    fileStream.SetLength(0);
-                    revertStream.CopyTo(fileStream);
-                }
+                projectFile.Restore();
             }, projectFile.Parent.FullName, message));
         }
     }

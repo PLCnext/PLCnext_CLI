@@ -17,5 +17,9 @@ namespace PlcNext.NamedPipeServer.Communication
         {
             
         }
+        public ClientDisconnectedException(Exception innerException) : base(ExceptionTexts.ClientDisconnected, innerException)
+        {
+            
+        }
     }
 }

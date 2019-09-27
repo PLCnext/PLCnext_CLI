@@ -57,9 +57,10 @@ namespace PlcNext.Common.Tools.SDK
             {
                 using (CMakeConversation conversation = await CMakeConversation.Start(processManager, binariesLocator, formatterPool,
                                                                                       tempDirectory, environmentService.Platform == OSPlatform.Windows,
-                                                                                      executionContext, sourceDirectory, binaryDirectory))
+                                                                                      executionContext, sourceDirectory, binaryDirectory)
+                                                                               .ConfigureAwait(false))
                 {
-                    codeModel = await conversation.GetCodeModel();
+                    codeModel = await conversation.GetCodeModel().ConfigureAwait(false);
                 }
             }
         }

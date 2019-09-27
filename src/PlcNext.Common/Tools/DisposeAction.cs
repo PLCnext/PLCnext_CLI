@@ -13,7 +13,7 @@ using System.Text;
 
 namespace PlcNext.Common.Tools
 {
-    public class DisposeAction : IDisposable
+    public sealed class DisposeAction : IDisposable
     {
         private readonly Action disposeAction;
 

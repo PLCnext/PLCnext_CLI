@@ -38,7 +38,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         }
 
         public ParserResult(IEnumerable<CodeSpecificException> exceptions)
-            : this(exceptions, new Dictionary<IType, CodePosition>(), new string[0], false)
+            : this(exceptions, new Dictionary<IType, CodePosition>(), Array.Empty<string>(), false)
         {
         }
 

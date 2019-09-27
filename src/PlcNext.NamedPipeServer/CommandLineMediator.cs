@@ -76,12 +76,12 @@ namespace PlcNext.NamedPipeServer
         private async void MessageParserOnSuicideIssued(object sender, EventArgs e)
         {
             commandLine.CancelAllCommands();
-            await WaitForCommandsToFinish();
-            server.Stop();
+            await WaitForCommandsToFinish().ConfigureAwait(false);
+            server.StopServer();
 
             async Task WaitForCommandsToFinish()
             {
-                await Task.WhenAll(executingCommands.Keys.ToArray());
+                await Task.WhenAll(executingCommands.Keys.ToArray()).ConfigureAwait(false);
             }
         }
 
@@ -91,15 +91,16 @@ namespace PlcNext.NamedPipeServer
             Task executingTask = commandLine.ExecuteCommand(e.Command)
                                             .ContinueWith(task =>
                                              {
-                                                 heart.Stop();
+                                                 heart.StopHeartbeat();
                                                  AsyncAutoResetEvent waitEvent = new AsyncAutoResetEvent(false);
                                                  
                                                  messageSender.SendCommandReply(task.Result,
                                                                                 () => waitEvent.Set());
                                                  waitEvent.WaitAsync().Wait();
-                                             });
+                                             }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
             executingCommands.TryAdd(executingTask, executingTask);
-            executingTask.ContinueWith(t => executingCommands.TryRemove(executingTask, out _));
+            executingTask.ContinueWith(t => executingCommands.TryRemove(executingTask, out _),
+                                       CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
         }
 
         private void MessageParserOnCommandCanceled(object sender, CommandEventArgs e)

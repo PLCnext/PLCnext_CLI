@@ -8,6 +8,11 @@
     <Copyright>Copyright (c) 2018 PHOENIX CONTACT GmbH &amp; Co. KG</Copyright>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="Templates\AcfProjectTemplate\.proj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -159,5 +164,7 @@
   <ItemGroup>
     <Folder Include="Templates\AcfComponentTemplate\" />
   </ItemGroup>
+
+  <Import Project="..\_Build_\CodeAnalysis.targets" Condition="Exists('..\_Build_\CodeAnalysis.targets')" />
 
 </Project>

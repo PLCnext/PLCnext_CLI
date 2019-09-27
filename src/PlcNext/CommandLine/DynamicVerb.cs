@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using PlcNext.Common.Commands;
@@ -16,18 +17,24 @@ namespace PlcNext.CommandLine
 {
     public class DynamicVerb : VerbBase
     {
-        public CommandDefinition Defintion { get; set; }
+        public CommandDefinition Definition { get; set; }
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
+            if (commandManager == null)
+            {
+                throw new ArgumentNullException(nameof(commandManager));
+            }
+
             AddDefinitionContent();
-            return await commandManager.Execute(AddDeprecatedInformation(new DynamicCommandArgs(Defintion)));
+            return await commandManager.Execute(AddDeprecatedInformation(new DynamicCommandArgs(Definition)))
+                                       .ConfigureAwait(false);
 
             void AddDefinitionContent()
             {
                 foreach (PropertyInfo publicProperty in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
-                    CommandDefinition definition = Defintion;
+                    CommandDefinition definition = Definition;
                     while (definition != null)
                     {
                         if (definition.Arguments.ContainsArgument(publicProperty.Name))

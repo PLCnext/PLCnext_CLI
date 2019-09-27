@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using PlcNext.Common.CodeModel;
@@ -37,7 +38,8 @@ namespace PlcNext.Common
             Uri pathUri = new Uri(path, UriKind.Absolute);
 
             // Folders must end in a slash
-            if (!basePath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!basePath.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), 
+                                   StringComparison.Ordinal))
             {
                 basePath += Path.DirectorySeparatorChar;
             }

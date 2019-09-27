@@ -148,7 +148,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
 
                     bool TryFindInclude(IncludeDefinition current, out IncludeFindResult result)
                     {
-                        if (current.Include.Trim().StartsWith("<"))
+                        if (current.Include.Trim().StartsWith("<", StringComparison.Ordinal))
                         {
                             //system includes in form <algorithms> are ignored
                             result = null;

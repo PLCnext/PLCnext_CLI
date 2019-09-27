@@ -74,13 +74,13 @@ namespace PlcNext.NamedPipeServer.Communication
 
         protected virtual OutgoingMessageQueue CreateOutgoingMessageQueue()
         {
-            return new OutgoingMessageQueue(log, CancellationToken, writeStream, this);
+            return new OutgoingMessageQueue(log, writeStream, this, CancellationToken);
         }
 
         protected virtual IncomingMessageQueue CreateIncomingMessageQueue(OutgoingMessageQueue outgoingQueue)
         {
             return new IncomingMessageQueue(streamFactory, log, readStream,
-                                            this, CancellationToken, outgoingQueue);
+                                            this, outgoingQueue, CancellationToken);
         }
 
         protected void Disconnect()
@@ -115,16 +115,17 @@ namespace PlcNext.NamedPipeServer.Communication
                 incomingMessageQueue.Dispose();
             }
             outgoingMessageQueue?.Dispose();
-            
+            disposedCancellationTokenSource.Dispose();
+
             //and report disconnect
             OnError();
         }
 
         public static async Task<ICommunicationProtocol> Connect(string address, StreamFactory streamFactory,
                                                                  ILog log,
+                                                                 bool actAsClient = false,
                                                                  CancellationToken cancellationToken =
-                                                                     default(CancellationToken),
-                                                                 bool actAsClient = false)
+                                                                     default(CancellationToken))
         {
             NamedPipeCommunicationProtocol result;
             if (!actAsClient)
@@ -136,7 +137,8 @@ namespace PlcNext.NamedPipeServer.Communication
                                                                          PipeTransmissionMode.Byte,
                                                                          PipeOptions.None);
                 await Task.WhenAll(readServer.WaitForConnectionAsync(cancellationToken),
-                                   writeServer.WaitForConnectionAsync(cancellationToken));
+                                   writeServer.WaitForConnectionAsync(cancellationToken))
+                          .ConfigureAwait(false);
 
                 result = new NamedPipeCommunicationProtocol(readServer, writeServer, streamFactory, new ServerNameLogDecorator(log,address,false));
             }
@@ -147,7 +149,8 @@ namespace PlcNext.NamedPipeServer.Communication
                 NamedPipeClientStream readClient = new NamedPipeClientStream(".", Path.Combine(address, "server-output"), PipeDirection.InOut,
                                                                               PipeOptions.None);
                 await Task.WhenAll(readClient.ConnectAsync(cancellationToken),
-                                   writeClient.ConnectAsync(cancellationToken));
+                                   writeClient.ConnectAsync(cancellationToken))
+                          .ConfigureAwait(false);
 
                 result = new NamedPipeCommunicationProtocol(readClient, writeClient, streamFactory, new ServerNameLogDecorator(log,address,true));
             }
@@ -156,6 +159,11 @@ namespace PlcNext.NamedPipeServer.Communication
 
         public void SendMessage(Stream message, Action messageCompletedAction = null)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             Stream messageCopy = streamFactory.Create(message.Length);
             message.CopyTo(messageCopy, BufferSize);
 
@@ -164,16 +172,25 @@ namespace PlcNext.NamedPipeServer.Communication
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
-        public virtual void Dispose()
+        public void Dispose()
         {
-            Disconnect();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public event EventHandler<EventArgs> Error;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Disconnect();
+            }
+        }
+
+        public event EventHandler<EventArgs> CommunicationError;
 
         protected virtual void OnError()
         {
-            Error?.Invoke(this, EventArgs.Empty);
+            CommunicationError?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void OnMessageReceived(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
@@ -196,7 +213,9 @@ namespace PlcNext.NamedPipeServer.Communication
             private Thread readingThread;
             private PollingCollectionObserver pollingCollectionObserver;
             
-            public IncomingMessageQueue(StreamFactory streamFactory, ILog log, PipeStream readStream, NamedPipeCommunicationProtocol communicationProtocol, CancellationToken cancellationToken, OutgoingMessageQueue outgoingMessageQueue)
+            public IncomingMessageQueue(StreamFactory streamFactory, ILog log, PipeStream readStream,
+                                        NamedPipeCommunicationProtocol communicationProtocol,
+                                        OutgoingMessageQueue outgoingMessageQueue, CancellationToken cancellationToken)
             {
                 this.streamFactory = streamFactory;
                 this.log = log;
@@ -304,9 +323,10 @@ namespace PlcNext.NamedPipeServer.Communication
                             splitMessages.TryGetValue(messageGuid, out IncomingMessage splitMessage))
                         {
                             MergeWithSplitMessage(splitMessage, messageStream);
+                            message.Dispose();
                             message = splitMessage;
                         }
-                        
+
                         if (isSplit)
                         {
                             EnqueueSplitMessage(messageGuid, message);
@@ -323,33 +343,33 @@ namespace PlcNext.NamedPipeServer.Communication
                     {
                         log.LogError($"Client disconnected during communication.{Environment.NewLine}" +
                                      $"{disconnectedException}");
-                        messageStream.Dispose();
+                        messageStream?.Dispose();
+                        message?.Dispose();
                         throw;
+                    }
+                    catch (TaskCanceledException c)
+                    {
+                        log.LogError($"Exception during message read.{Environment.NewLine}" +
+                                     $"{new MessageTimeoutException(messageGuid, MaxConfirmationResponseTime, c)}");
+                    }
+                    catch (OperationCanceledException oc)
+                    {
+                        log.LogError($"Exception during message read.{Environment.NewLine}" +
+                                     $"{new MessageTimeoutException(messageGuid, MaxConfirmationResponseTime, oc)}");
+                    }
+                    catch (PartialMessageException)
+                    {
+                        messageStream?.Dispose();
+                        message?.Dispose();
+                        outgoingMessageQueue.SendMessageConfirmation(messageGuid, false);
                     }
                     catch (Exception e)
                     {
-                        switch (e)
-                        {
-                            case TaskCanceledException c:
-                                e = new MessageTimeoutException(messageGuid, MaxConfirmationResponseTime, c);
-                                break;
-                            case OperationCanceledException oc:
-                                e = new MessageTimeoutException(messageGuid, MaxConfirmationResponseTime, oc);
-                                break;
-                        }
-
                         log.LogError($"Exception during message read.{Environment.NewLine}" +
                                      $"{e}");
-                        if (e is PartialMessageException)
-                        {
-                            outgoingMessageQueue.SendMessageConfirmation(messageGuid, false);
-                            message.Dispose();
-                            messageStream.Dispose();
-                        }
-                        else
-                        {
-                            throw new ClientDisconnectedException();
-                        }
+                        messageStream?.Dispose();
+                        message?.Dispose();
+                        throw new ClientDisconnectedException(e);
                     }
                     
                     log.LogVerbose("Finished reading message.");
@@ -401,6 +421,11 @@ namespace PlcNext.NamedPipeServer.Communication
 
             protected virtual void CompleteMessage(IncomingMessage message, Guid messageGuid, byte confirmation)
             {
+                if (message == null)
+                {
+                    throw new ArgumentNullException(nameof(message));
+                }
+
                 if (confirmation == DefaultConfirmationFlag)
                 {
                     LogConcreteMessage();
@@ -441,6 +466,16 @@ namespace PlcNext.NamedPipeServer.Communication
 
             protected virtual void MergeWithSplitMessage(IncomingMessage splitMessage, Stream messageStream)
             {
+                if (splitMessage == null)
+                {
+                    throw new ArgumentNullException(nameof(splitMessage));
+                }
+
+                if (messageStream == null)
+                {
+                    throw new ArgumentNullException(nameof(messageStream));
+                }
+
                 splitMessage.AppendMessageStream(messageStream, cancellationToken);
                 messageStream.Dispose();
             }
@@ -452,11 +487,21 @@ namespace PlcNext.NamedPipeServer.Communication
 
             protected virtual void AppendBuffer(Stream messageStream, byte[] buffer, int length)
             {
+                if (messageStream == null)
+                {
+                    throw new ArgumentNullException(nameof(messageStream));
+                }
+
                 messageStream.Write(buffer, 0, length);
             }
 
             protected virtual (int messageLength, bool isSplit, Guid messageGuid, byte confirmation) ParseHeader(byte[] header)
             {
+                if (header == null)
+                {
+                    throw new ArgumentNullException(nameof(header));
+                }
+
                 int messageLength = BitConverter.ToInt32(header.Take(4).ToArray().BigEndian(), 0);
                 bool isSplit = false;
                 if (messageLength == SplitMessageIndicator)
@@ -474,17 +519,26 @@ namespace PlcNext.NamedPipeServer.Communication
 
             public void Dispose()
             {
-                readingThread?.Join(CommunicationConstants.ThreadJoinTimeout);
-                pollingCollectionObserver?.Dispose();
-                
-                foreach (IncomingMessage message in messages)
-                {
-                    message.Dispose();
-                }
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
 
-                foreach (IncomingMessage splitMessage in splitMessages.Values)
+            protected virtual void Dispose(bool disposing)
+            {
+                if (disposing)
                 {
-                    splitMessage.Dispose();
+                    readingThread?.Join(CommunicationConstants.ThreadJoinTimeout);
+                    pollingCollectionObserver?.Dispose();
+
+                    foreach (IncomingMessage message in messages)
+                    {
+                        message.Dispose();
+                    }
+
+                    foreach (IncomingMessage splitMessage in splitMessages.Values)
+                    {
+                        splitMessage.Dispose();
+                    }
                 }
             }
 
@@ -547,7 +601,9 @@ namespace PlcNext.NamedPipeServer.Communication
             private PollingCollectionObserver pollingCollectionObserver;
             private int sending;
 
-            public OutgoingMessageQueue(ILog log, CancellationToken cancellationToken, PipeStream writeStream, NamedPipeCommunicationProtocol communicationProtocol)
+            public OutgoingMessageQueue(ILog log, PipeStream writeStream,
+                                        NamedPipeCommunicationProtocol communicationProtocol,
+                                        CancellationToken cancellationToken)
             {
                 this.log = log;
                 this.cancellationToken = cancellationToken;
@@ -670,23 +726,32 @@ namespace PlcNext.NamedPipeServer.Communication
 
             public void Dispose()
             {
-                pollingCollectionObserver?.Dispose();
-                
-                foreach (OutgoingMessage message in pendingMessages)
-                {
-                    message.ConfirmationTimeElapsed -= OutgoingMessageOnConfirmationTimeElapsed;
-                    message.Dispose();
-                }
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
 
-                foreach (OutgoingMessage outgoingMessage in unconfirmedMessages.Values.ToArray())
+            protected virtual void Dispose(bool disposing)
+            {
+                if (disposing)
                 {
-                    outgoingMessage.ConfirmationTimeElapsed -= OutgoingMessageOnConfirmationTimeElapsed;
-                    outgoingMessage.Dispose();
-                }
+                    pollingCollectionObserver?.Dispose();
 
-                foreach (OutgoingMessage resendMessage in resendMessages)
-                {
-                    resendMessage.Dispose();
+                    foreach (OutgoingMessage message in pendingMessages)
+                    {
+                        message.ConfirmationTimeElapsed -= OutgoingMessageOnConfirmationTimeElapsed;
+                        message.Dispose();
+                    }
+
+                    foreach (OutgoingMessage outgoingMessage in unconfirmedMessages.Values.ToArray())
+                    {
+                        outgoingMessage.ConfirmationTimeElapsed -= OutgoingMessageOnConfirmationTimeElapsed;
+                        outgoingMessage.Dispose();
+                    }
+
+                    foreach (OutgoingMessage resendMessage in resendMessages)
+                    {
+                        resendMessage.Dispose();
+                    }
                 }
             }
         }
@@ -818,12 +883,12 @@ namespace PlcNext.NamedPipeServer.Communication
                 }
             }
 
-            protected virtual byte[] GenerateMessageHeader(Guid guid, int length)
+            protected virtual byte[] GenerateMessageHeader(Guid messageId, int length)
             {
                 Log.LogVerbose($"Sending header with size {length}.");
                 return BitConverter.GetBytes(length)
                                    .BigEndian()
-                                   .Concat(guid.ToByteArray())
+                                   .Concat(messageId.ToByteArray())
                                    .Concat(new[] { DefaultConfirmationFlag })
                                    .ToArray();
             }
@@ -854,11 +919,17 @@ namespace PlcNext.NamedPipeServer.Communication
                 ConfirmationTimeElapsed?.Invoke(this, EventArgs.Empty);
             }
 
-            public override void Dispose()
+            protected override void Dispose(bool disposing)
             {
-                confirmationTimer.Elapsed -= ConfirmationTimerOnElapsed;
-                confirmationTimer.Dispose();
-                base.Dispose();
+                if (disposing)
+                {
+                    lock (completedSyncRoot)
+                    {
+                        confirmationTimer.Elapsed -= ConfirmationTimerOnElapsed;
+                        confirmationTimer.Dispose();
+                    }
+                }
+                base.Dispose(disposing);
             }
 
             public void PrepareResend()
@@ -875,6 +946,11 @@ namespace PlcNext.NamedPipeServer.Communication
 
             public void AppendMessageStream(Stream messageStream, CancellationToken token)
             {
+                if (messageStream == null)
+                {
+                    throw new ArgumentNullException(nameof(messageStream));
+                }
+
                 int intervals = (int)messageStream.Length / BufferSize;
                 int remaining = (int)messageStream.Length % BufferSize;
                 byte[] buffer = new byte[BufferSize];
@@ -897,7 +973,7 @@ namespace PlcNext.NamedPipeServer.Communication
 
         protected abstract class Message : IDisposable
         {
-            protected readonly ILog Log;
+            protected ILog Log { get; }
 
             protected Message(Guid id, Stream data, ILog log)
             {
@@ -909,9 +985,18 @@ namespace PlcNext.NamedPipeServer.Communication
             public Stream Data { get; }
             public Guid Id { get; }
 
-            public virtual void Dispose()
+            public void Dispose()
             {
-                Data?.Dispose();
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    Data?.Dispose();
+                }
             }
         }
     }

@@ -49,7 +49,7 @@ namespace PlcNext.Common.Build
                                                                      null)
             {
                 Target = projectTarget,
-                Sdk = sdkRepository.GetSdk(projectTarget)
+                SdkInformation = sdkRepository.GetSdk(projectTarget)
             };
             (bool success, VirtualDirectory cmakeFolder) = cmakeExecuter.EnsureConfigured(
                 buildInformation, showWarningsToUser: true, observable, showMessagesToUser: false);

@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
@@ -201,7 +202,7 @@ namespace PlcNext.Common.Tools.Settings
 
         private class BoolSettingsProperty : SingleSettingsProperty
         {
-            public BoolSettingsProperty(string key, bool value) : base(key, value.ToString())
+            public BoolSettingsProperty(string key, bool value) : base(key, value.ToString(CultureInfo.InvariantCulture))
             {
                 Value = value;
             }
@@ -216,7 +217,7 @@ namespace PlcNext.Common.Tools.Settings
                     }
                     throw new BoolSettingsValueFormatException(Key, base.Value);
                 }
-                set => base.Value = value.ToString();
+                private set => base.Value = value.ToString(CultureInfo.InvariantCulture);
             }
 
             public override string ToString()

@@ -13,7 +13,7 @@ using System.Text;
 
 namespace PlcNext.Common.Tools.DynamicCommands
 {
-    internal class ArgumentTypeMismatchException : Exception
+    public class ArgumentTypeMismatchException : Exception
     {
     }
 }

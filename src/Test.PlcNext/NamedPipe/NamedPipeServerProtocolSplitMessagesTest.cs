@@ -42,7 +42,7 @@ namespace Test.PlcNext.NamedPipe
             creationTask.Wait();
             protocol = creationTask.Result;
             protocol.MessageReceived += OnMessageReceived;
-            protocol.Error += OnError;
+            protocol.CommunicationError += OnCommunicationError;
             protocol.Start();
         }
 
@@ -89,7 +89,7 @@ namespace Test.PlcNext.NamedPipe
             serverMessageReceived.Set();
         }
 
-        private void OnError(object sender, EventArgs e)
+        private void OnCommunicationError(object sender, EventArgs e)
         {
             serverError.Set();
         }

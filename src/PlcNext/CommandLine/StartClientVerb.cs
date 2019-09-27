@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -36,15 +37,16 @@ namespace PlcNext.CommandLine
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
             ExecutionContext context = LifetimeScope.Resolve<ExecutionContext>();
-            context.WriteInformation(string.Format(MessageResources.ClientStarting, ServerName));
+            context.WriteInformation(string.Format(CultureInfo.InvariantCulture, MessageResources.ClientStarting, ServerName));
             using (ICommunicationProtocol protocol = await NamedPipeCommunicationProtocol.Connect(ServerName,
                                                                                         LifetimeScope.Resolve<StreamFactory>(),
                                                                                         LifetimeScope.Resolve<ILog>(),
-                                                                                        actAsClient: true))
+                                                                                        actAsClient: true)
+                                                                                         .ConfigureAwait(false))
             using (ManualResetEvent serverStoppedEvent = new ManualResetEvent(false))
             {
                 context.WriteInformation(MessageResources.ClientStarted);
-                protocol.Error += OnError;
+                protocol.CommunicationError += OnError;
                 protocol.MessageReceived += OnMessageReceived;
                 protocol.Start();
 
@@ -55,7 +57,7 @@ namespace PlcNext.CommandLine
                 
                 void OnError(object sender, EventArgs e)
                 {
-                    protocol.Error -= OnError;
+                    protocol.CommunicationError -= OnError;
                     context.WriteInformation(MessageResources.ClientServerDisconnectedMessage);
                     serverStoppedEvent.Set();
                 }
@@ -69,7 +71,7 @@ namespace PlcNext.CommandLine
                 void ReadConsoleAsync()
                 {
                     string serverMessage = Console.ReadLine();
-                    if (serverMessage?.ToLowerInvariant() == "kill")
+                    if (serverMessage?.Equals("kill",StringComparison.OrdinalIgnoreCase) == true)
                     {
                         serverStoppedEvent.Set();
                     }

@@ -29,9 +29,9 @@ namespace PlcNext.Common.Commands
             ICommand command = commands.FirstOrDefault(c => c.CommandArgsType.IsInstanceOfType(commandArgs));
             if (command != null)
             {
-                return await command.Execute(commandArgs);
+                return await command.Execute(commandArgs).ConfigureAwait(false);
             }
-            throw new ArgumentException($@"No command registered for command arguments type {commandArgs.GetType()}","commandArgs");
+            throw new ArgumentException($@"No command registered for command arguments type {commandArgs.GetType()}",nameof(commandArgs));
         }
     }
 }

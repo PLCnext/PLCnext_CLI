@@ -30,16 +30,11 @@ namespace PlcNext.CppParser.CppRipper
         /// A Rule can be named or unnamed. An unnamed Rule (IsUnnamed() == true)
         /// mean that the name field is null. The name is set by a call to static function
         /// </summary>
-        string name { get; set; }
+        string Name { get; set; }
         #endregion
 
         #region protected fields
-        /// <summary>
-        /// Used to manage child rules. In many cases this is a list of one-element (e.g. StarRule, PlusRule).
-        /// In some cases it has no-elements (e.g. NothingRule, AnythingRule). And in the cases of SeqRule, or ChoiceRule
-        /// it will contain two or more rules.
-        /// </summary>
-        protected List<Rule> rules = new List<Rule>();
+
         #endregion
 
         #region public methods
@@ -50,7 +45,7 @@ namespace PlcNext.CppParser.CppRipper
         /// </summary>
         public virtual void FlattenRules()
         {
-            foreach (Rule r in rules)
+            foreach (Rule r in Rules)
                 r.FlattenRules();
         }
         /// <summary>
@@ -62,7 +57,7 @@ namespace PlcNext.CppParser.CppRipper
             // If this assertion fails, there is a good chance that it is because
             // you are referring to a rule that hasn't been initialized yet. 
             Trace.Assert(r != null);
-            rules.Add(r);
+            Rules.Add(r);
         }
         /// <summary>
         /// Returns a collection of all child rules
@@ -70,7 +65,7 @@ namespace PlcNext.CppParser.CppRipper
         /// <returns></returns>
         public IEnumerable<Rule> GetRules()
         {
-            return rules;
+            return Rules;
         }
         #endregion
 
@@ -85,7 +80,7 @@ namespace PlcNext.CppParser.CppRipper
             if (IsUnnamed())
                 return RuleDefinition;
             else
-                return name;
+                return Name;
         }
         #endregion
 
@@ -100,7 +95,7 @@ namespace PlcNext.CppParser.CppRipper
                 if (IsUnnamed())
                     return "_unnamed_";
                 else
-                    return name;
+                    return Name;
             }
         }
 
@@ -140,6 +135,14 @@ namespace PlcNext.CppParser.CppRipper
         /// Returns a string representing the kind of rule (Star, Choice, etc.)
         /// </summary>
         public abstract string RuleType { get; }
+
+        /// <summary>
+        /// Used to manage child rules. In many cases this is a list of one-element (e.g. StarRule, PlusRule).
+        /// In some cases it has no-elements (e.g. NothingRule, AnythingRule). And in the cases of SeqRule, or ChoiceRule
+        /// it will contain two or more rules.
+        /// </summary>
+        protected List<Rule> Rules { get; } = new List<Rule>();
+
         #endregion
 
         #region operator overloads
@@ -182,21 +185,26 @@ namespace PlcNext.CppParser.CppRipper
         /// <returns></returns>
         public virtual bool Match(ParserState p)
         {
-            int old_index = p.index;
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
+            int old_index = p.Index;
 
             if (p.CreateNodes && !(this is SkipRule))
             {
-                ParseNode node = new ParseNode(this, p.Peek(), p.text, old_index);
+                ParseNode node = new ParseNode(this, p.Peek(), p.Text, old_index);
                 p.Push(node);
                 if (InternalMatch(p))
                 {
-                    node.Complete(p.index);
+                    node.Complete(p.Index);
                     p.Pop();
                     return true;
                 }
                 else
                 {
-                    p.index = old_index;
+                    p.Index = old_index;
                     node = null;
                     p.Pop();
                     return false;
@@ -210,7 +218,7 @@ namespace PlcNext.CppParser.CppRipper
                 }
                 else
                 {
-                    p.index = old_index;
+                    p.Index = old_index;
                     return false;
                 }
             }
@@ -233,7 +241,7 @@ namespace PlcNext.CppParser.CppRipper
         /// <param name="s"></param>
         public void SetName(string s)
         {
-            name = s;
+            Name = s;
         }
 
         /// <summary>
@@ -242,7 +250,7 @@ namespace PlcNext.CppParser.CppRipper
         /// <returns></returns>
         public bool IsUnnamed()
         {
-            return name == null;
+            return Name == null;
         }
 
         /// <summary>
@@ -251,7 +259,7 @@ namespace PlcNext.CppParser.CppRipper
         /// <returns></returns>
         public IEnumerable<Rule> GetChildren()
         {
-            return rules;
+            return Rules;
         }
     }
 
@@ -298,15 +306,16 @@ namespace PlcNext.CppParser.CppRipper
                         tmp.AddRange(r.GetRules());
                     else
                         tmp.Add(r);
-                if (rules.Count == tmp.Count)
+                if (Rules.Count == tmp.Count)
                     return;
-                rules = tmp;
+                Rules.Clear();
+                Rules.AddRange(tmp);
             }
         }
 
         protected override bool InternalMatch(ParserState p)
         {
-            foreach (Rule r in rules)
+            foreach (Rule r in Rules)
                 if (r.Match(p))
                     return true;
             return false;
@@ -326,10 +335,10 @@ namespace PlcNext.CppParser.CppRipper
 
         public SeqRule(IEnumerable<Rule> xs)
         {
-            rules.AddRange(xs);
+            Rules.AddRange(xs);
 
             // We should at least have two sub-rules 
-            Trace.Assert(rules.Count >= 2);
+            Trace.Assert(Rules.Count >= 2);
         }
 
         public override string RuleType
@@ -342,10 +351,10 @@ namespace PlcNext.CppParser.CppRipper
             get
             {
                 string r = "(";
-                for (int i = 0; i < rules.Count; ++i)
+                for (int i = 0; i < Rules.Count; ++i)
                 {
                     if (i > 0) r += " + ";
-                    r += rules[i].ToString();
+                    r += Rules[i].ToString();
                 }
                 return r + ")";
             }
@@ -358,20 +367,21 @@ namespace PlcNext.CppParser.CppRipper
             while (true)
             {
                 List<Rule> tmp = new List<Rule>();
-                foreach (Rule r in rules)
+                foreach (Rule r in Rules)
                     if (r is SeqRule && r.IsUnnamed())
                         tmp.AddRange(r.GetRules());
                     else
                         tmp.Add(r);
-                if (rules.Count == tmp.Count)
+                if (Rules.Count == tmp.Count)
                     return;
-                rules = tmp;
+                Rules.Clear();
+                Rules.AddRange(tmp);
             }
         }
 
         protected override bool InternalMatch(ParserState p)
         {
-            foreach (Rule r in rules)
+            foreach (Rule r in Rules)
                 if (!r.Match(p))
                     return false;
             return true;
@@ -383,7 +393,7 @@ namespace PlcNext.CppParser.CppRipper
     /// </summary>
     public class AnythingRule : Rule
     {
-        public static AnythingRule instance = new AnythingRule();
+        public static AnythingRule Instance { get; } = new AnythingRule();
 
         public AnythingRule()
         {
@@ -401,8 +411,13 @@ namespace PlcNext.CppParser.CppRipper
 
         protected override bool InternalMatch(ParserState p)
         {
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
             Trace.Assert(!p.AtEndOfInput());
-            p.index++;
+            p.Index++;
             return true;
         }
     }
@@ -413,7 +428,7 @@ namespace PlcNext.CppParser.CppRipper
     /// </summary>
     public class NothingRule : Rule
     {
-        public static NothingRule instance = new NothingRule();
+        public static NothingRule Instance { get; } = new NothingRule();
 
         public override string RuleType
         {
@@ -448,21 +463,26 @@ namespace PlcNext.CppParser.CppRipper
 
         public override string RuleDefinition
         {
-            get { return rules[0].ToString() + "*"; } 
+            get { return Rules[0] + "*"; } 
         }
 
         protected override bool InternalMatch(ParserState p)
         {
-            Trace.Assert(rules.Count == 1);
-            Rule r = rules[0];
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
+            Trace.Assert(Rules.Count == 1);
+            Rule r = Rules[0];
             while (true)
             {
-                int old = p.index;
+                int old = p.Index;
                 if (!r.Match(p))
                     return true;
 
                 // Avoid infinite loops.
-                if (p.index <= old)
+                if (p.Index <= old)
                     throw new Exception("Failed to advance parser input pointer, while parsing rule '" + 
                         r.RuleNameOrDefinition + "'. This means the grammar is invalid, maybe because of nested star rules.");
             }
@@ -486,23 +506,28 @@ namespace PlcNext.CppParser.CppRipper
 
         public override string RuleDefinition
         {
-            get { return rules[0].ToString() + "+"; }
+            get { return Rules[0] + "+"; }
         }
 
         protected override bool InternalMatch(ParserState p)
         {
-            Trace.Assert(rules.Count == 1);
-            Rule r = rules[0];
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
+            Trace.Assert(Rules.Count == 1);
+            Rule r = Rules[0];
             if (!r.Match(p))
                 return false;
             while (true)
             {
-                int old = p.index;
+                int old = p.Index;
                 if (!r.Match(p))
                     return true;
 
                 // Avoid infinite loops.
-                if (p.index <= old)
+                if (p.Index <= old)
                     throw new Exception("Failed to advance parser input pointer, while parsing rule '" +
                         r.RuleNameOrDefinition + "'. This means the grammar is invalid, maybe because of nested star rules.");
             }
@@ -526,13 +551,13 @@ namespace PlcNext.CppParser.CppRipper
 
         public override string RuleDefinition
         {
-            get { return rules[0].ToString() + "^"; }
+            get { return Rules[0] + "^"; }
         }
 
         protected override bool InternalMatch(ParserState p)
         {
-            Trace.Assert(rules.Count == 1);
-            Rule r = rules[0];
+            Trace.Assert(Rules.Count == 1);
+            Rule r = Rules[0];
             if (r.Match(p))
                 return false;
             return true;
@@ -556,12 +581,12 @@ namespace PlcNext.CppParser.CppRipper
 
         public override string RuleDefinition
         {
-            get { return rules[0].ToString() + "?"; }
+            get { return Rules[0] + "?"; }
         }
 
         protected override bool InternalMatch(ParserState p)
         {
-            Rule r = rules[0];
+            Rule r = Rules[0];
             r.Match(p);
             return true;
         }
@@ -605,10 +630,10 @@ namespace PlcNext.CppParser.CppRipper
     /// </summary>
     public class CharSeqRule : Rule
     {
-        public string str;
+        private readonly string str;
         public CharSeqRule(string s)
         {
-            str = s;
+            str = s ?? throw new ArgumentNullException(nameof(s));
             Trace.Assert(s.Length > 0);
         }
 
@@ -624,12 +649,17 @@ namespace PlcNext.CppParser.CppRipper
 
         protected override bool InternalMatch(ParserState p)
         {
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
             int n = str.Length;
-            if (p.index + n > p.text.Length)
+            if (p.Index + n > p.Text.Length)
                 return false;
             for (int i = 0; i < n; ++i)
             {
-                if (p.text[p.index++] != str[i])
+                if (p.Text[p.Index++] != str[i])
                     return false;
             }
             return true;
@@ -641,7 +671,7 @@ namespace PlcNext.CppParser.CppRipper
     /// </summary>
     public class CharSetRule : Rule
     {
-        public string str;
+        private readonly string str;
         public CharSetRule(string s)
         {
             str = s;
@@ -659,10 +689,15 @@ namespace PlcNext.CppParser.CppRipper
 
         protected override bool InternalMatch(ParserState p)
         {
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
             if (p.AtEndOfInput())
                 return false;
 
-            char c = p.text[p.index++];
+            char c = p.Text[p.Index++];
             return str.Contains(c);
         }
     }
@@ -672,8 +707,8 @@ namespace PlcNext.CppParser.CppRipper
     /// </summary>
     public class CharRangeRule : Rule
     {
-        public char first;
-        public char last;
+        private readonly char first;
+        private readonly char last;
 
         public CharRangeRule(char from, char to)
         {
@@ -688,15 +723,20 @@ namespace PlcNext.CppParser.CppRipper
 
         public override string RuleDefinition
         {
-            get { return "[" + first.ToString() + ".." + last.ToString() + "]"; } 
+            get { return "[" + first + ".." + last + "]"; } 
         }
 
         protected override bool InternalMatch(ParserState p)
         {
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
             if (p.AtEndOfInput())
                 return false;
 
-            char c = p.text[p.index++];
+            char c = p.Text[p.Index++];
             return (c >= first && c <= last);
         }
     }
@@ -718,12 +758,17 @@ namespace PlcNext.CppParser.CppRipper
 
         public override string RuleDefinition
         {
-            get { return rules[0].RuleDefinition; }
+            get { return Rules[0].RuleDefinition; }
         }
 
         protected override bool InternalMatch(ParserState p)
         {
-            Rule r = rules[0];
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
+            Rule r = Rules[0];
             if (!r.Match(p))
             {
                 ParsingException ex = new ParsingException(p.Peek(), r, p);
@@ -746,7 +791,7 @@ namespace PlcNext.CppParser.CppRipper
 
         public override string RuleDefinition
         {
-            get { return "skip(" + rules[0].RuleDefinition + ")"; }
+            get { return "skip(" + Rules[0].RuleDefinition + ")"; }
         }
 
         public override string RuleType
@@ -756,13 +801,18 @@ namespace PlcNext.CppParser.CppRipper
 
         protected override bool InternalMatch(ParserState p)
         {
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
             // Tell the parser state to stop creating nodes. 
             bool store = p.CreateNodes;
             p.CreateNodes = false;
             bool result = false;
             try
             {
-                result = rules[0].Match(p);
+                result = Rules[0].Match(p);
             }
             finally
             {
@@ -785,7 +835,7 @@ namespace PlcNext.CppParser.CppRipper
 
         public override string RuleDefinition
         {
-            get { return rules[0].RuleDefinition; }
+            get { return Rules[0].RuleDefinition; }
         }
 
         public override string RuleType
@@ -795,13 +845,18 @@ namespace PlcNext.CppParser.CppRipper
 
         protected override bool InternalMatch(ParserState p)
         {
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
             // Tell the parser state to stop creating nodes. 
             bool store = p.CreateNodes;
             p.CreateNodes = false;
             bool result = false;
             try
             {
-                result = rules[0].Match(p);
+                result = Rules[0].Match(p);
             }
             finally
             {
@@ -831,6 +886,11 @@ namespace PlcNext.CppParser.CppRipper
 
         public override bool Match(ParserState p)
         {
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
             return p.AtEndOfInput();
         }
 

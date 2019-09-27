@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using PlcNext.Common.Tools.FileSystem;
@@ -97,9 +98,10 @@ namespace PlcNext.Common.Tools.SDK
                 }
 
                 using (Stream fileStream = SdkPropertiesFile.OpenRead())
+                using (XmlReader reader = XmlReader.Create(fileStream))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(Properties));
-                    Properties result = (Properties) serializer.Deserialize(fileStream);
+                    Properties result = (Properties) serializer.Deserialize(reader);
                     return NeedsConversion(result) ? new Properties() : result;
                 }
                 
@@ -164,13 +166,13 @@ namespace PlcNext.Common.Tools.SDK
             exploredPaths.Add(sdkRootPath);
         }
 
-        public Sdk Get(string sdkRootPath)
+        public SdkInformation Get(string sdkRootPath)
         {
             sdkRootPath = sdkRootPath.CleanPath();
 
             return ParseSdk();
 
-            Sdk ParseSdk()
+            SdkInformation ParseSdk()
             {
                 SdkSchema definition = SdkProperties.SDK?.FirstOrDefault(s => s.path == sdkRootPath);
                 if (definition == null)
@@ -184,12 +186,12 @@ namespace PlcNext.Common.Tools.SDK
                 {
                     throw new SdkPathNotExistingException(definition.path);
                 }
-                return new Sdk(targets, definition.IncludePath ?? Enumerable.Empty<string>(),
+                return new SdkInformation(targets, definition.IncludePath ?? Enumerable.Empty<string>(),
                                fileSystem.GetDirectory(definition.path),
                                string.IsNullOrEmpty(definition.makepath)
                                    ? null
                                    : fileSystem.GetFile(definition.makepath),
-                               new Compiler(definition.CompilerSpec.compilerPath,
+                               new CompilerInformation(definition.CompilerSpec.compilerPath,
                                             definition.CompilerSpec.compilerSysroot,
                                             definition.CompilerSpec.compilerFlags,
                                             definition.CompilerSpec.IncludePath,

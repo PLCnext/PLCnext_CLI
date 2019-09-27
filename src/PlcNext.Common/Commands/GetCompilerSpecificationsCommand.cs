@@ -38,11 +38,11 @@ namespace PlcNext.Common.Commands
         {
             ProjectEntity project = ProjectEntity.Decorate(entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root);
             TargetsResult targetsResult = targetParser.Targets(project);
-            IEnumerable<Compiler> compilers = targetsResult.ValidTargets
+            IEnumerable<CompilerInformation> compilers = targetsResult.ValidTargets
                                                      .Select(sdkRepository.GetSdk)
                                                      .Where(sdk => sdk != null)
                                                      .Distinct()
-                                                     .Select(sdk => sdk.Compiler);
+                                                     .Select(sdk => sdk.CompilerInformation);
 
             return new CommandResult(0,
                                      new CompilerSpecificationCommandResult(

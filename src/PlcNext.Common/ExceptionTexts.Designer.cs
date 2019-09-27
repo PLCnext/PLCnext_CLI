@@ -385,11 +385,11 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The no-dublicate-lines control sequence must be in the form $([no-dublicate-lines]). Additional parameter inside the braces are not allowed..
+        ///   Looks up a localized string similar to The no-duplicate-lines control sequence must be in the form $([no-duplicate-lines]). Additional parameter inside the braces are not allowed..
         /// </summary>
-        internal static string NoDublicateLinesParameterMismatch {
+        internal static string NoDuplicateLinesParameterMismatch {
             get {
-                return ResourceManager.GetString("NoDublicateLinesParameterMismatch", resourceCulture);
+                return ResourceManager.GetString("NoDuplicateLinesParameterMismatch", resourceCulture);
             }
         }
         

@@ -16,7 +16,7 @@ using PlcNext.Common.Templates.Description;
 
 namespace PlcNext.Common.Templates
 {
-    public static class TemplateExtensions
+    internal static class TemplateExtensions
     {
         public static ICollection<string> TemplateNames(this TemplateDescription templateDescription,
                                                         ITemplateRepository templateRepository)
@@ -213,12 +213,12 @@ namespace PlcNext.Common.Templates
 
             bool IsMatch(string pattern)
             {
-                if (!pattern.StartsWith("^"))
+                if (!pattern.StartsWith("^", StringComparison.Ordinal))
                 {
                     pattern = $"^{pattern}";
                 }
 
-                if (!pattern.EndsWith("$"))
+                if (!pattern.EndsWith("$", StringComparison.Ordinal))
                 {
                     pattern += "$";
                 }

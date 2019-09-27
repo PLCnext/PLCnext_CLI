@@ -5,6 +5,11 @@
     <AssemblyName Condition="'$(PlcNextToolName)' != ''">$(PlcNextToolName).Common</AssemblyName>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Installation\copy_version.bat" />
     <None Remove="Tools\SDK\SampleProject\a.cxx" />
@@ -66,5 +71,7 @@
     <Folder Include="Project\templates\ProjectTemplates\" />
     <Folder Include="Project\templates\ProjectTemplates\" />
   </ItemGroup>
+
+  <Import Project="..\_Build_\CodeAnalysis.targets" Condition="Exists('..\_Build_\CodeAnalysis.targets')" />
 
 </Project>

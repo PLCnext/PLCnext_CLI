@@ -49,14 +49,14 @@ namespace PlcNext.Common.Commands
                 observable.OnNext(new Change(() => {}, $"Create temporary folder {directory.FullName}"));
                 if (string.IsNullOrEmpty(args.File))
                 {
-                    if (await cliUpdater.IsCurrentVersion(args.Version, args.Proxy))
+                    if (await cliUpdater.IsCurrentVersion(args.Version, args.Proxy).ConfigureAwait(false))
                     {
                         directory.Delete();
                         userInterface.WriteInformation("Version is up-to-date.");
                         return 0;
                     }
                     
-                    download = await cliUpdater.DownloadVersion(args.Version, directory, progressNotifier, args.Proxy);
+                    download = await cliUpdater.DownloadVersion(args.Version, directory, progressNotifier, args.Proxy).ConfigureAwait(false);
                 }
                 else
                 {
@@ -66,7 +66,7 @@ namespace PlcNext.Common.Commands
                     download = fileSystem.GetFile(args.File);
                 }
                 
-                await cliUpdater.InstallVersion(download, directory, progressNotifier);
+                await cliUpdater.InstallVersion(download, directory, progressNotifier).ConfigureAwait(false);
             }
 
             return 0;

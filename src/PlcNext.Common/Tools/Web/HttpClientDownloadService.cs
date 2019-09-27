@@ -49,7 +49,7 @@ namespace PlcNext.Common.Tools.Web
                 {
                     using (HttpClient client = new HttpClient(clientHandler))
                     {
-                        await client.DownloadAsync(url, writeStream, progress);
+                        await client.DownloadAsync(url, writeStream, progress).ConfigureAwait(false);
                     }
                 }
                 catch (HttpRequestException e)

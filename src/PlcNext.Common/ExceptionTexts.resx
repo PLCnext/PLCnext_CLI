@@ -322,8 +322,8 @@
   <data name="RelationshipNotFound" xml:space="preserve">
     <value>The relationship '{0}' used in an example is not defined in the template '{1}'.</value>
   </data>
-  <data name="NoDublicateLinesParameterMismatch" xml:space="preserve">
-    <value>The no-dublicate-lines control sequence must be in the form $([no-dublicate-lines]). Additional parameter inside the braces are not allowed.</value>
+  <data name="NoDuplicateLinesParameterMismatch" xml:space="preserve">
+    <value>The no-duplicate-lines control sequence must be in the form $([no-duplicate-lines]). Additional parameter inside the braces are not allowed.</value>
   </data>
   <data name="MalformedExternalLibrariesOption" xml:space="preserve">
     <value>{0} is neither an existing file nor a valid {1}: {2}</value>

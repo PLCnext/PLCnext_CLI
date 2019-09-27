@@ -247,14 +247,16 @@ namespace Test.PlcNext.NamedPipe.Tools
             base.OnError();
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            foreach (Stream stream in messagesReceived)
+            if (disposing)
             {
-                stream.Dispose();
+                foreach (Stream stream in messagesReceived)
+                {
+                    stream.Dispose();
+                }
             }
-            
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         protected override void OnMessageReceived(object sender, MessageReceivedEventArgs e)
@@ -295,7 +297,7 @@ namespace Test.PlcNext.NamedPipe.Tools
 
             public SimulatorOutgoingMessageQueue(ILog log, CancellationToken cancellationToken, PipeStream writeStream,
                                                  NamedPipeCommunicationProtocolSimulator simulator)
-                : base(log, cancellationToken, writeStream, simulator)
+                : base(log, writeStream, simulator, cancellationToken)
             {
                 this.log = log;
                 this.writeStream = writeStream;
@@ -363,7 +365,7 @@ namespace Test.PlcNext.NamedPipe.Tools
             private readonly NamedPipeCommunicationProtocolSimulator communicationProtocol;
             private Guid lastAppendedMessage;
 
-            public SimulatorIncomingMessageQueue(StreamFactory streamFactory, ILog log, PipeStream readStream, NamedPipeCommunicationProtocolSimulator communicationProtocol, CancellationToken cancellationToken, OutgoingMessageQueue outgoingMessageQueue) : base(streamFactory, log, readStream, communicationProtocol, cancellationToken, outgoingMessageQueue)
+            public SimulatorIncomingMessageQueue(StreamFactory streamFactory, ILog log, PipeStream readStream, NamedPipeCommunicationProtocolSimulator communicationProtocol, CancellationToken cancellationToken, OutgoingMessageQueue outgoingMessageQueue) : base(streamFactory, log, readStream, communicationProtocol, outgoingMessageQueue, cancellationToken)
             {
                 this.communicationProtocol = communicationProtocol;
             }
@@ -425,9 +427,9 @@ namespace Test.PlcNext.NamedPipe.Tools
                 this.fixedHeader = fixedHeader;
             }
 
-            protected override byte[] GenerateMessageHeader(Guid guid, int length)
+            protected override byte[] GenerateMessageHeader(Guid messageId, int length)
             {
-                return fixedHeader ?? base.GenerateMessageHeader(guid, length);
+                return fixedHeader ?? base.GenerateMessageHeader(messageId, length);
             }
 
             protected override void SendMessageInChunks(CancellationToken cancellationToken)

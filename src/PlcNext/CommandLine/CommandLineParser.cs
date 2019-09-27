@@ -10,6 +10,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -47,34 +48,41 @@ namespace PlcNext.CommandLine
 
         public Task<int> Parse(params string[] args)
         {
-            ParserResult<object> result = new Parser(settings =>
+            using (Parser parser = CreateParser())
             {
-                settings.HelpWriter = null;
-                settings.EnableDashDash = true;
-            }).ParseVerbs(
-                args, dynamicVerbFactory, typeof(BuildVerb), typeof(GenerateVerb), typeof(GetVerb),
-                typeof(SetVerb), typeof(UpdateVerb), typeof(InstallVerb),
-                typeof(ScanSdksVerb), 
-                typeof(ShowLogVerb), typeof(MigrateCliVerb));
-            return result
-                  .MapResult((object verb) => Execute(verb),
-                             (errors) => OnError(result));
+                ParserResult<object> result = parser.ParseVerbs(
+                    args, dynamicVerbFactory, typeof(BuildVerb), typeof(GenerateVerb), typeof(GetVerb),
+                    typeof(SetVerb), typeof(UpdateVerb), typeof(InstallVerb),
+                    typeof(ScanSdksVerb),
+                    typeof(ShowLogVerb), typeof(MigrateCliVerb));
+                return result
+                   .MapResult((object verb) => Execute(verb),
+                              (errors) => OnError(result));
+            }
         }
 
         public string GetParseResult(params string[] args)
         {
-            ParserResult<object> result = new Parser(settings =>
+            using (Parser parser = CreateParser())
+            {
+                ParserResult<object> result = parser.ParseVerbs(
+                    args, dynamicVerbFactory, typeof(BuildVerb), typeof(GenerateVerb), typeof(GetVerb),
+                    typeof(SetVerb), typeof(UpdateVerb), typeof(InstallVerb),
+                    typeof(ScanSdksVerb), typeof(StartServerVerb), typeof(StartClientVerb),
+                    typeof(ShowLogVerb), typeof(MigrateCliVerb));
+                return result
+                   .MapResult((object verb) => ConvertToString(verb),
+                              (errors) => ConvertError(result));
+            }
+        }
+
+        private static Parser CreateParser()
+        {
+            return new Parser(settings =>
             {
                 settings.HelpWriter = null;
                 settings.EnableDashDash = true;
-            }).ParseVerbs(
-                args, dynamicVerbFactory, typeof(BuildVerb), typeof(GenerateVerb), typeof(GetVerb),
-                typeof(SetVerb), typeof(UpdateVerb), typeof(InstallVerb),
-                typeof(ScanSdksVerb), typeof(StartServerVerb), typeof(StartClientVerb),
-                typeof(ShowLogVerb), typeof(MigrateCliVerb));
-            return result
-               .MapResult((object verb) => ConvertToString(verb),
-                          (errors) => ConvertError(result));
+            });
         }
 
         private string ConvertError(ParserResult<object> result)
@@ -116,7 +124,7 @@ namespace PlcNext.CommandLine
             return new JObject(new JProperty("command", command),
                                new JProperty("arguments",
                                              new JObject(options.Select(kv => new JProperty(kv.Key, kv.Value))
-                                                                .Concat(values.Select((value, i) => new JProperty(i.ToString("D"), 
+                                                                .Concat(values.Select((value, i) => new JProperty(i.ToString("D", CultureInfo.InvariantCulture), 
                                                                                                                   value)))
                                                                 .Cast<object>()
                                                                 .ToArray())))
@@ -180,8 +188,7 @@ namespace PlcNext.CommandLine
             ParserTypeInfo typeInfo = result.GetTypeInfo();
             if (typeInfo == null)
             {
-                userInterface.WriteError(
-                    "Could not construct help because command was not parsed as expected.");
+                userInterface.WriteError("Could not construct help because command was not parsed as expected.");
                 return Task.FromResult(1);
             }
 
@@ -325,8 +332,8 @@ namespace PlcNext.CommandLine
 
             void RemoveVersion(List<string> list)
             {
-                string versionLine = list.FirstOrDefault(l => l.Trim().StartsWith("version  ") ||
-                                                              l.Trim().StartsWith("--version  "));
+                string versionLine = list.FirstOrDefault(l => l.Trim().StartsWith("version  ", StringComparison.Ordinal) ||
+                                                              l.Trim().StartsWith("--version  ", StringComparison.Ordinal));
                 if (!string.IsNullOrEmpty(versionLine))
                 {
                     int index = list.IndexOf(versionLine);
@@ -386,7 +393,7 @@ namespace PlcNext.CommandLine
 
                 void PrintExample(HelpText helpTextFooter, UsageExample usageExample, string commandName)
                 {
-                    helpTextFooter.AddPostOptionsLine(usageExample.HelpText.EndsWith(":")
+                    helpTextFooter.AddPostOptionsLine(usageExample.HelpText.EndsWith(":", StringComparison.Ordinal)
                                                           ? usageExample.HelpText
                                                           : $"{usageExample.HelpText}:");
                     helpTextFooter.AddPostOptionsLine($@"{commandName} {usageExample.Command}");
@@ -444,9 +451,9 @@ namespace PlcNext.CommandLine
             verbBase.LifetimeScope = lifetimeScope;
             if (verbBase is DynamicVerb dynamicVerb)
             {
-                dynamicVerb.Defintion = dynamicVerbFactory.GetCommandDefintionForVerb(dynamicVerb.GetType());
+                dynamicVerb.Definition = dynamicVerbFactory.GetCommandDefintionForVerb(dynamicVerb.GetType());
             }
-            return await verbBase.Execute();
+            return await verbBase.Execute().ConfigureAwait(false);
         }
     }
 }

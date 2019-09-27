@@ -50,8 +50,8 @@ namespace PlcNext.Common.Commands
                 try
                 {
                     CommandResult commandResult = executeAsync
-                                                      ? await ExecuteDetailedAsync((T) args, observable)
-                                                      : await Task.Run(() => ExecuteDetailed((T) args, observable));
+                                                      ? await ExecuteDetailedAsync((T) args, observable).ConfigureAwait(false)
+                                                      : await Task.Run(() => ExecuteDetailed((T) args, observable)).ConfigureAwait(false);
                     result = commandResult.ExternalResult;
                     if (commandResult.DetailedResult != null)
                     {
@@ -101,7 +101,7 @@ namespace PlcNext.Common.Commands
 
         protected virtual async Task<CommandResult> ExecuteDetailedAsync(T args, ChangeObservable observable)
         {
-            return new CommandResult(await ExecuteAsync(args, observable), null);
+            return new CommandResult(await ExecuteAsync(args, observable).ConfigureAwait(false), null);
         }
     }
 }

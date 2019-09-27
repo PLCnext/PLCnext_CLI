@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using PlcNext.Common.CodeModel;
@@ -113,7 +114,7 @@ namespace PlcNext.Common.Commands
                 }
                 if (arg != null && arg is BoolArgument boolArgument)
                 {
-                    return boolArgument.Value.ToString();
+                    return boolArgument.Value.ToString(CultureInfo.InvariantCulture);
                 }
 
                 SingleValueArgument singleValueArgument = (SingleValueArgument) arg;

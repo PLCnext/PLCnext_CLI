@@ -23,6 +23,6 @@ namespace PlcNext.Common.Templates
         IEnumerable<formatTemplate> FormatTemplates { get; }
         IEnumerable<Type.metaDataTemplate> TypeTemplates { get; }
         TemplateDescription Template(string name);
-        string GetTemplateBase(TemplateDescription template);
+        string GetTemplateBase(TemplateDescription templateDescription);
     }
 }

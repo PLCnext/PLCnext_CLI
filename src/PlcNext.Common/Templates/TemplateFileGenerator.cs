@@ -45,8 +45,8 @@ namespace PlcNext.Common.Templates
                                    .Value;
             TemplateDescription template = dataModel.Template();
 
-            List<VirtualFile> generatedFiles = new List<VirtualFile>(await InitalizeFiles());
-            generatedFiles.AddRange(await InitalizeSubTemplates());
+            List<VirtualFile> generatedFiles = new List<VirtualFile>(await InitializeFiles().ConfigureAwait(false));
+            generatedFiles.AddRange(await InitializeSubTemplates().ConfigureAwait(false));
             
             Exception e = dataModel.GetCodeExceptions();
             if (e != null)
@@ -57,16 +57,16 @@ namespace PlcNext.Common.Templates
 
             return generatedFiles;
 
-            async Task<IEnumerable<VirtualFile>> InitalizeFiles()
+            async Task<IEnumerable<VirtualFile>> InitializeFiles()
             {
                 string basePath = dataModel.Root.Path;
                 HashSet<VirtualFile> files = new HashSet<VirtualFile>();
 
                 foreach (templateFile file in template.File)
                 {
-                    (string content, Encoding encoding) = await GetResolvedTemplateContent(dataModel, file, template);
+                    (string content, Encoding encoding) = await GetResolvedTemplateContent(dataModel, file, template).ConfigureAwait(false);
 
-                    VirtualFile destination = await GetFile(dataModel, file, forced, basePath, template);
+                    VirtualFile destination = await GetFile(dataModel, file, forced, basePath, template).ConfigureAwait(false);
                     observable.OnNext(new Change(() => destination.Restore(),
                                                  $"Create file {Path.GetFileName(destination.Name)} for template " +
                                                  $"{template.name} in {destination.Parent.FullName}."));
@@ -75,7 +75,7 @@ namespace PlcNext.Common.Templates
                     using (StreamWriter writer = new StreamWriter(fileStream, encoding))
                     {
                         fileStream.SetLength(0);
-                        await writer.WriteAsync(content);
+                        await writer.WriteAsync(content).ConfigureAwait(false);
                     }
 
                     files.Add(destination);
@@ -84,7 +84,7 @@ namespace PlcNext.Common.Templates
                 return files;
             }
 
-            async Task<IEnumerable<VirtualFile>> InitalizeSubTemplates()
+            async Task<IEnumerable<VirtualFile>> InitializeSubTemplates()
             {
                 List<VirtualFile> files = new List<VirtualFile>();
 
@@ -95,35 +95,35 @@ namespace PlcNext.Common.Templates
                         throw new TemplateReferenceNotDefinedException(reference.template);
                     }
 
-                    CommandDefinitionBuilder pseudoDefiniton = CommandDefinitionBuilder.Create()
+                    CommandDefinitionBuilder pseudoDefinition = CommandDefinitionBuilder.Create()
                                                                                        .SetName(reference.template);
                     foreach (templateArgumentInstance argumentInstance in reference.Arguments)
                     {
-                        AddArgument(argumentInstance, pseudoDefiniton);
+                        AddArgument(argumentInstance, pseudoDefinition);
                     }
 
                     IEnumerable<IGrouping<string, templateRelationshipInstance>> grouped = (reference.Relationship ?? Enumerable.Empty<templateRelationshipInstance>()).GroupBy(r => r.name);
                     foreach (IGrouping<string, templateRelationshipInstance> relationshipInstances in grouped)
                     {
-                        AddRelationships(relationshipInstances, pseudoDefiniton, reference);
+                        AddRelationships(relationshipInstances, pseudoDefinition, reference);
                     }
 
-                    pseudoDefiniton.CreateArgument()
+                    pseudoDefinition.CreateArgument()
                                    .SetName(TemplateCommandBuilder.ForcedArgumentName)
                                    .SetValue(forced)
                                    .Build();
-                    Entity referencedTemplateEntity = dataModel.Create(reference.template, pseudoDefiniton.Build());
+                    Entity referencedTemplateEntity = dataModel.Create(reference.template, pseudoDefinition.Build());
                     dataModel.AddEntity(referencedTemplateEntity);
-                    files.AddRange(await InitalizeTemplate(referencedTemplateEntity, observable));
+                    files.AddRange(await InitalizeTemplate(referencedTemplateEntity, observable).ConfigureAwait(false));
                 }
 
                 return files;
 
                 void AddArgument(templateArgumentInstance templateArgumentInstance, CommandDefinitionBuilder commandDefinitionBuilder)
                 {
-                    string tempalteArgumentValue = resolver.Resolve(templateArgumentInstance.value, dataModel);
-                    bool argumentHasNoValue = bool.TryParse(tempalteArgumentValue, out bool boolValue);
-                    string[] argumentSplit = tempalteArgumentValue.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    string templateArgumentValue = resolver.Resolve(templateArgumentInstance.value, dataModel);
+                    bool argumentHasNoValue = bool.TryParse(templateArgumentValue, out bool boolValue);
+                    string[] argumentSplit = templateArgumentValue.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                     bool isMultiArgument = argumentSplit.Length > 1;
                     if (argumentHasNoValue)
                     {
@@ -143,7 +143,7 @@ namespace PlcNext.Common.Templates
                     {
                         commandDefinitionBuilder.CreateArgument()
                                                 .SetName(templateArgumentInstance.name)
-                                                .SetValue(tempalteArgumentValue)
+                                                .SetValue(templateArgumentValue)
                                                 .Build();
                     }
                 }
@@ -151,15 +151,15 @@ namespace PlcNext.Common.Templates
                 void AddRelationships(IGrouping<string, templateRelationshipInstance> relationshipInstances,
                                       CommandDefinitionBuilder commandDefinitionBuilder, templateReference reference)
                 {
-                    templateRelationship relationshipDefintion = repository.Template(reference.template).Relationship
+                    templateRelationship relationshipDefinition = repository.Template(reference.template).Relationship
                                                                           ?.FirstOrDefault(r => r.name ==
                                                                                                 relationshipInstances.Key);
-                    if (relationshipDefintion == null)
+                    if (relationshipDefinition == null)
                     {
                         throw new TemplateRelationshipNotFoundException(reference.template, relationshipInstances.Key);
                     }
 
-                    bool multipleValues = relationshipDefintion.multiplicity == multiplicity.OneOrMore;
+                    bool multipleValues = relationshipDefinition.multiplicity == multiplicity.OneOrMore;
                     if (multipleValues)
                     {
                         string[] relationships = relationshipInstances.Select(r => resolver.Resolve(r.value, dataModel))
@@ -196,43 +196,53 @@ namespace PlcNext.Common.Templates
 
                     void Insert(templateReference current, CycleChecker<templateReference> cycleChecker = null)
                     {
-                        if (cycleChecker == null)
+                        using (cycleChecker = cycleChecker?.SpawnChild() ?? new CycleChecker<templateReference>(
+                                                  ExceptionTexts.TemplateRelationshipCycle,
+                                                  () => cycleChecker = null))
                         {
-                            cycleChecker = new CycleChecker<templateReference>(ExceptionTexts.TemplateRelationshipCycle);
-                        }
-
-                        cycleChecker.AddItem(current);
-                        List<templateReference> dependend = new List<templateReference>();
-                        foreach (templateRelationshipInstance relationshipInstance in current.Relationship ?? Enumerable.Empty<templateRelationshipInstance>())
-                        {
-                            templateReference reference = unsorted.FirstOrDefault(r => HasRelationship(r, relationshipInstance));
-                            if (reference != null)
+                            cycleChecker.AddItem(current);
+                            List<templateReference> dependent = new List<templateReference>();
+                            foreach (templateRelationshipInstance relationshipInstance in current.Relationship ??
+                                                                                          Enumerable
+                                                                                             .Empty<
+                                                                                                  templateRelationshipInstance
+                                                                                              >())
                             {
-                                Insert(reference, cycleChecker);
+                                templateReference reference =
+                                    unsorted.FirstOrDefault(r => HasRelationship(r, relationshipInstance));
+                                if (reference != null)
+                                {
+                                    Insert(reference, cycleChecker);
+                                }
+                                else
+                                {
+                                    reference = sorted.FirstOrDefault(r => HasRelationship(r, relationshipInstance));
+                                }
+
+                                if (reference != null)
+                                {
+                                    dependent.Add(reference);
+                                }
                             }
-                            else
+
+                            int skipping = dependent.Any() ? dependent.Select(d => sorted.IndexOf(d)).Max() : -1;
+                            int index = skipping + 1;
+                            sorted.Insert(index, current);
+                            unsorted.Remove(current);
+
+                            bool HasRelationship(templateReference currentReference,
+                                                 templateRelationshipInstance relationshipInstance)
                             {
-                                reference = sorted.FirstOrDefault(r => HasRelationship(r, relationshipInstance));
+                                templateArgumentInstance instance = currentReference.Arguments
+                                                                                    .FirstOrDefault(a => a.name
+                                                                                                          .Equals(
+                                                                                                               EntityKeys
+                                                                                                                  .NameKey,
+                                                                                                               StringComparison
+                                                                                                                  .OrdinalIgnoreCase));
+                                return instance?.value?.Equals(relationshipInstance.value,
+                                                               StringComparison.OrdinalIgnoreCase) == true;
                             }
-
-                            if (reference != null)
-                            {
-                                dependend.Add(reference);
-                            }
-                        }
-
-                        int skipping = dependend.Any() ? dependend.Select(d => sorted.IndexOf(d)).Max() : -1;
-                        int index = skipping + 1;
-                        sorted.Insert(index, current);
-                        unsorted.Remove(current);
-
-                        bool HasRelationship(templateReference currentReference, templateRelationshipInstance relationshipInstance)
-                        {
-                            templateArgumentInstance instance = currentReference.Arguments
-                                                                                .FirstOrDefault(a => a.name
-                                                                                                      .Equals(EntityKeys.NameKey,
-                                                                                                              StringComparison.OrdinalIgnoreCase));
-                            return instance?.value?.Equals(relationshipInstance.value) == true;
                         }
                     }
                 }
@@ -247,18 +257,18 @@ namespace PlcNext.Common.Templates
             using (StreamReader reader = new StreamReader(fileStream, Encoding.UTF8, true))
             {
                 encoding = reader.CurrentEncoding;
-                content = await reader.ReadToEndAsync();
+                content = await reader.ReadToEndAsync().ConfigureAwait(false);
             }
 
-            content = await resolver.ResolveAsync(content, dataModel);
+            content = await resolver.ResolveAsync(content, dataModel).ConfigureAwait(false);
             return (content, encoding);
         }
 
         private async Task<VirtualFile> GetFile(Entity dataModel, templateFile file, bool forced, string basePath,
                                    TemplateDescription template)
         {
-            string path = await resolver.ResolveAsync(file.path ?? string.Empty, dataModel);
-            string name = await resolver.ResolveAsync(file.name, dataModel);
+            string path = await resolver.ResolveAsync(file.path ?? string.Empty, dataModel).ConfigureAwait(false);
+            string name = await resolver.ResolveAsync(file.name, dataModel).ConfigureAwait(false);
             if (!forced && fileSystem.FileExists(Path.Combine(path, name), basePath))
             {
                 throw new FileExistsException(name, template.name);
@@ -276,7 +286,7 @@ namespace PlcNext.Common.Templates
             HashSet<VirtualDirectory> rootDirectories = new HashSet<VirtualDirectory>();
             foreach (Entity generatableEntity in generatableEntities)
             {
-                await GenerateFilesForEntity(generatableEntity);
+                await GenerateFilesForEntity(generatableEntity).ConfigureAwait(false);
             }
 
             Exception e = rootEntity.GetCodeExceptions();
@@ -321,10 +331,10 @@ namespace PlcNext.Common.Templates
                         continue;
                     }
 
-                    (string content, Encoding encoding) = await GetResolvedTemplateContent(generatableEntity, file, template);
+                    (string content, Encoding encoding) = await GetResolvedTemplateContent(generatableEntity, file, template).ConfigureAwait(false);
 
                     VirtualDirectory baseDirectory = GetBaseDirectory(file);
-                    VirtualFile destination = await GetFile(generatableEntity, file, true, baseDirectory.FullName, template);
+                    VirtualFile destination = await GetFile(generatableEntity, file, true, baseDirectory.FullName, template).ConfigureAwait(false);
                     rootDirectories.Add(baseDirectory);
                     generatedFiles.Add(destination);
 
@@ -333,7 +343,7 @@ namespace PlcNext.Common.Templates
                     using (Stream fileStream = destination.OpenComparingWriteStream())
                     using (StreamWriter writer = new StreamWriter(fileStream, encoding))
                     {
-                        await writer.WriteAsync(content);
+                        await writer.WriteAsync(content).ConfigureAwait(false);
                     }
                 }
 

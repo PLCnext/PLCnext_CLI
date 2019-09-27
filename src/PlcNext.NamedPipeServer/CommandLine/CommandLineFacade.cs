@@ -84,9 +84,10 @@ namespace PlcNext.NamedPipeServer.CommandLine
                 }
                 finally
                 {
+                    source.Dispose();
                     commandLineParser.Dispose();
                 }
-            }, CancellationToken.None);
+            }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
         }
 
         public void CancelCommand(Command command)

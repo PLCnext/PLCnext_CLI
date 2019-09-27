@@ -44,7 +44,7 @@ namespace PlcNext.Common.Tools.DynamicCommands
 
         public ArgumentBuilder SetValue(object value)
         {
-            this.value = value;
+            this.value = value ?? throw new ArgumentNullException(nameof(value));
             ArgumentType newType = ArgumentType.SingleValue;
             if (value is bool)
             {

@@ -27,7 +27,7 @@ using static PlcNext.Common.Tools.Constants;
 
 namespace PlcNext.Common.Tools.SDK
 {
-    public class CMakeCodeModelReplyMessage : CMakeReplyMessage
+    internal class CMakeCodeModelReplyMessage : CMakeReplyMessage
     {
         public CMakeCodeModelReplyMessage(JObject content, JArray codeModel) : base(content)
         {
@@ -47,7 +47,7 @@ namespace PlcNext.Common.Tools.SDK
         }
     }
 
-    public class CMakeCacheReplyMessage : CMakeReplyMessage
+    internal class CMakeCacheReplyMessage : CMakeReplyMessage
     {
         public CMakeCacheReplyMessage(JObject content, JArray cache) : base(content)
         {
@@ -67,7 +67,7 @@ namespace PlcNext.Common.Tools.SDK
         }
     }
 
-    public class CMakeReplyMessage : CMakeBaseResponseMessage
+    internal class CMakeReplyMessage : CMakeBaseResponseMessage
     {
         protected CMakeReplyMessage(JObject content) : base(content)
         {
@@ -87,20 +87,20 @@ namespace PlcNext.Common.Tools.SDK
         }
     }
 
-    public class CMakeProgressMessage : CMakeMessage
+    internal class CMakeProgressMessage : CMakeMessage
     {
         private CMakeProgressMessage()
         {
 
         }
 
-        public static CMakeProgressMessage Create(JObject content)
+        public static CMakeProgressMessage Create()
         {
             return new CMakeProgressMessage();
         }
     }
 
-    public class CMakeMessageMessage : CMakeBaseResponseMessage
+    internal class CMakeMessageMessage : CMakeBaseResponseMessage
     {
         public string Title { get; }
         public string Message { get; }
@@ -122,7 +122,7 @@ namespace PlcNext.Common.Tools.SDK
         }
     }
 
-    public class CMakeBaseResponseMessage : CMakeMessage
+    internal class CMakeBaseResponseMessage : CMakeMessage
     {
         private readonly JObject content;
 
@@ -142,7 +142,7 @@ namespace PlcNext.Common.Tools.SDK
         }
     }
 
-    public class CMakeHelloMessage : CMakeMessage
+    internal class CMakeHelloMessage : CMakeMessage
     {
         private CMakeHelloMessage(IEnumerable<Version> supportedProtocolVersions)
         {
@@ -187,7 +187,7 @@ namespace PlcNext.Common.Tools.SDK
                         cMakeMessage = CMakeReplyMessage.Create(content);
                         break;
                     case "progress":
-                        cMakeMessage = CMakeProgressMessage.Create(content);
+                        cMakeMessage = CMakeProgressMessage.Create();
                         break;
                     case "message":
                         cMakeMessage = CMakeMessageMessage.Create(content);
@@ -236,7 +236,7 @@ namespace PlcNext.Common.Tools.SDK
                              $"\"sourceDirectory\":\"{sourceDirectory}\",\"buildDirectory\":\"{buildDirectory}\", " +
                              $"\"generator\":\"{makefileGenerator}\"}}";
             serverStream.WriteMessage(message);
-            CMakeReplyMessage reply = await WaitForReply("handshake");
+            CMakeReplyMessage reply = await WaitForReply("handshake").ConfigureAwait(false);
             cookie = reply.Cookie;
         }
 
@@ -244,11 +244,11 @@ namespace PlcNext.Common.Tools.SDK
         {
             string message = $"{{\"cookie\":\"{cookie}\",\"type\":\"configure\"}}";
             serverStream.WriteMessage(message);
-            await WaitForReply("configure");
+            await WaitForReply("configure").ConfigureAwait(false);
 
             message = $"{{\"cookie\":\"{cookie}\",\"type\":\"compute\"}}";
             serverStream.WriteMessage(message);
-            await WaitForReply("compute");
+            await WaitForReply("compute").ConfigureAwait(false);
             //Replies of contigure and compute have no useful informations
         }
 
@@ -256,7 +256,7 @@ namespace PlcNext.Common.Tools.SDK
         {
             string message = $"{{\"cookie\":\"{cookie}\",\"type\":\"codemodel\"}}";
             serverStream.WriteMessage(message);
-            CMakeCodeModelReplyMessage reply = (CMakeCodeModelReplyMessage)await WaitForReply("codemodel");
+            CMakeCodeModelReplyMessage reply = (CMakeCodeModelReplyMessage)await WaitForReply("codemodel").ConfigureAwait(false);
             return reply.CodeModel;
         }
 
@@ -264,7 +264,7 @@ namespace PlcNext.Common.Tools.SDK
         {
             string message = $"{{\"cookie\":\"{cookie}\",\"type\":\"cache\"}}";
             serverStream.WriteMessage(message);
-            CMakeCacheReplyMessage reply = (CMakeCacheReplyMessage)await WaitForReply("cache");
+            CMakeCacheReplyMessage reply = (CMakeCacheReplyMessage)await WaitForReply("cache").ConfigureAwait(false);
             return reply.Cache;
         }
 
@@ -276,13 +276,16 @@ namespace PlcNext.Common.Tools.SDK
             do
             {
                 //Expect at least a progress message after default timeout
-                message = CMakeMessage.Parse<CMakeMessage>(await serverStream.ReadMessage().TimeoutAfter(CMakeServerTimeout), userInterface);
+                message = CMakeMessage.Parse<CMakeMessage>(await serverStream.ReadMessage()
+                                                                             .TimeoutAfter(CMakeServerTimeout)
+                                                                             .ConfigureAwait(false), 
+                                                           userInterface);
                 progressMessage = message as CMakeProgressMessage;
                 messageMessage = message as CMakeMessageMessage;
                 if (messageMessage != null)
                 {
                     CheckCookieAndType(messageMessage);
-                    if (messageMessage.Title.ToLowerInvariant().Contains("error"))
+                    if (messageMessage.Title.Contains("error", StringComparison.OrdinalIgnoreCase))
                     {
                         throw new FormattableException($"CMake discovered an error.{Environment.NewLine}" +
                                                             $"{messageMessage.Title}{Environment.NewLine}" +
@@ -354,7 +357,10 @@ namespace PlcNext.Common.Tools.SDK
                 CMakeHelloMessage hello;
                 do
                 {
-                    hello = CMakeMessage.Parse<CMakeHelloMessage>(await serverStream.ReadMessage().TimeoutAfter(CMakeServerTimeout), jsonCmakeInterface);
+                    hello = CMakeMessage.Parse<CMakeHelloMessage>(await serverStream.ReadMessage()
+                                                                                    .TimeoutAfter(CMakeServerTimeout)
+                                                                                    .ConfigureAwait(false), 
+                                                                  jsonCmakeInterface);
                 } while (hello == null);
 
                 if (hello.SupportedProtocolVersions.All(v => v.Major != 1))
@@ -366,8 +372,9 @@ namespace PlcNext.Common.Tools.SDK
                 CMakeConversation conversation = new CMakeConversation(process, pipeClient, serverStream, jsonCmakeInterface);
 
                 await conversation.Handshake(sourceDirectory.FullName.Replace('\\', '/'),
-                                             binaryDirectory.FullName.Replace('\\', '/'));
-                await conversation.Configure();
+                                             binaryDirectory.FullName.Replace('\\', '/'))
+                                  .ConfigureAwait(false);
+                await conversation.Configure().ConfigureAwait(false);
 
                 return conversation;
             }
@@ -386,7 +393,7 @@ namespace PlcNext.Common.Tools.SDK
         }
     }
 
-    public class CMakeServerStream
+    internal class CMakeServerStream
     {
         private readonly ILog log;
         private NamedPipeClientStream ioStream;
@@ -460,13 +467,13 @@ namespace PlcNext.Common.Tools.SDK
         }
     }
 
-    public static class TaskExtensions
+    internal static class TaskExtensions
     {
         public static async Task<TResult> TimeoutAfter<TResult>(this Task<TResult> task, int millisecondsTimeout)
         {
-            if (task == await Task.WhenAny(task, Task.Delay(millisecondsTimeout)))
+            if (task == await Task.WhenAny(task, Task.Delay(millisecondsTimeout)).ConfigureAwait(false))
             {
-                return await task;
+                return await task.ConfigureAwait(false);
             }
 
             throw new TimeoutException();

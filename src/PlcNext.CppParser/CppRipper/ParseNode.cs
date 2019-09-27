@@ -157,6 +157,11 @@ namespace PlcNext.CppParser.CppRipper
         /// <param name="node"></param>
         public void AddChild(ParseNode node)
         {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
             Trace.Assert(node != null);
             Trace.Assert(!(node.rule is SkipRule));
             

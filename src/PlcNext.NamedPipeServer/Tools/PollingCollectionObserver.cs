@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace PlcNext.NamedPipeServer.Tools
 {
-    public class PollingCollectionObserver : IDisposable
+    internal class PollingCollectionObserver : IDisposable
     {
         private readonly ICollection[] observedCollections;
         private readonly Action executedAction;

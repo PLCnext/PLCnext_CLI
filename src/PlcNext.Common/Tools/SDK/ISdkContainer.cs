@@ -16,6 +16,6 @@ namespace PlcNext.Common.Tools.SDK
         bool Contains(string path);
         void Remove(string sdkRootPath);
         void Add(string sdkRootPath, SdkSchema sdkSchema);
-        Sdk Get(string sdkRootPath);
+        SdkInformation Get(string sdkRootPath);
     }
 }

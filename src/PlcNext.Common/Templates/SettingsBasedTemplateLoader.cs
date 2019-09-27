@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Templates.Field;
@@ -51,8 +52,9 @@ namespace PlcNext.Common.Templates
                 VirtualFile baseFile = fileSystem.GetFile(templateLocation, environmentService.AssemblyDirectory);
                 Templates.Templates templates;
                 using (Stream fileStream = baseFile.OpenRead())
+                using (XmlReader reader = XmlReader.Create(fileStream))
                 {
-                    templates = (Templates.Templates)templatesSerializer.Deserialize(fileStream);
+                    templates = (Templates.Templates)templatesSerializer.Deserialize(reader);
                 }
 
                 foreach (include include in templates.Include)
@@ -61,31 +63,32 @@ namespace PlcNext.Common.Templates
                                          .Replace('/', Path.DirectorySeparatorChar);
                     path = Path.Combine(baseFile.Parent.FullName, path);
                     using (Stream includeStream = fileSystem.GetFile(path).OpenRead())
+                    using (XmlReader reader = XmlReader.Create(includeStream))
                     {
                         switch (include.type)
                         {
                             case includeType.Template:
                                 result.Add(new TemplateLoaderResult(
-                                               templateDescriptionSerializer.Deserialize(includeStream),
+                                               templateDescriptionSerializer.Deserialize(reader),
                                                Path.GetDirectoryName(path)));
                                 break;
                             case includeType.Fields:
                                 result.Add(new TemplateLoaderResult(
-                                               fieldTemplateSerializer.Deserialize(includeStream),
+                                               fieldTemplateSerializer.Deserialize(reader),
                                                Path.GetDirectoryName(path)));
                                 break;
                             case includeType.Types:
                                 result.Add(new TemplateLoaderResult(
-                                               typeTemplateSerializer.Deserialize(includeStream),
+                                               typeTemplateSerializer.Deserialize(reader),
                                                Path.GetDirectoryName(path)));
                                 break;
                             case includeType.Format:
                                 result.Add(new TemplateLoaderResult(
-                                               formatTemplateSerializer.Deserialize(includeStream),
+                                               formatTemplateSerializer.Deserialize(reader),
                                                Path.GetDirectoryName(path)));
                                 break;
                             default:
-                                throw new ArgumentException();
+                                throw new InvalidOperationException();
                         }
                     }
                 }

@@ -47,19 +47,24 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public async Task CopyToAsync(VirtualDirectory destination)
         {
+            if (destination == null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
             foreach (VirtualFile file in Entries.OfType<VirtualFile>())
             {
                 VirtualFile destinationFile = destination.File(file.Name);
                 using (Stream destinationStream = destinationFile.OpenWrite())
                 using (Stream sourceStream = file.OpenRead())
                 {
-                    await sourceStream.CopyToAsync(destinationStream);
+                    await sourceStream.CopyToAsync(destinationStream).ConfigureAwait(false);
                 }
             }
 
             foreach (VirtualDirectory directory in Directories)
             {
-                await directory.CopyToAsync(destination.Directory(directory.Name));
+                await directory.CopyToAsync(destination.Directory(directory.Name)).ConfigureAwait(false);
             }
         }
 
@@ -128,6 +133,11 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public IEnumerable<VirtualFile> Files(string searchString = "*", bool searchRecursive = false)
         {
+            if (searchString == null)
+            {
+                throw new ArgumentNullException(nameof(searchString));
+            }
+
             string regexPattern = searchString.Replace(".", "\\.").Replace("*", ".*").Replace("?", ".");
             Regex pattern = new Regex(regexPattern);
             return Files(pattern, searchRecursive);

@@ -32,7 +32,7 @@ namespace PlcNext.Common.Commands
 
         protected override async Task<int> ExecuteAsync(GetUpdateVersionsCommandArgs commandArgs, ChangeObservable observable)
         {
-            IEnumerable<Version> versions = await cliUpdater.GetAvailableVersions();
+            IEnumerable<Version> versions = await cliUpdater.GetAvailableVersions().ConfigureAwait(false);
             userInterface.WriteInformation("The following versions are available:");
             userInterface.WriteInformation(string.Join(Environment.NewLine, versions.Select(v => v.ToString(3))));
             return 0;

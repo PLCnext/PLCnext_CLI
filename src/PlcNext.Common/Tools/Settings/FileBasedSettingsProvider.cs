@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -199,7 +200,7 @@ namespace PlcNext.Common.Tools.Settings
                                                                 new XElement("CliRepositorySignatureFileName", current.CliRepositorySignatureFileName),
                                                                 new XElement("HttpProxy", current.HttpProxy??string.Empty),
                                                                 new XElement("LogFilePath", current.LogFilePath ?? "log.txt"),
-                                                                new XElement("SystemCommands", current.UseSystemCommands.ToString()),
+                                                                new XElement("SystemCommands", current.UseSystemCommands.ToString(CultureInfo.InvariantCulture)),
                                                                 new XElement("SDKS",
                                                                              current.SdkPaths.Select(p => new XElement("SDK", p))
                                                                                     .Cast<object>().ToArray()),

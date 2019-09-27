@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -38,7 +39,7 @@ namespace PlcNext.Common.Tools.UI
 
         public void Add<T>(T value)
         {
-            parameters[Guid.NewGuid().ToString("D")] = value;
+            parameters[Guid.NewGuid().ToString("D", CultureInfo.InvariantCulture)] = value;
         }
 
         public void Add<T>(T value, string name)

@@ -61,7 +61,7 @@ namespace PlcNext.Common.Tools.SDK
                 throw new SdkPathNotExistingException(sdkRootPath);
             }
             VirtualDirectory rootDirectory = fileSystem.GetDirectory(sdkRootPath);
-            SdkSchema sdkSchema = await Explore();
+            SdkSchema sdkSchema = await Explore().ConfigureAwait(false);
             executionContext.WriteVerbose($"Finished exploration with the following content:{Environment.NewLine}" +
                                        $"{JsonConvert.SerializeObject(sdkSchema, Formatting.Indented, new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Ignore})}");
             exploredPaths.Add(sdkRootPath);
@@ -77,7 +77,7 @@ namespace PlcNext.Common.Tools.SDK
                     CreateSampleProject(temporaryDirectory);
                     string makeExecutable = FindMakeExecutable();
                     ConfigureSampleProject(temporaryDirectory, makeExecutable);
-                    return await ExploreSampleProject(temporaryDirectory, makeExecutable);
+                    return await ExploreSampleProject(temporaryDirectory, makeExecutable).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
@@ -96,10 +96,11 @@ namespace PlcNext.Common.Tools.SDK
                                                                                           environmentService.Platform == OSPlatform.Windows,
                                                                                           executionContext,
                                                                                           sourceDirectory,
-                                                                                          binaryDirectory))
+                                                                                          binaryDirectory)
+                                                                                   .ConfigureAwait(false))
                     {
-                        JArray cache = await conversation.GetCache();
-                        JArray codeModel = await conversation.GetCodeModel();
+                        JArray cache = await conversation.GetCache().ConfigureAwait(false);
+                        JArray codeModel = await conversation.GetCodeModel().ConfigureAwait(false);
                         return ExploreCMakeOutput(cache, codeModel);
                     }
 
@@ -263,7 +264,7 @@ namespace PlcNext.Common.Tools.SDK
                     string resourceBaseString = "PlcNext.Common.Tools.SDK.SampleProject.";
                     Assembly assembly = Assembly.GetAssembly(typeof(CMakeSdkExplorer));
                     IEnumerable<string> resources = assembly.GetManifestResourceNames()
-                                                            .Where(n => n.StartsWith(resourceBaseString));
+                                                            .Where(n => n.StartsWith(resourceBaseString, StringComparison.OrdinalIgnoreCase));
                     foreach (string resource in resources)
                     {
                         string fileName = resource.Substring(resourceBaseString.Length);

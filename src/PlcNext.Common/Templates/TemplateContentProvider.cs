@@ -74,7 +74,7 @@ namespace PlcNext.Common.Templates
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
-            if (key.StartsWith("is"))
+            if (key.StartsWith("is", StringComparison.OrdinalIgnoreCase))
             {
                 return owner.Create(key, IsCheck(owner, key));
             }
@@ -102,9 +102,9 @@ namespace PlcNext.Common.Templates
                 return foreachItem.Current;
             }
 
-            if (owner.Any(o => o.Value<templateFile>()?.key?.ToLowerInvariant() == key))
+            if (owner.Any(o => o.Value<templateFile>()?.key?.Equals(key, StringComparison.OrdinalIgnoreCase) == true))
             {
-                return owner.First(o => o.Value<templateFile>()?.key?.ToLowerInvariant() == key);
+                return owner.First(o => o.Value<templateFile>()?.key?.Equals(key, StringComparison.OrdinalIgnoreCase) == true);
             }
 
             if (owner.Value<templateFile>() != null)
@@ -182,7 +182,7 @@ namespace PlcNext.Common.Templates
 
                     bool IsRelatedType(IType relatedType, string name)
                     {
-                        if (relatedType?.FullName.Equals(name) == true)
+                        if (relatedType?.FullName.Equals(name, StringComparison.Ordinal) == true)
                         {
                             return true;
                         }
@@ -246,7 +246,7 @@ namespace PlcNext.Common.Templates
                     (IType, string)[] wildEnities = FindWildEntities().ToArray();
                     if (wildEnities.Length == 1)
                     {
-                        throw new WildEntityException(wildEnities[0].Item1, wildEnities[0].Item2,
+                        throw new WildEntityException(wildEnities[0].Item1, wildEnities[0].Item2.ToLowerInvariant(),
                                                       relationships[wildEnities[0].Item2]);
                     }
 
@@ -272,16 +272,16 @@ namespace PlcNext.Common.Templates
                         {
                             return arg.Attributes.Select(a => (!a.Values.Any() &&
                                                                !a.NamedValues.Any() &&
-                                                               relationships.ContainsKey(a.Name.ToLowerInvariant()) &&
-                                                               relationships[a.Name.ToLowerInvariant()].Any(),
-                                                               a.Name.ToLowerInvariant()))
+                                                               relationships.ContainsKey(a.Name.ToUpperInvariant()) &&
+                                                               relationships[a.Name.ToUpperInvariant()].Any(),
+                                                               a.Name.ToUpperInvariant()))
                                       .FirstOrDefault(r => r.Item1);
                         }
                     }
 
                     Dictionary<string, string[]> GetAllRelationships()
                     {
-                        return templateRepository.Templates.ToDictionary(t => t.name.ToLowerInvariant(), description => (description.Relationship ?? Enumerable.Empty<templateRelationship>())
+                        return templateRepository.Templates.ToDictionary(t => t.name.ToUpperInvariant(), description => (description.Relationship ?? Enumerable.Empty<templateRelationship>())
                                                                                           .Select(r => templateRepository.Template(r.type))
                                                                                           .Where(t => t != null)
                                                                                           .Select(t => t.isRoot ? string.Empty : t.name.ToLowerInvariant())

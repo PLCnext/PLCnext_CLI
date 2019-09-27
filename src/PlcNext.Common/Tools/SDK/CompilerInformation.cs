@@ -13,9 +13,9 @@ using System.Text;
 
 namespace PlcNext.Common.Tools.SDK
 {
-    public class Compiler
+    public class CompilerInformation
     {
-        public Compiler(string compilerPath, string sysroot, string flags, IEnumerable<string> includePaths, IEnumerable<CompilerMakro> makros)
+        public CompilerInformation(string compilerPath, string sysroot, string flags, IEnumerable<string> includePaths, IEnumerable<CompilerMakro> makros)
         {
             CompilerPath = compilerPath;
             Sysroot = sysroot;

@@ -209,7 +209,7 @@ namespace PlcNext.Common.Templates
             if (definition.BaseDefinition == newCommand)
             {
                 Entity dataModel = entityFactory.Create(definition.Name, definition);
-                IEnumerable<VirtualFile> files = await templateFileGenerator.InitalizeTemplate(dataModel, observable);
+                IEnumerable<VirtualFile> files = await templateFileGenerator.InitalizeTemplate(dataModel, observable).ConfigureAwait(false);
 
                 userInterface.WriteInformation($"Successfully created template '{dataModel.Template().name}' in {GetCommonPath(files,dataModel.Path)}.");
             }
@@ -223,7 +223,8 @@ namespace PlcNext.Common.Templates
                                                      $"generator for {dataModel.Root.Path}.");
 
                 SingleValueArgument singleValueArgument = definition.Argument<SingleValueArgument>(Constants.OutputArgumentName);
-                await templateFileGenerator.GenerateFiles(dataModel.Root, definition.Name, singleValueArgument.Value, singleValueArgument.IsDefined, observable);
+                await templateFileGenerator.GenerateFiles(dataModel.Root, definition.Name, singleValueArgument.Value, singleValueArgument.IsDefined, observable)
+                                           .ConfigureAwait(false);
 
                 userInterface.WriteInformation(definition.Name == "all"
                                                    ? $"Successfully generated all files for {dataModel.Root.Path}."

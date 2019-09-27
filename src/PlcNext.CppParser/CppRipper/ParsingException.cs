@@ -14,24 +14,22 @@ namespace PlcNext.CppParser.CppRipper
     public class ParsingException
         : Exception
     {
-        public int location;
-        public ParseNode parentNode;
-        public Rule failedRule;
-        public Rule parentRule;
-        public int col;
-        public int row;
-        public int index;
-        public int lineStart;
-        public int lineEnd;
-        public int lineLength;
-        public string line;
-        public string text;
-        public string ptr;
+        private readonly Rule failedRule;
+        private readonly Rule parentRule;
+        public int Col { get; }
+        public int Row { get; }
+        private readonly string line;
+        private readonly string ptr;
 
         public ParsingException(ParseNode parent, Rule rule, ParserState ps)
         {
+            if (ps == null)
+            {
+                throw new ArgumentNullException(nameof(ps));
+            }
+
             // Store the failed node, the parent node (which should be named), and the associated rule
-            parentNode = parent;
+            ParseNode parentNode = parent;
             if (parentNode != null)
                 parentNode = parentNode.GetNamedParent();
             failedRule = rule;
@@ -39,17 +37,17 @@ namespace PlcNext.CppParser.CppRipper
                 parentRule = parentNode.GetRule();
 
             // set the main text variables
-            text = ps.text;
+            string text = ps.Text;
 
             // set the index into the text
-            index = ps.index;
+            int index = ps.Index;
             if (index >= text.Length)
                 index = text.Length - 1;
 
             // initialize a bunch of values 
-            lineStart = 0;
-            col = 0;
-            row = 0;
+            int lineStart = 0;
+            Col = 0;
+            Row = 0;
             int i = 0;
 
             // Compute the column, row, and lineStart
@@ -58,12 +56,12 @@ namespace PlcNext.CppParser.CppRipper
                 if (text[i] == '\n')
                 {
                     lineStart = i + 1;
-                    col = 0;
-                    ++row;
+                    Col = 0;
+                    ++Row;
                 }
                 else
                 {
-                    ++col;
+                    ++Col;
                 }
             }
 
@@ -71,10 +69,9 @@ namespace PlcNext.CppParser.CppRipper
             while (i < text.Length)
                 if (text[i++] == '\n')
                     break;
-            lineEnd = i;
 
             // Compute the line length 
-            lineLength = lineEnd - lineStart;
+            int lineLength = i - lineStart;
 
             // Get the line text (don't include the new line)
             line = text.Substring(lineStart, lineLength - 1);
@@ -85,7 +82,7 @@ namespace PlcNext.CppParser.CppRipper
             // Compute the pointer (^) line will be
             // based on the fact that we will be replacing tabs 
             // with spaces.
-            string tmp = line.Substring(0, col);
+            string tmp = line.Substring(0, Col);
             tmp = tmp.Replace("\t", tab);
             ptr = new String(' ', tmp.Length);
             ptr += "^";
@@ -98,7 +95,7 @@ namespace PlcNext.CppParser.CppRipper
         {
             get
             {
-                string s = "line number " + row.ToString() + ", and character number " + col.ToString() + "\n";
+                string s = "line number " + Row + ", and character number " + Col + "\n";
                 s += line + "\n";
                 s += ptr + "\n";
                 return s;
@@ -118,10 +115,10 @@ namespace PlcNext.CppParser.CppRipper
             string s = "parsing exception occured ";
             if (parentRule != null)
             {
-                s += "while parsing '" + parentRule.ToString() + "' ";
+                s += "while parsing '" + parentRule + "' ";
             }
             if (failedRule != null)
-                s += "expected '" + failedRule.ToString() + "' ";
+                s += "expected '" + failedRule + "' ";
             s += " at \n";
             s += Location;
             return s;

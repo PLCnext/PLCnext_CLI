@@ -25,7 +25,7 @@ namespace PlcNext.Common.Tools.SDK
 {
     internal class SettingsBasedSdkRepository : ISdkRepository
     {
-        private readonly Dictionary<Target, Sdk> sdks = new Dictionary<Target, Sdk>();
+        private readonly Dictionary<Target, SdkInformation> sdks = new Dictionary<Target, SdkInformation>();
         private readonly ISettingsProvider settingsProvider;
         private readonly ISdkExplorer sdkExplorer;
         private readonly ISdkContainer sdkContainer;
@@ -38,7 +38,7 @@ namespace PlcNext.Common.Tools.SDK
             this.sdkContainer = sdkContainer;
         }
 
-        private Dictionary<Target, Sdk> Sdks
+        private Dictionary<Target, SdkInformation> Sdks
         {
             get
             {
@@ -51,10 +51,10 @@ namespace PlcNext.Common.Tools.SDK
                     
                     foreach (string path in settingsProvider.Settings.SdkPaths)
                     {
-                        Sdk sdk = sdkContainer.Get(path);
-                        foreach (Target target in sdk.Targets)
+                        SdkInformation sdkInformation = sdkContainer.Get(path);
+                        foreach (Target target in sdkInformation.Targets)
                         {
-                            sdks.Add(target, sdk);
+                            sdks.Add(target, sdkInformation);
                         }
                     }
 
@@ -64,9 +64,9 @@ namespace PlcNext.Common.Tools.SDK
             }
         }
 
-        IEnumerable<Sdk> ISdkRepository.Sdks => Sdks.Values.Distinct().ToArray();
+        IEnumerable<SdkInformation> ISdkRepository.Sdks => Sdks.Values.Distinct().ToArray();
 
-        public Sdk GetSdk(Target target)
+        public SdkInformation GetSdk(Target target)
         {
             if (!Sdks.ContainsKey(target))
             {
@@ -95,7 +95,7 @@ namespace PlcNext.Common.Tools.SDK
                 sdkContainer.Remove(sdkPath);
             }
 
-            SdkSchema sdkSchema = await sdkExplorer.ExploreSdk(sdkPath, forced);
+            SdkSchema sdkSchema = await sdkExplorer.ExploreSdk(sdkPath, forced).ConfigureAwait(false);
             if (sdkSchema != null)
             {
                 sdkContainer.Add(sdkPath, sdkSchema);

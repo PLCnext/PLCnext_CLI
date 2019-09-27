@@ -24,7 +24,7 @@ using ExecutionContext = PlcNext.Common.Tools.ExecutionContext;
 
 namespace PlcNext.CliNamedPipeMediator
 {
-    public class UpdateMessagesMediator : IDisposable
+    internal class UpdateMessagesMediator : IDisposable
     {
         private readonly ISettingsObserver settingsObserver;
         private readonly IProcessInformationService processInformationService;
@@ -79,12 +79,13 @@ namespace PlcNext.CliNamedPipeMediator
                 try
                 {
                     using (ITemporaryCommunicationChannel communicationChannel =
-                        await instanceCommunicationService.OpenCommunicationChannel(otherInstancesProcessId))
+                        await instanceCommunicationService.OpenCommunicationChannel(otherInstancesProcessId)
+                                                          .ConfigureAwait(false))
                     {
                         AsyncAutoResetEvent waitEvent = new AsyncAutoResetEvent(false);
                         sendAction(communicationChannel.MessageSender,waitEvent);
-                        await waitEvent.WaitAsync(cancellationToken);
-                        executionContext.WriteVerbose($"Update message send.");
+                        await waitEvent.WaitAsync(cancellationToken).ConfigureAwait(false);
+                        executionContext.WriteVerbose("Update message send.");
                     }
                 }
                 catch (Exception exception)

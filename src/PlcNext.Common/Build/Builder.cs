@@ -65,7 +65,7 @@ namespace PlcNext.Common.Build
         private void BuildProjectForTargets(BuildInformation buildInfo, ChangeObservable observable, IEnumerable<Target> targets)
         {
             targets = targets.ToArray();
-            MultiDictionary<Sdk, Target> sdks = new MultiDictionary<Sdk, Target>();
+            MultiDictionary<SdkInformation, Target> sdks = new MultiDictionary<SdkInformation, Target>();
             List<FormattableException> exceptions = new List<FormattableException>();
             foreach (Target target in targets)
             {
@@ -84,12 +84,12 @@ namespace PlcNext.Common.Build
             }
 
             userInterface.WriteInformation($"Requested build for targets {String.Join(", ", targets.Select(x => x.GetFullName()).ToArray())}");
-            foreach (Sdk sdk in sdks.Keys)
+            foreach (SdkInformation sdk in sdks.Keys)
             {
                 foreach (Target target in sdks.Get(sdk))
                 {
                     userInterface.WriteInformation($"Starting build for target {target.GetFullName()}");
-                    buildInfo.Sdk = sdk;
+                    buildInfo.SdkInformation = sdk;
                     buildInfo.Target = target;
                     buildExecuter.ExecuteBuild(buildInfo, observable);
                     userInterface.WriteInformation($"Successfully built the project {buildInfo.RootEntity.Name} for target {target.GetFullName()}.");

@@ -203,7 +203,7 @@ namespace PlcNext.Common.Project
                                     if (e is FormattableException || e is AggregateException)
                                         executionContext.WriteWarning($"Automatic include detection via cmake could not be executed. See log for details.");
                                     else
-                                        throw e;
+                                        throw;
                                 }
                             }
                         }
@@ -226,11 +226,11 @@ namespace PlcNext.Common.Project
 
                         IEnumerable<string> GetTargetIncludes()
                         {
-                            Sdk[] projectSdks = projectTargets.Select(sdkRepository.GetSdk)
+                            SdkInformation[] projectSdks = projectTargets.Select(sdkRepository.GetSdk)
                                                               .Distinct()
                                                               .ToArray();
 
-                            return projectSdks.SelectMany(s => s.IncludePaths.Concat(s.Compiler.IncludePaths));
+                            return projectSdks.SelectMany(s => s.IncludePaths.Concat(s.CompilerInformation.IncludePaths));
                         }
 
                         VirtualDirectory GetIncludeDirectory(string path)
@@ -372,7 +372,8 @@ namespace PlcNext.Common.Project
                                 }).Any();
                             }
                         }
-                    }catch(Exception exception)
+                    }
+                    catch (Exception exception)
                     {
                         executionContext.WriteVerbose($"Error while creating fallback root entity.{Environment.NewLine}{exception}");
                     }

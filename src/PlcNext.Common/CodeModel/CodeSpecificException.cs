@@ -60,12 +60,12 @@ namespace PlcNext.Common.CodeModel
             Uri baseUri = new Uri(projectRoot, UriKind.Absolute);
             Uri specificUri = new Uri(CodeFile, UriKind.Absolute);
             string relativePath = baseUri.MakeRelativeUri(specificUri).ToString();
-            return relativePath.StartsWith("..") ? CodeFile : relativePath;
+            return relativePath.StartsWith("..", StringComparison.Ordinal) ? CodeFile : relativePath;
         }
 
         private string GetMessage()
         {
-            string message = CodeErrors.ResourceManager.GetString(errorCode);
+            string message = CodeErrors.ResourceManager.GetString(errorCode, CultureInfo.InvariantCulture);
             if (additionalInformation != null)
             {
                 message = string.Format(CultureInfo.InvariantCulture, message, additionalInformation);

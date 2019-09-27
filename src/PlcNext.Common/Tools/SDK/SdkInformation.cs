@@ -11,18 +11,18 @@ using PlcNext.Common.Tools.FileSystem;
 
 namespace PlcNext.Common.Tools.SDK
 {
-    public class Sdk
+    public class SdkInformation
     {
-        public Sdk(IEnumerable<Target> targets, IEnumerable<string> includePaths, VirtualDirectory root, VirtualFile makeFile, Compiler compiler)
+        public SdkInformation(IEnumerable<Target> targets, IEnumerable<string> includePaths, VirtualDirectory root, VirtualFile makeFile, CompilerInformation compilerInformation)
         {
             Targets = targets;
             Root = root;
             MakeFile = makeFile;
-            Compiler = compiler;
+            CompilerInformation = compilerInformation;
             IncludePaths = includePaths;
         }
 
-        public Compiler Compiler { get; }
+        public CompilerInformation CompilerInformation { get; }
 
         public IEnumerable<Target> Targets { get; }
 

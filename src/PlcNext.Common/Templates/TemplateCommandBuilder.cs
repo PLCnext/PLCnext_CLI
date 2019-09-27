@@ -215,10 +215,10 @@ namespace PlcNext.Common.Templates
             {
                 string[] defaultArguments =
                 {
-                    EntityKeys.PathKey.ToLowerInvariant(),
-                    Constants.OutputArgumentName.ToLowerInvariant(),
-                    Constants.FilesArgumentName.ToLowerInvariant(),
-                    Constants.TargetArgumentName.ToLowerInvariant(),
+                    EntityKeys.PathKey.ToUpperInvariant(),
+                    Constants.OutputArgumentName.ToUpperInvariant(),
+                    Constants.FilesArgumentName.ToUpperInvariant(),
+                    Constants.TargetArgumentName.ToUpperInvariant(),
                 };
                 Dictionary<templateArgumentDefinition, string> argumentToStringDictionary = new Dictionary<templateArgumentDefinition, string>();
                 List<templateArgumentDefinition> setlessArguments = new List<templateArgumentDefinition>();
@@ -228,7 +228,7 @@ namespace PlcNext.Common.Templates
                        .SelectMany(d => d.Arguments);
                     foreach (templateArgumentDefinition argument in arguments)
                     {
-                        if (!defaultArguments.Contains(argument.name.ToLowerInvariant()))
+                        if (!defaultArguments.Contains(argument.name.ToUpperInvariant()))
                         {
                             templateArgumentDefinition existingDefinition = argumentToStringDictionary.Keys
                                                                                                       .FirstOrDefault(d => d.name

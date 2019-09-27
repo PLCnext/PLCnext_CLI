@@ -14,9 +14,9 @@ using PlcNext.Common.Tools;
 
 namespace PlcNext.Common.Templates
 {
-    internal class NoDublicateLinesParameterMismatchException : FormattableException
+    internal class NoDuplicateLinesParameterMismatchException : FormattableException
     {
-        public NoDublicateLinesParameterMismatchException() : base(ExceptionTexts.NoDublicateLinesParameterMismatch)
+        public NoDuplicateLinesParameterMismatchException() : base(ExceptionTexts.NoDuplicateLinesParameterMismatch)
         {
             
         }

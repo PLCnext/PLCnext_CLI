@@ -42,7 +42,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             {
                 messages.Add(parser.Exception == null
                                  ? new ParserMessage("CPP0004", 1, 1)
-                                 : new ParserMessage("CPP0005", parser.Exception.row, parser.Exception.col,
+                                 : new ParserMessage("CPP0005", parser.Exception.Row, parser.Exception.Col,
                                                      $"{Environment.NewLine}{parser.Exception.Message}"));
                 codeSpecificExceptions.AddRange(messages.Select(m => m.ToException(file)));
                 return new ParserResult(codeSpecificExceptions);
@@ -143,7 +143,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 List<string> result = new List<string>();
                 foreach (ParseNode includeNode in root.GetHierarchy().Where(n => n.RuleType == "sequence" &&
                                                                                  n.RuleName == "pp_directive" &&
-                                                                                 n.Any(c => c.ToString().ToLowerInvariant() == "include")))
+                                                                                 n.Any(c => c.ToString().Equals("include", StringComparison.OrdinalIgnoreCase))))
                 {
                     ParseNode include = includeNode.FirstOrDefault(n => n.RuleName == "until_eol");
                     if (include != null)

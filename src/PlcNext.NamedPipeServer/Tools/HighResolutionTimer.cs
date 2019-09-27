@@ -32,16 +32,6 @@ namespace PlcNext.NamedPipeServer.Tools
         public static readonly double TickLength = 1000f / Stopwatch.Frequency;
 
         /// <summary>
-        /// Tick frequency
-        /// </summary>
-        public static readonly double Frequency = Stopwatch.Frequency;
-
-        /// <summary>
-        /// True if the system/operating system supports HighResolution timer
-        /// </summary>
-        public static bool IsHighResolution = Stopwatch.IsHighResolution;
-
-        /// <summary>
         /// Invoked when the timer is elapsed
         /// </summary>
         public event EventHandler<HighResolutionTimerElapsedEventArgs> Elapsed;

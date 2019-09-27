@@ -17,7 +17,7 @@ namespace PlcNext.Common.CodeModel
     {
         string Name { get; }
 
-        IComment[] Comments { get; }
-        IAttribute[] Attributes { get; }
+        IReadOnlyCollection<IComment> Comments { get; }
+        IReadOnlyCollection<IAttribute> Attributes { get; }
     }
 }

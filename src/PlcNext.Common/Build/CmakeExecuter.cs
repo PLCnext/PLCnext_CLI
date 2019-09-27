@@ -116,6 +116,7 @@ namespace PlcNext.Common.Build
             return EnsureConfigured(buildInformation, showMessagesToUser, observable, throwOnError, showMessagesToUser);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Build", "CA1031:Modify 'EnsureConfigured' to catch a more specific exception type, or rethrow the exception.", Justification = "Exception is purposefully logged and ignored.")]
         public (bool, VirtualDirectory) EnsureConfigured(BuildInformation buildInformation, bool showWarningsToUser, ChangeObservable observable = null,
                                                          bool throwOnError = false, bool showMessagesToUser = true)
         {
@@ -173,8 +174,7 @@ namespace PlcNext.Common.Build
                     !buildInformation.NoConfigure)
                 {
                     string cmakeCommand = GenerateCmakeCommand(buildInformation.Target.Name,
-                                                               buildInformation.Target.LongVersion,
-                                                               buildInformation.Target.Version);
+                                                               buildInformation.Target.LongVersion);
 
                     if (showMessagesToUser)
                     {
@@ -193,10 +193,10 @@ namespace PlcNext.Common.Build
 
                 return true;
 
-                string GenerateCmakeCommand(string target, string version, string shortVersion)
+                string GenerateCmakeCommand(string target, string version)
                 {
                     List<string> commandParts = new List<string>();
-                    string sdkRoot = buildInformation.Sdk.Root.FullName.Replace("\\", "/");
+                    string sdkRoot = buildInformation.SdkInformation.Root.FullName.Replace("\\", "/");
                     if (!buildInformation.BuildProperties.Contains("-DCMAKE_TOOLCHAIN_FILE "))
                     {
                         commandParts.Add(ToolchainFileOption.Replace("%SDK_ROOT%", sdkRoot));
@@ -224,9 +224,9 @@ namespace PlcNext.Common.Build
                     if (!buildInformation.BuildProperties.Contains("-G "))
                     {
                         commandParts.Add(GeneratorOption);
-                        if (buildInformation.Sdk.MakeFile != null && !buildInformation.BuildProperties.Contains("-DCMAKE_MAKE_PROGRAM "))
+                        if (buildInformation.SdkInformation.MakeFile != null && !buildInformation.BuildProperties.Contains("-DCMAKE_MAKE_PROGRAM "))
                         {
-                            commandParts.Add(MakeFileOption.Replace("%MAKE_EXE%", $"\"{buildInformation.Sdk.MakeFile.FullName.Replace("\\", "/")}\""));
+                            commandParts.Add(MakeFileOption.Replace("%MAKE_EXE%", $"\"{buildInformation.SdkInformation.MakeFile.FullName.Replace("\\", "/")}\""));
                         }
                     }
                     if (!string.IsNullOrEmpty(buildInformation.BuildProperties))

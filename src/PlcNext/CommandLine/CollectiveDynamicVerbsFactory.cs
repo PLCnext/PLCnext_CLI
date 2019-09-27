@@ -84,7 +84,7 @@ namespace PlcNext.CommandLine
                             separator = arg.Separator;
                             break;
                         default:
-                            throw new ArgumentException("Unkown value type.");
+                            throw new ArgumentException("Unknown value type.");
                     }
                     if(valueType == OptionValueType.MultipleValue)
                     {

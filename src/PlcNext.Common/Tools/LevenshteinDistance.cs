@@ -26,6 +26,16 @@ namespace PlcNext.Common.Tools
         /// </summary>
         public static int Compute(string s, string t)
         {
+            if (s == null)
+            {
+                throw new ArgumentNullException(nameof(s));
+            }
+
+            if (t == null)
+            {
+                throw new ArgumentNullException(nameof(t));
+            }
+
             int n = s.Length;
             int m = t.Length;
             int[,] d = new int[n + 1, m + 1];

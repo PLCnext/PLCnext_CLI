@@ -50,7 +50,7 @@ namespace PlcNext.Common.Tools.SDK
             ComparePaths(e.SplitValue);
         }
 
-        private void ComparePaths(string[] newPaths)
+        private void ComparePaths(IReadOnlyCollection<string> newPaths)
         {
             string[] cleanedPaths = newPaths.Select(p => p.CleanPath()).ToArray();
             

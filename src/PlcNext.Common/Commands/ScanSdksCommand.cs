@@ -34,7 +34,7 @@ namespace PlcNext.Common.Commands
         {
             foreach (string sdkPath in settingsProvider.Settings.SdkPaths)
             {
-                await sdkRepository.Update(sdkPath, true);
+                await sdkRepository.Update(sdkPath, true).ConfigureAwait(false);
             }
 
             return 0;

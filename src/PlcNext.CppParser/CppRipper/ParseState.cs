@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -19,8 +20,10 @@ namespace PlcNext.CppParser.CppRipper
         #endregion 
 
         #region public fields
-        public readonly string text;
-        public int index;
+
+        public string Text { get; }
+        public int Index { get; set; }
+
         #endregion
 
         #region public propterties
@@ -39,13 +42,13 @@ namespace PlcNext.CppParser.CppRipper
             get
             {
                 int cnt = 25;
-                int begin = index - cnt;
+                int begin = Index - cnt;
                 if (begin < 0)
                 {
                     begin = 0;
-                    cnt = index - begin;
+                    cnt = Index - begin;
                 }
-                return "... " + text.Substring(begin, cnt);
+                return "... " + Text.Substring(begin, cnt);
             }
         }
 
@@ -58,9 +61,9 @@ namespace PlcNext.CppParser.CppRipper
             get
             {
                 int cnt = 25;
-                if (index + cnt > text.Length)
-                    cnt = text.Length - index;
-                return text.Substring(index, cnt) + " ... ";
+                if (Index + cnt > Text.Length)
+                    cnt = Text.Length - Index;
+                return Text.Substring(Index, cnt) + " ... ";
             }
         }
         #endregion
@@ -72,7 +75,7 @@ namespace PlcNext.CppParser.CppRipper
         public ParserState(string text)
         {
             CreateNodes = true;
-            this.text = text;
+            this.Text = text ?? throw new ArgumentNullException(nameof(text));
             ParseNode root = new ParseNode(null, null, text, 0);
             root.Complete(text.Length);
             nodes.Push(root);
@@ -84,7 +87,7 @@ namespace PlcNext.CppParser.CppRipper
         /// <returns></returns>
         public bool AtEndOfInput()
         {
-            return index == text.Length;
+            return Index == Text.Length;
         }
 
         /// <summary>
@@ -133,7 +136,7 @@ namespace PlcNext.CppParser.CppRipper
         {
             while (nodes.Count > 1)
             {
-                Peek().Complete(index);
+                Peek().Complete(Index);
                 Pop();
             }
         }

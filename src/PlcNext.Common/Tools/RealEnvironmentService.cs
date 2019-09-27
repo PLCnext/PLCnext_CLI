@@ -27,7 +27,7 @@ namespace PlcNext.Common.Tools
             }
         }
 
-        public string Architecture => RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
+        public string Architecture => RuntimeInformation.ProcessArchitecture.ToString();
 
         public string PlatformName
         {
@@ -93,6 +93,11 @@ namespace PlcNext.Common.Tools
 
         public bool ContainsKey(string key)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return Enum.TryParse(key, true, out Environment.SpecialFolder _) ||
                    key.Equals("ApplicationName", StringComparison.OrdinalIgnoreCase);
         }

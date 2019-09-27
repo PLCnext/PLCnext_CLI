@@ -18,7 +18,7 @@ namespace PlcNext.NamedPipeServer.Communication
     {
         void SendMessage(Stream message, Action messageCompletedAction = null);
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        event EventHandler<EventArgs> Error;
+        event EventHandler<EventArgs> CommunicationError;
         void Start();
         void FlushReceivedMessages();
     }

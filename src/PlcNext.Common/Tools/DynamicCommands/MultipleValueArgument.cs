@@ -74,7 +74,7 @@ namespace PlcNext.Common.Tools.DynamicCommands
 
         public override string ToString()
         {
-            return $"{base.ToString()}, {nameof(Values)}: {string.Join(",", Values ?? new string[0])}";
+            return $"{base.ToString()}, {nameof(Values)}: {string.Join(",", Values ?? Array.Empty<string>())}";
         }
     }
 }

@@ -314,7 +314,7 @@ namespace PlcNext.Common.CodeModel
                     foreach (string part in contextPath)
                     {
                         current = current?.Owner;
-                        if (current?[$"is{part.ToLowerInvariant()}"].Value<bool>() != true)
+                        if (current?[$"is{part}"].Value<bool>() != true)
                         {
                             return false;
                         }
@@ -527,7 +527,7 @@ namespace PlcNext.Common.CodeModel
                 IDataType GetRealFieldDataType()
                 {
                     ICodeModel rootCodeModel = owner.Root.Value<ICodeModel>();
-                    IEnum @enum = field.DataType.PotentialFullNames.Select(n => rootCodeModel.Enum(n)).FirstOrDefault(e => e != null);
+                    IEnum @enum = field.DataType.PotentialFullNames.Select(n => rootCodeModel.GetEnum(n)).FirstOrDefault(e => e != null);
                     if (@enum != null)
                     {
                         (IDataType enumBaseType, _) = GetEnumBaseType(@enum);
@@ -660,8 +660,8 @@ namespace PlcNext.Common.CodeModel
                 }
 
                 ICodeModel rootCodeModel = dataSource.Root.Value<ICodeModel>();
-                bool isStruct = dataSourceField.DataType.PotentialFullNames.Any(n => rootCodeModel.Class(n) != null || rootCodeModel.Structure(n) != null);
-                IEnum @enum = dataSourceField.DataType.PotentialFullNames.Select(n => rootCodeModel.Enum(n)).FirstOrDefault(e => e != null);
+                bool isStruct = dataSourceField.DataType.PotentialFullNames.Any(n => rootCodeModel.GetClass(n) != null || rootCodeModel.GetStructure(n) != null);
+                IEnum @enum = dataSourceField.DataType.PotentialFullNames.Select(n => rootCodeModel.GetEnum(n)).FirstOrDefault(e => e != null);
                 bool isArray = dataSourceField.Multiplicity.Any();
                 string arpName = "DataType::" + GetArpDataType(dataSourceField.DataType.Name);
 

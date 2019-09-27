@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Management;
 using System.Reflection;
@@ -28,7 +29,8 @@ namespace PlcNext.Common.Tools.Process
         private readonly CancellationToken cancellationToken;
         private readonly IOutputFormatterPool formatterPool;
 
-        public ProcessManager(IEnvironmentService environmentService, ExecutionContext executionContext, CancellationToken cancellationToken, IOutputFormatterPool formatterPool)
+        public ProcessManager(IEnvironmentService environmentService, ExecutionContext executionContext,
+                              IOutputFormatterPool formatterPool, CancellationToken cancellationToken)
         {
             this.environmentService = environmentService;
             this.cancellationToken = cancellationToken;
@@ -143,7 +145,7 @@ namespace PlcNext.Common.Tools.Process
 
         public async Task WaitForExitAsync()
         {
-            await exitedResetEvent.WaitAsync();
+            await exitedResetEvent.WaitAsync().ConfigureAwait(false);
         }
 
         public void WaitForExit()
@@ -179,16 +181,15 @@ namespace PlcNext.Common.Tools.Process
         {
             if (platform == OSPlatform.Windows)
             {
-                ManagementObjectSearcher processSearcher = new ManagementObjectSearcher
-                    ("Select * From Win32_Process Where ParentProcessID=" + pid);
-                ManagementObjectCollection processCollection = processSearcher.Get();
-
-                // We must kill child processes first!
-                if (processCollection != null)
+                using (ManagementObjectSearcher processSearcher = new ManagementObjectSearcher
+                    ("Select * From Win32_Process Where ParentProcessID=" + pid))
                 {
-                    foreach (ManagementObject mo in processCollection)
+                    ManagementObjectCollection processCollection = processSearcher.Get();
+
+                    // We must kill child processes first!
+                    foreach (ManagementObject mo in processCollection.OfType<ManagementObject>())
                     {
-                        KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"])); //kill child processes(also kills childrens of childrens etc.)
+                        KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"],CultureInfo.InvariantCulture)); //kill child processes(also kills childrens of childrens etc.)
                     }
                 }
             }
@@ -233,6 +234,7 @@ namespace PlcNext.Common.Tools.Process
                         internalProcess.StandardInput.WriteLine();
                         KillProcessAndChildren(internalProcess.Id);
                     }
+                    internalProcess.Dispose();
                 }
             }
             catch (Exception e)

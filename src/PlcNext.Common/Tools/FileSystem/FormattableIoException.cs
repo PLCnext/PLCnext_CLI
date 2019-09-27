@@ -18,12 +18,12 @@ namespace PlcNext.Common.Tools.FileSystem
         {
         }
 
-        public FormattableIoException(IOException exception) : base(exception.Message, exception)
+        public FormattableIoException(IOException exception) : base(exception?.Message, exception)
         {
 
         }
         
-        public FormattableIoException(UnauthorizedAccessException exception) : base(exception.Message, exception)
+        public FormattableIoException(UnauthorizedAccessException exception) : base(exception?.Message, exception)
         {
 
         }

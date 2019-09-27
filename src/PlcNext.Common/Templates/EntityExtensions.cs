@@ -18,7 +18,7 @@ using PlcNext.Common.Tools.DynamicCommands;
 
 namespace PlcNext.Common.Templates
 {
-    public static class EntityExtensions
+    internal static class EntityExtensions
     {
         public static TemplateDescription Template(this Entity owner)
         {
@@ -38,7 +38,7 @@ namespace PlcNext.Common.Templates
             ICodeModel codeModel = owner.Root.Value<ICodeModel>();
             IType[] availableTypes = codeModel?.Types.Keys
                                                .Where(t => t.HasAttributeWithoutValue(relationshipDescription.name))
-                                               .ToArray() ?? new IType[0];
+                                               .ToArray() ?? Array.Empty<IType>();
             Entity[] availableEntities = owner.EntityHierarchy()
                                               .Where(e => e.Type.Equals(relationshipDescription.name,
                                                                         StringComparison.OrdinalIgnoreCase))
@@ -63,8 +63,7 @@ namespace PlcNext.Common.Templates
                 IType exactType = availableTypes.FirstOrDefault(t => t.FullName.Equals(name, StringComparison.OrdinalIgnoreCase));
                 IType[] relationshipTypes = exactType != null
                                                 ? new[] {exactType}
-                                                : availableTypes.Where(t => t.FullName.ToLowerInvariant()
-                                                                             .Contains(name.ToLowerInvariant()))
+                                                : availableTypes.Where(t => t.FullName.Contains(name, StringComparison.OrdinalIgnoreCase))
                                                                 .ToArray();
                 Entity[] relationshipEntities = availableEntities.Where(e => e.Name?.Equals(name,
                                                                                               StringComparison.OrdinalIgnoreCase)

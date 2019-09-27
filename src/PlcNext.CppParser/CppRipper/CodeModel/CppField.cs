@@ -29,7 +29,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         }
 
         public IDataType DataType { get; }
-        public int[] Multiplicity { get; }
+        public IReadOnlyCollection<int> Multiplicity { get; }
         public IType ContainingType { get; }
 
         public static IEnumerable<CppField> Parse(ParseNode declaration, string[] usings, string ns,
@@ -100,7 +100,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 ParseNode content = declaration.ChildrenSkipUnnamed().FirstOrDefault(n => n.RuleType == "plus" && n.RuleName == "declaration_content");
                 if (content == null)
                 {
-                    return new ParseNode[0];
+                    return Array.Empty<ParseNode>();
                 }
 
                 return content.ChildrenSkipUnnamed()
@@ -150,8 +150,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
             ParseNode[] GetTypeNodes(ParseNode[] parseNodes)
             {
-                return parseNodes.TakeWhile(n => n.ToString().EndsWith("::"))
-                                 .Concat(parseNodes.SkipWhile(n => n.ToString().EndsWith("::")).Take(1))
+                return parseNodes.TakeWhile(n => n.ToString().EndsWith("::", StringComparison.Ordinal))
+                                 .Concat(parseNodes.SkipWhile(n => n.ToString().EndsWith("::", StringComparison.Ordinal)).Take(1))
                                  .ToArray();
             }
         }

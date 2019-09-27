@@ -114,14 +114,14 @@ namespace PlcNext.Common.Project
             
             void SetProjectIncludes()
             {
-                IEnumerable<Sdk> relevantSdks = ProjectTargets.Select(t => availableTargets.FirstOrDefault(at => t.Target.Name == at.Name && at.LongVersion == t.Target.LongVersion))
+                IEnumerable<SdkInformation> relevantSdks = ProjectTargets.Select(t => availableTargets.FirstOrDefault(at => t.Target.Name == at.Name && at.LongVersion == t.Target.LongVersion))
                                              .Where(t => t != null)
                                              .Select(sdkRepository.GetSdk)
                                              .Where(sdk => sdk != null)
                                              .Distinct();
                 IncludePaths = relevantSdks.SelectMany(sdk => sdk.IncludePaths)
                                            .Concat(codeModel.IncludeDirectories.Select(d => d.FullName))
-                                           .Concat(relevantSdks.SelectMany(sdk => sdk.Compiler.IncludePaths))
+                                           .Concat(relevantSdks.SelectMany(sdk => sdk.CompilerInformation.IncludePaths))
                                            .Distinct();
             }
         }

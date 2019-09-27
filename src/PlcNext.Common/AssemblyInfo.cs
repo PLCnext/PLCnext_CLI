@@ -7,8 +7,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.Resources;
 using System.Runtime.CompilerServices;
 
+[assembly: NeutralResourcesLanguage("en")]
 #if !PUBLISHBUILD
 [assembly: InternalsVisibleTo("Test.PlcNext")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

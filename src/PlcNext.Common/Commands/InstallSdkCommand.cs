@@ -46,7 +46,7 @@ namespace PlcNext.Common.Commands
             {
                 throw new SdkFileNotFoundException(args.Sdk);
             }
-            await sdkInstaller.InstallSdk(sdk, directory, observable, args.Force);
+            await sdkInstaller.InstallSdk(sdk, directory, observable, args.Force).ConfigureAwait(false);
 
             userInterface.WriteInformation($"Successfully installed sdk {args.Sdk} in {args.Destination}.");
             return 0;

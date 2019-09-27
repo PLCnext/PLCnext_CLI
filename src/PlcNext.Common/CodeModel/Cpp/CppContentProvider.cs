@@ -79,7 +79,7 @@ namespace PlcNext.Common.CodeModel.Cpp
                     string output = commandEntity.Output;
                     string rootPath = templateOrigin.Root.Path;
                     string outputDirectory = fileSystem.GetDirectory(output, rootPath, false).FullName;
-                    if (outputDirectory.StartsWith(rootPath) && outputDirectory != rootPath)
+                    if (outputDirectory.StartsWith(rootPath, StringComparison.Ordinal) && outputDirectory != rootPath)
                     {
                         string partialPath = outputDirectory.Substring(rootPath.Length + 1).CleanPath();
                         Match match = relativeDirectoryRegex.Match(partialPath);
@@ -93,7 +93,7 @@ namespace PlcNext.Common.CodeModel.Cpp
                 string result = resolver.Resolve(formatOrigin.Name, templateOrigin);
                 if (!string.IsNullOrEmpty(basePath))
                 {
-                    if (!basePath.EndsWith("/"))
+                    if (!basePath.EndsWith("/", StringComparison.Ordinal))
                     {
                         basePath += "/";
                     }

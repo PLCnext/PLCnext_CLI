@@ -25,7 +25,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         public string Namespace { get; }
         public string FullName => $"{Namespace}::{Name}";
-        protected ParseNode GetDeclarationList(ParseNode content, ParseNode typeDeclaration)
+        protected static ParseNode GetDeclarationList(ParseNode content, ParseNode typeDeclaration)
         {
             return (from node in
                         content.ChildrenSkipUnnamed()

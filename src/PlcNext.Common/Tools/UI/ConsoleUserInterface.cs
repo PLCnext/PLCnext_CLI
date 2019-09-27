@@ -74,7 +74,7 @@ namespace PlcNext.Common.Tools.UI
             { ConsoleColor.Yellow,ConsoleColor.DarkYellow},
         };
 
-        public ConsoleUserInterface(ISettingsProvider settingsProvider, IEnvironmentService environmentService, IFileSystem fileSystem, ILog log)
+        public ConsoleUserInterface(ISettingsProvider settingsProvider, IEnvironmentService environmentService, ILog log)
         {
             this.log = log;
             try
@@ -194,7 +194,7 @@ namespace PlcNext.Common.Tools.UI
                     Console.ResetColor();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidOperationException();
             }
 
             void SwitchColorsToError()

@@ -34,7 +34,7 @@ namespace PlcNext.NamedPipeServer.Communication
         {
             if (communicationProtocol != null)
             {
-                Stop();
+                StopServer();
             }
 
             try
@@ -42,7 +42,7 @@ namespace PlcNext.NamedPipeServer.Communication
                 startCancellationTokenSource = new CancellationTokenSource();
                 communicationProtocol =
                     await NamedPipeCommunicationProtocol.Connect(serverName, streamFactory, log,
-                                                        startCancellationTokenSource.Token);
+                                                        cancellationToken:startCancellationTokenSource.Token).ConfigureAwait(false);
             }
             catch (TaskCanceledException e)
             {
@@ -58,29 +58,30 @@ namespace PlcNext.NamedPipeServer.Communication
 
             if (communicationProtocol != null)
             {
-                communicationProtocol.Error += CommunicationProtocolOnError;
+                communicationProtocol.CommunicationError += CommunicationProtocolOnCommunicationError;
             }
             OnConnected(new ServerConnectedEventArgs(communicationProtocol, heartbeat));
             communicationProtocol.Start();
             return true;
         }
 
-        private void CommunicationProtocolOnError(object sender, EventArgs e)
+        private void CommunicationProtocolOnCommunicationError(object sender, EventArgs e)
         {
-            Stop();
+            StopServer();
         }
 
-        public void Stop()
+        public void StopServer()
         {
             lock (syncRoot)
             {
                 if (communicationProtocol != null)
                 {
-                    communicationProtocol.Error -= CommunicationProtocolOnError;
+                    communicationProtocol.CommunicationError -= CommunicationProtocolOnCommunicationError;
                 }
                 startCancellationTokenSource?.Cancel();
                 communicationProtocol?.Dispose();
                 communicationProtocol = null;
+                startCancellationTokenSource?.Dispose();
                 OnDisconnected();
             }
         }
@@ -90,7 +91,7 @@ namespace PlcNext.NamedPipeServer.Communication
 
         public void Dispose()
         {
-            Stop();
+            StopServer();
         }
 
         protected virtual void OnConnected(ServerConnectedEventArgs e)

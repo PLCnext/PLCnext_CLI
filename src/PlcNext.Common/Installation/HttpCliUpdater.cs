@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
@@ -77,10 +78,10 @@ namespace PlcNext.Common.Installation
             using (MemoryStream signatureStream = RecyclableMemoryStreamManager.Instance.GetStream())
             using (Stream publicKeyFileStream = fileSystem.GetFile(publicKeyFile).OpenRead())
             {
-                await Download(repositoryFile, repositoryStream, proxy);
+                await Download(repositoryFile, repositoryStream, proxy).ConfigureAwait(false);
                 repositoryStream.Seek(0, SeekOrigin.Begin);
 
-                await Download(signatureFile, signatureStream, proxy);
+                await Download(signatureFile, signatureStream, proxy).ConfigureAwait(false);
                 signatureStream.Seek(0, SeekOrigin.Begin);
 
                 try
@@ -95,7 +96,10 @@ namespace PlcNext.Common.Installation
 
                 repositoryStream.Seek(0, SeekOrigin.Begin);
                 XmlSerializer serializer = new XmlSerializer(typeof(Repository));
-                repository = (Repository) serializer.Deserialize(repositoryStream);
+                using (XmlReader reader = XmlReader.Create(repositoryStream))
+                {
+                    repository = (Repository) serializer.Deserialize(reader);
+                }
             }
         }
 
@@ -103,18 +107,18 @@ namespace PlcNext.Common.Installation
         {
             if (!string.IsNullOrEmpty(proxy))
             {
-                await downloadService.Download(repositoryFile, repositoryStream, new WebProxy(new Uri(proxy)), parentProgress);
+                await downloadService.Download(repositoryFile, repositoryStream, new WebProxy(new Uri(proxy)), parentProgress).ConfigureAwait(false);
             }
             else
             {
-                await downloadService.Download(repositoryFile, repositoryStream, parentProgress);
+                await downloadService.Download(repositoryFile, repositoryStream, parentProgress).ConfigureAwait(false);
             }
         }
 
         public async Task<bool> IsCurrentVersion(string version, string proxy = "")
         {
-            await EnsureRepository(proxy);
-            string actualVersion = await CheckVersion(version, proxy);
+            await EnsureRepository(proxy).ConfigureAwait(false);
+            string actualVersion = await CheckVersion(version, proxy).ConfigureAwait(false);
             bool onlyUpdate = actualVersion != version;
             CliVersionDefinition versionDefinition = repository.Version.FirstOrDefault(v => v.GetInformalVersion() == actualVersion);
             if (versionDefinition != null)
@@ -133,7 +137,7 @@ namespace PlcNext.Common.Installation
         {
             if (string.IsNullOrEmpty(version))
             {
-                await EnsureRepository(proxy);
+                await EnsureRepository(proxy).ConfigureAwait(false);
                 version = repository.Version.OrderByDescending(v => Version.Parse(v.version)).FirstOrDefault()
                                    ?.GetInformalVersion() ?? string.Empty;
             }
@@ -145,8 +149,8 @@ namespace PlcNext.Common.Installation
                                                        IProgressNotifier parentProgress = null,
                                                        string proxy = "")
         {
-            await EnsureRepository(proxy);
-            string actualVersion = await CheckVersion(version, proxy);
+            await EnsureRepository(proxy).ConfigureAwait(false);
+            string actualVersion = await CheckVersion(version, proxy).ConfigureAwait(false);
 
             CliVersionDefinition versionDefinition = repository.Version.FirstOrDefault(v => v.GetInformalVersion() == actualVersion);
             if (versionDefinition == null)
@@ -165,7 +169,7 @@ namespace PlcNext.Common.Installation
             VirtualFile result = downloadDirectory.File(downloadFile.name);
             using (Stream fileStream = result.OpenWrite())
             {
-                await Download(downloadUri, fileStream, proxy, parentProgress);
+                await Download(downloadUri, fileStream, proxy, parentProgress).ConfigureAwait(false);
             }
 
             using (Stream fileStream = result.OpenRead())
@@ -186,11 +190,11 @@ namespace PlcNext.Common.Installation
             FileDefinition GetCorrectVersion()
             {
                 FileDefinition[] correctArchitecture = versionDefinition.File
-                                                                        .Where(f => f.Architecture.ToString().ToLowerInvariant() ==
-                                                                                    environmentService.Architecture)
+                                                                        .Where(f => f.Architecture.ToString().Equals(environmentService.Architecture, 
+                                                                                                                     StringComparison.OrdinalIgnoreCase))
                                                                         .ToArray();
-                return correctArchitecture.FirstOrDefault(f => f.OS.ToString().ToLowerInvariant() ==
-                                                               environmentService.PlatformName) ??
+                return correctArchitecture.FirstOrDefault(f => f.OS.ToString().Equals(environmentService.PlatformName,
+                                                              StringComparison.OrdinalIgnoreCase)) ??
                        correctArchitecture.FirstOrDefault(f => f.OS == OSDefinition.unbound);
             }
         }
@@ -201,14 +205,14 @@ namespace PlcNext.Common.Installation
 
             using (IProgressNotifier progressNotifier = parentProgress?.Spawn(installationSteps.Count()+1,"Installing version"))
             {
-                await fileUnpackService.Unpack(setup, destination, progressNotifier);
+                await fileUnpackService.Unpack(setup, destination, progressNotifier).ConfigureAwait(false);
 
                 foreach (IInstallationStep installationStep in installationSteps)
                 {
-                    await installationStep.Install(destination, progressNotifier);
+                    await installationStep.Install(destination, progressNotifier).ConfigureAwait(false);
                 }
             
-                await ReplaceApplication();
+                await ReplaceApplication().ConfigureAwait(false);
             }
 
             async Task ReplaceApplication()
@@ -217,7 +221,7 @@ namespace PlcNext.Common.Installation
 
                 if (environmentService.Platform != OSPlatform.Windows)
                 {
-                    await destination.CopyToAsync(fileSystem.GetDirectory(environmentService.AssemblyDirectory));
+                    await destination.CopyToAsync(fileSystem.GetDirectory(environmentService.AssemblyDirectory)).ConfigureAwait(false);
                     tempDirectory.Delete();
                 }
                 else
@@ -239,7 +243,7 @@ namespace PlcNext.Common.Installation
 
         public async Task<IEnumerable<Version>> GetAvailableVersions(string proxy = "")
         {
-            await EnsureRepository(proxy);
+            await EnsureRepository(proxy).ConfigureAwait(false);
             return repository.Version.Select(v => Version.Parse(v.version));
         }
 
@@ -247,7 +251,7 @@ namespace PlcNext.Common.Installation
         {
             if (repository == null)
             {
-                await LoadRepository(proxy);
+                await LoadRepository(proxy).ConfigureAwait(false);
             }
         }
     }

@@ -26,7 +26,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         {
             Name = name;
             Position = position;
-            Values = value != null ? new[] { value } : new string[0];
+            Values = value != null ? new[] { value } : Array.Empty<string>();
         }
 
         public CodePosition Position { get; }

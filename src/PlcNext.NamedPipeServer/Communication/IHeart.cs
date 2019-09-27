@@ -12,6 +12,6 @@ namespace PlcNext.NamedPipeServer.Communication
     public interface IHeart
     {
         void Start();
-        void Stop();
+        void StopHeartbeat();
     }
 }

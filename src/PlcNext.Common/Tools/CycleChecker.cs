@@ -14,7 +14,7 @@ using PlcNext.Common.DataModel;
 
 namespace PlcNext.Common.Tools
 {
-    public class CycleChecker<T> : IDisposable where T: IEquatable<T>
+    internal class CycleChecker<T> : IDisposable where T: IEquatable<T>
     {
         private readonly Action resetCycleCheckerInstanceAction;
         private readonly CycleChecker<T> parent;

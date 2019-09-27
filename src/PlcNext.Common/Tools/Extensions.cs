@@ -18,8 +18,18 @@ namespace PlcNext.Common.Tools
 {
     public static class Extensions
     {
+        public static bool Contains(this string source, string toCheck, StringComparison comp)
+        {
+            return source?.IndexOf(toCheck, comp) >= 0;
+        }
+
         public static string ToPropertyName(this string name)
         {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             return name.Replace("-", "")
                        .Replace("_", "")
                        .ToLowerInvariant();
@@ -27,6 +37,16 @@ namespace PlcNext.Common.Tools
 
         public static string ResolvePathName(this string path, IEnvironmentPathNames pathNames)
         {
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (pathNames == null)
+            {
+                throw new ArgumentNullException(nameof(pathNames));
+            }
+
             string resolved = path;
             Regex resolvePattern = new Regex(@"{(?<resolvable>\w+)}");
             Match resolveMatch = resolvePattern.Match(path);
@@ -60,6 +80,11 @@ namespace PlcNext.Common.Tools
         
         public static void ExecutesWithTimeout(this Action action, int timeout)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             Thread actionThread = new Thread(action.Invoke);
             actionThread.Start();
             bool finished = actionThread.Join(timeout);
@@ -69,9 +94,9 @@ namespace PlcNext.Common.Tools
             }
         }
         
-        public static string ToByteString(this Guid guid)
+        public static string ToByteString(this Guid id)
         {
-            byte[] bytes = guid.ToByteArray();
+            byte[] bytes = id.ToByteArray();
             return $"{bytes[0]:X2}{bytes[1]:X2}{bytes[2]:X2}{bytes[3]:X2}-{bytes[4]:X2}{bytes[5]:X2}-" +
                    $"{bytes[6]:X2}{bytes[7]:X2}-{bytes[8]:X2}{bytes[9]:X2}-" +
                    $"{bytes[10]:X2}{bytes[11]:X2}{bytes[12]:X2}{bytes[13]:X2}{bytes[14]:X2}{bytes[15]:X2}";

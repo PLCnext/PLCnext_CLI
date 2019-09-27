@@ -46,12 +46,17 @@ namespace PlcNext.CommandLine
             UserInterface?.SetVerbosity(Verbose);
             UserInterface?.SetQuiet(Quiet);
 
-            return await Execute(CommandManager);
+            return await Execute(CommandManager).ConfigureAwait(false);
         }
 
         protected T AddDeprecatedInformation<T>(T commandArgs)
         where T : CommandArgs
         {
+            if (commandArgs == null)
+            {
+                throw new ArgumentNullException(nameof(commandArgs));
+            }
+
             DeprecatedVerbAttribute attribute = this.GetType().GetCustomAttribute<DeprecatedVerbAttribute>();
             if (attribute == null)
             {

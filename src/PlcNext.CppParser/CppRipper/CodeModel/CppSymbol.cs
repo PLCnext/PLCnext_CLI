@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -48,7 +49,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 {
                     if (long.TryParse(lastSymbol.Value, out long numberValue))
                     {
-                        value = (numberValue + 1).ToString("D");
+                        value = (numberValue + 1).ToString("D", CultureInfo.InvariantCulture);
                     }
                 }
                 else

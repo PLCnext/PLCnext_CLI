@@ -71,7 +71,7 @@ namespace PlcNext.Common.Tools.FileSystem
         
         protected bool Equals(VirtualEntry other)
         {
-            return string.Equals(FullName, other.FullName);
+            return other != null && string.Equals(FullName, other.FullName, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)

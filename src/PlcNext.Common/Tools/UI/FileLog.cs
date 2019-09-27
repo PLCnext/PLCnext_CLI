@@ -15,7 +15,7 @@ using System.Text;
 
 namespace PlcNext.Common.Tools.UI
 {
-    public class FileLog : ILog, IDisposable
+    public sealed class FileLog : ILog, IDisposable
     {
         private readonly Stream traceStream;
         private readonly TextWriterTraceListener textListener;

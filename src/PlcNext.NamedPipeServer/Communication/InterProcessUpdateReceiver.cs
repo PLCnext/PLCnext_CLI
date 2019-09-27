@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
@@ -37,7 +38,7 @@ namespace PlcNext.NamedPipeServer.Communication
         public InterProcessUpdateReceiver(IEnvironmentInformation environmentInformation, StreamFactory streamFactory, ILog log, ICommunicationProtocol externalProtocol, IMessageParser messageParser)
         {
             serverName = environmentInformation.InterProcessServerNameBase +
-                         environmentInformation.CurrentProcessId.ToString("D");
+                         environmentInformation.CurrentProcessId.ToString("D", CultureInfo.InvariantCulture);
             this.streamFactory = streamFactory;
             this.log = log;
             this.externalProtocol = externalProtocol;
@@ -71,18 +72,18 @@ namespace PlcNext.NamedPipeServer.Communication
                     log.LogVerbose($"Start other instance update receiver {serverName}.");
 
                     protocol = await NamedPipeCommunicationProtocol.Connect(serverName, streamFactory, log,
-                                                                            cancellationToken: CancellationToken);
+                                                                            cancellationToken: CancellationToken).ConfigureAwait(false);
                     log.LogVerbose($"Other instance connected to the update receiver {serverName}.");
                     AsyncAutoResetEvent waitEvent = new AsyncAutoResetEvent(false);
-                    protocol.Error += ProtocolOnError;
+                    protocol.CommunicationError += ProtocolOnError;
                     protocol.MessageReceived += ProtocolOnMessageReceived;
                     protocol.Start();
-                    await waitEvent.WaitAsync(CancellationToken);
+                    await waitEvent.WaitAsync(CancellationToken).ConfigureAwait(false);
 
                     void ProtocolOnError(object sender, EventArgs e)
                     {
                         protocol.FlushReceivedMessages();
-                        protocol.Error -= ProtocolOnError;
+                        protocol.CommunicationError -= ProtocolOnError;
                         protocol.MessageReceived -= ProtocolOnMessageReceived;
                         waitEvent.Set();
                     }
@@ -113,6 +114,7 @@ namespace PlcNext.NamedPipeServer.Communication
             
             messageParser.HandshakeCompleted -= MessageParserOnHandshakeCompleted;
             protocol?.Dispose();
+            disposeSource.Dispose();
         }
     }
 }

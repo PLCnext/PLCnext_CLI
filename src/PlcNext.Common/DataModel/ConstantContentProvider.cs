@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using PlcNext.Common.Tools;
@@ -94,7 +95,7 @@ namespace PlcNext.Common.DataModel
                     return owner.Create(key, fileSystem.CurrentDirectory.FullName);
                 case EntityKeys.IsRootedKey:
                     bool isRooted = fileSystem.IsRooted(owner.Value<string>());
-                    return owner.Create(key, isRooted.ToString(), isRooted);
+                    return owner.Create(key, isRooted.ToString(CultureInfo.InvariantCulture), isRooted);
                 case EntityKeys.InternalDirectoryKey:
                     string path = owner.HasValue<string>() &&
                                   fileSystem.DirectoryExists(owner.Value<string>())

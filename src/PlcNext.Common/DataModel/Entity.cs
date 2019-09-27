@@ -90,6 +90,11 @@ namespace PlcNext.Common.DataModel
         {
             get
             {
+                if (key == null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+
                 key = key.ToLowerInvariant();
                 if (!cache.ContainsKey(key))
                 {
@@ -366,7 +371,7 @@ namespace PlcNext.Common.DataModel
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return Type == other.Type && string.Equals(Key, other.Key);
+                return Type == other.Type && string.Equals(Key, other.Key, StringComparison.OrdinalIgnoreCase);
             }
 
             public override bool Equals(object obj)

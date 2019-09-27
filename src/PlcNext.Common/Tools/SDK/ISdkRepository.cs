@@ -17,8 +17,8 @@ namespace PlcNext.Common.Tools.SDK
 {
     public interface ISdkRepository
     {
-        IEnumerable<Sdk> Sdks { get; }
-        Sdk GetSdk(Target target);
+        IEnumerable<SdkInformation> Sdks { get; }
+        SdkInformation GetSdk(Target target);
         IEnumerable<Target> GetAllTargets();
         IEnumerable<string> SdkPaths { get; }
         Task Update(string sdkPath, bool forced = false);

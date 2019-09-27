@@ -25,8 +25,7 @@ namespace PlcNext.NamedPipeServer.Communication
 
         private readonly object heartSyncRoot = new object();
         private readonly object liveCounterSyncRoot = new object();
-        
-        private Thread heartbeatThread;
+
         private CancellationTokenSource heartKillToken;
         private int lifeCounter;
         private bool isAlive;
@@ -59,7 +58,7 @@ namespace PlcNext.NamedPipeServer.Communication
             }
         }
 
-        public void Stop()
+        public void StopHeartbeat()
         {
             if (!settings.HeartbeatEnabled)
             {
@@ -175,6 +174,8 @@ namespace PlcNext.NamedPipeServer.Communication
             {
                 isAlive = false;
                 heartKillToken?.Cancel();
+                heartKillToken?.Dispose();
+                heartKillToken = null;
             }
         }
     }

@@ -75,7 +75,8 @@ namespace PlcNext.CommandLine
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
             return await commandManager.Execute(AddDeprecatedInformation(new 
-                GenerateLibraryCommandArgs(Path, MetaFilesDirectory, LibraryLocation, OutputDirectory, LibraryGuid, Targets, ExternalLibraries, SourceDirectories)));
+                GenerateLibraryCommandArgs(Path, MetaFilesDirectory, LibraryLocation, OutputDirectory, LibraryGuid, Targets, ExternalLibraries, SourceDirectories)))
+                                       .ConfigureAwait(false);
         }
     }
 }

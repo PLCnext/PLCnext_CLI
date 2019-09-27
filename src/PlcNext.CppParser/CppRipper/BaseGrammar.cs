@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -20,6 +21,7 @@ namespace PlcNext.CppParser.CppRipper
     /// functions (e.g. GetRuleFields(), GetRules()) are exposed in this class to be used 
     /// for iterating over the public Rule fields in a grammar, using reflection. 
     /// </summary>
+    [GeneratedCode("CppRipper", "1.0")]
     public class BaseGrammar
     {
         /// Rule operators are functions that take rules as arguments and produce new rules
@@ -64,7 +66,7 @@ namespace PlcNext.CppParser.CppRipper
         /// return true. It is represented by the symbol "#".
         /// </summary>
         /// <returns></returns>
-        public static Rule Nothing() { return NothingRule.instance; }
+        public static Rule Nothing() { return NothingRule.Instance; }
 
         /// <summary>
         /// Creates a rule that matches single characters, up to and including a 
@@ -119,7 +121,7 @@ namespace PlcNext.CppParser.CppRipper
         /// input. No node is created for this kind of rule.
         /// </summary>
         /// <returns></returns>
-        public static Rule Anything() { return AnythingRule.instance; }
+        public static Rule Anything() { return AnythingRule.Instance; }
 
         /// <summary>
         /// Creates a rule that matches any single character, as long as the Rule x

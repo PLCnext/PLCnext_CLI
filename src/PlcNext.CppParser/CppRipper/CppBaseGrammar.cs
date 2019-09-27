@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.CodeDom.Compiler;
 using System.Reflection;
 
 namespace PlcNext.CppParser.CppRipper
@@ -18,6 +19,7 @@ namespace PlcNext.CppParser.CppRipper
     /// * http://cpp.comsci.us/etymology/literals.html   
     /// </summary>
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
+    [GeneratedCode("CppRipper","1.0")]
     public class CppBaseGrammar
         : BaseGrammar
     {

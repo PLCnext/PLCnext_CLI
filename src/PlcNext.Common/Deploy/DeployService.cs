@@ -282,7 +282,8 @@ namespace PlcNext.Common.Deploy
                         return Constants.ReleaseFolderName;
                     }
 
-                    return buildType.Substring(0, 1).ToUpperInvariant() + buildType.Substring(1).ToLowerInvariant();
+                    return buildType.Substring(0, 1).ToUpperInvariant() + 
+                           buildType.Substring(1).ToLowerInvariant();
                 }
             }
         }

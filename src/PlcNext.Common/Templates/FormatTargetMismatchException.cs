@@ -18,7 +18,7 @@ namespace PlcNext.Common.Templates
 {
     public class FormatTargetMismatchException : FormattableException
     {
-        public FormatTargetMismatchException(formatTemplate template, string entityType) : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.FormatTargetMismatch, template.name, entityType, template.target))
+        public FormatTargetMismatchException(formatTemplate template, string entityType) : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.FormatTargetMismatch, template?.name, entityType, template.target))
         {
             
         }

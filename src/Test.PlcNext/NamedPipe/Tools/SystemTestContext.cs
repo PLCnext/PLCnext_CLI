@@ -172,7 +172,7 @@ namespace Test.PlcNext.NamedPipe.Tools
 
         public virtual void Dispose()
         {
-            server?.Stop();
+            server?.StopServer();
             host?.Dispose();
             commandResetEvent.Dispose();
             issuedCommands.Dispose();

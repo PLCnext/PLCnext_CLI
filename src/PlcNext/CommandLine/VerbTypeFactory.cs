@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -37,7 +38,10 @@ namespace PlcNext.CommandLine
             {
                 if (moduleBuilder == null)
                 {
-                    AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(Guid.NewGuid().ToString("N")), AssemblyBuilderAccess.Run);
+                    AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(Guid.NewGuid()
+                                                                                                                 .ToString("N",
+                                                                                                                      CultureInfo.InvariantCulture)), 
+                                                                                            AssemblyBuilderAccess.Run);
                     moduleBuilder = assemblyBuilder.DefineDynamicModule("DefaultModule");
                 }
                 return moduleBuilder;
@@ -103,7 +107,7 @@ namespace PlcNext.CommandLine
 
                 TypeBuilder GetTypeBuilder()
                 {
-                    string typeSignature = Guid.NewGuid().ToString("N");
+                    string typeSignature = Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
                     TypeBuilder result = ModuleBuilder.DefineType(typeSignature,
                                                                   TypeAttributes.Public |
                                                                   TypeAttributes.Class |
@@ -118,8 +122,8 @@ namespace PlcNext.CommandLine
                 void AddUseChildVerbsAsCategory()
                 {
                     Type childVerbsAsCategory = typeof(UseChildVerbsAsCategoryAttribute);
-                    ConstructorInfo constructor = childVerbsAsCategory.GetConstructor(new Type[0]);
-                    typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(constructor, new object[0]));
+                    ConstructorInfo constructor = childVerbsAsCategory.GetConstructor(Array.Empty<Type>());
+                    typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(constructor, Array.Empty<object>()));
                 }
 
                 void AddVerbAttribute()
@@ -145,8 +149,8 @@ namespace PlcNext.CommandLine
                     void AddUsageAttribute()
                     {
                         Type usageAttributeType = typeof(UsageAttribute);
-                        ConstructorInfo constructor = usageAttributeType.GetConstructor(new Type[0]);
-                        CustomAttributeBuilder usageAttributeBuilder = new CustomAttributeBuilder(constructor,new object[0]);
+                        ConstructorInfo constructor = usageAttributeType.GetConstructor(Array.Empty<Type>());
+                        CustomAttributeBuilder usageAttributeBuilder = new CustomAttributeBuilder(constructor, Array.Empty<object>());
                         builder.SetCustomAttribute(usageAttributeBuilder);
                     }
 
@@ -238,7 +242,7 @@ namespace PlcNext.CommandLine
                             case OptionValueType.MultipleValue:
                                 return typeof(IEnumerable<string>);
                             default:
-                                throw new ArgumentException("optionValueType");
+                                throw new ArgumentException("Unkown option value type", nameof(optionValueType));
                         }
                     }
 

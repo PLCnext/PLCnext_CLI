@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using PlcNext.Common.Tools.IO;
 
@@ -22,11 +23,19 @@ namespace PlcNext.Common.Tools.Security
     {
         public void ValidateSignature(Stream dataStream, Stream signatureStream, Stream publicKeyStream)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(RSAParameters));
-            RSAParameters parameters = (RSAParameters)serializer.Deserialize(publicKeyStream);
+            RSAParameters parameters;
+            RSASignature signature;
+            using (XmlReader reader = XmlReader.Create(publicKeyStream))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(RSAParameters));
+                parameters = (RSAParameters)serializer.Deserialize(reader);
+            }
 
-            serializer = new XmlSerializer(typeof(RSASignature));
-            RSASignature signature = (RSASignature)serializer.Deserialize(signatureStream);
+            using (XmlReader reader = XmlReader.Create(signatureStream))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(RSASignature));
+                signature = (RSASignature)serializer.Deserialize(reader);
+            }
 
             HashAlgorithmName name = string.IsNullOrEmpty(signature.HashAlgorithm)
                                          ? HashAlgorithmName.MD5
@@ -38,18 +47,18 @@ namespace PlcNext.Common.Tools.Security
             }
 
             RSASignaturePadding padding = RSASignaturePadding.Pkcs1;
-            switch (signature.RsaPadding.ToLowerInvariant())
+            switch (signature.RsaPadding.ToUpperInvariant())
             {
-                case "pkcs1":
+                case "PKCS1":
                     padding = RSASignaturePadding.Pkcs1;
                     break;
-                case "pss":
+                case "PSS":
                     padding = RSASignaturePadding.Pss;
                     break;
                 default:
                     if (!string.IsNullOrEmpty(signature.RsaPadding))
                     {
-                        throw new ArgumentException($"Rsa signature padding {signature.RsaPadding} is not kown.");
+                        throw new ArgumentException($"Rsa signature padding {signature.RsaPadding} is not known.");
                     }
                     break;
             }
@@ -78,7 +87,7 @@ namespace PlcNext.Common.Tools.Security
             HashAlgorithm hashAlgorithm = (HashAlgorithm)CryptoConfig.CreateFromName(name.Name);
             if (hashAlgorithm == null)
             {
-                throw new ArgumentException($"Unkown hash algorithm {hashAlgorithmName}");
+                throw new ArgumentException($"Unknown hash algorithm {hashAlgorithmName}");
             }
 
             byte[] data = dataStream.ReadToEnd();

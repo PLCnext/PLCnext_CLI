@@ -69,7 +69,7 @@ namespace PlcNext.Common.Tools.Priority
 
         public override int GetHashCode()
         {
-            return Identifier.ToLowerInvariant().GetHashCode();
+            return Identifier.ToUpperInvariant().GetHashCode();
         }
 
         public static bool operator ==(SubjectIdentifier left, SubjectIdentifier right)

@@ -23,9 +23,9 @@ namespace PlcNext.Common.Tools.Settings
 
         public string Key { get; }
         public string Value { get; set; }
-        public string[] SplitValue
+        public IReadOnlyCollection<string> SplitValue
         {
-            get => Value?.Split(new[] { Constants.SettingSplitChar }, StringSplitOptions.RemoveEmptyEntries)??new string[0];
+            get => Value?.Split(new[] { Constants.SettingSplitChar }, StringSplitOptions.RemoveEmptyEntries)?? Array.Empty<string>();
             set => Value = string.Join(new string(Constants.SettingSplitChar, 1), value);
         }
     }

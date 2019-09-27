@@ -21,12 +21,22 @@ namespace PlcNext.Common.Commands
     {
         public static bool IsCommand(this Entity entity)
         {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             return entity.HasValue<CommandDefinition>()
                    || entity.HasValue<CommandArgs>();
         }
 
         public static string GetPathCommandArgument(this Entity entity)
         {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             return entity.Value<CommandDefinition>()
                         ?.Argument<SingleValueArgument>(EntityKeys.PathKey)
                         ?.Value
@@ -37,6 +47,11 @@ namespace PlcNext.Common.Commands
 
         public static bool HasPathCommandArgument(this Entity entity)
         {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             return entity.Value<CommandDefinition>()
                         ?.Argument<SingleValueArgument>(EntityKeys.PathKey)
                    != null

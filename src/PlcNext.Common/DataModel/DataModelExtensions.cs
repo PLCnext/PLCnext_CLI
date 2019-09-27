@@ -54,8 +54,7 @@ namespace PlcNext.Common.DataModel
 
         public static bool HasPropertyValueEntity(this object valueProvider, string key)
         {
-            PropertyInfo property = valueProvider.GetType().GetProperties().FirstOrDefault(p => p.Name.ToLowerInvariant() ==
-                                                                                                key);
+            PropertyInfo property = valueProvider.GetType().GetProperties().FirstOrDefault(p => p.Name.Equals(key, StringComparison.OrdinalIgnoreCase));
             return property != null;
         }
 
@@ -65,8 +64,7 @@ namespace PlcNext.Common.DataModel
             {
                 entityType = key;
             }
-            PropertyInfo property = valueProvider.GetType().GetProperties().FirstOrDefault(p => p.Name.ToLowerInvariant() ==
-                                                                                           key);
+            PropertyInfo property = valueProvider.GetType().GetProperties().FirstOrDefault(p => p.Name.Equals(key, StringComparison.OrdinalIgnoreCase));
             if (property != null)
             {
                 if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) &&
@@ -87,8 +85,7 @@ namespace PlcNext.Common.DataModel
 
         public static T PropertyValue<T>(this object valueProvider, string key)
         {
-            PropertyInfo property = valueProvider.GetType().GetProperties().FirstOrDefault(p => p.Name.ToLowerInvariant() ==
-                                                                                                key);
+            PropertyInfo property = valueProvider.GetType().GetProperties().FirstOrDefault(p => p.Name.Equals(key, StringComparison.OrdinalIgnoreCase));
             if (property != null && typeof(T).IsAssignableFrom(property.PropertyType))
             {
                 return (T) property.GetValue(valueProvider);
@@ -99,8 +96,7 @@ namespace PlcNext.Common.DataModel
 
         public static bool HasPropertyValue(this object valueProvider, string key, Type propertyType)
         {
-            PropertyInfo property = valueProvider.GetType().GetProperties().FirstOrDefault(p => p.Name.ToLowerInvariant() ==
-                                                                                                key);
+            PropertyInfo property = valueProvider.GetType().GetProperties().FirstOrDefault(p => p.Name.Equals(key, StringComparison.OrdinalIgnoreCase));
             return property != null && propertyType.IsAssignableFrom(property.PropertyType);
         }
 
