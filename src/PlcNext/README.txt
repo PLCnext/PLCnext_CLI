@@ -13,6 +13,8 @@ How to setup the CLIF
 + When SDKs are already installed, add each SDK to the settings with the 
   command: 
   'plcncli set setting --add SdkPaths "<path\to\SDK>"'
++ If a previous version of the CLIF was installed (19.0.X), before executing
+  any command, execute the command 'migrate-old-cli'
 
 ----------------------------------
 Example on how to create a library
@@ -22,7 +24,7 @@ Example on how to create a library
 <Path to command> set target -n AXCF2152 --add -p My.Company.Product
 <Path to command> generate all -p My.Company.Product
 <Path to command> build -p My.Company.Product
-<Path to command> generate library -p My.Company.Product
+<Path to command> deploy -p My.Company.Product
 
 --------------------------------------
 How to define a component/program port
@@ -35,9 +37,9 @@ How to define a component/program port
 	  such as Input, separated by '|'
 + The port field need to be public
 
-----
+-------------
 Miscellaneous
-----
+-------------
 
 Q.	What is the '//#component(<Name of a component>)' comment above the class
 definition of a program?
@@ -52,10 +54,3 @@ Q.	Can I change the prefix '#' for all markings such as '#port' and
 A.	Yes. In the 'settings.xml' is an attribute called 'AttributePrefix'. This
 value is used to define the prefix. Warning: This setting applies to all
 projects. All attributes need to be changed accordingly.
-
-Q.  I have created a project with a CLI version prior 19.0. Can I use the old
-project with the new CLI version?
-
-A. Yes and no. Use the PlcNextProjectConverter to convert the project.
-Components need to be recreated as there was a breaking change in the 
-interface since the last version.

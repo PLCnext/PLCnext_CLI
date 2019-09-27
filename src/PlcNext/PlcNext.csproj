@@ -32,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ChangeLog.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="file-names.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
