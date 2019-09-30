@@ -9,6 +9,9 @@ namespace HiddenPlm
 
 using namespace Arp::Plc::Commons::Meta;
 
+    static const FieldDefinition HiddenPlm_HiddenPlmComponent_Example_value1("value1", offsetof(::HiddenPlm::HiddenPlmComponent::Example, value1), DataType::Int32, "", sizeof(int32), alignof(int32), {  }, StandardAttribute::Input);
+    static const FieldDefinition HiddenPlm_HiddenPlmComponent_Example_value2("NamedPort", offsetof(::HiddenPlm::HiddenPlmComponent::Example, value2), DataType::Boolean, "", sizeof(bool), alignof(bool), {  }, StandardAttribute::Output | StandardAttribute::Opc);
+    
     void HiddenPlmLibrary::InitializeTypeDomain()
     {
         this->typeDomain.AddTypeDefinitions
@@ -19,8 +22,8 @@ using namespace Arp::Plc::Commons::Meta;
                     DataType::Struct, CTN<HiddenPlm::HiddenPlmComponent::Example>(), sizeof(::HiddenPlm::HiddenPlmComponent::Example), alignof(::HiddenPlm::HiddenPlmComponent::Example), StandardAttribute::Hidden,
                     {
                         // FieldDefinitions:
-                        { "value1", offsetof(::HiddenPlm::HiddenPlmComponent::Example, value1), DataType::Int32, "", sizeof(int32), alignof(int32), {  }, StandardAttribute::Input },
-                        { "NamedPort", offsetof(::HiddenPlm::HiddenPlmComponent::Example, value2), DataType::Boolean, "", sizeof(bool), alignof(bool), {  }, StandardAttribute::Output | StandardAttribute::Opc },
+                        HiddenPlm_HiddenPlmComponent_Example_value1,
+                        HiddenPlm_HiddenPlmComponent_Example_value2,
                     }
                 },
                 {   // ProgramDefinition: HiddenPlm::HiddenPlmProgram

@@ -929,6 +929,7 @@ namespace Test.PlcNext.SystemTests.Tools
             using (StreamReader resourceReader = new StreamReader(resourceStream))
             {
                 //StringBuilder builder = new StringBuilder(reader.ReadToEnd());
+                reader.EndOfStream.Should().BeFalse("content already read");
                 while (!reader.EndOfStream)
                 {
                     string actualContent = reader.ReadLine();
