@@ -330,15 +330,6 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Do_not_allow_hidden_structures_inside_programs()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("ProgramWithHiddenStructPortProgram"),
-                _ => When_I_generate_all_metafiles(),
-                _ => Then_the_user_was_informed_that_the_scope_of_a_used_attribute_does_not_match()).RunAsyncWithTimeout();
-        }
-
-        [Scenario]
         public async Task Generate_port_information_for_hidden_struct_port()
         {
             await Runner.AddSteps(
