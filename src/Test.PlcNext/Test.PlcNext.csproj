@@ -22,6 +22,22 @@
     <None Remove="Deployment\HiddenPlm\src\HiddenPlmComponent.hpp" />
     <None Remove="Deployment\HiddenPlm\src\HiddenPlmProgram.cpp" />
     <None Remove="Deployment\HiddenPlm\src\HiddenPlmProgram.hpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\bin\AXCF2152_19.0.0.17548\Release\lib\libPrjN_ST_Update_Proj_Targets_2237.so" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\CMakeLists.txt" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\Component1.meta.cpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\Component1ProgramProvider.cpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\Component1ProgramProvider.hpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\PrjN_ST_Update_Proj_Targets_2237Library.cpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\PrjN_ST_Update_Proj_Targets_2237Library.hpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\PrjN_ST_Update_Proj_Targets_2237Library.meta.cpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\config\Component1\Component1.compmeta" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\config\Component1\CppProgram11\CppProgram11.progmeta" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\config\RNS_ST_Update_Proj_Targets_2237.libmeta" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\config\RNS_ST_Update_Proj_Targets_2237.typemeta" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\src\Component1.cpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\src\Component1.hpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\src\CppProgram11.cpp" />
+    <None Remove="Deployment\PartiallyBuildProjectWithCustomNamespace\src\CppProgram11.hpp" />
     <None Remove="Deployment\PortNameTooLong\CMakeLists.txt" />
     <None Remove="Deployment\PortNameTooLong\src\PortNameTooLongComponent.cpp" />
     <None Remove="Deployment\PortNameTooLong\src\PortNameTooLongComponent.hpp" />
@@ -61,6 +77,7 @@
     <None Remove="Deployment\TestResults\GetProjectInformationStandardReply.json" />
     <None Remove="Deployment\TestResults\GetProjectTargetsReply.json" />
     <None Remove="Deployment\TestResults\HiddenPlm.meta.cpp" />
+    <None Remove="Deployment\TestResults\PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
     <EmbeddedResource Include="Deployment\HiddenPlm\CMakeLists.txt" />
@@ -68,6 +85,22 @@
     <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmComponent.hpp" />
     <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmProgram.cpp" />
     <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmProgram.hpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\bin\AXCF2152_19.0.0.17548\Release\lib\libPrjN_ST_Update_Proj_Targets_2237.so" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\Component1.meta.cpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\Component1ProgramProvider.cpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\Component1ProgramProvider.hpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\PrjN_ST_Update_Proj_Targets_2237Library.cpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\PrjN_ST_Update_Proj_Targets_2237Library.hpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\code\PrjN_ST_Update_Proj_Targets_2237Library.meta.cpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\config\Component1\Component1.compmeta" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\config\Component1\CppProgram11\CppProgram11.progmeta" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\config\RNS_ST_Update_Proj_Targets_2237.libmeta" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\intermediate\config\RNS_ST_Update_Proj_Targets_2237.typemeta" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\src\Component1.cpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\src\Component1.hpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\src\CppProgram11.cpp" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\src\CppProgram11.hpp" />
     <EmbeddedResource Include="Deployment\PortNameTooLong\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\PortNameTooLong\src\PortNameTooLongComponent.cpp" />
     <EmbeddedResource Include="Deployment\PortNameTooLong\src\PortNameTooLongComponent.hpp" />
@@ -97,6 +130,7 @@
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.hpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.cpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\DemoLibraryCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\DemoLibraryCommandArgsWithSpecificId.txt" />
     <EmbeddedResource Include="Deployment\TestResults\DemoLibraryDifferentPathsCommandArgs.txt" />
@@ -772,6 +806,7 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.cpp" Link="Deployment\Templates\ProjectTemplate\Library.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.hpp" Link="Deployment\Templates\ProjectTemplate\Library.hpp" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\plcnext.proj" />
     <EmbeddedResource Include="Deployment\HiddenPlm\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\plcnext.proj" />

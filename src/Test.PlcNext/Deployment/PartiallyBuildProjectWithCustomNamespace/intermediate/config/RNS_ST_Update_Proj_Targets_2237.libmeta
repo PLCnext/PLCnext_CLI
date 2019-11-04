@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MetaConfigurationDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaVersion="2.0" xmlns="http://www.phoenixcontact.com/schema/metaconfig">
+  <Library name="RNS_ST_Update_Proj_Targets_2237" applicationDomain="CPLUSPLUS">
+    <File path="libRNS_ST_Update_Proj_Targets_2237.so" />
+    <TypeIncludes>
+      <Include path="RNS_ST_Update_Proj_Targets_2237.typemeta" />
+    </TypeIncludes>
+    <ComponentIncludes>
+      <Include path="Component1/Component1.compmeta" />
+    </ComponentIncludes>
+  </Library>
+</MetaConfigurationDocument>

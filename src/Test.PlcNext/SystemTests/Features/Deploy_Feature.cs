@@ -58,6 +58,20 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Deploy_for_project_with_custom_namespace_generates_library()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PartiallyBuildProjectWithCustomNamespace"),
+                _ => Given_is_the_working_directory_PATH("PartiallyBuildProjectWithCustomNamespace"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.17548"),
+                _ => Given_is_that_the_directory_exists("sysroots"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("PrjN_ST_Update_Proj_Targets_2237"),
+                _ => When_I_deploy(new DeployCommandArgs { BuildType = "Release" }),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt")
+            ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Deploy_for_project_with_malformated_library_id_throws_error()
         {
             await Runner.AddSteps(

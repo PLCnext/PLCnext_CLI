@@ -74,7 +74,7 @@ namespace PlcNext.Common.Build
             }
             CheckMetaFiles(targets.First());
 
-            string commandOptionsFile = GenerateCommandOptions(project, projectLibraries);
+            string commandOptionsFile = GenerateCommandOptions(project, projectLibraries, projectName);
             return ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project);
 
             VirtualFile FindLibrary(Entity target)
@@ -157,7 +157,7 @@ namespace PlcNext.Common.Build
             }
         }
 
-        private string GenerateCommandOptions(ProjectEntity project, Dictionary<Entity, VirtualFile> projectLibraries)
+        private string GenerateCommandOptions(ProjectEntity project, Dictionary<Entity, VirtualFile> projectLibraries, string projectName)
         {
             FileEntity projectFileEntity = FileEntity.Decorate(project);
             VirtualFile commandOptions = projectFileEntity.TempDirectory.File("CommandOptions.txt");
@@ -169,7 +169,7 @@ namespace PlcNext.Common.Build
             using (Stream stream = commandOptions.OpenWrite())
             using (StreamWriter writer = new StreamWriter(stream))
             {
-                writer.WriteLine($"{Constants.OutputOption} \"{MakeRelative(Path.Combine(outputRoot.FullName, project.Name))}.{Constants.EngineeringLibraryExtension}\"");
+                writer.WriteLine($"{Constants.OutputOption} \"{MakeRelative(Path.Combine(outputRoot.FullName, projectName))}.{Constants.EngineeringLibraryExtension}\"");
                 writer.WriteLine($"{Constants.GuidOption} {project.Id:D}");
 
                 RenameAndWriteLibraryFile(writer);
@@ -185,7 +185,7 @@ namespace PlcNext.Common.Build
                 {
                     VirtualFile renamedLibrary = projectFileEntity
                                                 .TempDirectory.Directory(target.FullName.Replace(",", "_"))
-                                                .File("lib" + project.Name +
+                                                .File("lib" + projectName +
                                                       Path.GetExtension(projectLibraries[target.Base].Name));
                     executionContext.Observable.OnNext(new Change(() => { }, $"Rename library file to {renamedLibrary.FullName}"));
                     using (Stream source = projectLibraries[target.Base].OpenRead(true))
@@ -229,22 +229,22 @@ namespace PlcNext.Common.Build
                 {
                     string destinationPath;
                     string fileType;
-                    switch (Path.GetExtension(metaFile.Name)?.ToLowerInvariant() ?? string.Empty)
+                    switch (Path.GetExtension(metaFile.Name)?.ToUpperInvariant() ?? string.Empty)
                     {
-                        case ".libmeta":
+                        case ".LIBMETA":
                             destinationPath = string.Empty;
                             fileType = Constants.LibmetaFileType;
                             break;
-                        case ".typemeta":
+                        case ".TYPEMETA":
                             destinationPath = string.Empty;
                             fileType = Constants.TypemetaFileType;
                             break;
-                        case ".compmeta":
+                        case ".COMPMETA":
                             CreateComponentDirectory(metaFile.Parent);
                             destinationPath = metaFile.Parent.Name;
                             fileType = Constants.CompmetaFileType;
                             break;
-                        case ".progmeta":
+                        case ".PROGMETA":
                             CreateProgramDirectory(metaFile.Parent);
                             destinationPath = $"{metaFile.Parent.Parent.Name}/{metaFile.Parent.Name}";
                             fileType = Constants.ProgmetaFileType;
