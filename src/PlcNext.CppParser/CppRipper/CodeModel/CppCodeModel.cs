@@ -48,7 +48,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                    .Concat(structures.Values.Select(t => ((IType) t.Item1, t.Item2)))
                    .ToDictionary(t => t.Item1, t => t.Item2);
 
-        public IEnumerable<VirtualDirectory> IncludeDirectories { get; internal set; }
+        public IDictionary<string, VirtualDirectory> IncludeDirectories { get; internal set; }
 
         public IStructure GetStructure(string structureName)
         {

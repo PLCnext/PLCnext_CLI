@@ -22,14 +22,14 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
 
     internal class IncludeManagerParameter
     {
-        public IncludeManagerParameter(IEnumerable<VirtualDirectory> includeDirectories, IEnumerable<string> knownIncludes, IEnumerable<IncludeDefinition> includeDefinitions)
+        public IncludeManagerParameter(IDictionary<string, VirtualDirectory> includeDirectories, IEnumerable<string> knownIncludes, IEnumerable<IncludeDefinition> includeDefinitions)
         {
             IncludeDirectories = includeDirectories;
             KnownIncludes = knownIncludes;
             IncludeDefinitions = includeDefinitions;
         }
 
-        public IEnumerable<VirtualDirectory> IncludeDirectories { get; }
+        public IDictionary<string, VirtualDirectory> IncludeDirectories { get; }
         public IEnumerable<string> KnownIncludes { get; }
         public IEnumerable<IncludeDefinition> IncludeDefinitions { get; }
     }

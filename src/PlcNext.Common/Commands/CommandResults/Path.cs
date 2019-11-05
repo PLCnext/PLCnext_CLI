@@ -22,4 +22,15 @@ namespace PlcNext.Common.Commands.CommandResults
         [JsonProperty(PropertyName = "path")]
         public string PathValue { get; }
     }
+
+    public class UncheckedPath : Path
+    {
+        public UncheckedPath(string pathValue, bool exists) : base(pathValue)
+        {
+            Exists = exists;
+        }
+
+        [JsonProperty(PropertyName = "exists")]
+        public bool Exists { get; }
+    }
 }

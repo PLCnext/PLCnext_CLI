@@ -32,7 +32,7 @@ namespace PlcNext.Common.Project
 
         Dictionary<CodeEntity, IEnumerable<Entity>> ProjectCodeEntities { get; }
 
-        IEnumerable<string> IncludePaths { get; }
+        IDictionary<string, bool> IncludePaths { get; }
 
         void Initialize(Entity root);
 
@@ -120,9 +120,15 @@ namespace PlcNext.Common.Project
                                              .Where(sdk => sdk != null)
                                              .Distinct();
                 IncludePaths = relevantSdks.SelectMany(sdk => sdk.IncludePaths)
-                                           .Concat(codeModel.IncludeDirectories.Select(d => d.FullName))
                                            .Concat(relevantSdks.SelectMany(sdk => sdk.CompilerInformation.IncludePaths))
-                                           .Distinct();
+                                           .Distinct()
+                                           .ToDictionary(x => x, x => true);
+                
+                    foreach (KeyValuePair<string, VirtualDirectory> codeModelIncludeDirectory in codeModel.IncludeDirectories)
+                    {
+                        if(!IncludePaths.ContainsKey(codeModelIncludeDirectory.Key))
+                            IncludePaths.Add(codeModelIncludeDirectory.Key, codeModelIncludeDirectory.Value!=null);
+                    }
             }
         }
 
@@ -136,7 +142,7 @@ namespace PlcNext.Common.Project
 
         public Dictionary<CodeEntity, IEnumerable<Entity>> ProjectCodeEntities { get; private set; }
 
-        public IEnumerable<string> IncludePaths { get; private set; }
+        public IDictionary<string, bool> IncludePaths { get; private set; }
 
         public IEnumerable<Exception> Exceptions { get; private set; }
     }

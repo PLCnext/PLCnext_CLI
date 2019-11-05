@@ -183,7 +183,7 @@ namespace PlcNext.Common.Project
                         throw;
                     }
 
-                    ICollection<VirtualDirectory> GetIncludeDirectories(VirtualDirectory baseDirectory)
+                    IDictionary<string, VirtualDirectory> GetIncludeDirectories(VirtualDirectory baseDirectory)
                     {
                         IEnumerable<string> includes = HasIncludeDirectoriesCommandArgument(owner)
                                                            ? GetIncludeDirectoriesCommandArgument(owner)
@@ -219,9 +219,8 @@ namespace PlcNext.Common.Project
                         });
 
                         includes = includes.Concat(GetTargetIncludes());
-                        ICollection<VirtualDirectory> includeDirectories = includes.Select(GetIncludeDirectory)
-                                                                                   .Where(d => d != null)
-                                                                                 .ToArray();
+                        
+                        IDictionary<string, VirtualDirectory> includeDirectories = includes.ToDictionary(x => x, GetIncludeDirectory);
                         return includeDirectories;
 
                         IEnumerable<string> GetTargetIncludes()

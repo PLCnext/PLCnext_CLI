@@ -19,7 +19,7 @@ namespace PlcNext.Common.Commands.CommandResults
         public ProjectInformationCommandResult(string name, string ns, string type,
                                                IEnumerable<TargetResult> targets,
                                                IEnumerable<EntityResult> entities,
-                                               IEnumerable<Path> includePaths)
+                                               IEnumerable<UncheckedPath> includePaths)
         {
             Name = name;
             Namespace = ns;

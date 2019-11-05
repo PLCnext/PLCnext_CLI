@@ -171,7 +171,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
                         }
 
                         //Parse relative to include path
-                        foreach (VirtualDirectory includeDirectory in parameter.IncludeDirectories)
+                        foreach (VirtualDirectory includeDirectory in parameter.IncludeDirectories.Values.Where(v => v != null))
                         {
                             if (includeDirectory.TryGetFileFromPath(current.Include, out file))
                             {

@@ -35,10 +35,10 @@ namespace PlcNext.CppParser.CppRipper
             this.includeManager = includeManager;
         }
 
-        public ICodeModel Parse(ICollection<VirtualDirectory> sourceDirectories, ICollection<VirtualDirectory> includeDirectories, out IEnumerable<CodeSpecificException> loggableExceptions)
+        public ICodeModel Parse(ICollection<VirtualDirectory> sourceDirectories, IDictionary<string, VirtualDirectory> includeDirectories, out IEnumerable<CodeSpecificException> loggableExceptions)
         {
             log.LogVerbose($"Creating code model for {string.Join(", ", sourceDirectories.Select(d => d.FullName))} " +
-                           $"with include paths {string.Join(", ",includeDirectories.Select(d => d.FullName))}");
+                           $"with include paths {string.Join(", ",includeDirectories.Values.Where(d => d != null).Select(d => d.FullName))}");
             Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes = new Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)>();
             Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)> enums = new Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)>();
             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures = new Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)>();

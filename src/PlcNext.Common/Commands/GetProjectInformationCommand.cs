@@ -60,7 +60,7 @@ namespace PlcNext.Common.Commands
                                                                                                                           kvp.Key.Namespace,
                                                                                                                           kvp.Key.Type,
                                                                                                                           kvp.Value.Select(en => en.Name))),
-                                                    propertiesProvider.IncludePaths.Select(p => new CommandResults.Path(p))
+                                                    propertiesProvider.IncludePaths.Select(p => new CommandResults.UncheckedPath(p.Key, p.Value))
                                                     ),
                 propertiesProvider.Exceptions);
         }
