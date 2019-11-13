@@ -201,7 +201,10 @@ namespace PlcNext.Common.Project
                                 catch (Exception e)
                                 {
                                     if (e is FormattableException || e is AggregateException)
+                                    {
                                         executionContext.WriteWarning($"Automatic include detection via cmake could not be executed. See log for details.");
+                                        executionContext.WriteError(e.ToString(), false);
+                                    }
                                     else
                                         throw;
                                 }
