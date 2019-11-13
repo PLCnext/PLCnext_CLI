@@ -8,6 +8,7 @@
 #endregion
 
 using System.Collections.Generic;
+using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.Common.Tools.Process
@@ -19,7 +20,14 @@ namespace PlcNext.Common.Tools.Process
     {
         IProcess StartProcess(string fileName, string arguments,
                               IUserInterface userInterface,
-                              string workingDirectory = null, bool showOutput = true, bool showError = true,
+                              string workingDirectory = null,
+                              bool showOutput = true, bool showError = true,
+                              bool killOnDispose = true);
+
+        IProcess StartProcessWithSetup(string fileName, string arguments,
+                              IUserInterface userInterface, string setup,
+                              string workingDirectory = null,
+                              bool showOutput = true, bool showError = true,
                               bool killOnDispose = true);
     }
 }

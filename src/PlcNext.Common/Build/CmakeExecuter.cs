@@ -89,11 +89,15 @@ namespace PlcNext.Common.Build
             return CallCmake(workingDirectory, command, showOutput, throwOnError, showOutput);
         }
 
-            private bool CallCmake(VirtualDirectory workingDirectory, string command, bool showOutput, bool throwOnError, bool showWarnings)
+        private bool CallCmake(VirtualDirectory workingDirectory, string command, bool showOutput, bool throwOnError,
+            bool showWarnings)
         {
-            using (IProcess process = processManager.StartProcess(binariesLocator.GetExecutableCommand("cmake"), command, userInterface,
-                                                                  workingDirectory.FullName.Replace("\\", "/"),
-                                                                  showOutput: showOutput, showError: showWarnings))
+            string setup = GetSetupFile(workingDirectory);
+            
+            using (IProcess process = processManager.StartProcessWithSetup(binariesLocator.GetExecutableCommand("cmake"),
+                    command, userInterface, setup,
+                    workingDirectory.FullName.Replace("\\", "/"),
+                    showOutput: showOutput, showError: showWarnings))
             {
                 process.WaitForExit();
                 if (process.ExitCode != 0)
@@ -108,6 +112,20 @@ namespace PlcNext.Common.Build
             }
 
             return true;
+        }
+
+        private string GetSetupFile(VirtualDirectory scriptDirectory)
+        {
+            string environmentSetupScript = environmentService.Platform == OSPlatform.Linux
+                ? $"{Constants.EnvironmentSetupScriptFile}.{Constants.ScriptFileExtensionLinux}"
+                : $"{Constants.EnvironmentSetupScriptFile}.{Constants.ScriptFileExtensionWin}";
+
+            if (scriptDirectory.CheckDirectlyFileExists(environmentSetupScript))
+            {
+                //return environmentSetupScript;
+                return Path.Combine(scriptDirectory.FullName, environmentSetupScript);
+            }
+            return null;
         }
 
         public (bool, VirtualDirectory) EnsureConfigured(BuildInformation buildInformation, ChangeObservable observable = null, bool throwOnError = false,

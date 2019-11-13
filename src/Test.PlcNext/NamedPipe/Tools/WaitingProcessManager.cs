@@ -36,6 +36,15 @@ namespace Test.PlcNext.NamedPipe.Tools
             return new WaitingProcess(CancellationToken);
         }
 
+        public IProcess StartProcessWithSetup(string fileName, string arguments,
+                              IUserInterface userInterface, string setup,
+                              string workingDirectory = null,
+                              bool showOutput = true, bool showError = true,
+                              bool killOnDispose = true)
+        {
+            return StartProcess(fileName, arguments, userInterface, workingDirectory, showOutput, showError, killOnDispose);
+        }
+
         private class WaitingProcess : IProcess
         {
             private readonly CancellationToken cancellationToken;

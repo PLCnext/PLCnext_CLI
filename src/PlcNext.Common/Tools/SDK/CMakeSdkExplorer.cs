@@ -134,8 +134,11 @@ namespace PlcNext.Common.Tools.SDK
                             string flags = GetCacheEntry("CMAKE_CXX_FLAGS")["value"].Value<string>();
                             string command = $"--sysroot=\"{cmakeSysroot}\" {flags} -E -P -v -dD a.cxx";
                             StringBuilderUserInterface stringBuilder = new StringBuilderUserInterface(executionContext,true,true,true,true);
-                            using (IProcess process = processManager.StartProcess(compiler.Replace('/', Path.DirectorySeparatorChar),
-                                                                                  command, stringBuilder, 
+
+                            string setup = GetSetupFile(binaryDirectory);
+
+                            using (IProcess process = processManager.StartProcessWithSetup(compiler.Replace('/', Path.DirectorySeparatorChar),
+                                                                                  command, stringBuilder, setup, 
                                                                                   temporaryDirectory.FullName))
                             {
                                 process.WaitForExit();
@@ -192,7 +195,7 @@ namespace PlcNext.Common.Tools.SDK
                             if (project == null)
                             {
                                 throw new FormattableException($"The code model does not contain any project with the name 'MyProject'. " +
-                                                               $"The code model contains the follwoing data:{Environment.NewLine}" +
+                                                               $"The code model contains the following data:{Environment.NewLine}" +
                                                                $"{codeModel.ToString(Formatting.Indented)}");
                             }
 
@@ -204,7 +207,7 @@ namespace PlcNext.Common.Tools.SDK
                             if (target == null)
                             {
                                 throw new FormattableException($"The project 'MyProject' does not contain any target with the name 'MyProject'. " +
-                                                               $"The project contains the follwoing data:{Environment.NewLine}" +
+                                                               $"The project contains the following data:{Environment.NewLine}" +
                                                                $"{project.ToString(Formatting.Indented)}");
                             }
 
@@ -251,7 +254,11 @@ namespace PlcNext.Common.Tools.SDK
                         $"-DARP_CHECK_DEVICE=OFF " +
                         $"-DARP_CHECK_DEVICE_VERSION=OFF " +
                         $"..";
-                    using (IProcess process = processManager.StartProcess(binariesLocator.GetExecutableCommand("cmake"), command, executionContext,
+
+                    string setup = GetSetupFile(cache);
+
+                    using (IProcess process = processManager.StartProcessWithSetup(binariesLocator.GetExecutableCommand("cmake"),
+                                                                          command, executionContext, setup,
                                                                           cache.FullName.Replace("\\", "/"),
                                                                           showOutput: false, showError: false))
                     {
@@ -304,6 +311,21 @@ namespace PlcNext.Common.Tools.SDK
             {
                 return !forceExploration && exploredPaths.Contains(sdkRootPath);
             }
+        }
+
+        private string GetSetupFile(VirtualDirectory scriptDirectory)
+        {
+            string environmentSetupScript = environmentService.Platform == OSPlatform.Linux
+                ? $"{Constants.EnvironmentSetupScriptFile}.{Constants.ScriptFileExtensionLinux}"
+                : $"{Constants.EnvironmentSetupScriptFile}.{Constants.ScriptFileExtensionWin}";
+
+            if (scriptDirectory.CheckDirectlyFileExists(environmentSetupScript))
+            {
+                //return environmentSetupScript;
+                return Path.Combine(scriptDirectory.FullName, environmentSetupScript);
+            }
+
+            return null;
         }
     }
 }

@@ -37,6 +37,8 @@ namespace PlcNext.Common.Tools
         public const string EngineeringLibraryExtension = "pcwlx";
         public const string HeaderExtension = "hpp";
         public const string ClassExtension = "cpp";
+        public const string ScriptFileExtensionWin = "bat";
+        public const string ScriptFileExtensionLinux = "sh";
 
         //other
         public const string Tab = "    ";
@@ -58,6 +60,7 @@ namespace PlcNext.Common.Tools
         public const string PublicKeyFileName = "public_cli_repository_key.xml";
         public const string ProjectFileName = "plcnext.proj";
         public const string FileNamesFile = "file-names.xml";
+        public const string EnvironmentSetupScriptFile = "EnvironmentSetup";
 
         //progress visualizer
         public const double ProgressBarDelay = 300;

@@ -8,16 +8,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Mono.Unix;
 using Nito.AsyncEx;
+using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.Common.Tools.Process
@@ -40,21 +44,61 @@ namespace PlcNext.Common.Tools.Process
 
         public IProcess StartProcess(string fileName, string arguments,
                                      IUserInterface userInterface,
-                                     string workingDirectory = null, bool showOutput = true, bool showError = true,
+                                     string workingDirectory = null,
+                                     bool showOutput = true, bool showError = true,
                                      bool killOnDispose = true)
         {
             FormatterParameters parameters = new FormatterParameters();
-            parameters.Add(fileName,Constants.CommandKey);
-            parameters.Add(arguments,Constants.CommandArgumentsKey);
+            parameters.Add(fileName, Constants.CommandKey);
+            parameters.Add(arguments, Constants.CommandArgumentsKey);
             IUserInterface formatterUserInterface = formatterPool.GetFormatter(parameters, userInterface);
             ExecutionContext redirectedContext = executionContext.RedirectOutput(formatterUserInterface);
 
-            return new ProcessFacade(fileName, arguments, workingDirectory, redirectedContext, showOutput, showError, killOnDispose,
+            return new ProcessFacade(fileName, arguments, workingDirectory, redirectedContext, null, showOutput, showError, killOnDispose,
                 environmentService.Platform, cancellationToken);
         }
 
+        public IProcess StartProcessWithSetup(string fileName, string arguments,
+                              IUserInterface userInterface, string setup,
+                              string workingDirectory = null,
+                              bool showOutput = true, bool showError = true,
+                              bool killOnDispose = true)
+        {
+            string commandName = fileName;
+            if (setup != null)
+            {
+                commandName = $"cmd.exe";
+                string arguments2 = $"/c \"\"{setup}\" && \"{fileName}\" {arguments}\"";
+                if (environmentService.Platform == OSPlatform.Linux)
+                {
+                    commandName = "/bin/sh";
+                    arguments2 = $"-c \"'{setup}' && '{fileName}' {arguments}\"";
+                }
+                arguments = arguments2;
+                
+            }
+            string displayName = Path.GetFileNameWithoutExtension(fileName);
+
+            FormatterParameters parameters = new FormatterParameters();
+            parameters.Add(commandName, Constants.CommandKey);
+            parameters.Add(arguments, Constants.CommandArgumentsKey);
+            IUserInterface formatterUserInterface = formatterPool.GetFormatter(parameters, userInterface);
+            ExecutionContext redirectedContext = executionContext.RedirectOutput(formatterUserInterface);
+
+            if (environmentService.Platform == OSPlatform.Linux && setup != null)
+            {
+                var fileInfo = new UnixFileInfo(setup);
+                fileInfo.FileAccessPermissions = fileInfo.FileAccessPermissions | FileAccessPermissions.UserExecute;
+            }
+            
+            ProcessFacade facade = new ProcessFacade(commandName, arguments, workingDirectory, redirectedContext, displayName, showOutput, showError, killOnDispose,
+            environmentService.Platform, cancellationToken);
+
+            return facade;
+        }
+
         private static int CurrentProcessId => System.Diagnostics.Process.GetCurrentProcess().Id;
-        
+
         public IEnumerable<int> GetOtherInstancesProcessIds()
         {
             return System.Diagnostics.Process
@@ -79,10 +123,11 @@ namespace PlcNext.Common.Tools.Process
         private readonly bool errorReadStarted;
         private readonly AsyncAutoResetEvent exitedResetEvent = new AsyncAutoResetEvent(false);
         private bool disposed;
+        private readonly string displayName;
         #endregion
 
         public ProcessFacade(string fileName, string arguments, string workingDirectory,
-                             ExecutionContext executionContext,
+                             ExecutionContext executionContext, string displayName,
                              bool showOutput, bool showError, bool killOnDispose, OSPlatform platform,
                              CancellationToken cancellationToken)
         {
@@ -91,6 +136,7 @@ namespace PlcNext.Common.Tools.Process
             this.showError = showError;
             this.killOnDispose = killOnDispose;
             this.platform = platform;
+            this.displayName = displayName;
             ProcessStartInfo processInfo = new ProcessStartInfo(fileName, arguments)
             {
                 CreateNoWindow = true,
@@ -104,10 +150,10 @@ namespace PlcNext.Common.Tools.Process
             {
                 processInfo.WorkingDirectory = workingDirectory;
             }
-            
+
             executionContext.WriteVerbose($"Starting process {processInfo.FileName} {processInfo.Arguments} in {processInfo.WorkingDirectory}.");
             internalProcess = System.Diagnostics.Process.Start(processInfo);
-            if(internalProcess != null && !internalProcess.HasExited)
+            if (internalProcess != null && !internalProcess.HasExited)
             {
                 try
                 {
@@ -123,7 +169,7 @@ namespace PlcNext.Common.Tools.Process
                 }
                 catch (Exception e)
                 {
-                    processName = "unkown process";
+                    processName = "unknown process";
                     executionContext.WriteWarning($"Error while starting process: {e}", false);
                     //this happens when the process exits somewhere in this if clause
                 }
@@ -132,14 +178,14 @@ namespace PlcNext.Common.Tools.Process
             }
             else
             {
-                processName = "unkown process";
+                processName = "unknown process";
                 exitedResetEvent.Set();
             }
         }
 
+
         private void InternalProcessOnExited(object sender, EventArgs e)
         {
-            
             exitedResetEvent.Set();
         }
 
@@ -160,15 +206,15 @@ namespace PlcNext.Common.Tools.Process
         {
             if (dataReceivedEventArgs.Data != null)
             {
-                executionContext.WriteInformation($"[{processName}]: {dataReceivedEventArgs.Data}", showOutput);
+                executionContext.WriteInformation($"[{displayName ?? processName}]: {dataReceivedEventArgs.Data}", showOutput);
             }
         }
 
         private void InternalProcessOnErrorDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
         {
-            if(dataReceivedEventArgs.Data != null)
+            if (dataReceivedEventArgs.Data != null)
             {
-                executionContext.WriteError($"[{processName}]: {dataReceivedEventArgs.Data}", showError);
+                executionContext.WriteError($"[{displayName ?? processName}]: {dataReceivedEventArgs.Data}", showError);
             }
         }
 
@@ -189,7 +235,7 @@ namespace PlcNext.Common.Tools.Process
                     // We must kill child processes first!
                     foreach (ManagementObject mo in processCollection.OfType<ManagementObject>())
                     {
-                        KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"],CultureInfo.InvariantCulture)); //kill child processes(also kills childrens of childrens etc.)
+                        KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"], CultureInfo.InvariantCulture)); //kill child processes(also kills childrens of childrens etc.)
                     }
                 }
             }

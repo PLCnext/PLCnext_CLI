@@ -93,6 +93,16 @@ namespace PlcNext.Common.Tools.FileSystem
             return true;
         }
 
+        public bool CheckDirectlyFileExists(string filename)
+        {
+            VirtualFile result = contentResolver.GetContent().OfType<VirtualFile>().FirstOrDefault(d => d.Name == filename);
+            if (result == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool DirectoryExists(string directoryName)
         {
             VirtualDirectory result = Entries.OfType<VirtualDirectory>().FirstOrDefault(d => d.Name == directoryName);
