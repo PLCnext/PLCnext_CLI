@@ -270,36 +270,28 @@ namespace PlcNext.Common.Tools.SDK
 
         private async Task<CMakeReplyMessage> WaitForReply(string type)
         {
-            CMakeProgressMessage progressMessage;
-            CMakeMessageMessage messageMessage;
-            CMakeMessage message;
+            CMakeProgressMessage progressMessage = null;
+            CMakeMessageMessage messageMessage = null;
+            CMakeMessage message = null;
             do
             {
-                //Expect at least a progress message after default timeout
-                message = CMakeMessage.Parse<CMakeMessage>(await serverStream.ReadMessage()
-                                                                             .TimeoutAfter(CMakeServerTimeout)
-                                                                             .ConfigureAwait(false), 
-                                                           userInterface);
-                progressMessage = message as CMakeProgressMessage;
-                messageMessage = message as CMakeMessageMessage;
-                if (messageMessage != null)
+                foreach (string singleMessage in await serverStream.ReadMessage()
+                                                           .TimeoutAfter(CMakeServerTimeout)
+                                                           .ConfigureAwait(false))
                 {
-                    CheckCookieAndType(messageMessage);
-                    if (messageMessage.Title.Contains("error", StringComparison.OrdinalIgnoreCase))
+                    //Expect at least a progress message after default timeout
+                    message = ParseMessage(singleMessage);
+                    if (message is CMakeReplyMessage replyMessage)
                     {
-                        throw new FormattableException($"CMake discovered an error.{Environment.NewLine}" +
-                                                            $"{messageMessage.Title}{Environment.NewLine}" +
-                                                            $"==================================={Environment.NewLine}" +
-                                                            $"{messageMessage.Message}");
+                        CheckCookieAndType(replyMessage);
+                        return replyMessage;
                     }
                 }
             } while (progressMessage != null ||
                      messageMessage != null ||
                      message == null);
 
-            CMakeReplyMessage replyMessage = (CMakeReplyMessage)message;
-            CheckCookieAndType(replyMessage);
-            return replyMessage;
+            throw new InvalidOperationException("This is not possible.");
 
             void CheckCookieAndType(CMakeBaseResponseMessage responseMessage)
             {
@@ -318,6 +310,26 @@ namespace PlcNext.Common.Tools.SDK
                                                         "Someone else is taking to the server unexpectedly " +
                                                         "or the server is confusing.");
                 }
+            }
+
+            CMakeMessage ParseMessage(string singleMessage)
+            {
+                CMakeMessage parsedMessage = CMakeMessage.Parse<CMakeMessage>(singleMessage, userInterface);
+                progressMessage = parsedMessage as CMakeProgressMessage;
+                messageMessage = parsedMessage as CMakeMessageMessage;
+                if (messageMessage != null)
+                {
+                    CheckCookieAndType(messageMessage);
+                    if (messageMessage.Title.Contains("error", StringComparison.OrdinalIgnoreCase))
+                    {
+                        throw new FormattableException($"CMake discovered an error.{Environment.NewLine}" +
+                                                       $"{messageMessage.Title}{Environment.NewLine}" +
+                                                       $"==================================={Environment.NewLine}" +
+                                                       $"{messageMessage.Message}");
+                    }
+                }
+
+                return parsedMessage;
             }
         }
 
@@ -354,13 +366,15 @@ namespace PlcNext.Common.Tools.SDK
                 IUserInterface jsonCmakeInterface = formatterPool.GetFormatter(parameters, executionContext);
 
                 CMakeServerStream serverStream = new CMakeServerStream(pipeClient, executionContext);
-                CMakeHelloMessage hello;
+                CMakeHelloMessage hello = null;
                 do
                 {
-                    hello = CMakeMessage.Parse<CMakeHelloMessage>(await serverStream.ReadMessage()
-                                                                                    .TimeoutAfter(CMakeServerTimeout)
-                                                                                    .ConfigureAwait(false), 
-                                                                  jsonCmakeInterface);
+                    foreach (string singleMessage in await serverStream.ReadMessage()
+                                                               .TimeoutAfter(CMakeServerTimeout)
+                                                               .ConfigureAwait(false))
+                    {
+                        hello = CMakeMessage.Parse<CMakeMessage>(singleMessage, jsonCmakeInterface) as CMakeHelloMessage;
+                    }
                 } while (hello == null);
 
                 if (hello.SupportedProtocolVersions.All(v => v.Major != 1))
@@ -410,7 +424,7 @@ namespace PlcNext.Common.Tools.SDK
             streamEncoding = new UTF8Encoding();
         }
 
-        public async Task<string> ReadMessage()
+        public async Task<IEnumerable<string>> ReadMessage()
         {
             StringBuilder message = new StringBuilder();
             int readBytes = 0;
@@ -419,7 +433,7 @@ namespace PlcNext.Common.Tools.SDK
                 byte[] buffer = new byte[BufferSize];
                 readBytes = await ioStream.ReadAsync(buffer, 0, BufferSize).ConfigureAwait(false);
                 message.Append(streamEncoding.GetString(buffer, 0, readBytes));
-
+                log.LogVerbose($"Read {readBytes} bytes from cmake server.");
             } while (readBytes == BufferSize && !EndsWithEndTag());
 
             return Decode(message.ToString());
@@ -444,10 +458,20 @@ namespace PlcNext.Common.Tools.SDK
                 return true;
             }
 
-            string Decode(string completeMessage)
+            IEnumerable<string> Decode(string completeMessage)
             {
                 Match decoderMatch = MessageDecoder.Match(completeMessage);
-                return decoderMatch.Success ? decoderMatch.Groups["message"].Value : completeMessage;
+                if (!decoderMatch.Success)
+                {
+                    return new []{completeMessage};
+                }
+                List<string> messages = new List<string>();
+                while (decoderMatch.Success)
+                {
+                    messages.Add(decoderMatch.Groups["message"].Value);
+                    decoderMatch = decoderMatch.NextMatch();
+                }
+                return messages;
             }
         }
 
