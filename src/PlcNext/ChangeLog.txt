@@ -1,6 +1,6 @@
 ﻿eclipse - 20.0.0
 ----------------
-Tested with: Eclipse Photon - Java 12 / Eclipse 2019.6 - Java 12
+Tested with: Eclipse Photon - Java 12 / Eclipse 2019.9 - Java 12
 
 New features:
  + It is now possible to import existing PLCnCLI projects into eclipse
