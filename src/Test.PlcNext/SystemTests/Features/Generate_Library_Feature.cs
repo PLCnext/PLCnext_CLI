@@ -219,7 +219,7 @@ namespace Test.PlcNext.SystemTests.Features
                 // if path which is returned by cmake server is relative, it is always relative to cmake build system
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo", "Some/Path/T,o/Some.so"),
                 _ => When_I_generate_the_library(),
-                _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryWithExternalLibs.txt")
+                _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgs.txt")
             ).RunAsyncWithTimeout();
         }
 
@@ -235,7 +235,7 @@ namespace Test.PlcNext.SystemTests.Features
                 {
                     ExternalLibraries = new[] { "\"Some/Path/T,o/Some.so\"" }
                 }),
-                _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryWithExternalLibs.txt")
+                _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgs.txt")
             ).RunAsyncWithTimeout();
         }
 
@@ -252,7 +252,7 @@ namespace Test.PlcNext.SystemTests.Features
                     Targets = new[] { "axcf2152,1.0.0.12345", "axcf2152,2.0.0.12345" },
                     ExternalLibraries = new[] { "axcf2152,1.0,Some/Path/To/Some.so" }
                 }),
-                _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryWithExternalLibsMultibinary.txt")
+                _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryMultibinary.txt")
             ).RunAsyncWithTimeout();
         }
 

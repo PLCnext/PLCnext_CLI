@@ -119,8 +119,10 @@ namespace PlcNext.Common.Build
 
                 foreach (string externalLibrary in buildEntity.BuildSystem.ExternalLibraries)
                 {
-                    VirtualFile newFile = fileSystem.GetFile(externalLibrary).CopyTo(deployDirectory);
-                    executionContext.Observable.OnNext(new Change(() => newFile.Delete(), $"Copied {externalLibrary} to {newFile.FullName}."));
+                    executionContext.WriteWarning($"The library {externalLibrary} must be transferred to the device into the directory \"usr/local/lib\" manually.");
+                    
+                    //VirtualFile newFile = fileSystem.GetFile(externalLibrary).CopyTo(deployDirectory);
+                    //executionContext.Observable.OnNext(new Change(() => newFile.Delete(), $"Copied {externalLibrary} to {newFile.FullName}."));
                 }
             }
 
@@ -647,13 +649,13 @@ namespace PlcNext.Common.Build
                                                    target.GetShortFullName().Replace(",", "_")));
                     }
 
-                    foreach ((VirtualFile externalLibFile, Target target) in resolvedExternalLibraries)
-                    {
-                        writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                                                    "/file \":{0}:{1}\"",
-                                                    externalLibFile.FullName,
-                                                    target.GetShortFullName().Replace(",", "_")));
-                    }
+                    //foreach ((VirtualFile externalLibFile, Target target) in resolvedExternalLibraries)
+                    //{
+                    //    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                    //                                "/file \":{0}:{1}\"",
+                    //                                externalLibFile.FullName,
+                    //                                target.GetShortFullName().Replace(",", "_")));
+                    //}
 
                     VirtualDirectory metaDirectory = fileSystem.GetDirectory(metaFilesDirectory);
                     HashSet<VirtualDirectory> createDirectories = new HashSet<VirtualDirectory>();

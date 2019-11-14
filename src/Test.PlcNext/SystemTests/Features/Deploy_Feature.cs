@@ -254,7 +254,8 @@ namespace Test.PlcNext.SystemTests.Features
                 // if path which is returned by cmake server is relative, it is always relative to cmake build system
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo", "Some/Path/T,o/Some.so"),
                 _ => When_I_deploy(new DeployCommandArgs{ BuildType = "Debug" }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryCommandArgs.txt"),
+                _ => Then_the_user_was_informed_that_the_library_must_be_transferred_manually("Some.so")
             ).RunAsyncWithTimeout();
         }
 

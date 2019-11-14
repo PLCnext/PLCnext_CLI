@@ -510,5 +510,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfError(typeof(ArgumentRestrictionException));
             ScenarioContext.CheckUserInformedOfError("but only a maximal length of", "message of too long argument was expected");
         }
+
+        protected void Then_the_user_was_informed_that_the_library_must_be_transferred_manually(string externalLibrary)
+        {
+            ScenarioContext.CheckUserInformedOfWarning($"{externalLibrary} must be transferred to the device", 
+                                                       "message of manually transferring library to device expected");
+        }
     }
 }
