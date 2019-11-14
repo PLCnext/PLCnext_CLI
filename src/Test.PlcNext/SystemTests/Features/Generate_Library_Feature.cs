@@ -223,140 +223,140 @@ namespace Test.PlcNext.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
 
-        [Scenario]
-        public async Task Generate_library_executed_with_external_libraries_via_option()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("Demo"),
-                _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_is_that_the_file_exists("Some/Path/T,o/Some.so"),
-                _ => When_I_generate_the_library(new LibraryCommandArgs
-                {
-                    ExternalLibraries = new[] { "\"Some/Path/T,o/Some.so\"" }
-                }),
-                _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgs.txt")
-            ).RunAsyncWithTimeout();
-        }
+        //[Scenario]
+        //public async Task Generate_library_executed_with_external_libraries_via_option()
+        //{
+        //    await Runner.AddSteps(
+        //        _ => Given_is_the_project("Demo"),
+        //        _ => Given_is_the_working_directory_PATH("Demo"),
+        //        _ => Given_is_that_the_directory_exists("sysroots"),
+        //        _ => Given_is_that_the_file_exists("Some/Path/T,o/Some.so"),
+        //        _ => When_I_generate_the_library(new LibraryCommandArgs
+        //        {
+        //            ExternalLibraries = new[] { "\"Some/Path/T,o/Some.so\"" }
+        //        }),
+        //        _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryCommandArgs.txt")
+        //    ).RunAsyncWithTimeout();
+        //}
 
-        [Scenario]
-        public async Task Generate_library_executed_with_external_libraries_via_option_for_targets()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("DemoWithMultibinary"),
-                _ => Given_is_the_working_directory_PATH("DemoWithMultibinary"),
-                _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
-                _ => When_I_generate_the_library(new LibraryCommandArgs
-                {
-                    Targets = new[] { "axcf2152,1.0.0.12345", "axcf2152,2.0.0.12345" },
-                    ExternalLibraries = new[] { "axcf2152,1.0,Some/Path/To/Some.so" }
-                }),
-                _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryMultibinary.txt")
-            ).RunAsyncWithTimeout();
-        }
+        //[Scenario]
+        //public async Task Generate_library_executed_with_external_libraries_via_option_for_targets()
+        //{
+        //    await Runner.AddSteps(
+        //        _ => Given_is_the_project("DemoWithMultibinary"),
+        //        _ => Given_is_the_working_directory_PATH("DemoWithMultibinary"),
+        //        _ => Given_is_that_the_directory_exists("sysroots"),
+        //        _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
+        //        _ => When_I_generate_the_library(new LibraryCommandArgs
+        //        {
+        //            Targets = new[] { "axcf2152,1.0.0.12345", "axcf2152,2.0.0.12345" },
+        //            ExternalLibraries = new[] { "axcf2152,1.0,Some/Path/To/Some.so" }
+        //        }),
+        //        _ => Then_the_library_was_generated_with_the_following_content("DemoLibraryMultibinary.txt")
+        //    ).RunAsyncWithTimeout();
+        //}
 
-        [Scenario]
-        public async Task Generate_library_executed_with_external_libraries_via_option_throws_error()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("Demo"),
-                _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
-                _ => Given_is_that_the_file_exists("OtherLib.so"),
-                _ => When_I_generate_the_library(new LibraryCommandArgs
-                {
-                    Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
-                    ExternalLibraries = new[] { "axcf2152,19.0,Some/Path/To/Some.so", "OtherLib.so" }
-                }),
-                _ => Then_the_user_was_informed_that_the_library_option_is_wrong_combined()
-            ).RunAsyncWithTimeout();
-        }
+        //[Scenario]
+        //public async Task Generate_library_executed_with_external_libraries_via_option_throws_error()
+        //{
+        //    await Runner.AddSteps(
+        //        _ => Given_is_the_project("Demo"),
+        //        _ => Given_is_the_working_directory_PATH("Demo"),
+        //        _ => Given_is_that_the_directory_exists("sysroots"),
+        //        _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
+        //        _ => Given_is_that_the_file_exists("OtherLib.so"),
+        //        _ => When_I_generate_the_library(new LibraryCommandArgs
+        //        {
+        //            Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
+        //            ExternalLibraries = new[] { "axcf2152,19.0,Some/Path/To/Some.so", "OtherLib.so" }
+        //        }),
+        //        _ => Then_the_user_was_informed_that_the_library_option_is_wrong_combined()
+        //    ).RunAsyncWithTimeout();
+        //}
 
-        [Scenario]
-        public async Task Generate_library_executed_with_external_libraries_via_option_wrong_target_throws_error()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("Demo"),
-                _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
-                _ => When_I_generate_the_library(new LibraryCommandArgs
-                {
-                    Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
-                    ExternalLibraries = new[] { "nfc482s,19.0,Some/Path/To/Some.so" }
-                }),
-                _ => Then_the_user_was_informed_that_the_library_option_is_malformatted()
-            ).RunAsyncWithTimeout();
-        }
+        //[Scenario]
+        //public async Task Generate_library_executed_with_external_libraries_via_option_wrong_target_throws_error()
+        //{
+        //    await Runner.AddSteps(
+        //        _ => Given_is_the_project("Demo"),
+        //        _ => Given_is_the_working_directory_PATH("Demo"),
+        //        _ => Given_is_that_the_directory_exists("sysroots"),
+        //        _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
+        //        _ => When_I_generate_the_library(new LibraryCommandArgs
+        //        {
+        //            Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
+        //            ExternalLibraries = new[] { "nfc482s,19.0,Some/Path/To/Some.so" }
+        //        }),
+        //        _ => Then_the_user_was_informed_that_the_library_option_is_malformatted()
+        //    ).RunAsyncWithTimeout();
+        //}
 
-        [Scenario]
-        public async Task Generate_library_executed_with_external_libraries_via_option_ambiguous_target_throws_error()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("Demo"),
-                _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
-                _ => When_I_generate_the_library(new LibraryCommandArgs
-                {
-                    Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
-                    ExternalLibraries = new[] { "axcf2152,Some/Path/To/Some.so" }
-                }),
-                _ => Then_the_user_was_informed_that_the_target_is_ambiguous()
-            ).RunAsyncWithTimeout();
-        }
+        //[Scenario]
+        //public async Task Generate_library_executed_with_external_libraries_via_option_ambiguous_target_throws_error()
+        //{
+        //    await Runner.AddSteps(
+        //        _ => Given_is_the_project("Demo"),
+        //        _ => Given_is_the_working_directory_PATH("Demo"),
+        //        _ => Given_is_that_the_directory_exists("sysroots"),
+        //        _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
+        //        _ => When_I_generate_the_library(new LibraryCommandArgs
+        //        {
+        //            Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
+        //            ExternalLibraries = new[] { "axcf2152,Some/Path/To/Some.so" }
+        //        }),
+        //        _ => Then_the_user_was_informed_that_the_target_is_ambiguous()
+        //    ).RunAsyncWithTimeout();
+        //}
 
-        [Scenario]
-        public async Task Generate_library_executed_with_external_libraries_via_option_wrong_version_throws_error()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("Demo"),
-                _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
-                _ => When_I_generate_the_library(new LibraryCommandArgs
-                {
-                    Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
-                    ExternalLibraries = new[] { "axcf2152,1.0,Some/Path/To/Some.so" }
-                }),
-                _ => Then_the_user_was_informed_that_the_library_option_is_malformatted()
-            ).RunAsyncWithTimeout();
-        }
+        //[Scenario]
+        //public async Task Generate_library_executed_with_external_libraries_via_option_wrong_version_throws_error()
+        //{
+        //    await Runner.AddSteps(
+        //        _ => Given_is_the_project("Demo"),
+        //        _ => Given_is_the_working_directory_PATH("Demo"),
+        //        _ => Given_is_that_the_directory_exists("sysroots"),
+        //        _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
+        //        _ => When_I_generate_the_library(new LibraryCommandArgs
+        //        {
+        //            Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
+        //            ExternalLibraries = new[] { "axcf2152,1.0,Some/Path/To/Some.so" }
+        //        }),
+        //        _ => Then_the_user_was_informed_that_the_library_option_is_malformatted()
+        //    ).RunAsyncWithTimeout();
+        //}
 
-        [Scenario]
-        public async Task Generate_library_executed_with_external_libraries_via_option_ambiguous_version_throws_error()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("Demo"),
-                _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
-                _ => When_I_generate_the_library(new LibraryCommandArgs
-                {
-                    Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,1.0.0.12345" },
-                    ExternalLibraries = new[] { "axcf2152,1,Some/Path/To/Some.so" }
-                }),
-                _ => Then_the_user_was_informed_that_the_target_is_ambiguous()
-            ).RunAsyncWithTimeout();
-        }
+        //[Scenario]
+        //public async Task Generate_library_executed_with_external_libraries_via_option_ambiguous_version_throws_error()
+        //{
+        //    await Runner.AddSteps(
+        //        _ => Given_is_the_project("Demo"),
+        //        _ => Given_is_the_working_directory_PATH("Demo"),
+        //        _ => Given_is_that_the_directory_exists("sysroots"),
+        //        _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
+        //        _ => When_I_generate_the_library(new LibraryCommandArgs
+        //        {
+        //            Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,1.0.0.12345" },
+        //            ExternalLibraries = new[] { "axcf2152,1,Some/Path/To/Some.so" }
+        //        }),
+        //        _ => Then_the_user_was_informed_that_the_target_is_ambiguous()
+        //    ).RunAsyncWithTimeout();
+        //}
 
-        [Scenario]
-        public async Task Generate_library_executed_with_external_libraries_via_option_nonexisting_lib_throws_error()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("Demo"),
-                _ => Given_is_the_working_directory_PATH("Demo"),
-                _ => Given_is_that_the_directory_exists("sysroots"),
-                _ => When_I_generate_the_library(new LibraryCommandArgs
-                {
-                    Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
-                    ExternalLibraries = new[] { "axcf2152,2,Some/Path/To/Some.so" }
-                }),
-                _ => Then_the_user_was_informed_that_the_library_was_not_found()
-            ).RunAsyncWithTimeout();
-        }
+        //[Scenario]
+        //public async Task Generate_library_executed_with_external_libraries_via_option_nonexisting_lib_throws_error()
+        //{
+        //    await Runner.AddSteps(
+        //        _ => Given_is_the_project("Demo"),
+        //        _ => Given_is_the_working_directory_PATH("Demo"),
+        //        _ => Given_is_that_the_directory_exists("sysroots"),
+        //        _ => When_I_generate_the_library(new LibraryCommandArgs
+        //        {
+        //            Targets = new[] { "axcf2152,19.0.0.12345", "axcf2152,2.0.0.12345" },
+        //            ExternalLibraries = new[] { "axcf2152,2,Some/Path/To/Some.so" }
+        //        }),
+        //        _ => Then_the_user_was_informed_that_the_library_was_not_found()
+        //    ).RunAsyncWithTimeout();
+        //}
 
         [Scenario]
         public async Task Generate_library_executed_without_cmake_build_system()
