@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -75,6 +76,12 @@ namespace PlcNext.Common.Tools
         {
             get
             {
+                //Workaround for https://github.com/dotnet/core-setup/issues/7491
+                ProcessModule mainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
+                if (mainModule != null)
+                {
+                    return Path.GetDirectoryName(mainModule.FileName);
+                }
                 string codeBase = Assembly.GetExecutingAssembly().CodeBase;
                 UriBuilder uri = new UriBuilder(codeBase);
                 string path = Uri.UnescapeDataString(uri.Path);
