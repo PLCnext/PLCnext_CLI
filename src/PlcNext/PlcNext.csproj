@@ -78,7 +78,7 @@
     <None Update="Templates\AcfProjectTemplate\TemplateDescription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\ComponentTemplate\Component.meta.cpp">
+    <None Update="Templates\BaseComponentTemplate\Component.meta.cpp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Templates\BaseComponentTemplate\TemplateDescription.xml">

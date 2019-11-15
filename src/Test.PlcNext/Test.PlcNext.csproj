@@ -799,10 +799,11 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
 	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\acf.config" Link="Deployment\Templates\AcfProjectTemplate\acf.config" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\BaseComponentTemplate\Component.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.cpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\ComponentTemplate\Component.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.hpp" Link="Deployment\Templates\AcfProjectTemplate\Library.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.cpp" Link="Deployment\Templates\ProjectTemplate\Library.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.hpp" Link="Deployment\Templates\ProjectTemplate\Library.hpp" />
