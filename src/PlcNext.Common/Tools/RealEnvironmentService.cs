@@ -76,12 +76,14 @@ namespace PlcNext.Common.Tools
         {
             get
             {
+#if !DEBUG
                 //Workaround for https://github.com/dotnet/core-setup/issues/7491
                 ProcessModule mainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
                 if (mainModule != null)
                 {
                     return Path.GetDirectoryName(mainModule.FileName);
                 }
+#endif
                 string codeBase = Assembly.GetExecutingAssembly().CodeBase;
                 UriBuilder uri = new UriBuilder(codeBase);
                 string path = Uri.UnescapeDataString(uri.Path);

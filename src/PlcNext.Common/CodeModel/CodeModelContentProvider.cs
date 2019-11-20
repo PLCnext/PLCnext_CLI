@@ -133,6 +133,19 @@ namespace PlcNext.Common.CodeModel
             return false;
         }
 
+        private class FullNameCodeEntityComparer : IEqualityComparer<CodeEntity>
+        {
+            public bool Equals(CodeEntity x, CodeEntity y)
+            {
+                return $"{x.Namespace}.{x.Name}" == $"{y.Namespace}.{y.Name}";
+            }
+
+            public int GetHashCode(CodeEntity obj)
+            {
+                return $"{obj.Namespace}.{obj.Name}".GetHashCode();
+            }
+        }
+
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
             TemplateEntity ownerTemplateEntity = TemplateEntity.Decorate(owner);
@@ -230,9 +243,10 @@ namespace PlcNext.Common.CodeModel
                 HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetAllPorts()
                                                               .Select(f => f.ResolvedType)
                                                               .Where(t => t.AsType != null && 
-                                                                          t.AsEnum == null));
+                                                                          t.AsEnum == null),
+                    new FullNameCodeEntityComparer());
 
-                HashSet<CodeEntity> visited = new HashSet<CodeEntity>();
+                HashSet<CodeEntity> visited = new HashSet<CodeEntity>(new FullNameCodeEntityComparer());
                 while (structures.Except(visited).Any())
                 {
                     foreach (CodeEntity structure in structures.Except(visited).ToArray())
@@ -571,8 +585,9 @@ namespace PlcNext.Common.CodeModel
                     {
                         IAttribute attribute = field.Attributes.LastOrDefault(a => a.Name.Equals(metaDataTemplate.name,
                                                                                                   StringComparison.OrdinalIgnoreCase));
-                        string value = attribute?.Values.FirstOrDefault() ??
-                                       resolver.Resolve(metaDataTemplate.defaultvalue, owner);
+                        string value = string.IsNullOrEmpty(attribute?.Values.FirstOrDefault())
+                                           ? resolver.Resolve(metaDataTemplate.defaultvalue, owner)
+                                           : attribute.Values.First();
                         return (metaDataTemplate.multiplicity == multiplicity.OneOrMore
                                     ? value.Split(new[] {metaDataTemplate.split}, StringSplitOptions.RemoveEmptyEntries)
                                     : new[] {value},
