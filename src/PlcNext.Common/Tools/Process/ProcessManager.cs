@@ -227,16 +227,23 @@ namespace PlcNext.Common.Tools.Process
         {
             if (platform == OSPlatform.Windows)
             {
-                using (ManagementObjectSearcher processSearcher = new ManagementObjectSearcher
-                    ("Select * From Win32_Process Where ParentProcessID=" + pid))
+                try
                 {
-                    ManagementObjectCollection processCollection = processSearcher.Get();
-
-                    // We must kill child processes first!
-                    foreach (ManagementObject mo in processCollection.OfType<ManagementObject>())
+                    using (ManagementObjectSearcher processSearcher = new ManagementObjectSearcher
+                        ("Select * From Win32_Process Where ParentProcessID=" + pid))
                     {
-                        KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"], CultureInfo.InvariantCulture)); //kill child processes(also kills childrens of childrens etc.)
+                        ManagementObjectCollection processCollection = processSearcher.Get();
+
+                        // We must kill child processes first!
+                        foreach (ManagementObject mo in processCollection.OfType<ManagementObject>())
+                        {
+                            KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"], CultureInfo.InvariantCulture)); //kill child processes(also kills childrens of childrens etc.)
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    executionContext.WriteVerbose($"Error while closing child process - this can happen when the child process is already shutting down.{Environment.NewLine}{e}",showOutput);
                 }
             }
 
