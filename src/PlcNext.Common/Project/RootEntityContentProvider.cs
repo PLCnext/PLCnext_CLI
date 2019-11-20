@@ -223,7 +223,7 @@ namespace PlcNext.Common.Project
 
                         includes = includes.Concat(GetTargetIncludes());
                         
-                        IDictionary<string, VirtualDirectory> includeDirectories = includes.ToDictionary(x => x, GetIncludeDirectory);
+                        IDictionary<string, VirtualDirectory> includeDirectories = includes.Distinct().ToDictionary(x => x, GetIncludeDirectory);
                         return includeDirectories;
 
                         IEnumerable<string> GetTargetIncludes()
