@@ -193,10 +193,10 @@ namespace PlcNext.Common.Tools.SDK
                         cMakeMessage = CMakeMessageMessage.Create(content);
                         break;
                     case "signal":
-                        userInterface?.WriteInformation("Signal messages are ignored.");
+                        userInterface?.WriteVerbose("Received signal message from cmake server. Signal messages are ignored.");
                         return null;
                     default:
-                        throw new FormattableException($"Unkown message type {content["type"].Value<string>()}.{Environment.NewLine}" +
+                        throw new FormattableException($"Unknown message type {content["type"].Value<string>()}.{Environment.NewLine}" +
                                                             $"Complete message: {message}");
                 }
 
@@ -204,7 +204,7 @@ namespace PlcNext.Common.Tools.SDK
                 {
                     return converted;
                 }
-                throw new FormattableException($"Excpeted message of type {typeof(T)}, but message was of type  {cMakeMessage.GetType()}");
+                throw new FormattableException($"Expected message of type {typeof(T)}, but message was of type  {cMakeMessage.GetType()}");
             }
             catch (JsonReaderException e)
             {
