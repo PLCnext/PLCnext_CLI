@@ -517,36 +517,6 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Generate_library_files_on_generate_with_multiple_namespaces()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("MultipleNamespaces"),
-                _ => Given_is_the_working_directory_PATH("MultipleNamespaces"),
-                _ => When_I_generate_all_codefiles_with_the_source_directories("src","extern"),
-                _ => Then_the_library_files_are_generated_containing_the_components("MultipleNamespacesComponent")).RunAsyncWithTimeout();
-        }
-        [Scenario]
-        public async Task Generate_struct_typemeta_information_for_other_namespace_structs()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("MultipleNamespaces"),
-                _ => When_I_generate_all_metafiles_with_the_source_directories("src", "extern"),
-                _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("CircuitControlOutputs",
-                                                                                                   new[]
-                                                                                                   {
-                                                                                                       new TypeMember("CondTemp","float64"),
-                                                                                                       new TypeMember("ConLiquidSubCooling","float64"),
-                                                                                                       new TypeMember("CircuitState","uint16"),
-                                                                                                       new TypeMember("AlarmWord","uint64"),
-                                                                                                       new TypeMember("WarningWord","uint64"),
-                                                                                                       new TypeMember("EvaShValvePosition","float64"),
-                                                                                                       new TypeMember("EcoShValvePosition","float64"),
-                                                                                                       new TypeMember("HGBValvePosition","float64"),
-                                                                                                       new TypeMember("CPValvePosition","float64"),
-                                                                                                   }))).RunAsyncWithTimeout();
-        }
-
-        [Scenario]
         public async Task Error_when_entites_are_in_multiple_namespaces()
         {
             await Runner.AddSteps(

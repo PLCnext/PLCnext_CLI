@@ -87,8 +87,6 @@ namespace PlcNext.Common.CodeModel
         {
             string result = string.Empty;
             IEnumerable<string> namespaces = model.Classes.Keys.Where(m => m.Namespace != null)
-                                                  .Where(type => templates.Where(t => t.isRelevantForProjectNamespace)
-                                                                          .Select(t => t.name).Any(type.HasAttributeWithoutValue))
                                                   .Select(m => m.Namespace)
                                                   .ToArray();
             if (!namespaces.Any())
