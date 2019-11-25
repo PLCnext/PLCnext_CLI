@@ -9,10 +9,6 @@ namespace ExternalLibraryTest
 
 using namespace Arp::Plc::Commons::Meta;
 
-    static const FieldDefinition ExternalLibraryTest_ExternalStruct_Member1("Member1", offsetof(::ExternalLibraryTest::ExternalStruct, Member1), DataType::Int64, "", sizeof(int64), alignof(int64), {  }, StandardAttribute::None);
-    static const FieldDefinition ExternalLibraryTest_ExternalStruct_Member2("Member2", offsetof(::ExternalLibraryTest::ExternalStruct, Member2), DataType::Int16, "", sizeof(int16), alignof(int16), {  }, StandardAttribute::None);
-    static const FieldDefinition ExternalLibraryTest_ExternalLibraryTestProgram_port("ExternalPort", offsetof(::ExternalLibraryTest::ExternalLibraryTestProgram, port), DataType::Struct, CTN<ExternalLibraryTest::ExternalStruct>(), sizeof(ExternalLibraryTest::ExternalStruct), alignof(ExternalLibraryTest::ExternalStruct), {  }, StandardAttribute::Output);
-    
     void ExternalLibraryTestLibrary::InitializeTypeDomain()
     {
         this->typeDomain.AddTypeDefinitions
@@ -23,15 +19,15 @@ using namespace Arp::Plc::Commons::Meta;
                     DataType::Struct, CTN<ExternalLibraryTest::ExternalStruct>(), sizeof(::ExternalLibraryTest::ExternalStruct), alignof(::ExternalLibraryTest::ExternalStruct), StandardAttribute::None,
                     {
                         // FieldDefinitions:
-                        ExternalLibraryTest_ExternalStruct_Member1,
-                        ExternalLibraryTest_ExternalStruct_Member2,
+                        { "Member1", offsetof(::ExternalLibraryTest::ExternalStruct, Member1), DataType::Int64, "", sizeof(int64), alignof(int64), {  }, StandardAttribute::None },
+                        { "Member2", offsetof(::ExternalLibraryTest::ExternalStruct, Member2), DataType::Int16, "", sizeof(int16), alignof(int16), {  }, StandardAttribute::None },
                     }
                 },
                 {   // ProgramDefinition: ExternalLibraryTest::ExternalLibraryTestProgram
                     DataType::Program, CTN<ExternalLibraryTest::ExternalLibraryTestProgram>(), sizeof(::ExternalLibraryTest::ExternalLibraryTestProgram), alignof(::ExternalLibraryTest::ExternalLibraryTestProgram), StandardAttribute::None,
                     {
                         // FieldDefinitions:
-                        ExternalLibraryTest_ExternalLibraryTestProgram_port,
+                        { "ExternalPort", offsetof(::ExternalLibraryTest::ExternalLibraryTestProgram, port), DataType::Struct, CTN<ExternalLibraryTest::ExternalStruct>(), sizeof(ExternalLibraryTest::ExternalStruct), alignof(ExternalLibraryTest::ExternalStruct), {  }, StandardAttribute::Output },
                     }
                 },
             }

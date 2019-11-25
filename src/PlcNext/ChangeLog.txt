@@ -40,6 +40,14 @@ Fixed Bugs
    as the port configuration
  + Fixed behavior of '--output' option with new xxx commands
 
+Known Issues
+ + 'acfproject's do not compile with a SDK prior 2020.0.
+   Workaround - only necessary when an 'acfproject' should be compiled for a
+   SDK prior 2020.0:
+   In each component .cpp file replace the line 'MetaComponentBase::SetupSettings();'
+   with 'this->RegisterComponentPorts();' and the line
+   'MetaComponentBase::Dispose();' with 'this->dataInfoProvider.Reset();'
+
 
 plcncli - 19.0.2
 ----------------
