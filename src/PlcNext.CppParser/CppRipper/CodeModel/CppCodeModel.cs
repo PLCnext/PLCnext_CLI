@@ -50,6 +50,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         public IDictionary<string, VirtualDirectory> IncludeDirectories { get; internal set; }
 
+        public  IEnumerable<VirtualDirectory> SourceDirectories { get; internal set; }
+
         public IStructure GetStructure(string structureName)
         {
             return structures.TryGetValue(structureName, out (CppStructure structure, VirtualFile _, VirtualDirectory d) tuple)

@@ -610,7 +610,7 @@ namespace PlcNext.Common.CodeModel
                     }
                     case EntityKeys.NamespaceKey:
                     {
-                        string ns = codeModel.RootNamespace(templateRepository.Templates);
+                        string ns = codeModel.RootNamespace();
                         if (string.IsNullOrEmpty(ns))
                         {
                             ns = owner.Name;

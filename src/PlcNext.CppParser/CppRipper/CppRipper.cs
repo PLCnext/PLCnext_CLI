@@ -63,6 +63,9 @@ namespace PlcNext.CppParser.CppRipper
             }
 
             CppCodeModel model = new CppCodeModel(classes, structures, enums);
+
+            model.SourceDirectories = sourceDirectories;
+
             loggableExceptions = includeManager.InitializeCodeModel(model, new IncludeManagerParameter(
                                                                         includeDirectories,
                                                                         parsedIncludes,
