@@ -83,19 +83,14 @@ namespace PlcNext.Common.CodeModel
                                             !a.NamedValues.Any());
         }
 
-        public static string RootNamespace(this ICodeModel model, IEnumerable<TemplateDescription> templates, bool allowNoCodeEntities = true)
+        public static string RootNamespace(this ICodeModel model, bool allowNoCodeEntities = true)
         {
             string result = string.Empty;
-            IEnumerable<string> namespaces = model.Classes.Keys.Where(m => m.Namespace != null)
+            IEnumerable<string> namespaces = model.Classes.Where(c => model.SourceDirectories.Contains(c.Value.Parent))
+                                                  .Select(p => p.Key)
+                                                  .Where(m => m.Namespace != null)
                                                   .Select(m => m.Namespace)
                                                   .ToArray();
-            if (!namespaces.Any())
-            {
-                namespaces = model.Classes.Keys.Where(m => m.Namespace != null)
-                                  .Where(type => templates.Select(t => t.name).Any(type.HasAttributeWithoutValue))
-                                  .Select(m => m.Namespace)
-                                  .ToArray();
-            }
             if (!namespaces.Any())
             {
                 if (allowNoCodeEntities)
