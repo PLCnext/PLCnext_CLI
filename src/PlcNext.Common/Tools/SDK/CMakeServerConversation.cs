@@ -171,7 +171,7 @@ namespace PlcNext.Common.Tools.SDK
 
     public abstract class CMakeMessage
     {
-        public static T Parse<T>(string message, IUserInterface userInterface = null) where T : CMakeMessage
+        public static T Parse<T>(string message, IUserInterface userInterface = null, bool throwJsonException = true) where T : CMakeMessage
         {
             try
             {
@@ -208,7 +208,12 @@ namespace PlcNext.Common.Tools.SDK
             }
             catch (JsonReaderException e)
             {
-                throw new FormattableException("Error while parsing the response json.", e);
+                if (throwJsonException)
+                {
+                    throw new FormattableException($"Error while parsing the response json{Environment.NewLine}{message}.", e);
+                }
+
+                return null;
             }
         }
     }
