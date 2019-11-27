@@ -87,7 +87,15 @@ namespace PlcNext.Common.Tools.SDK
 
             private void HandleMessage(string message)
             {
-                CMakeMessage parsed = CMakeMessage.Parse<CMakeMessage>(message);
+                if (!((message.StartsWith("{", StringComparison.Ordinal) &&
+                       message.EndsWith("}", StringComparison.Ordinal)) || //For object
+                      (message.StartsWith("[", StringComparison.Ordinal) &&
+                       message.EndsWith("]", StringComparison.Ordinal)))) //For array
+                {
+                    return;
+                }
+
+                CMakeMessage parsed = CMakeMessage.Parse<CMakeMessage>(message, throwJsonException: false);
                 if (parsed is CMakeMessageMessage messageMessage)
                 {
                     if (messageMessage.Title.Contains("warning", StringComparison.OrdinalIgnoreCase))
