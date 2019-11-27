@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using PlcNext.Common.Project;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Settings;
 using PlcNext.Common.Tools.UI;
@@ -54,6 +55,11 @@ namespace PlcNext.Common.Tools.SDK
                         SdkInformation sdkInformation = sdkContainer.Get(path);
                         foreach (Target target in sdkInformation.Targets)
                         {
+                            if (sdks.ContainsKey(target))
+                            {
+                                throw new TargetInstalledTwiceException(target.GetLongFullName());
+                            }
+
                             sdks.Add(target, sdkInformation);
                         }
                     }
