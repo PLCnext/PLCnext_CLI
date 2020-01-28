@@ -30,12 +30,15 @@ namespace PlcNext.Common.Templates
         private readonly IFileSystem fileSystem;
         private readonly ISettingsProvider settingsProvider;
         private readonly IEnvironmentService environmentService;
+        private readonly ExecutionContext executionContext;
 
-        public SettingsBasedTemplateLoader(IFileSystem fileSystem, ISettingsProvider settingsProvider, IEnvironmentService environmentService)
+        public SettingsBasedTemplateLoader(IFileSystem fileSystem, ISettingsProvider settingsProvider, IEnvironmentService environmentService,
+                                            ExecutionContext executionContext)
         {
             this.fileSystem = fileSystem;
             this.settingsProvider = settingsProvider;
             this.environmentService = environmentService;
+            this.executionContext = executionContext;
         }
 
         public IReadOnlyCollection<TemplateLoaderResult> LoadTemplates()
@@ -49,48 +52,64 @@ namespace PlcNext.Common.Templates
 
             foreach (string templateLocation in settingsProvider.Settings.TemplateLocations)
             {
-                VirtualFile baseFile = fileSystem.GetFile(templateLocation, environmentService.AssemblyDirectory);
-                Templates.Templates templates;
-                using (Stream fileStream = baseFile.OpenRead())
-                using (XmlReader reader = XmlReader.Create(fileStream))
+                try
                 {
-                    templates = (Templates.Templates)templatesSerializer.Deserialize(reader);
-                }
-
-                foreach (include include in templates.Include)
-                {
-                    string path = include.Value.Replace('\\', Path.DirectorySeparatorChar)
-                                         .Replace('/', Path.DirectorySeparatorChar);
-                    path = Path.Combine(baseFile.Parent.FullName, path);
-                    using (Stream includeStream = fileSystem.GetFile(path).OpenRead())
-                    using (XmlReader reader = XmlReader.Create(includeStream))
+                    if (!fileSystem.FileExists(templateLocation, environmentService.AssemblyDirectory))
                     {
-                        switch (include.type)
+                        executionContext.WriteWarning($"The template location {templateLocation} does not point to an existing file." +
+                                                      " Fix problems with template or remove the location from the settings.");
+                        continue;
+                    }
+
+                    VirtualFile baseFile = fileSystem.GetFile(templateLocation, environmentService.AssemblyDirectory);
+                    Templates.Templates templates;
+                    using (Stream fileStream = baseFile.OpenRead())
+                    using (XmlReader reader = XmlReader.Create(fileStream))
+                    {
+                        templates = (Templates.Templates)templatesSerializer.Deserialize(reader);
+                    }
+
+                    foreach (include include in templates.Include)
+                    {
+                        string path = include.Value.Replace('\\', Path.DirectorySeparatorChar)
+                            .Replace('/', Path.DirectorySeparatorChar);
+                        path = Path.Combine(baseFile.Parent.FullName, path);
+                        using (Stream includeStream = fileSystem.GetFile(path).OpenRead())
+                        using (XmlReader reader = XmlReader.Create(includeStream))
                         {
-                            case includeType.Template:
-                                result.Add(new TemplateLoaderResult(
-                                               templateDescriptionSerializer.Deserialize(reader),
-                                               Path.GetDirectoryName(path)));
-                                break;
-                            case includeType.Fields:
-                                result.Add(new TemplateLoaderResult(
-                                               fieldTemplateSerializer.Deserialize(reader),
-                                               Path.GetDirectoryName(path)));
-                                break;
-                            case includeType.Types:
-                                result.Add(new TemplateLoaderResult(
-                                               typeTemplateSerializer.Deserialize(reader),
-                                               Path.GetDirectoryName(path)));
-                                break;
-                            case includeType.Format:
-                                result.Add(new TemplateLoaderResult(
-                                               formatTemplateSerializer.Deserialize(reader),
-                                               Path.GetDirectoryName(path)));
-                                break;
-                            default:
-                                throw new InvalidOperationException();
+                            switch (include.type)
+                            {
+                                case includeType.Template:
+                                    result.Add(new TemplateLoaderResult(
+                                        templateDescriptionSerializer.Deserialize(reader),
+                                        Path.GetDirectoryName(path)));
+                                    break;
+                                case includeType.Fields:
+                                    result.Add(new TemplateLoaderResult(
+                                        fieldTemplateSerializer.Deserialize(reader),
+                                        Path.GetDirectoryName(path)));
+                                    break;
+                                case includeType.Types:
+                                    result.Add(new TemplateLoaderResult(
+                                        typeTemplateSerializer.Deserialize(reader),
+                                        Path.GetDirectoryName(path)));
+                                    break;
+                                case includeType.Format:
+                                    result.Add(new TemplateLoaderResult(
+                                        formatTemplateSerializer.Deserialize(reader),
+                                        Path.GetDirectoryName(path)));
+                                    break;
+                                default:
+                                    throw new InvalidOperationException();
+                            }
                         }
                     }
+                }
+                catch (InvalidOperationException e)
+                {
+                    executionContext.WriteWarning($"The template {templateLocation} could not be loaded. See log for details.");
+                    executionContext.WriteWarning($"Fix problems with template or remove template {templateLocation} from the settings", false);
+                    executionContext.WriteError(e.ToString(), false);
                 }
             }
 

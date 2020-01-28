@@ -15,6 +15,7 @@ using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Templates.Field;
 using PlcNext.Common.Templates.Format;
 using PlcNext.Common.Templates.Type;
+using PlcNext.Common.Tools;
 using metaDataTemplate = PlcNext.Common.Templates.Field.metaDataTemplate;
 
 namespace PlcNext.Common.Templates
@@ -22,15 +23,17 @@ namespace PlcNext.Common.Templates
     internal class TemplateRepository : ITemplateRepository
     {
         private readonly ITemplateLoader templateLoader;
+        private readonly ExecutionContext executionContext;
 
         private Dictionary<TemplateDescription, string> templates;
         private FieldTemplates[] fieldTemplates;
         private FormatTemplates[] formatTemplates;
         private TypeTemplates[] typeTemplates;
 
-        public TemplateRepository(ITemplateLoader templateLoader)
+        public TemplateRepository(ITemplateLoader templateLoader, ExecutionContext executionContext)
         {
             this.templateLoader = templateLoader;
+            this.executionContext = executionContext;
         }
 
         public IEnumerable<TemplateDescription> Templates
@@ -87,17 +90,25 @@ namespace PlcNext.Common.Templates
             }
             
             IReadOnlyCollection<TemplateLoaderResult> result = templateLoader.LoadTemplates();
-            templates = result.Where(r => r.Template is TemplateDescription)
-                              .ToDictionary(r => (TemplateDescription)r.Template,r => r.TemplateLocation);
-            fieldTemplates = result.Select(r => r.Template)
-                                   .OfType<FieldTemplates>()
-                                   .ToArray();
-            typeTemplates = result.Select(r => r.Template)
-                                   .OfType<TypeTemplates>()
-                                   .ToArray();
-            formatTemplates = result.Select(r => r.Template)
-                                    .OfType<FormatTemplates>()
-                                    .ToArray();
+            try
+            {
+                templates = result.Where(r => r.Template is TemplateDescription)
+                    .ToDictionary(r => (TemplateDescription) r.Template, r => r.TemplateLocation);
+                fieldTemplates = result.Select(r => r.Template)
+                    .OfType<FieldTemplates>()
+                    .ToArray();
+                typeTemplates = result.Select(r => r.Template)
+                    .OfType<TypeTemplates>()
+                    .ToArray();
+                formatTemplates = result.Select(r => r.Template)
+                    .OfType<FormatTemplates>()
+                    .ToArray();
+            }
+            catch (ArgumentException e)
+            {
+                executionContext.WriteError(e.ToString(), false);
+                throw new FormattableException("Two templates with the same name exist. See log for more information.");
+            }
         }
     }
 }

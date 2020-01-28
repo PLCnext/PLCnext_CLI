@@ -93,7 +93,7 @@ namespace PlcNext.Common.Tools.SDK
             {
                 if (!fileSystem.FileExists(SdkPropertiesFile.FullName))
                 {
-                    executionContext.WriteVerbose($"No sdk properties found in {SdkPropertiesFile.FullName}. Emtpy properties will be used.");
+                    executionContext.WriteVerbose($"No sdk properties found in {SdkPropertiesFile.FullName}. Empty properties will be used.");
                     return new Properties();
                 }
 
@@ -126,7 +126,7 @@ namespace PlcNext.Common.Tools.SDK
             {
                 executionContext.WriteWarning("The properties of the configured SDKs cannot be saved and " +
                                            "will be explored every time the CLI is executed. " +
-                                           "Please call the command 'scan sdks' with administator rights to " +
+                                           "Please call the command 'scan sdks' with administrator rights to " +
                                            "save the SDKs properties.");
             }
 
