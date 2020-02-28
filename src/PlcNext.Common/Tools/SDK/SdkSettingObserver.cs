@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace PlcNext.Common.Tools.SDK
             this.settingsProvider = settingsProvider;
             this.sdkRepository = sdkRepository;
             settingsObserver.SettingAdding += OnSettingAdding;
-            settingsObserver.SettingRemoved += OnSettingRemoved;
+            settingsObserver.SettingRemoving += OnSettingRemoving;
             settingsObserver.SettingCleared += OnSettingCleared;
             settingsObserver.SettingSetting += OnSettingSetting;
             sdkRepository.Loaded += OnSdksPropertiesLoaded;
@@ -52,11 +53,11 @@ namespace PlcNext.Common.Tools.SDK
 
         private void ComparePaths(IReadOnlyCollection<string> newPaths)
         {
-            string[] cleanedPaths = newPaths.Select(p => p.CleanPath()).ToArray();
+            string[] cleanedPaths = newPaths.Select(p => Path.GetFullPath(p.CleanPath())).ToArray();
             
             foreach (string path in cleanedPaths)
             {
-                sdkRepository.Update(path.CleanPath()).ConfigureAwait(false).GetAwaiter().GetResult();
+                sdkRepository.Update(Path.GetFullPath(path.CleanPath())).ConfigureAwait(false).GetAwaiter().GetResult();
             }
 
             foreach (string removablePath in sdkRepository.SdkPaths.Except(cleanedPaths).ToArray())
@@ -74,21 +75,26 @@ namespace PlcNext.Common.Tools.SDK
 
             foreach (string sdkPath in sdkRepository.SdkPaths.ToArray())
             {
-                sdkRepository.Remove(sdkPath.CleanPath());
+                sdkRepository.Remove(Path.GetFullPath(sdkPath.CleanPath()));
             }
         }
 
-        private void OnSettingRemoved(object sender, SettingsObserverEventArgs e)
+        private void OnSettingRemoving(object sender, SettingsObserverEventArgs e)
         {
             if (!IsRelevant(e))
             {
                 return;
             }
 
+            List<string> removedPaths = new List<string>();
             foreach (string sdkPath in e.SplitValue)
             {
-                sdkRepository.Remove(sdkPath.CleanPath());
+                string path = Path.GetFullPath(sdkPath.CleanPath());
+                sdkRepository.Remove(path);
+                removedPaths.Add(path);
             }
+
+            e.SplitValue = removedPaths;
         }
 
         private void OnSettingAdding(object sender, SettingsObserverEventArgs e)
@@ -97,11 +103,16 @@ namespace PlcNext.Common.Tools.SDK
             {
                 return;
             }
-
-            foreach (string path in e.SplitValue)
+            
+            List<string> addedPaths = new List<string>();
+            foreach (string sdkPath in e.SplitValue)
             {
-                sdkRepository.Update(path.CleanPath()).ConfigureAwait(false).GetAwaiter().GetResult();
+                string path = Path.GetFullPath(sdkPath.CleanPath());
+                sdkRepository.Update(path).ConfigureAwait(false).GetAwaiter().GetResult();
+                addedPaths.Add(path);
             }
+
+            e.SplitValue = addedPaths;
         }
 
         private static bool IsRelevant(SettingsObserverEventArgs settingsObserverEventArgs)
@@ -112,7 +123,7 @@ namespace PlcNext.Common.Tools.SDK
         public void Dispose()
         {
             settingsObserver.SettingAdding -= OnSettingAdding;
-            settingsObserver.SettingRemoved -= OnSettingRemoved;
+            settingsObserver.SettingRemoving -= OnSettingRemoving;
             settingsObserver.SettingCleared -= OnSettingCleared;
             settingsObserver.SettingSetting -= OnSettingSetting;
             sdkRepository.Loaded -= OnSdksPropertiesLoaded;
