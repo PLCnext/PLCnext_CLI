@@ -27,7 +27,6 @@ namespace PlcNext.Common.Tools.SDK
         private readonly ExecutionContext executionContext;
         private VirtualFile sdkPropertiesFile;
         private Properties sdkProperties;
-        private readonly HashSet<string> exploredPaths = new HashSet<string>();
 
         public PropertiesFileSdkContainer(IFileSystem fileSystem, IEnvironmentService environmentService, ExecutionContext executionContext)
         {
@@ -142,7 +141,7 @@ namespace PlcNext.Common.Tools.SDK
         public bool Contains(string path)
         {
             EnsurePropertiesLoaded();
-            return exploredPaths.Contains(path);
+            return SdkProperties.SDK?.Any(s => s.path == path) == true;
         }
 
         public void Remove(string sdkRootPath)
@@ -163,7 +162,6 @@ namespace PlcNext.Common.Tools.SDK
                                     ? SdkProperties.SDK.Concat(new[] {sdkSchema}).ToArray()
                                     : new[] {sdkSchema};
             SaveProperties();
-            exploredPaths.Add(sdkRootPath);
         }
 
         public SdkInformation Get(string sdkRootPath)

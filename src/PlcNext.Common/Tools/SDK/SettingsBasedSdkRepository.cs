@@ -52,6 +52,10 @@ namespace PlcNext.Common.Tools.SDK
                     
                     foreach (string path in settingsProvider.Settings.SdkPaths)
                     {
+                        if (!sdkContainer.Contains(path))
+                        {
+                            AddNewSdk(path, true).Wait();
+                        }
                         SdkInformation sdkInformation = sdkContainer.Get(path);
                         foreach (Target target in sdkInformation.Targets)
                         {
@@ -91,23 +95,28 @@ namespace PlcNext.Common.Tools.SDK
         
         public async Task Update(string sdkPath, bool forced = false)
         {
-            if (!forced && SdkPaths.Contains(sdkPath))
+            if (!forced && sdkContainer.Contains(sdkPath))
             {
                 return;
             }
 
-            if (SdkPaths.Contains(sdkPath))
+            if (sdkContainer.Contains(sdkPath))
             {
                 sdkContainer.Remove(sdkPath);
             }
 
+            await AddNewSdk(sdkPath, forced).ConfigureAwait(false);
+
+            OnUpdated();
+        }
+
+        private async Task AddNewSdk(string sdkPath, bool forced)
+        {
             SdkSchema sdkSchema = await sdkExplorer.ExploreSdk(sdkPath, forced).ConfigureAwait(false);
             if (sdkSchema != null)
             {
                 sdkContainer.Add(sdkPath, sdkSchema);
             }
-            
-            OnUpdated();
         }
 
         public void Remove(string sdkPath)
