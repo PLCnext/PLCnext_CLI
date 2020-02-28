@@ -35,6 +35,7 @@ public: // operations
 
 private: // fields
 	//#port
+	//#name(InCpp<INT)
 	//#attributes(Input|Opc)
 	Example examplePort1;
 	//#port

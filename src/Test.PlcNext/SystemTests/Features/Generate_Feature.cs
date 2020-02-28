@@ -194,7 +194,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                   new [] {"MyComponent", "MyProgram"},
                                                                                   new []
                                                                                   {
-                                                                                      new Portmeta("examplePort1","Example","Input|Opc"),
+                                                                                      new Portmeta("InCpp<INT","Example","Input|Opc"),
                                                                                       new Portmeta("examplePort2","Example","Output", 1),
                                                                                       new Portmeta("examplePort3","Example","Output", 5),
                                                                                       new Portmeta("examplePort4","int32","", 0),
