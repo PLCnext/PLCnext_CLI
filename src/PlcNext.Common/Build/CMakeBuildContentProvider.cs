@@ -32,11 +32,13 @@ namespace PlcNext.Common.Build
         private static readonly Regex LibrariesDecoder = new Regex("(?<path>\\\"[^\\\"]+\\\"|[^ |\\\"]+)", RegexOptions.Compiled);
         private static readonly Regex LibrariesRPathDecoder = new Regex("-rpath(?:-link)?,(?<rpath>(?:\\\"[^\\\"]+\\\"|[^ |\\\"]+;?)*)", RegexOptions.Compiled);
         private readonly ICMakeConversation cmakeConversation;
+        private readonly ExecutionContext executionContext;
 
-        public CMakeBuildContentProvider(IFileSystem fileSystem, ICMakeConversation cmakeConversation)
+        public CMakeBuildContentProvider(IFileSystem fileSystem, ICMakeConversation cmakeConversation, ExecutionContext executionContext)
         {
             this.fileSystem = fileSystem;
             this.cmakeConversation = cmakeConversation;
+            this.executionContext = executionContext;
         }
 
         public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
@@ -201,9 +203,17 @@ namespace PlcNext.Common.Build
         private JArray GetCodeModel(Entity owner, VirtualDirectory buildSystemDirectory)
         {
             VirtualDirectory temp = FileEntity.Decorate(owner).TempDirectory;
-            JArray codeModel = cmakeConversation.GetCodeModelFromServer(temp.Directory("cmake"),
-                                                                        FileEntity.Decorate(owner.Root).Directory,
-                                                                        buildSystemDirectory);
+            JArray codeModel = null;
+            try
+            {
+                codeModel = cmakeConversation.GetCodeModelFromServer(temp.Directory("cmake"),
+                                                                     FileEntity.Decorate(owner.Root).Directory,
+                                                                     buildSystemDirectory);
+            }
+            catch (TimeoutException e)
+            {
+                executionContext.WriteError($"Timeout during cmake server conversation: {e}", false);
+            }
             if (codeModel == null)
             {
                 throw new FormattableException("Could not fetch code model from cmake build system.");
