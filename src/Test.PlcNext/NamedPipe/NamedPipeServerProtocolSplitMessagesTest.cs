@@ -12,11 +12,13 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using PlcNext;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.IO;
 using PlcNext.NamedPipeServer;
 using PlcNext.NamedPipeServer.Communication;
 using Test.PlcNext.NamedPipe.Tools;
+using Test.PlcNext.Tools.XUnit;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -33,6 +35,11 @@ namespace Test.PlcNext.NamedPipe
 
         public NamedPipeServerProtocolSplitMessagesTest(ITestOutputHelper output)
         {
+            NamedPipeServerFeature serverFeature = new NamedPipeServerFeature();
+            if (!serverFeature.FeatureEnabled)
+            {
+                throw new SkipTestException("Disabled named pipe communication");
+            }
             streamFactory = PageStreamFactory.CreateDefault(16);
             string serverName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                                     ? Guid.NewGuid().ToByteString()
@@ -46,7 +53,7 @@ namespace Test.PlcNext.NamedPipe
             protocol.Start();
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task SendMaxLengthMessageAsSingleMessage()
         {
             protocol.SendMessage(GenerateMaxLengthMessage());
@@ -54,7 +61,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.False(await simulator.LastMessageWasSplit(), "Max length message was split.");
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task SendSplitMessage()
         {
             protocol.SendMessage(GenerateSplitLengthMessage());
@@ -62,7 +69,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.True(await simulator.LastMessageWasSplit(), "Max length message was split.");
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task ReceiveSplitMessage()
         {
             await simulator.WriteMessage(GenerateSplitLengthMessage());

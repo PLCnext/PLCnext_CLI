@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
+using PlcNext;
 using Test.PlcNext.NamedPipe.SystemTests.StepDefinitions;
 using Test.PlcNext.SystemTests.Tools;
 using Xunit.Abstractions;
@@ -23,7 +24,6 @@ using Xunit.Abstractions;
 namespace Test.PlcNext.NamedPipe.SystemTests.Features
 {
     [FeatureDescription(@"Check all scenarios with progress.")]
-    [IgnoreScenario("Disabled named pipe communication")]
     public class Progress_Feature : SystemTestBase
     {
         [Scenario(Timeout = 10000)]
@@ -172,6 +172,11 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
 
         public Progress_Feature(ITestOutputHelper output) : base(output)
         {
+            NamedPipeServerFeature serverFeature = new NamedPipeServerFeature();
+            if (!serverFeature.FeatureEnabled)
+            {
+                StepExecution.Current.IgnoreScenario("Disabled named pipe communication");
+            }
         }
     }
 }

@@ -158,7 +158,7 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 ISdkExplorer explorer = Substitute.For<ISdkExplorer>();
                 explorer.ExploreSdk(null, false)
-                        .ReturnsForAnyArgs(Task.FromResult(new SdkSchema()));
+                        .ReturnsForAnyArgs(Task.FromResult((SdkSchema)null));
                 return explorer;
             }
         }

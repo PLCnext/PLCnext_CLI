@@ -15,12 +15,14 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using PlcNext;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.IO;
 using PlcNext.Common.Tools.UI;
 using PlcNext.NamedPipeServer;
 using PlcNext.NamedPipeServer.Communication;
 using Test.PlcNext.NamedPipe.Tools;
+using Test.PlcNext.Tools.XUnit;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -39,6 +41,11 @@ namespace Test.PlcNext.NamedPipe
 
         public NamedPipeServerProtocolTest(ITestOutputHelper output)
         {
+            NamedPipeServerFeature serverFeature = new NamedPipeServerFeature();
+            if (!serverFeature.FeatureEnabled)
+            {
+                throw new SkipTestException("Disabled named pipe communication");
+            }
             streamFactory = PageStreamFactory.CreateDefault();
             string serverName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                                     ? Guid.NewGuid().ToByteString()
@@ -53,7 +60,7 @@ namespace Test.PlcNext.NamedPipe
             log = new LogTracer(output);
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task SendMessageIsReceivedByTheClient()
         {
             protocol.SendMessage(DefaultMessage);
@@ -62,7 +69,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.Equal(DefaultMessage, receivedMessage);
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task ReceiveMessagesFromClient()
         {
             await simulator.WriteMessage(DefaultMessage);
@@ -70,7 +77,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.Equal(DefaultMessage, GetLatestServerMessage());
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task ConfirmMessageFromClient()
         {
             await simulator.WriteMessage(DefaultMessage);
@@ -78,7 +85,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.Equal(NamedPipeCommunicationProtocol.SuccessConfirmationFlag, await simulator.GetLastConfirmationFlag());
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task ErrorConfirmationOnCorruptedMessage()
         {
             byte[] header = GenerateCorruptedHeader(DefaultMessage);
@@ -87,7 +94,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, await simulator.GetLastConfirmationFlag());
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task ServerDisconnectsOnMissingMessageAfterHeader()
         {
             byte[] header = GenerateCorruptedHeader(DefaultMessage);
@@ -96,7 +103,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.True(serverError.WaitOne(500), "Server did not register disconnect.");
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task ServerDisconnectsOnMissingMessageAfterBufferSize()
         {
             byte[] header = GenerateCorruptedHeader(2*NamedPipeCommunicationProtocol.BufferSize);
@@ -105,7 +112,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.True(serverError.WaitOne(500), "Server did not register disconnect.");
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task ErrorConfirmationOnPartialMessageChunk()
         {
             byte[] header = GenerateCorruptedHeader(2 * NamedPipeCommunicationProtocol.BufferSize);
@@ -116,7 +123,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.Equal(NamedPipeCommunicationProtocol.ErrorConfirmationFlag, await simulator.GetLastConfirmationFlag());
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task ServerResendsMessagesWithErrorConfirmationThreeTimes()
         {
             simulator.UseErrorConfirmation(NamedPipeCommunicationProtocol.MaxRetrySendingCount-1);
@@ -125,7 +132,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.True(await simulator.WaitForMessages(NamedPipeCommunicationProtocol.MaxRetrySendingCount, m => m == DefaultMessage), "Did not receive message three times.");
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public async Task ServerResendsMessagesWithTimeoutThreeTimes()
         {
             simulator.SkipConfirmation(NamedPipeCommunicationProtocol.MaxRetrySendingCount-1);
@@ -134,7 +141,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.True(await simulator.WaitForMessages(NamedPipeCommunicationProtocol.MaxRetrySendingCount, m => m == DefaultMessage), "Did not receive message three times.");
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public void ServerDisconnectsAfterThreeFailedAttempts()
         {
             simulator.UseErrorConfirmation(NamedPipeCommunicationProtocol.MaxRetrySendingCount);
@@ -144,7 +151,7 @@ namespace Test.PlcNext.NamedPipe
             Assert.True(serverError.WaitOne(100), "Server did not raise error event.");
         }
 
-        [Fact(Skip = "Disabled named pipe communication")]
+        [SkippableFact]
         public void ServerClosesAfterClientDisconnect()
         {
             simulator.Disconnect();

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
+using PlcNext;
 using Test.PlcNext.NamedPipe.SystemTests.StepDefinitions;
 using Xunit.Abstractions;
 
@@ -19,10 +20,16 @@ using Xunit.Abstractions;
 namespace Test.PlcNext.NamedPipe.SystemTests.Features
 {
     [FeatureDescription(@"Checks that the cancel .")]
-    [IgnoreScenario("Disabled named pipe communication")]
     public class Totally_Integrated_Cancel_Feature : CommandLineIntegrationTestBase
     {
-        public Totally_Integrated_Cancel_Feature(ITestOutputHelper helper) : base(helper, withWaitingProcess:true){}
+        public Totally_Integrated_Cancel_Feature(ITestOutputHelper helper) : base(helper, withWaitingProcess: true)
+        {
+            NamedPipeServerFeature serverFeature = new NamedPipeServerFeature();
+            if (!serverFeature.FeatureEnabled)
+            {
+                StepExecution.Current.IgnoreScenario("Disabled named pipe communication");
+            }
+        }
         
         [Scenario(Timeout = 10000)]
         public async Task Cancel_inside_CLI_on_cancel_command()

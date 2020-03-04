@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
+using PlcNext;
 using Test.PlcNext.NamedPipe.SystemTests.StepDefinitions;
 using Test.PlcNext.NamedPipe.Tools;
 using Xunit.Abstractions;
@@ -23,7 +24,6 @@ using Xunit.Abstractions;
 namespace Test.PlcNext.NamedPipe.SystemTests.Features
 {
     [FeatureDescription(@"Checks all possible scenarios for communication from client to the server.")]
-    [IgnoreScenario("Disabled named pipe communication")]
     public class Client_To_Server_Feature : SystemTestBase
     {
         [Scenario(Timeout = 10000)]
@@ -124,6 +124,11 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
 
         public Client_To_Server_Feature(ITestOutputHelper output) : base(output)
         {
+            NamedPipeServerFeature serverFeature = new NamedPipeServerFeature();
+            if (!serverFeature.FeatureEnabled)
+            {
+                StepExecution.Current.IgnoreScenario("Disabled named pipe communication");
+            }
         }
     }
 }

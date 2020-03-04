@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
+using PlcNext;
 using Test.PlcNext.NamedPipe.SystemTests.StepDefinitions;
 using Xunit;
 using Xunit.Abstractions;
@@ -22,7 +23,6 @@ using Xunit.Abstractions;
 namespace Test.PlcNext.NamedPipe.SystemTests.Features
 {
     [FeatureDescription(@"Check the get commands using the integrated named pipe server and command line.")]
-    [IgnoreScenario("Disabled named pipe communication")]
     public class Totally_Integrated_Get_Feature : CommandLineIntegrationTestBase
     {
         [Scenario(Timeout = 10000)]
@@ -69,6 +69,11 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
 
         public Totally_Integrated_Get_Feature(ITestOutputHelper helper) : base(helper)
         {
+            NamedPipeServerFeature serverFeature = new NamedPipeServerFeature();
+            if (!serverFeature.FeatureEnabled)
+            {
+                StepExecution.Current.IgnoreScenario("Disabled named pipe communication");
+            }
         }
     }
 }

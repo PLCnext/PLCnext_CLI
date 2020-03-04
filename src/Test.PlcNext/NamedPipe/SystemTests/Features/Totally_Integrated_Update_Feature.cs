@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
+using PlcNext;
 using Test.PlcNext.NamedPipe.SystemTests.StepDefinitions;
 using Xunit;
 using Xunit.Abstractions;
@@ -20,10 +21,16 @@ using Xunit.Abstractions;
 namespace Test.PlcNext.NamedPipe.SystemTests.Features
 {
     [FeatureDescription(@"Checks the feature that other cli instances will trigger an update to the server instance.")]
-    [IgnoreScenario("Disabled named pipe communication")]
     public class Totally_Integrated_Update_Feature : CommandLineIntegrationTestBase
     {
-        public Totally_Integrated_Update_Feature(ITestOutputHelper helper) : base(helper, true){}
+        public Totally_Integrated_Update_Feature(ITestOutputHelper helper) : base(helper, true)
+        {
+            NamedPipeServerFeature serverFeature = new NamedPipeServerFeature();
+            if (!serverFeature.FeatureEnabled)
+            {
+                StepExecution.Current.IgnoreScenario("Disabled named pipe communication");
+            }
+        }
         
         [Scenario(Timeout = 10000)]
         public async Task Sending_update_when_the_settings_are_changed()

@@ -19,14 +19,15 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 {
     public class MockedSystemTestBase : SystemTestBase
     {
-        public MockedSystemTestBase(ITestOutputHelper helper) : base(new SystemTestContext(new MockedFileSystemAbstraction(),
-                                                 new MockedDownloadServiceAbstraction(),
-                                                 new MockedProcessManagerAbstraction(),
-                                                 new MockedUserInterfaceAbstraction(),
-                                                 new MockedEnvironmentServiceAbstraction(),
-                                                 new MockedExceptionHandlerAbstraction(),
-                                                 new MockedGuidAbstraction(),
-                                                 new MockedCMakeConversationAbstraction()), helper)
+        public MockedSystemTestBase(ITestOutputHelper helper) : base(ScenarioExtensions.RunWithTimeout(() => new SystemTestContext(new MockedFileSystemAbstraction(),
+                                                                                                                                   new MockedDownloadServiceAbstraction(),
+                                                                                                                                   new MockedProcessManagerAbstraction(),
+                                                                                                                                   new MockedUserInterfaceAbstraction(),
+                                                                                                                                   new MockedEnvironmentServiceAbstraction(),
+                                                                                                                                   new MockedExceptionHandlerAbstraction(),
+                                                                                                                                   new MockedGuidAbstraction(),
+                                                                                                                                   new MockedCMakeConversationAbstraction()),
+                                                                         1000), helper)
         {
         }
     }
