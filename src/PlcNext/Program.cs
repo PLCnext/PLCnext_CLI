@@ -46,6 +46,8 @@ namespace PlcNext
             {
                 return Migrate() ? 0 : 1;
             }
+
+            Agents.Net.CommunityAnalysis.Analyse(Array.Empty<Assembly>());
 #if DEBUG
             Stopwatch stopwatch = Stopwatch.StartNew();
 #endif
