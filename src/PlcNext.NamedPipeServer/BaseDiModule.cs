@@ -28,7 +28,6 @@ namespace PlcNext.NamedPipeServer
             builder.RegisterType<ServerConnectionLifetimeScope>().AsSelf().AutoActivate();
             builder.RegisterType<CommandLineFacade>().As<ICommandLineFacade>().InstancePerLifetimeScope();
             builder.RegisterType<JsonMessageParser>().As<IMessageParser>().InstancePerLifetimeScope();
-            builder.RegisterType<ThreadingHeart>().As<IHeart>().InstancePerLifetimeScope();
             builder.RegisterModule<MessageSenderDiModule>();
         }
     }

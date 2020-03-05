@@ -51,37 +51,13 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
         }
 
         [Scenario(Timeout = 10000)]
-        public async Task Cancel_command_does_not_trigger_command_reply()
+        public async Task Cancel_command_does_not_reply_at_all()
         {
             await Runner.AddSteps(
                 _ => Given_is_a_connected_client(),
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_I_cancel_the_command("command --with args"),
-                _ => Then_the_client_did_not_receive_a_command_reply_for_the_command("command --with args")
-            ).RunAsyncWithTimeout();
-        }
-
-        [Scenario(Timeout = 10000)]
-        public async Task Cancel_command_replies_with_cancel()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_a_connected_client(),
-                _ => When_I_executed_the_command("command --with args"),
-                _ => When_I_cancel_the_command("command --with args"),
-                _ => Then_the_the_client_received_a_cancel_reply_for_the_command("command --with args")
-            ).RunAsyncWithTimeout();
-        }
-
-        [Scenario(Timeout = 10000)]
-        public async Task Cancel_command_replies_with_correct_command_cancel()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_a_connected_client(),
-                _ => When_I_executed_the_command("command --with args"),
-                _ => When_I_executed_the_command("command --with other,args"),
-                _ => When_I_executed_the_command("other command --withFlag"),
-                _ => When_I_cancel_the_command("command --with other,args"),
-                _ => Then_the_the_client_received_a_cancel_reply_for_the_command("command --with other,args")
+                _ => Then_the_the_client_received_no_reply()
             ).RunAsyncWithTimeout();
         }
 
@@ -121,7 +97,6 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_a_started_server(),
                 _ => When_I_executed_the_command("command --with args"),
-                _ => When_I_cancel_the_command("command --with args"),
                 _ => Then_the_the_client_received_no_reply()
             ).RunAsyncWithTimeout();
         }
@@ -135,66 +110,6 @@ namespace Test.PlcNext.NamedPipe.SystemTests.Features
                 _ => When_I_executed_the_command("command --with args"),
                 _ => When_the_command_line_outputs_the_message_MESSAGE_with_the_type_TYPE(message, messageType),
                 _ => Then_the_client_received_a_message_with_the_content_CONTENT_and_type_TYPE_for_the_command(message, messageType, "command --with args")
-            ).RunAsyncWithTimeout();
-        }
-
-        [Scenario(Timeout = 10000)]
-        public async Task Show_no_heartbeat_before_any_message_send()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_a_started_server_with_heartbeat_enabled(),
-                _ => When_I_wait_for_TIME_ms(800),
-                _ => Then_the_client_received_at_most_COUNT_heartbeats(0)
-            ).RunAsyncWithTimeout();
-        }
-
-        [Scenario(Timeout = 10000)]
-        public async Task Show_no_heartbeat_before_any_command_executed()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_a_started_server_with_heartbeat_enabled_and_valid_handshake(),
-                _ => When_I_wait_for_TIME_ms(800),
-                _ => Then_the_client_received_at_most_COUNT_heartbeats(0)
-            ).RunAsyncWithTimeout();
-        }
-
-        [Scenario(Timeout = 10000)]
-        public async Task Show_heartbeat_after_command_started()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_a_started_server_with_heartbeat_enabled_and_valid_handshake(),
-                _ => When_I_executed_the_command("command --with args"),
-                _ => When_I_wait_for_TIME_ms(800),
-                _ => Then_the_client_received_at_least_COUNT_heartbeats(4)
-            ).RunAsyncWithTimeout();
-        }
-
-        [Scenario(Timeout = 10000)]
-        public async Task Show_heartbeat_until_last_command_finished()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_a_started_server_with_heartbeat_enabled_and_valid_handshake(),
-                _ => When_I_executed_the_command("command --with args"),
-                _ => When_I_executed_the_command("command --with other,args"),
-                _ => When_I_wait_for_TIME_ms(800),
-                _ => When_the_command_successful_finishes("command","--with","args"),
-                _ => When_I_wait_for_TIME_ms(600),
-                _ => Then_the_client_received_at_least_COUNT_heartbeats(7)
-            ).RunAsyncWithTimeout();
-        }
-
-        [Scenario(Timeout = 10000)]
-        public async Task Show_no_heartbeat_after_command_executed()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_a_started_server_with_heartbeat_enabled_and_valid_handshake(),
-                _ => When_I_executed_the_command("command --with args"),
-                _ => When_I_executed_the_command("command --with other,args"),
-                _ => When_I_wait_for_TIME_ms(600),
-                _ => When_the_command_successful_finishes("command","--with","args"),
-                _ => When_the_command_successful_finishes("command","--with","other,args"),
-                _ => When_I_wait_for_TIME_ms(800),
-                _ => Then_the_client_received_at_most_COUNT_heartbeats(6)
             ).RunAsyncWithTimeout();
         }
 

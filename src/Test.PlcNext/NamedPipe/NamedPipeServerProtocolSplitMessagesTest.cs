@@ -54,27 +54,9 @@ namespace Test.PlcNext.NamedPipe
         }
 
         [SkippableFact]
-        public async Task SendMaxLengthMessageAsSingleMessage()
+        public void SendSplitMessage()
         {
-            protocol.SendMessage(GenerateMaxLengthMessage());
-
-            Assert.False(await simulator.LastMessageWasSplit(), "Max length message was split.");
-        }
-
-        [SkippableFact]
-        public async Task SendSplitMessage()
-        {
-            protocol.SendMessage(GenerateSplitLengthMessage());
-
-            Assert.True(await simulator.LastMessageWasSplit(), "Max length message was split.");
-        }
-
-        [SkippableFact]
-        public async Task ReceiveSplitMessage()
-        {
-            await simulator.WriteMessage(GenerateSplitLengthMessage());
-
-            Assert.True(serverMessageReceived.WaitOne(2*NamedPipeCommunicationProtocolSimulator.DefaultTimeout), "Timeout while waiting for server to complete message.");
+            Assert.Throws<ArgumentOutOfRangeException>(() => protocol.SendMessage(GenerateSplitLengthMessage()));
         }
 
         #region Helpers
@@ -82,12 +64,6 @@ namespace Test.PlcNext.NamedPipe
         private Stream GenerateSplitLengthMessage()
         {
             long length = (long)int.MaxValue + 100;
-            return streamFactory.GenerateRandomStream(length);
-        }
-
-        private Stream GenerateMaxLengthMessage()
-        {
-            long length = int.MaxValue - NamedPipeCommunicationProtocol.HeaderSize;
             return streamFactory.GenerateRandomStream(length);
         }
 

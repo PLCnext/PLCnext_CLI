@@ -31,17 +31,15 @@ namespace PlcNext.NamedPipeServer
         private readonly ICliServer server;
         private readonly IMessageSender messageSender;
         private readonly ILog logger;
-        private readonly IHeart heart;
         private readonly ConcurrentDictionary<Task,Task> executingCommands = new ConcurrentDictionary<Task, Task>();
 
-        public CommandLineMediator(IMessageParser messageParser, ICommandLineFacade commandLine, ICliServer server, IMessageSender messageSender, ILog logger, IHeart heart)
+        public CommandLineMediator(IMessageParser messageParser, ICommandLineFacade commandLine, ICliServer server, IMessageSender messageSender, ILog logger)
         {
             this.messageParser = messageParser;
             this.commandLine = commandLine;
             this.server = server;
             this.messageSender = messageSender;
             this.logger = logger;
-            this.heart = heart;
             messageParser.CommandIssued += MessageParserOnCommandIssued;
             messageParser.CommandCanceled += MessageParserOnCommandCanceled;
             messageParser.SuicideIssued += MessageParserOnSuicideIssued;
@@ -87,11 +85,9 @@ namespace PlcNext.NamedPipeServer
 
         private void MessageParserOnCommandIssued(object sender, CommandEventArgs e)
         {
-            heart.Start();
             Task executingTask = commandLine.ExecuteCommand(e.Command)
                                             .ContinueWith(task =>
                                              {
-                                                 heart.StopHeartbeat();
                                                  AsyncAutoResetEvent waitEvent = new AsyncAutoResetEvent(false);
                                                  
                                                  messageSender.SendCommandReply(task.Result,
