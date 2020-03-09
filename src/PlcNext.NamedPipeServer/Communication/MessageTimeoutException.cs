@@ -15,7 +15,7 @@ namespace PlcNext.NamedPipeServer.Communication
 {
     public class MessageTimeoutException : Exception
     {
-        public MessageTimeoutException(Guid messageGuid, int timeout, Exception innerException) : base(string.Format(CultureInfo.InvariantCulture,ExceptionTexts.MessageTimeout,timeout,messageGuid.ToByteString()), innerException)
+        public MessageTimeoutException(int messageLength, int timeout, Exception innerException) : base(string.Format(CultureInfo.InvariantCulture,ExceptionTexts.MessageTimeout,timeout,messageLength), innerException)
         {
             
         }

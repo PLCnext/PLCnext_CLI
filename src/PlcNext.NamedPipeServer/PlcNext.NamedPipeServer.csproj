@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Agents.Net" Version="2020.0.0-prerelease-20200306110127" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PlcNext.Common\PlcNext.Common.csproj" />
   </ItemGroup>
 

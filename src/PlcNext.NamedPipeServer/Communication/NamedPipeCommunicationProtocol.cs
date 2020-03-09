@@ -350,12 +350,12 @@ namespace PlcNext.NamedPipeServer.Communication
                     catch (TaskCanceledException c)
                     {
                         log.LogError($"Exception during message read.{Environment.NewLine}" +
-                                     $"{new MessageTimeoutException(messageGuid, MaxConfirmationResponseTime, c)}");
+                                     $"{new MessageTimeoutException(messageGuid.GetHashCode(), MaxConfirmationResponseTime, c)}");
                     }
                     catch (OperationCanceledException oc)
                     {
                         log.LogError($"Exception during message read.{Environment.NewLine}" +
-                                     $"{new MessageTimeoutException(messageGuid, MaxConfirmationResponseTime, oc)}");
+                                     $"{new MessageTimeoutException(messageGuid.GetHashCode(), MaxConfirmationResponseTime, oc)}");
                     }
                     catch (PartialMessageException)
                     {

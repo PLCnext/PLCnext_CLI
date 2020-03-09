@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Agents.Net" Version="2020.0.0-prerelease-20200304100733" />
+    <PackageReference Include="Agents.Net" Version="2020.0.0-prerelease-20200306110127" />
     <PackageReference Include="Autofac" Version="4.9.2" />
     <PackageReference Include="FeatureToggle" Version="4.0.2" />
   </ItemGroup>
