@@ -4,6 +4,7 @@
 #include "Arp/System/Commons/Logging.h"
 #include "ExternalLibraryTestComponent.hpp"
 #include "My/Company/Name/ExternalStruct.hpp"
+#include "Helper.hpp"
 
 namespace ExternalLibraryTest
 {
@@ -11,6 +12,7 @@ namespace ExternalLibraryTest
 using namespace Arp;
 using namespace Arp::System::Commons::Diagnostics::Logging;
 using namespace Arp::Plc::Commons::Esm;
+using namespace Special::Namespace;
 
 //#program
 //#component(ExternalLibraryTest::ExternalLibraryTestComponent)
@@ -50,6 +52,7 @@ public: /* Ports
 
 private: // fields
     ExternalLibraryTest::ExternalLibraryTestComponent& externalLibraryTestComponent;
+    Helper helper
 
 };
 

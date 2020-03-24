@@ -610,7 +610,13 @@ namespace PlcNext.Common.CodeModel
                     }
                     case EntityKeys.NamespaceKey:
                     {
-                        string ns = codeModel.RootNamespace();
+                        IEnumerable<string> relevantTypes = TemplateEntity.Decorate(owner).EntityHierarchy
+                                                                          .Select(CodeEntity.Decorate)
+                                                                          .Where(c => !c.IsRoot())
+                                                                          .Concat(GetPortStructures())
+                                                                          .Concat(GetPortEnums())
+                                                                          .Select(c => c.FullName);
+                        string ns = codeModel.RootNamespace(relevantTypes.ToArray());
                         if (string.IsNullOrEmpty(ns))
                         {
                             ns = owner.Name;

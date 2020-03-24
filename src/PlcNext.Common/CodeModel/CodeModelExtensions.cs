@@ -83,26 +83,33 @@ namespace PlcNext.Common.CodeModel
                                             !a.NamedValues.Any());
         }
 
-        public static string RootNamespace(this ICodeModel model, bool allowNoCodeEntities = true)
+        public static string RootNamespace(this ICodeModel model, string[] relevantTypes)
         {
-            string result = string.Empty;
-            IEnumerable<string> namespaces = model.Classes.Where(c => model.SourceDirectories.Contains(c.Value.Parent))
+            string[] sourceDirectories = model.SourceDirectories.Select(d => d.FullName).ToArray();
+            IEnumerable<string> namespaces = model.Types.Where(c => sourceDirectories.Any(c.Value.FullName.StartsWith))
+                                                  .Where(c => relevantTypes.Contains(c.Key.FullName))
                                                   .Select(p => p.Key)
                                                   .Where(m => m.Namespace != null)
                                                   .Select(m => m.Namespace)
                                                   .ToArray();
             if (!namespaces.Any())
             {
-                if (allowNoCodeEntities)
-                    return string.Empty;
-                throw new FormattableException("No code entities found for the specified project.");
+                namespaces = model.Types.Where(c => sourceDirectories.Any(c.Value.FullName.StartsWith))
+                                  .Select(p => p.Key)
+                                  .Where(m => m.Namespace != null)
+                                  .Select(m => m.Namespace)
+                                  .ToArray();
+            }
+            if (!namespaces.Any())
+            {
+                return string.Empty;
             }
 
-            result = string.Join(".", namespaces
-                                     .Select(s => s.Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries)
-                                                   .AsEnumerable())
-                                     .Transpose()
-                                     .TakeWhile(s => s.All(x => x == s.First())).Select(s => s.First()));
+            string result = string.Join(".", namespaces
+                                            .Select(s => s.Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries)
+                                                          .AsEnumerable())
+                                            .Transpose()
+                                            .TakeWhile(s => s.All(x => x == s.First())).Select(s => s.First()));
             if (string.IsNullOrEmpty(result))
             {
                 throw new MultipleRootNamespacesException(namespaces);

@@ -41,6 +41,8 @@ namespace PlcNext.Common.CodeModel
                                           ? Decorate(this[EntityKeys.ResolvedTypeKey])
                                           : null;
 
+        public string FullName => AsType?.FullName ?? Name;
+
         public IField AsField => Value<IField>();
         public IType AsType => Value<IType>();
         public IEnum AsEnum => Value<IEnum>();

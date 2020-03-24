@@ -10,8 +10,10 @@
     <Compile Remove="TestResults\**" />
     <EmbeddedResource Remove="TestResults\**" />
     <None Remove="TestResults\**" />
+    <None Remove="Deployment\ExternalLibrary\My\Company\Name\Helper.hpp" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
+    <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\Helper.hpp" />
     <EmbeddedResource Include="Deployment\HiddenPlm\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmComponent.cpp" />
     <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmComponent.hpp" />
