@@ -151,10 +151,17 @@ namespace PlcNext.Common.Tools.UI
             JObject ReadCatalog(FileStream catalogStream)
             {
                 JObject catalogContent;
-                using (StreamReader reader = new StreamReader(catalogStream, Encoding.UTF8, true, 4096, true))
-                using (JsonReader jsonReader = new JsonTextReader(reader))
+                try
                 {
-                    catalogContent = JObject.Load(jsonReader);
+                    using (StreamReader reader = new StreamReader(catalogStream, Encoding.UTF8, true, 4096, true))
+                    using (JsonReader jsonReader = new JsonTextReader(reader))
+                    {
+                        catalogContent = JObject.Load(jsonReader);
+                    }
+                }
+                catch (JsonReaderException)
+                {
+                    catalogContent = new JObject();
                 }
 
                 return catalogContent;
