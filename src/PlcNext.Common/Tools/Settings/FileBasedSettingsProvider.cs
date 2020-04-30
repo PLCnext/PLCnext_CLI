@@ -46,7 +46,7 @@ namespace PlcNext.Common.Tools.Settings
             {
                 if (parser == null)
                 {
-                    parser = new SettingsParser(LoadSettings());
+                    parser = new SettingsParser(OnSettingsLoading(LoadSettings()));
                     OnSettingsLoaded();
                     loaded = true;
                 }
@@ -219,6 +219,7 @@ namespace PlcNext.Common.Tools.Settings
         public event EventHandler<SettingsObserverEventArgs> SettingRemoved;
         public event EventHandler<SettingsObserverEventArgs> SettingCleared;
         private event EventHandler<EventArgs> SettingsLoaded;
+        public event EventHandler<SettingsLoadingEventArgs> SettingsLoading;
 
         event EventHandler<EventArgs> ISettingsObserver.SettingsLoaded
         {
@@ -271,6 +272,13 @@ namespace PlcNext.Common.Tools.Settings
         protected virtual void OnSettingRemoving(SettingsObserverEventArgs e)
         {
             SettingRemoving?.Invoke(this, e);
+        }
+
+        protected virtual Settings OnSettingsLoading(Settings settings)
+        {
+            SettingsLoadingEventArgs e = new SettingsLoadingEventArgs(settings);
+            SettingsLoading?.Invoke(this, e);
+            return e.Settings;
         }
 
         private class EditableSettings : IEditableSettings

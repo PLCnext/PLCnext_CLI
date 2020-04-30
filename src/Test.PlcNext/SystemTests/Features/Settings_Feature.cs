@@ -82,6 +82,16 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Remove_initial_collection_setting_value_clears_setting()
+        {
+            await Runner.AddSteps(
+                _ => Given_are_the_standard_settings(),
+                _ => When_I_remove_the_value_from_the_setting_collection("TemplateLocations", "./Templates/Templates.xml"),
+                _ => Then_the_setting_has_the_values("TemplateLocations", new string[0])
+            ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Clear_collection_setting_removes_all_values()
         {
             await Runner.AddSteps(

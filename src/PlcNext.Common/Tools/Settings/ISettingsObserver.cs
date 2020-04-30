@@ -23,5 +23,6 @@ namespace PlcNext.Common.Tools.Settings
         event EventHandler<SettingsObserverEventArgs> SettingRemoved;
         event EventHandler<SettingsObserverEventArgs> SettingCleared;
         event EventHandler<EventArgs> SettingsLoaded;
+        event EventHandler<SettingsLoadingEventArgs> SettingsLoading;
     }
 }

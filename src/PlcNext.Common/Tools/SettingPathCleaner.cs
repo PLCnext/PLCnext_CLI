@@ -33,6 +33,20 @@ namespace PlcNext.Common.Tools
             settingsObserver.SettingAdding += OnSettingChanging;
             settingsObserver.SettingSetting += OnSettingChanging;
             settingsObserver.SettingRemoving += OnSettingChanging;
+            settingsObserver.SettingsLoading += OnSettingsLoading;
+        }
+
+        private void OnSettingsLoading(object sender, SettingsLoadingEventArgs e)
+        {
+            e.Settings = new Settings.Settings(e.Settings.AttributePrefix,
+                                               e.Settings.SdkPaths.Select(p => p.CleanPath()).ToArray(),
+                                               e.Settings.CliRepositoryRoot,
+                                               e.Settings.CliRepositoryFileName,
+                                               e.Settings.CliRepositorySignatureFileName,
+                                               e.Settings.HttpProxy,
+                                               e.Settings.LogFilePath.CleanPath(),
+                                               e.Settings.TemplateLocations.Select(p => p.CleanPath()).ToArray(),
+                                               e.Settings.UseSystemCommands);
         }
 
         private void OnSettingChanging(object sender, SettingsObserverEventArgs e)
@@ -48,6 +62,7 @@ namespace PlcNext.Common.Tools
             settingsObserver.SettingAdding -= OnSettingChanging;
             settingsObserver.SettingSetting -= OnSettingChanging;
             settingsObserver.SettingRemoving -= OnSettingChanging;
+            settingsObserver.SettingsLoading -= OnSettingsLoading;
         }
     }
 }
