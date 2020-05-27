@@ -27,7 +27,7 @@ namespace PlcNext.CommandLine
 
         [Option(CommandLineConstants.TargetChar, CommandLineConstants.TargetOption, HelpText ="Targets for which the build shall be executed. " +
                                                     "Targets should have the form <target>[,<version>] [...]. " +
-                                                    "The complete version can be but must not be used. " +
+                                                    "The complete version can be but does not have to be used. " +
                                                     "The combination of target and version must be unambiguous. " +
                                                     "If the version contains a space, quotation marks around that target are necessary. " +
                                                     "WARNING: Do not use this option directly before the cmake options, " +
