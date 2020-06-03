@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Agents.Net" Version="2020.0.0-prerelease-20200306110127" />
+    <PackageReference Include="Agents.Net" Version="2020.0.1" />
   </ItemGroup>
 
   <ItemGroup>

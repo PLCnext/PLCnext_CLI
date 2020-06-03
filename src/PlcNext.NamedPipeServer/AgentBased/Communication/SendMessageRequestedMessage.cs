@@ -49,9 +49,12 @@ namespace PlcNext.NamedPipeServer.AgentBased.Communication
             return string.Empty;
         }
 
-        protected override void DisposeConsumables()
+        protected override void Dispose(bool disposing)
         {
-            Message.Dispose();
+            if (disposing)
+            {
+                Message.Dispose();
+            }
         }
     }
 }
