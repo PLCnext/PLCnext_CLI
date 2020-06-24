@@ -31,6 +31,10 @@ private: // fields
 	//#port
 	//#attributes(Input|Retain)
     int16 intArray[12] = {0,1,2,3,4,5,6,7,8,9,10,11};
+    
+    //#port
+    //#attributes(retain)
+    uint32 Var_ARRAY_UDINT1[3][2]={0, 0};
 };
 
 ///////////////////////////////////////////////////////////////////////////////

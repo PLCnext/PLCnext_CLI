@@ -128,6 +128,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 int index = identifier.GetParentIndex();
                 ParseNode parent = identifier.GetParent();
                 List<int> multiplicities = new List<int>();
+                bool firstMultiplicityFound = false;
                 foreach (ParseNode sibling in parent.Skip(index+1).SkipUnnamed())
                 {
                     if (sibling.RuleType == "choice" && sibling.RuleName == "node")
@@ -139,9 +140,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                             if (int.TryParse(bracketGroup.Substring(1, bracketGroup.Length-2), out int result))
                             {
                                 multiplicities.Add(result);
+                                firstMultiplicityFound = true;
                             }
                         }
-                        break;
+                        else if(firstMultiplicityFound)
+                        {
+                            break;
+                        }
                     }
                 }
 

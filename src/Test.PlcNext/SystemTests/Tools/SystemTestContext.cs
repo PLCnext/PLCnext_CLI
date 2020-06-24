@@ -593,9 +593,9 @@ namespace Test.PlcNext.SystemTests.Tools
                         FieldDefinition fieldDefinition = definition.Fields.FirstOrDefault(f => f.name == member.Name);
                         fieldDefinition.Should().NotBeNull($"fieldDefinition {member.Name} expected in structure {ObjectToString(definition)}");
 
-                        if (member.MultiplicityUsed && (member.Multiplicity != 0 || !string.IsNullOrEmpty(fieldDefinition.dimensions)))
+                        if (member.MultiplicityUsed && (!string.IsNullOrEmpty(member.Multiplicity) || !string.IsNullOrEmpty(fieldDefinition.dimensions)))
                         {
-                            fieldDefinition.dimensions.Should().Be(member.Multiplicity.ToString());
+                            fieldDefinition.dimensions.Should().Be(member.Multiplicity);
                         }
                         fieldDefinition.type.Should().Be(member.Type);
                         if (member.AttributesUsed && (!string.IsNullOrEmpty(member.Attributes) || !string.IsNullOrEmpty(fieldDefinition.attributes)))
@@ -804,9 +804,9 @@ namespace Test.PlcNext.SystemTests.Tools
                         portDefinition.attributes.Should().Be(portmeta.Attributes, "attributes should match 1:1");
                         portDefinition.type.Should().Be(portmeta.Type);
 
-                        if (portmeta.MultiplicityUsed && (portmeta.Multiplicity != 0 || !string.IsNullOrEmpty(portDefinition.dimensions)))
+                        if (portmeta.MultiplicityUsed && (!string.IsNullOrEmpty(portmeta.Multiplicity) || !string.IsNullOrEmpty(portDefinition.dimensions)))
                         {
-                            portDefinition.dimensions.Should().Be(portmeta.Multiplicity.ToString());
+                            portDefinition.dimensions.Should().Be(portmeta.Multiplicity);
                         }
                     }
                 }
@@ -867,9 +867,9 @@ namespace Test.PlcNext.SystemTests.Tools
                             portDefinition.attributes.Should().Be(portmeta.Attributes, "attributes should match 1:1");
                             portDefinition.type.Should().Be(portmeta.Type);
 
-                            if (portmeta.MultiplicityUsed && (portmeta.Multiplicity != 0 || !string.IsNullOrEmpty(portDefinition.dimensions)))
+                            if (portmeta.MultiplicityUsed && (!string.IsNullOrEmpty(portmeta.Multiplicity) || !string.IsNullOrEmpty(portDefinition.dimensions)))
                             {
-                                portDefinition.dimensions.Should().Be(portmeta.Multiplicity.ToString());
+                                portDefinition.dimensions.Should().Be(portmeta.Multiplicity);
                             }
                         }
                     }

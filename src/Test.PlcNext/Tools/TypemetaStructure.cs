@@ -67,13 +67,13 @@ namespace Test.PlcNext.Tools
             Type = type;
         }
 
-        public TypeMember(string name, string type, uint multiplicity) : this(name, type)
+        public TypeMember(string name, string type, string multiplicity) : this(name, type)
         {
             Multiplicity = multiplicity;
             MultiplicityUsed = true;
         }
 
-        public TypeMember(string name, string type, uint multiplicity, string attributes) : this(name, type, multiplicity)
+        public TypeMember(string name, string type, string multiplicity, string attributes) : this(name, type, multiplicity)
         {
             AttributesUsed = true;
             Attributes = attributes;
@@ -82,7 +82,7 @@ namespace Test.PlcNext.Tools
         public string Name { get; }
         public string Type { get; }
 
-        public uint Multiplicity { get; }
+        public string Multiplicity { get; }
 
         public bool MultiplicityUsed { get; }
 
