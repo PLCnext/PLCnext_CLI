@@ -36,7 +36,7 @@ namespace Test.PlcNext.Tools
             Attributes = attributes;
         }
 
-        public Portmeta(string name, string type, string attributes, uint multiplicity) : this(name, type, attributes)
+        public Portmeta(string name, string type, string attributes, string multiplicity) : this(name, type, attributes)
         {
             Multiplicity = multiplicity;
             MultiplicityUsed = true;
@@ -45,7 +45,7 @@ namespace Test.PlcNext.Tools
         public string Type { get; }
         public string Attributes { get; }
 
-        public uint Multiplicity { get; }
+        public string Multiplicity { get; }
 
         public bool MultiplicityUsed { get; }
     }

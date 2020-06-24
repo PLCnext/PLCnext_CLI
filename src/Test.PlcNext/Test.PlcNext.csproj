@@ -11,6 +11,7 @@
     <EmbeddedResource Remove="TestResults\**" />
     <None Remove="TestResults\**" />
     <None Remove="Deployment\ExternalLibrary\My\Company\Name\Helper.hpp" />
+    <None Remove="Deployment\TestResults\ArrayInitializer.meta.cpp" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\Helper.hpp" />
@@ -64,6 +65,7 @@
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.hpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.cpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\ArrayInitializer.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\DemoLibraryCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\DemoLibraryCommandArgsWithSpecificId.txt" />

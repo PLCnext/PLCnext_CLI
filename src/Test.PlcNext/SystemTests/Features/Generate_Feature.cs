@@ -39,9 +39,9 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                  new []
                                                                                  {
                                                                                      new TypeMember("value1","int32"),
-                                                                                     new TypeMember("value2","bit", 0),
-                                                                                     new TypeMember("value3","int64", 6),
-                                                                                     new TypeMember("value4","int64", 1),
+                                                                                     new TypeMember("value2","bit", string.Empty),
+                                                                                     new TypeMember("value3","int64", "6"),
+                                                                                     new TypeMember("value4","int64", "1"),
                                                                                  }))).RunAsyncWithTimeout();
         }
 
@@ -56,9 +56,9 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                    new[]
                                                                                                    {
                                                                                                        new TypeMember("value1","int32"),
-                                                                                                       new TypeMember("value2","bit", 0),
-                                                                                                       new TypeMember("value3","int64", 6),
-                                                                                                       new TypeMember("value4","int64", 1),
+                                                                                                       new TypeMember("value2","bit", string.Empty),
+                                                                                                       new TypeMember("value3","int64", "6"),
+                                                                                                       new TypeMember("value4","int64", "1"),
                                                                                                    }))).RunAsyncWithTimeout();
         }
 
@@ -72,8 +72,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("Example",
                                                                                                    new[]
                                                                                                    {
-                                                                                                       new TypeMember("value1","int32", 0, "Input|Opc"),
-                                                                                                       new TypeMember("value2","bit", 0, null),
+                                                                                                       new TypeMember("value1","int32", string.Empty, "Input|Opc"),
+                                                                                                       new TypeMember("value2","bit", string.Empty, null),
                                                                                                    }))).RunAsyncWithTimeout();
         }
 
@@ -195,9 +195,9 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                   new []
                                                                                   {
                                                                                       new Portmeta("InCpp<INT","Example","Input|Opc"),
-                                                                                      new Portmeta("examplePort2","Example","Output", 1),
-                                                                                      new Portmeta("examplePort3","Example","Output", 5),
-                                                                                      new Portmeta("examplePort4","int32","", 0),
+                                                                                      new Portmeta("examplePort2","Example","Output", "1"),
+                                                                                      new Portmeta("examplePort3","Example","Output", "5"),
+                                                                                      new Portmeta("examplePort4","int32","", string.Empty),
                                                                                   }))).RunAsyncWithTimeout();
         }
 
@@ -273,7 +273,8 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                new[] { "MyComponent", "MyProgram" },
                                                                                                new[]
                                                                                                {
-                                                                                                   new Portmeta("intArray","int16","Input|Retain", 12),
+                                                                                                   new Portmeta("intArray","int16","Input|Retain", "12"),
+                                                                                                   new Portmeta("Var_ARRAY_UDINT1","uint32","Retain", "3;2"),
                                                                                                }))).RunAsyncWithTimeout();
         }
 
@@ -289,14 +290,14 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                 new[]
                                                                                 {
                                                                                     new Portmeta("examplePort1","Example","Input|Opc"),
-                                                                                    new Portmeta("examplePort2","Example","Output", 1),
-                                                                                    new Portmeta("examplePort3","Example","Output", 5)
+                                                                                    new Portmeta("examplePort2","Example","Output", "1"),
+                                                                                    new Portmeta("examplePort3","Example","Output", "5")
                                                                                 },
                                                                                 new[] { "MyProgram", "MyProgram2"}
                                                                                 ), 
                                                                               new CompmetaData("MyOtherComponent",
                                                                                 new string[] { "MyOtherComponent" },
-                                                                                new[] { new Portmeta("examplePort4","int32","", 0) },
+                                                                                new[] { new Portmeta("examplePort4","int32","", string.Empty) },
                                                                                 new[] { "MyOtherProgram"}
                                                                                 ))).RunAsyncWithTimeout();
         }
@@ -363,6 +364,15 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("HiddenPlm"),
                 _ => When_I_generate_all_codefiles(),
                 _ => Then_the_typemeta_method_looks_like_NAME("HiddenPlm.meta.cpp")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_typemeta_information_for_array_initializers()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ProgramWithArrayInitializedPort"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_typemeta_method_looks_like_NAME("ArrayInitializer.meta.cpp")).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -454,8 +464,8 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                        new TypeMember("MaxTaskActivationDelay","int64"),
                                                                                                        new TypeMember("ExecutionTimeThreshold","int64"),
                                                                                                        new TypeMember("ExecutionTimeThresholdCount","uint32"),
-                                                                                                       new TypeMember("TaskName","StaticString",2),
-                                                                                                       new TypeMember("TaskName2","StaticString100",0),
+                                                                                                       new TypeMember("TaskName","StaticString","2"),
+                                                                                                       new TypeMember("TaskName2","StaticString100",string.Empty),
                                                                                                    }))).RunAsyncWithTimeout();
         }
 
@@ -484,14 +494,14 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                 new[]
                                                                                 {
                                                                                     new Portmeta("examplePort1","Example","Input|Opc"),
-                                                                                    new Portmeta("examplePort2","Example","Output", 1),
-                                                                                    new Portmeta("examplePort3","Example","Output", 5)
+                                                                                    new Portmeta("examplePort2","Example","Output", "1"),
+                                                                                    new Portmeta("examplePort3","Example","Output", "5")
                                                                                 },
                                                                                 new[] { "MyProgram", "MyProgram2" }
                                                                                 ),
                                                                               new CompmetaData("MyOtherComponent",
                                                                                 new string[] { "MyOtherComponent" },
-                                                                                new[] { new Portmeta("examplePort4", "int32", "", 0) },
+                                                                                new[] { new Portmeta("examplePort4", "int32", "", string.Empty) },
                                                                                 new[] { "MyOtherProgram" }
                                                                                 ))).RunAsyncWithTimeout();
         }

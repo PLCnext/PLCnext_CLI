@@ -1,12 +1,12 @@
 [submodule "src/PlcNext/Templates"]
 	path = src/PlcNext/Templates
 	url = https://github.com/PLCnext/PLCnext_CLI_Templates.git
-	branch = master
+	branch = release/20.6.0
 [submodule "visual-studio-plugin"]
 	path = visual-studio-plugin
 	url = https://github.com/PLCnext/PLCnext_CLI_VS.git
-	branch = master
+	branch = release/20.6.0
 [submodule "eclipse-plugin"]
 	path = eclipse-plugin
 	url = https://github.com/PLCnext/PLCnext_CLI_Eclipse.git
-	branch = master
+	branch = release/20.6.0
