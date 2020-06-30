@@ -134,7 +134,7 @@ namespace PlcNext.Common.Tools.IO
                     }
 
                     if (!Regex.IsMatch(validationUserInterface.Information,
-                                       $@"(?=.*(?:usage|Usage)).*{Regex.Escape(file.Name)}(?=.*-y)(?=.*-d)"))
+                                       @"(?=.*(?:usage|Usage)).*(?=.*-y)(?=.*-d)"))
                     {
                         throw new UnsupportedArchiveFormatException(file.FullName,
                             new FormattableException($"Did not find the expected usage information.{Environment.NewLine}" +
