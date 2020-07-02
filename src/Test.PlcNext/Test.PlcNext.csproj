@@ -461,7 +461,7 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.hpp" Link="Deployment\Templates\ComponentTemplate\Component.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\ComponentProgramProvider.cpp" Link="Deployment\Templates\ComponentTemplate\ComponentProgramProvider.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\ComponentProgramProvider.hpp" Link="Deployment\Templates\ComponentTemplate\ComponentProgramProvider.hpp" />
-	<EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\Component.cpp" Link="Deployment\Templates\AcfComponentTemplate\Component.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\Component.cpp" Link="Deployment\Templates\AcfComponentTemplate\Component.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\Component.hpp" Link="Deployment\Templates\AcfComponentTemplate\Component.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.cpp" Link="Deployment\Templates\ProgramTemplate\Program.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.hpp" Link="Deployment\Templates\ProgramTemplate\Program.hpp" />
@@ -470,7 +470,7 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.libmeta" Link="Deployment\Templates\ProjectTemplate\Library.libmeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
-	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\acf.config" Link="Deployment\Templates\AcfProjectTemplate\acf.config" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
@@ -549,11 +549,15 @@
     <Folder Include="Deployment\Templates\ProgramTemplate\" />
     <Folder Include="Tools\XUnit\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="JUnit.TestLogger">
-      <HintPath>..\Tools\JUnitLogger\JUnit.TestLogger.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+  
+  <Choose>
+    <When Condition="Exists('..\Tools\JUnitLogger\JUnit.TestLogger.dll')">
+      <ItemGroup>
+        <Reference Include="JUnit.TestLogger">
+          <HintPath>..\Tools\JUnitLogger\JUnit.TestLogger.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
 
 </Project>
