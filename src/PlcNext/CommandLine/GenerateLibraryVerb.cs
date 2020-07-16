@@ -14,7 +14,6 @@ using CommandLine;
 using CommandLine.Text;
 using PlcNext.Common.Commands;
 using PlcNext.Common.Tools;
-using System.Linq;
 
 namespace PlcNext.CommandLine
 {
@@ -51,6 +50,11 @@ namespace PlcNext.CommandLine
                Separator = ',')]
         public IEnumerable<string> SourceDirectories { get; set; }
 
+        [Option(CommandLineConstants.ExternalLibrariesChar, CommandLineConstants.ExternalLibrariesOption, HelpText="List of external libraries separated by ',' to add to library." +
+                                                                                                                   " For multibinary libraries: specify list of libraries separated by ','" +
+                                                                                                                   " which then will be added for every target or specify per " +
+                                                                                                                   "target a list of libraries.")]
+        public IEnumerable<string> ExternalLibraries { get; set; }
         [Usage]
         public static IEnumerable<UsageExample> GenerateLibraryUsageExample =>
         new[]
@@ -62,13 +66,16 @@ namespace PlcNext.CommandLine
                 $"--{CommandLineConstants.TargetOption} AXCF2152 RFC4072S"),
             new UsageExample("Generate library for target with compilation file in special location:"
                 , $"{CommandLineConstants.GenerateVerb} {CommandLineConstants.LibraryVerb} --{CommandLineConstants.PathOption} Path/To/Project " +
-                $"--{CommandLineConstants.TargetOption} AXCF2152,2019.0,path/to/Project.so")
+                $"--{CommandLineConstants.TargetOption} AXCF2152,2019.0,path/to/Project.so"),
+            new UsageExample("Generate library with external libraries:"
+                , $"{CommandLineConstants.GenerateVerb} {CommandLineConstants.LibraryVerb} --{CommandLineConstants.PathOption} Path/To/Project " +
+                $"--{CommandLineConstants.ExternalLibrariesOption} AXCF2152,2019.0,path/to/libforaxc.so,path/to/otherlib.so RFC4072S,path/to/libfornfc.so")
         };
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
             return await commandManager.Execute(AddDeprecatedInformation(new 
-                GenerateLibraryCommandArgs(Path, MetaFilesDirectory, LibraryLocation, OutputDirectory, LibraryGuid, Targets, Enumerable.Empty<string>(), SourceDirectories)))
+                GenerateLibraryCommandArgs(Path, MetaFilesDirectory, LibraryLocation, OutputDirectory, LibraryGuid, Targets, ExternalLibraries, SourceDirectories)))
                                        .ConfigureAwait(false);
         }
     }

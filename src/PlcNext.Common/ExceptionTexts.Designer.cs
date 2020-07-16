@@ -376,6 +376,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following possible namespaces were found for the project. Only one namespace is allowed for targets prior to 2020.6.0.{0}.
+        /// </summary>
+        internal static string MultipleRootNamespacesForTarget {
+            get {
+                return ResourceManager.GetString("MultipleRootNamespacesForTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Project {0} has no assigned targets.{1}Please specify a target to execute the build..
         /// </summary>
         internal static string NoAssignedTargets {

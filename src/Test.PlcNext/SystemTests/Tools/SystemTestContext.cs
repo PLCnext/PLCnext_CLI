@@ -886,7 +886,6 @@ namespace Test.PlcNext.SystemTests.Tools
                 MetaConfigurationDocument document = (MetaConfigurationDocument)serializer.Deserialize(fileStream);
                 LibraryDefinition libraryDefinition = document.Item as LibraryDefinition;
                 libraryDefinition.Should().NotBeNull("metadata content should be a LibraryDefinition");
-                libraryDefinition.name.Should().Be(knownProjectName);
                 libraryDefinition.applicationDomain.Should().Be(ApplicationDomainEnumeration.CPLUSPLUS);
                 libraryDefinition.File.path.Should().Be($"lib{knownProjectName}.{Constants.SharedObjectExtension}");
                 libraryDefinition.TypeIncludes.Should().ContainSingle();

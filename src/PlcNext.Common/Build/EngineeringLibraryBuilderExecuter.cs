@@ -15,11 +15,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Xml;
+using System.Xml.Serialization;
 using Newtonsoft.Json.Linq;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Commands;
 using PlcNext.Common.Deploy;
+using PlcNext.Common.MetaData;
 using PlcNext.Common.Project;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
@@ -30,6 +32,7 @@ using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
 using CodeEntity = PlcNext.Common.CodeModel.CodeEntity;
 using Entity = PlcNext.Common.DataModel.Entity;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace PlcNext.Common.Build
 {
@@ -57,6 +60,7 @@ namespace PlcNext.Common.Build
             this.executionContext = executionContext;
         }
 
+        //TODO Patch libmeta here
         public int Execute(Entity dataModel)
         {
             ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
@@ -68,14 +72,27 @@ namespace PlcNext.Common.Build
                 throw new FormattableException("Please use --target to specify for which targets the library shall be generated.");
             }
             Dictionary<Entity, VirtualFile> projectLibraries = targets.ToDictionary(t => t, FindLibrary);
+            List<string> externalLibraries = new List<string>();
+            List<VirtualFile> deletableFiles = new List<VirtualFile>();
             foreach (Entity target in targets)
             {
-                CopyExternalLibrariesToOutputDirectory(target);
+                CopyExternalLibrariesToOutputDirectory(target, projectLibraries,
+                                                       out IEnumerable<string> libraries,
+                                                       out IEnumerable<VirtualFile> toBeDeleted);
+                externalLibraries.AddRange(libraries);
+                deletableFiles.AddRange(toBeDeleted);
             }
             CheckMetaFiles(targets.First());
 
             string commandOptionsFile = GenerateCommandOptions(project, projectLibraries, projectName);
-            return ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project);
+            int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project);
+
+            foreach (VirtualFile deletable in deletableFiles)
+            {
+                deletable.Delete();
+            }
+
+            return result;
 
             VirtualFile FindLibrary(Entity target)
             {
@@ -95,37 +112,6 @@ namespace PlcNext.Common.Build
                 return file;
             }
 
-            void CopyExternalLibrariesToOutputDirectory(Entity target)
-            {
-                VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
-                VirtualDirectory externalDirectory = deployDirectory.Directory("auto-deployed-external-libraries");
-                externalDirectory.Clear();
-                executionContext.Observable.OnNext(new Change(() => externalDirectory.UnClear(),
-                                                              "Cleared automatic copied external libraries."));
-
-                if (deployDirectory.Files("*.so", true).Except(projectLibraries.Values).Any())
-                {
-                    //external libraries where copied by user; no further action is required
-                    return;
-                }
-
-                BuildEntity buildEntity = BuildEntity.Decorate(target);
-                if (!buildEntity.HasBuildSystem)
-                {
-                    TargetEntity targetEntity = TargetEntity.Decorate(target);
-                    executionContext.WriteWarning(new CMakeBuildSystemNotFoundException(targetEntity.FullName, buildEntity.BuildType).Message);
-                    return;
-                }
-
-                foreach (string externalLibrary in buildEntity.BuildSystem.ExternalLibraries)
-                {
-                    executionContext.WriteWarning($"The library {externalLibrary} must be transferred to the device into the directory \"usr/local/lib\" manually.");
-                    
-                    //VirtualFile newFile = fileSystem.GetFile(externalLibrary).CopyTo(deployDirectory);
-                    //executionContext.Observable.OnNext(new Change(() => newFile.Delete(), $"Copied {externalLibrary} to {newFile.FullName}."));
-                }
-            }
-
             void CheckMetaFiles(Entity target)
             {
                 TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
@@ -135,6 +121,8 @@ namespace PlcNext.Common.Build
                 {
                     throw new MetaLibraryNotFoundException(deployDirectory.FullName);
                 }
+
+                PatchLibmeta(fileSystem.GetFile(Path.Combine(deployDirectory.FullName, $"{projectName}.libmeta")));
                 IEnumerable<VirtualFile> metaFiles = deployDirectory.Files(searchRecursive: true);
 
                 IEnumerable<Entity> componentsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
@@ -157,6 +145,92 @@ namespace PlcNext.Common.Build
                     throw new MetaFileNotFoundException(deployDirectory.FullName, $"{programsWithoutMetaFile.First().Name}.{Constants.ProgmetaExtension}");
                 }
             }
+
+            void PatchLibmeta(VirtualFile libmetaFile)
+            {
+                if (!externalLibraries.Any())
+                {
+                    return;
+                }
+                XmlSerializer serializer = new XmlSerializer(typeof(MetaConfigurationDocument));
+                MetaConfigurationDocument document;
+                try
+                {
+                    using (Stream fileStream = libmetaFile.OpenRead())
+                    using (XmlReader reader = XmlReader.Create(fileStream))
+                    {
+                        document = (MetaConfigurationDocument)serializer.Deserialize(reader);
+                    }
+                }
+                catch (XmlException e)
+                {
+                    executionContext.WriteWarning($"Cannot parse libmeta file. Cannot patch dependencies. {e.Message}");
+                    return;
+                }
+
+                LibraryDefinition definition = (LibraryDefinition) document.Item;
+                IEnumerable<string> dependencies = externalLibraries.Select(Path.GetFileName)
+                                                                    .Concat(definition.Dependencies?.Select(d => d.path)??
+                                                                            Enumerable.Empty<string>());
+                definition.Dependencies = dependencies.Select(d => new DependencyDefinition {path = d}).ToArray();
+                
+                using (Stream fileStream = libmetaFile.OpenWrite())
+                using (XmlWriter writer = XmlWriter.Create(fileStream, new XmlWriterSettings
+                {
+                    Indent = true
+                }))
+                {
+                    serializer.Serialize(writer, document);
+                }
+            }
+        }
+
+        private void CopyExternalLibrariesToOutputDirectory(Entity target, Dictionary<Entity, VirtualFile> projectLibraries, 
+                                                            out IEnumerable<string> externalLibraries,
+                                                            out IEnumerable<VirtualFile> copiedLibraries)
+        {
+            VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
+            VirtualDirectory externalDirectory = deployDirectory.Directory("auto-deployed-external-libraries");
+            externalDirectory.Clear();
+            executionContext.Observable.OnNext(new Change(() => externalDirectory.UnClear(), "Cleared automatic copied external libraries."));
+            externalLibraries = Enumerable.Empty<string>();
+            copiedLibraries = Enumerable.Empty<VirtualFile>();
+            List<VirtualFile> newLibraryFiles = new List<VirtualFile>();
+
+            if (deployDirectory.Files("*.so", true).Except(projectLibraries.Values).Any())
+            {
+                //external libraries where copied by user; no further action is required
+                return;
+            }
+
+            BuildEntity buildEntity = BuildEntity.Decorate(target);
+            if (!buildEntity.HasBuildSystem)
+            {
+                TargetEntity targetEntity = TargetEntity.Decorate(target);
+                executionContext.WriteWarning(new CMakeBuildSystemNotFoundException(targetEntity.FullName, buildEntity.BuildType).Message);
+                return;
+            }
+
+            externalLibraries = buildEntity.BuildSystem.ExternalLibraries;
+            TargetEntity entity = TargetEntity.Decorate(target);
+            if (entity.Version >= new Version(20, 6))
+            {
+                foreach (string externalLibrary in buildEntity.BuildSystem.ExternalLibraries)
+                {
+                    VirtualFile newFile = fileSystem.GetFile(externalLibrary).CopyTo(deployDirectory);
+                    newLibraryFiles.Add(newFile);
+                    executionContext.Observable.OnNext(new Change(() => newFile.Delete(), $"Copied {externalLibrary} to {newFile.FullName}."));
+                }
+            }
+            else
+            {
+                foreach (string externalLibrary in buildEntity.BuildSystem.ExternalLibraries)
+                {
+                    executionContext.WriteWarning($"The library {externalLibrary} must be transferred to the device {entity.FullName} into the directory \"usr/local/lib\" manually.");
+                }
+            }
+
+            copiedLibraries = newLibraryFiles;
         }
 
         private string GenerateCommandOptions(ProjectEntity project, Dictionary<Entity, VirtualFile> projectLibraries, string projectName)
@@ -649,13 +723,16 @@ namespace PlcNext.Common.Build
                                                    target.GetShortFullName().Replace(",", "_")));
                     }
 
-                    //foreach ((VirtualFile externalLibFile, Target target) in resolvedExternalLibraries)
-                    //{
-                    //    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                    //                                "/file \":{0}:{1}\"",
-                    //                                externalLibFile.FullName,
-                    //                                target.GetShortFullName().Replace(",", "_")));
-                    //}
+                    foreach ((VirtualFile externalLibFile, Target target) in resolvedExternalLibraries)
+                    {
+                        if(Version.Parse(target.Version) >= new Version(20, 6))
+                        {
+                            writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                           "/file \":{0}:{1}\"",
+                                                           externalLibFile.FullName,
+                                                           target.GetShortFullName().Replace(",", "_")));
+                        }
+                    }
 
                     VirtualDirectory metaDirectory = fileSystem.GetDirectory(metaFilesDirectory);
                     HashSet<VirtualDirectory> createDirectories = new HashSet<VirtualDirectory>();

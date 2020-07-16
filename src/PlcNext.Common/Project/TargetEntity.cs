@@ -31,5 +31,6 @@ namespace PlcNext.Common.Project
         public string FullName => this[EntityKeys.TargetFullNameKey].Value<string>();
         public string ShortFullName => this[EntityKeys.TargetShortFullNameKey].Value<string>();
         public string EngineerVersion => this[EntityKeys.TargetEngineerVersionKey].Value<string>();
+        public Version Version => this[EntityKeys.TargetVersionKey].Value<Version>();
     }
 }

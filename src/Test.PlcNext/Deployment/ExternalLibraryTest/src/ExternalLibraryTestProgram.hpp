@@ -13,6 +13,7 @@ using namespace Arp;
 using namespace Arp::System::Commons::Diagnostics::Logging;
 using namespace Arp::Plc::Commons::Esm;
 using namespace Special::Namespace;
+using namespace My::Company::Name;
 
 //#program
 //#component(ExternalLibraryTest::ExternalLibraryTestComponent)

@@ -361,4 +361,7 @@
   <data name="TargetFormatMismatchWithFile" xml:space="preserve">
     <value>The target {0} does not have the correct format. Expected is the format &lt;target&gt;,&lt;version&gt;(,&lt;file&gt;).</value>
   </data>
+  <data name="MultipleRootNamespacesForTarget" xml:space="preserve">
+    <value>The following possible namespaces were found for the project. Only one namespace is allowed for targets prior to 2020.6.0.{0}</value>
+  </data>
 </root>

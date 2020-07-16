@@ -78,6 +78,7 @@ namespace PlcNext.Common.Tools
         public const string TargetFullNameKey = "targetfullname";
         public const string TargetShortFullNameKey = "targetshortfullname";
         public const string TargetEngineerVersionKey = "__internaltargetengineerversion__";
+        public const string TargetVersionKey = "__internaltargetversion__";
 
         //General keys
         public const string PathKey = "path";

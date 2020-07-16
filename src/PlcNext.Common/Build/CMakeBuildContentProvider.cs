@@ -190,6 +190,10 @@ namespace PlcNext.Common.Build
             void AddExternalLib()
             {
                 string path = match.Groups["path"].Value.Trim('\\', '"');
+                if (path.StartsWith("-l", StringComparison.Ordinal))
+                {
+                    path = $"lib{path.Substring(2)}.so";
+                }
 
                 string pathBase = rPaths.FirstOrDefault(p => fileSystem.FileExists(path, p));
                 if (!string.IsNullOrEmpty(pathBase) && IsNotSysrootPath(path))

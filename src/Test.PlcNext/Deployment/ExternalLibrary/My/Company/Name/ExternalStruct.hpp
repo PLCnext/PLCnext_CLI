@@ -1,4 +1,4 @@
-namespace ExternalLibraryTest
+namespace My { namespace Company { namespace Name
 {
 
 class ExternalStruct
@@ -25,4 +25,4 @@ public: // fields
 ///////////////////////////////////////////////////////////////////////////////
 // inline methods of class ExternalStruct
 
-} // end of namespace ExternalLibraryTest
+}}} // end of namespace My::Company::Name

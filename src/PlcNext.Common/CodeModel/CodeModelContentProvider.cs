@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.MetaData;
+using PlcNext.Common.Project;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Templates.Field;
@@ -610,13 +611,17 @@ namespace PlcNext.Common.CodeModel
                     }
                     case EntityKeys.NamespaceKey:
                     {
+                        bool prior206Target = CheckProjectTargets();
                         IEnumerable<string> relevantTypes = TemplateEntity.Decorate(owner).EntityHierarchy
                                                                           .Select(CodeEntity.Decorate)
                                                                           .Where(c => !c.IsRoot())
-                                                                          .Concat(GetPortStructures())
-                                                                          .Concat(GetPortEnums())
                                                                           .Select(c => c.FullName);
-                        string ns = codeModel.RootNamespace(relevantTypes.ToArray());
+                        string ns = prior206Target
+                                        ? codeModel.RootNamespaceForOldTarget(
+                                            relevantTypes.ToArray(), GetPortStructures().Concat(GetPortEnums())
+                                                                                        .Select(c => c.FullName)
+                                                                                        .ToArray())
+                                        : codeModel.RootNamespace(relevantTypes.ToArray());
                         if (string.IsNullOrEmpty(ns))
                         {
                             ns = owner.Name;
@@ -626,6 +631,12 @@ namespace PlcNext.Common.CodeModel
                     }
                     default:
                         throw new ContentProviderException(key, owner);
+                }
+
+                bool CheckProjectTargets()
+                {
+                    IEnumerable<TargetEntity> targets = ProjectEntity.Decorate(owner).Targets.Select(t => TargetEntity.Decorate(t));
+                    return targets.Any(t => t.Version < new Version(20, 6));
                 }
             }
 

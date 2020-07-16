@@ -161,10 +161,10 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("DemoWithMultibinary"),
                 _ => Given_is_the_working_directory_PATH("DemoWithMultibinary"),
-                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,1.0.0.12345", "AXCF2152,2.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,100.0.0.12345", "AXCF2152,200.0.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
-                _ => When_I_deploy(new DeployCommandArgs { Targets = new[] { "axcf2152,1.0", "axcf2152,2" } }),
+                _ => When_I_deploy(new DeployCommandArgs { Targets = new[] { "axcf2152,100.0", "axcf2152,200" } }),
                 _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoWithMultibinaryLibraryCommandArgs.txt")
                 ).RunAsyncWithTimeout();
         }
@@ -249,12 +249,14 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("Demo"),
                 _ => Given_is_the_working_directory_PATH("Demo"),
                 _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,19.0.0.12345"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets("AXCF2152,20.6.0.12345"),
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_is_that_the_file_exists("intermediate/cmake/AXCF2152,19.0.0.12345/Debug/Some/Path/T,o/Some.so"),
+                _ => Given_is_that_the_file_exists("intermediate/cmake/AXCF2152,20.6.0.12345/Debug/Some/Path/T,o/Some.so"),
                 // if path which is returned by cmake server is relative, it is always relative to cmake build system
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo", "Some/Path/T,o/Some.so"),
                 _ => When_I_deploy(new DeployCommandArgs{ BuildType = "Debug" }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryCommandArgs.txt"),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibs.txt"),
                 _ => Then_the_user_was_informed_that_the_library_must_be_transferred_manually("Some.so")
             ).RunAsyncWithTimeout();
         }
@@ -272,11 +274,12 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "\"Some/Path/T,o/Some.so\"" },
                     BuildType = "Debug"
                 }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibsForAllTargets.txt")
             ).RunAsyncWithTimeout();
         }
 
         [Scenario]
+        [IgnoreScenario("TODO as soon as old generate library command is gone, reactivate")]
         public async Task Inform_user_of_target_format_mismatch()
         {
             await Runner.AddSteps(
@@ -325,8 +328,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_file_exists("Some/Path/To/Some.so"),
                 _ => When_I_deploy(new DeployCommandArgs
                 {
-                    Targets = new[] { "axcf2152,1.0.0.12345", "axcf2152,2.0.0.12345" },
-                    ExternalLibraries = new[] { "axcf2152,1.0,Some/Path/To/Some.so" }
+                    Targets = new[] { "axcf2152,100.0.0.12345", "axcf2152,200.0.0.12345" },
+                    ExternalLibraries = new[] { "axcf2152,100.0,Some/Path/To/Some.so" }
                 }),
                 _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibsMultibinary.txt")
             ).RunAsyncWithTimeout();

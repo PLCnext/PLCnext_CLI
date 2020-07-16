@@ -66,7 +66,7 @@
 				</xs:element>
 			</xs:choice>
 			<xs:attribute name="schemaVersion" type="VersionDefinition"
-				use="required" fixed="2.0" />
+				use="required" fixed="4.0" />
 
 		</xs:complexType>
 
@@ -117,17 +117,6 @@
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:pattern value="([1-9]+[0-9]*)(;[1-9]+[0-9]*)?" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="NamespaceDefinition">
-		<xs:annotation>
-			<xs:documentation>Simple type used to specify a namespace and
-				restrict its structure.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:pattern value="([a-zA-Z]*)(.[a-zA-Z0-9]+)*" />
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -233,6 +222,15 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="Dependencies"
+				type="DependencyListDefinition">
+				<xs:annotation>
+					<xs:documentation>
+						Optional element used to specify dependencies of
+						this library.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element maxOccurs="1" minOccurs="0" name="TypeIncludes"
 				type="IncludeListDefinition">
 				<xs:annotation>
@@ -250,22 +248,6 @@
 			</xs:element>
 		</xs:sequence>
 
-
-
-
-		<xs:attribute name="name" type="NamespaceDefinition"
-			use="required">
-			<xs:annotation>
-				<xs:documentation>This attribute sets the name for the library
-					and all child elements
-					(component, program, types). If not provided
-					the library will be used in a global namespace.
-					This can lead to
-					name clashes and should be avoided.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-
 		<xs:attribute name="applicationDomain" type="ApplicationDomainEnumeration"
 			use="optional">
 			<xs:annotation>
@@ -278,7 +260,37 @@
 		</xs:attribute>
 	</xs:complexType>
 
+	<xs:complexType name="DependencyListDefinition">
+		<xs:annotation>
+			<xs:documentation>A list of dependencies for a library.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="Dependency"
+				type="DependencyDefinition">
+				<xs:annotation>
+					<xs:documentation>A dependency for a library.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 
+	<xs:complexType name="DependencyDefinition">
+		<xs:annotation>
+			<xs:documentation>A dependency for a library.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="path" type="xs:string"
+			use="required">
+			<xs:annotation>
+				<xs:documentation>
+				    Path to the library's dependency. The path shall be
+					relative to the library's path.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
 
 
 	<!-- Definition of meta/acf includes -->
@@ -333,6 +345,13 @@
 				<xs:annotation>
 					<xs:documentation>A list of programs that are contained in this
 						component.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="ProgramGroups" type="ProgramGroupListDefinition">
+				<xs:annotation>
+					<xs:documentation>A list of program groups that are specified
+						by this component.
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
@@ -404,12 +423,70 @@
 			 ]]>
 				</xs:documentation>
 			</xs:annotation>
-
 		</xs:attribute>
+		
+		<xs:attribute name="groupName" use="optional" type="RestrictedName">
+			<xs:annotation>
+				<xs:documentation>Name of the program group this program
+					is a member of. If the name of the program matches
+					the program group it is the main program of the program group.
+				<![CDATA[
+			 <ul>
+			 <li>Dots are not allowed in a name</li>
+			 <li>A name can not start with a number</li>
+			 <li>Can not be empty</li>
+			 <li>Must be at least 2 characters</li>
+			 <li>Must be at max 128 characters</li>
+			 <li>Can not contain white spaces or tab stops</li>
+			 </ul>
+			 ]]>
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		
+		<xs:attribute name="recommendedIntervalTime" use="optional" type="xs:unsignedLong">
+			<xs:annotation>
+				<xs:documentation>
+					Recommended execution interval of this program in nanoseconds.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute> 
+		
 	</xs:complexType>
 
+	<!-- ProgramGroup -->
+	<xs:complexType name="ProgramGroupListDefinition">
+		<xs:annotation>
+			<xs:documentation>
+				A list of program groups.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="ProgramGroup" type="ProgramGroupDefinition" minOccurs="0" maxOccurs="unbounded" />
+		</xs:choice>
+	</xs:complexType>
 
-
+	<xs:complexType name="ProgramGroupDefinition">
+		<xs:annotation>
+			<xs:documentation>
+				Defines a program group with its properties.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="name" type="RestrictedName" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					The name of the program group.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="isMultiEsmGroup" type="xs:boolean" use="optional" default="false">
+			<xs:annotation>
+				<xs:documentation>
+					Defines whether the programs of this group may be instantiated on different ESMs.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
 
 	<xs:complexType name="PortDefinition" >
 		<xs:annotation>

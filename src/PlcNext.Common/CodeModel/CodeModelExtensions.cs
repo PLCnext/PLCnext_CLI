@@ -83,15 +83,52 @@ namespace PlcNext.Common.CodeModel
                                             !a.NamedValues.Any());
         }
 
+        public static string RootNamespaceForOldTarget(this ICodeModel model, string[] relevantTypes,
+                                                       string[] additionalRelevantTypes)
+        {
+            if (!RootNamespaceWithoutException(model, relevantTypes.Concat(additionalRelevantTypes).ToArray(), false, out IEnumerable<string> namespaces, out string result))
+            {
+                return string.Empty;
+            }
+            string futureTargetResult = model.RootNamespace(relevantTypes);
+
+            if (string.IsNullOrEmpty(result) && !string.IsNullOrEmpty(futureTargetResult))
+            {
+                throw new MultipleRootNamespacesForTargetException(namespaces);
+            }
+
+            if(string.IsNullOrEmpty(result))
+            {
+                throw new MultipleRootNamespacesException(namespaces);
+            }
+            return result;
+        }
+
         public static string RootNamespace(this ICodeModel model, string[] relevantTypes)
         {
+            if (!RootNamespaceWithoutException(model, relevantTypes, true, out IEnumerable<string> namespaces, out string result))
+            {
+                return string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(result))
+            {
+                throw new MultipleRootNamespacesException(namespaces);
+            }
+            return result;
+        }
+
+        private static bool RootNamespaceWithoutException(ICodeModel model, string[] relevantTypes, bool filterRelevantTypesWithSourceDirectory, out IEnumerable<string> namespaces,
+                                                          out string result)
+        {
             string[] sourceDirectories = model.SourceDirectories.Select(d => d.FullName).ToArray();
-            IEnumerable<string> namespaces = model.Types.Where(c => sourceDirectories.Any(c.Value.FullName.StartsWith))
-                                                  .Where(c => relevantTypes.Contains(c.Key.FullName))
-                                                  .Select(p => p.Key)
-                                                  .Where(m => m.Namespace != null)
-                                                  .Select(m => m.Namespace)
-                                                  .ToArray();
+            namespaces = model.Types.Where(c => !filterRelevantTypesWithSourceDirectory ||
+                                                sourceDirectories.Any(c.Value.FullName.StartsWith))
+                              .Where(c => relevantTypes.Contains(c.Key.FullName))
+                              .Select(p => p.Key)
+                              .Where(m => m.Namespace != null)
+                              .Select(m => m.Namespace)
+                              .ToArray();
             if (!namespaces.Any())
             {
                 namespaces = model.Types.Where(c => sourceDirectories.Any(c.Value.FullName.StartsWith))
@@ -100,21 +137,19 @@ namespace PlcNext.Common.CodeModel
                                   .Select(m => m.Namespace)
                                   .ToArray();
             }
+
             if (!namespaces.Any())
             {
-                return string.Empty;
+                result = string.Empty;
+                return false;
             }
 
-            string result = string.Join(".", namespaces
-                                            .Select(s => s.Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries)
-                                                          .AsEnumerable())
-                                            .Transpose()
-                                            .TakeWhile(s => s.All(x => x == s.First())).Select(s => s.First()));
-            if (string.IsNullOrEmpty(result))
-            {
-                throw new MultipleRootNamespacesException(namespaces);
-            }
-            return result;
+            result = string.Join(".", namespaces
+                                     .Select(s => s.Split(new[] {"::"}, StringSplitOptions.RemoveEmptyEntries)
+                                                   .AsEnumerable())
+                                     .Transpose()
+                                     .TakeWhile(s => s.All(x => x == s.First())).Select(s => s.First()));
+            return true;
         }
     }
 }

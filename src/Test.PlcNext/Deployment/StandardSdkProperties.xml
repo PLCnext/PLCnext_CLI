@@ -3,7 +3,10 @@
   <SDK path="C:\MySdk" make-path="">
     <Target name="AXCF2152" version="1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)" />
     <Target name="AXCF2152" version="2.0 LTS (2.0.0.12345 branches/release/2.0.0/ beta)" />
+    <Target name="AXCF2152" version="100.0 LTS (100.0.0.12345 branches/release/100.0.0/ beta)" />
+    <Target name="AXCF2152" version="200.0 LTS (200.0.0.12345 branches/release/200.0.0/ beta)" />
     <Target name="AXCF2152" version="19.0 LTS (19.0.0.12345 branches/release/19.0.0/ beta)" />
+    <Target name="AXCF2152" version="20.6 LTS (20.6.0.12345 branches/release/20.6.0/ beta)" />
     <IncludePath>C:\keep\plcnext\SDKs\AXCF2152\sysroots\cortexa9t2hf-neon-pxc-linux-gnueabi\usr\include\plcnext</IncludePath>
     <CompilerSpec compilerPath="C:\keep\plcnext\SDKs\AXCF2152\sysroots\x86_64-pokysdk-mingw32\usr\bin\arm-pxc-linux-gnueabi\arm-pxc-linux-gnueabi-g++.exe" compilerSysroot="C:/keep/plcnext/SDKs/AXCF2152/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi" compilerFlags=" -march=armv7-a -mthumb -mfpu=neon -mfloat-abi=hard -mcpu=cortex-a9">
       <IncludePath>c:\keep\plcnext\sdks\axcf2152\sysroots\x86_64-pokysdk-mingw32\usr\lib\arm-pxc-linux-gnueabi\gcc\arm-pxc-linux-gnueabi\7.3.0\include</IncludePath>

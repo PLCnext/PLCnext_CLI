@@ -103,6 +103,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfError(typeof(MultipleRootNamespacesException));
         }
 
+        protected void Then_the_user_was_informed_that_there_are_multiple_root_namespaces_for_target_version()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(MultipleRootNamespacesForTargetException));
+        }
+
         protected void Then_the_project_supports_the_targets(params string[] targets)
         {
             ScenarioContext.CheckTargetSupported(targets);
@@ -510,7 +515,7 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfError(typeof(ArgumentRestrictionException));
             ScenarioContext.CheckUserInformedOfError("but only a maximal length of", "message of too long argument was expected");
         }
-
+		
         protected void Then_the_user_was_informed_that_the_library_must_be_transferred_manually(string externalLibrary)
         {
             ScenarioContext.CheckUserInformedOfWarning($"{externalLibrary} must be transferred to the device", 

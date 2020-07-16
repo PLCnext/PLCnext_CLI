@@ -186,7 +186,7 @@ namespace PlcNext.Common.Templates
                                                                                              "Deploys files for production.")
                                                                                         .EnableUseChildVerbsAsCategory()
                 .AddExample($"deploy --path Path/To/Project", "Deploy files for all targets supported by project")
-                .AddExample($"deploy --path Path/To/Project --files doc/HelpText.txt|doc", "Deploy doc/HelpText.txt to the doc directory in the deploy directory additionally to the normally deployed files.")
+                .AddExample($"deploy --path Path/To/Project --files doc/HelpText.txt|doc", "Deploy doc/HelpText.txt to the doc directory in the deploy directory aditonally to the normally deployed files.")
                 .AddExample($"deploy --path Path/To/Project --target AXCF2152 RFC4072S", "Deploy library for targets AXCF2152 and RFC4072S"),
                                                                 allTemplates.Where(t => !t.isHidden & t.isRoot),
                                                                 shortNames),

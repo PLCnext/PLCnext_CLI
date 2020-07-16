@@ -120,7 +120,7 @@ namespace Test.PlcNext.SystemTests.Features
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("Standard"),
-                _ => When_I_add_the_target("AXCF2152", "2"),
+                _ => When_I_add_the_target("AXCF2152", "2.0"),
                 _ => Then_the_project_supports_the_targets("AXCF2152,1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)"
                                                          , "AXCF2152,2.0 LTS (2.0.0.12345 branches/release/2.0.0/ beta)")
                 ).RunAsyncWithTimeout();

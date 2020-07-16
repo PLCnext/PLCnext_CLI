@@ -39,6 +39,8 @@ namespace PlcNext.Common.Project
                     owner.HasValue<Target>()) ||
                    (key == EntityKeys.TargetEngineerVersionKey &&
                     owner.HasValue<Target>()) ||
+                   (key == EntityKeys.TargetVersionKey &&
+                    owner.HasValue<Target>()) ||
                    (key == EntityKeys.NameKey &&
                     owner.HasValue<Target>());
         }
@@ -55,6 +57,14 @@ namespace PlcNext.Common.Project
                     return owner.Create(key, owner.Value<Target>().GetShortFullName());
                 case EntityKeys.TargetEngineerVersionKey:
                     return owner.Create(key, EngineerVersion(owner.Value<Target>()));
+                case EntityKeys.TargetVersionKey:
+                    Version version = new Version();
+                    string versionString = owner.Value<Target>().Version;
+                    if (Version.TryParse(versionString, out Version parsedVersion))
+                    {
+                        version = parsedVersion;
+                    }
+                    return owner.Create(key, version);
                 case EntityKeys.NameKey:
                     return owner.Create(key, owner.Value<Target>().Name);
                 default:
@@ -67,7 +77,8 @@ namespace PlcNext.Common.Project
                 if (commandEntity.IsCommandArgumentSpecified(Constants.TargetArgumentName))
                 {
                     IEnumerable<string> targets = commandEntity.GetMultiValueArgument(Constants.TargetArgumentName);
-                    IEnumerable<Target> targetsSet = GetSpecificTargets(targets, validate, false).Select(t => t.Item1);
+                    //TODO parseLocation true here is legacy as soon as old generate library command is gone, reset to false
+                    IEnumerable<Target> targetsSet = GetSpecificTargets(targets, validate, true).Select(t => t.Item1);
                     return owner.Create(key, targetsSet.Select(t => owner.Create(key.Singular(), t.Name, t)));
                 }
                 ProjectEntity project = ProjectEntity.Decorate(owner);
