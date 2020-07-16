@@ -260,7 +260,7 @@ namespace PlcNext.Common.Build
                         return buildInformation.Output != null
                                    ? fileSystem.GetDirectory(buildInformation.Output,
                                                              buildInformation.RootFileEntity.Directory.FullName)
-                                               .FullName
+                                               .FullName.Replace(Path.DirectorySeparatorChar, '/')
                                    : Path.Combine(basePath, Constants.LibraryFolderName)
                                          .Replace(Path.DirectorySeparatorChar, '/');
                     }
