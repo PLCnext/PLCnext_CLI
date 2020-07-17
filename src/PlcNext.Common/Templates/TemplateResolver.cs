@@ -24,7 +24,7 @@ namespace PlcNext.Common.Templates
 {
     internal class TemplateResolver : ITemplateResolver
     {
-        private readonly Regex templateAccessRegex = new Regex(@"\$\((?<content>(?:[^\.]+?)(?:\.[^\.]+?)*)\)", RegexOptions.Compiled);
+        private readonly Regex templateAccessRegex = new Regex(@"\$\((?<text_control>[lu]:)?(?<content>(?:[^\.]+?)(?:\.[^\.]+?)*)\)", RegexOptions.Compiled);
         private readonly Regex controlSequenceFinder = new Regex(@"\$\(\[(?<expression>[^\]]+?)\][^\)]*?\)[\s\S]*?\$\(\[end-\1\]\)", RegexOptions.Compiled);
         private readonly Regex greedyContentFinder = new Regex(@"\$\(\[(?<expression>[^\]]+?)\](?<parameter>[^\)]*?)\)(?<content>[\s\S]*)\$\(\[end-\1\]\)", RegexOptions.Compiled);
         private readonly Regex newlineSearcher = new Regex(@"\s*?(?:\r\n|\r|\n)", RegexOptions.Compiled);
@@ -250,11 +250,17 @@ namespace PlcNext.Common.Templates
 
                     string[] path = content.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
                     string value = (ResolveRecursively(path)).Value<string>();
+                    if (controlSequenceMatch.Groups["text_control"].Success)
+                    {
+                        string textControlSequence = controlSequenceMatch.Groups["text_control"].Value;
+                        textControlSequence = textControlSequence.Substring(0, textControlSequence.Length - 1);
+                        value = ResolveTextControlSequences(value, textControlSequence);
+                    }
                     result = result.Replace(controlSequenceMatch.Value, value);
                     controlSequenceMatch = controlSequenceMatch.NextMatch();
                 }
 
-                return ResolveTextControlSequences(result);
+                return result;
             }
 
             IEntityBase ResolveRecursively(string[] path)
@@ -266,7 +272,6 @@ namespace PlcNext.Common.Templates
                     if (current.HasValue<string>())
                     {
                         string value = Resolve(current.Value<string>(), current);
-                        value = ResolveTextControlSequences(value);
                         current.SetValue(value);
                     }
                 }
@@ -287,29 +292,23 @@ namespace PlcNext.Common.Templates
                                          TaskScheduler.Default);
         }
 
-        private string ResolveTextControlSequences(string value)
+        private string ResolveTextControlSequences(string value, string textControlSequence)
         {
-            int index = value.IndexOf(@"\l", StringComparison.Ordinal);
-            while (index >= 0)
+            if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(textControlSequence))
             {
-                value = value.Remove(index, 2);
-                value = value.Substring(0, index) +
-                        new string(value[index], 1).ToLowerInvariant() +
-                        (value.Length > index + 1 ? value.Substring(index + 1) : string.Empty);
-                index = value.IndexOf(@"\l", StringComparison.Ordinal);
+                return value;
             }
-
-            index = value.IndexOf(@"\u", StringComparison.Ordinal);
-            while (index >= 0)
+            switch (textControlSequence.ToUpperInvariant())
             {
-                value = value.Remove(index, 2);
-                value = value.Substring(0, index) +
-                        new string(value[index], 1).ToUpperInvariant() +
-                        (value.Length > index + 1 ? value.Substring(index + 1) : string.Empty);
-                index = value.IndexOf(@"\u", StringComparison.Ordinal);
+                case "L":
+                    return value.Substring(0, 1).ToLowerInvariant() +
+                           (value.Length > 1 ? value.Substring(1) : string.Empty);
+                case "U":
+                    return value.Substring(0, 1).ToUpperInvariant() +
+                           (value.Length > 1 ? value.Substring(1) : string.Empty);
+                default:
+                    throw new UnrecognizedControlSequenceException(textControlSequence);
             }
-
-            return value;
         }
     }
 }
