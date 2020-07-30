@@ -168,6 +168,7 @@ namespace PlcNext.Common.Build
                     return;
                 }
 
+                document.schemaVersion = "4.0";
                 LibraryDefinition definition = (LibraryDefinition) document.Item;
                 IEnumerable<string> dependencies = externalLibraries.Select(Path.GetFileName)
                                                                     .Concat(definition.Dependencies?.Select(d => d.path)??
@@ -199,6 +200,8 @@ namespace PlcNext.Common.Build
 
             if (deployDirectory.Files("*.so", true).Except(projectLibraries.Values).Any())
             {
+                externalLibraries = deployDirectory.Files("*.so", true).Except(projectLibraries.Values)
+                                                   .Select(f => f.FullName).ToArray();
                 //external libraries where copied by user; no further action is required
                 return;
             }

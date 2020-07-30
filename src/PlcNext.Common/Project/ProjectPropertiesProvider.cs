@@ -86,7 +86,6 @@ namespace PlcNext.Common.Project
             void SetProjectTargets()
             {
                 TargetsResult targetsResult = targetParser.Targets(project, false);
-                Exceptions = Enumerable.Empty<Exception>();
 
                 ProjectTargets = targetsResult.ValidTargets
                     .Select(t => new ProjectTarget(t, availableTargets.Any(at => t.Name == at.Name && at.LongVersion == t.LongVersion)));
