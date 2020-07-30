@@ -188,7 +188,8 @@ namespace PlcNext.Common.Build
                 executionContext.WriteInformation("Checking if CMake needs to be reconfigured...", showMessagesToUser);
                 if ((!cmakeFolder.FileExists("CMakeCache.txt") ||
                      buildInformation.Configure ||
-                     !IsCorrectlyConfigured()) &&
+                     !IsCorrectlyConfigured() ||
+                     OutputOptionDiffersFromStagingPrefix()) &&
                     !buildInformation.NoConfigure)
                 {
                     string cmakeCommand = GenerateCmakeCommand(buildInformation.Target.Name,
@@ -258,12 +259,23 @@ namespace PlcNext.Common.Build
                     {
                         string basePath = buildInformation.RootFileEntity.Directory.FullName;
                         return buildInformation.Output != null
-                                   ? fileSystem.GetDirectory(buildInformation.Output,
-                                                             buildInformation.RootFileEntity.Directory.FullName)
-                                               .FullName.Replace(Path.DirectorySeparatorChar, '/')
+                                   ? OutputOptionFullPath()
                                    : Path.Combine(basePath, Constants.LibraryFolderName)
                                          .Replace(Path.DirectorySeparatorChar, '/');
                     }
+                }
+
+                string OutputOptionFullPath()
+                {
+                    return fileSystem.GetDirectory(buildInformation.Output,
+                                                   buildInformation.RootFileEntity.Directory.FullName)
+                                     .FullName.Replace(Path.DirectorySeparatorChar, '/');
+                }
+
+                bool OutputOptionDiffersFromStagingPrefix()
+                {
+                    return buildInformation.Output != null && 
+                           !buildInformation.BuildEntity.BuildSystem.InstallationPaths.Any(p => p.StartsWith(OutputOptionFullPath(), StringComparison.Ordinal));
                 }
 
                 bool IsCorrectlyConfigured()

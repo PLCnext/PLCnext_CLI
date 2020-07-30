@@ -52,6 +52,9 @@ namespace PlcNext.Common.Build
                 (key == EntityKeys.InternalExternalLibrariesKey &&
                  owner.HasValue<JArray>() &&
                  owner.Type.Equals(EntityKeys.InternalBuildSystemKey, StringComparison.OrdinalIgnoreCase)) ||
+                (key == EntityKeys.InternalInstallationPathsKey &&
+                 owner.HasValue<JArray>() &&
+                 owner.Type.Equals(EntityKeys.InternalBuildSystemKey, StringComparison.OrdinalIgnoreCase)) ||
                    key == EntityKeys.InternalBuildSystemDirectoryKey;
         }
 
@@ -109,6 +112,10 @@ namespace PlcNext.Common.Build
                                                                                              owner.Root.Name,
                                                                                              owner.Value<VirtualDirectory>());
                     return owner.Create(key, externalLibraries.Select(l => owner.Create(key, l)));
+                case EntityKeys.InternalInstallationPathsKey:
+                    IEnumerable<string> installationPaths = FindInstallationPaths(owner.Value<JArray>(),
+                                                                                  owner.Root.Name);
+                    return owner.Create(key, installationPaths.Select(p => owner.Create(key, p)));
                 default:
                     VirtualFile cmakeFile = GetCMakeFile(owner);
                     using (Stream fileStream = cmakeFile.OpenRead())
@@ -131,6 +138,21 @@ namespace PlcNext.Common.Build
 
                     return owner.Create(key, Path.GetFileName(owner.Path));
             }
+        }
+
+        private IEnumerable<string> FindInstallationPaths(JArray codeModel, string projectName)
+        {
+            JObject projectTarget = codeModel.GetProjectTarget(projectName);
+
+            JArray installationPaths = projectTarget.ContainsKey("installPaths")
+                                           ? projectTarget["installPaths"] as JArray
+                                           : null;
+            if (installationPaths != null)
+            {
+                return installationPaths.Select(t => t.Value<string>());
+            }
+
+            return Enumerable.Empty<string>();
         }
 
         private IEnumerable<string> FindExternalLibrariesInCodeModel(JArray codeModel, string projectName,

@@ -73,6 +73,7 @@ namespace PlcNext.Common.Tools
         public const string InternalBuildSystemKey = "__internalbuildsystem__";
         public const string InternalBuildSystemDirectoryKey = "__internalbuildsystemdirectory__";
         public const string InternalExternalLibrariesKey = "__internalexternallibraries__";
+        public const string InternalInstallationPathsKey = "__internalstagingprefix__";
 
         //TargetParser
         public const string TargetFullNameKey = "targetfullname";
