@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using PlcNext.Common.Project;
@@ -44,6 +45,9 @@ namespace PlcNext.Common.Build
         private const string ToolchainRootOption = "-DARP_TOOLCHAIN_ROOT=\"%SDK_ROOT%\"";
         private const string StagingPrefixOption = "-DCMAKE_STAGING_PREFIX=\"%STAGING_PREFIX%\"";
         private const string MakeFileOption = "-DCMAKE_MAKE_PROGRAM=%MAKE_EXE%";
+        private const string PrefixPathOption = "-DCMAKE_PREFIX_PATH=\"%PREFIX_PATH%\"";
+
+        private static Regex IncludeDirectoryPattern = new Regex(@"^(?<name>[^\s]*)_(?<version>\d*\.\d*\.\d*\.\d*)$", RegexOptions.Compiled);
 
         public CmakeExecuter(IProcessManager processManager, IUserInterface userInterface, IBinariesLocator binariesLocator, IFileSystem fileSystem, IEnvironmentService environmentService, ExecutionContext executionContext, IOutputFormatterPool formatterPool)
         {
@@ -240,6 +244,11 @@ namespace PlcNext.Common.Build
                     {
                         commandParts.Add(StagingPrefixOption.Replace("%STAGING_PREFIX%", GenerateStagingPrefixForTarget()));
                     }
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_PREFIX_PATH ") &&
+                        IsIncludePathAvailable(out string includePath))
+                    {
+                        commandParts.Add(PrefixPathOption.Replace("%PREFIX_PATH%", includePath));
+                    }
                     if (!buildInformation.BuildProperties.Contains("-G "))
                     {
                         commandParts.Add(GeneratorOption);
@@ -262,6 +271,53 @@ namespace PlcNext.Common.Build
                                    ? OutputOptionFullPath()
                                    : Path.Combine(basePath, Constants.LibraryFolderName)
                                          .Replace(Path.DirectorySeparatorChar, '/');
+                    }
+
+                    bool IsIncludePathAvailable(out string path)
+                    {
+                        path = null;
+                        if (!buildInformation.RootFileEntity.Directory.DirectoryExists("external"))
+                        {
+                            return false;
+                        }
+
+                        Dictionary<Version, VirtualDirectory> versions = new Dictionary<Version, VirtualDirectory>();
+                        foreach (VirtualDirectory directory in buildInformation.RootFileEntity.Directory.Directory("external").Directories)
+                        {
+                            Match patternMatch = IncludeDirectoryPattern.Match(directory.Name);
+                            if (!patternMatch.Success ||
+                                !Version.TryParse(patternMatch.Groups["version"].Value, out Version includeVersion) ||
+                                target != patternMatch.Groups["name"].Value)
+                            {
+                                continue;
+                            }
+
+                            versions.Add(includeVersion, directory);
+                        }
+
+                        Version actualVersion = Version.Parse(buildInformation.Target.Version);
+                        Version bestMatch = versions.Keys.Where(v => v <= actualVersion)
+                                                    .OrderByDescending(v => v)
+                                                    .FirstOrDefault();
+                        if (bestMatch != null)
+                        {
+                            VirtualDirectory directory = versions[bestMatch];
+                            if (directory.DirectoryExists(buildInformation.BuildType))
+                            {
+                                path = directory.Directory(buildInformation.BuildType).FullName;
+                            }
+                            else if (directory.DirectoryExists(Constants.ReleaseFolderName))
+                            {
+                                path = directory.Directory(Constants.ReleaseFolderName).FullName;
+                            }
+                            else
+                            {
+                                path = directory.FullName;
+                            }
+                            return true;
+                        }
+
+                        return false;
                     }
                 }
 
