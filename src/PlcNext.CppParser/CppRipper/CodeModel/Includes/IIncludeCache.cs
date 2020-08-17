@@ -17,7 +17,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
     {
         void LoadCache(VirtualFile cacheFile);
         bool TryGetCacheEntry(string pathToInclude, out IncludeCacheEntry cacheEntry);
-        bool TryGetCacheEntryWithTypeName(string typeFullName, out IncludeCacheEntry cacheEntry);
+        bool TryGetCacheEntryWithTypeName(string typeFullName, IReadOnlyCollection<string> includeDirectories,
+                                          out IncludeCacheEntry cacheEntry);
         IIncludeCacheTransaction StartTransaction();
         IEnumerable<IncludeCacheEntry> Entries { get; }
     }

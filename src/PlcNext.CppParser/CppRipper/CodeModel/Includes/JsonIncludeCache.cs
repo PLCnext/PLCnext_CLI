@@ -70,9 +70,11 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
             return Cache.TryGetValue(pathToInclude, out cacheEntry);
         }
 
-        public bool TryGetCacheEntryWithTypeName(string typeFullName, out IncludeCacheEntry cacheEntry)
+        public bool TryGetCacheEntryWithTypeName(string typeFullName, IReadOnlyCollection<string> includeDirectories,
+                                                 out IncludeCacheEntry cacheEntry)
         {
-            cacheEntry = Cache.Values.FirstOrDefault(v => v.Types.Contains(typeFullName));
+            cacheEntry = Cache.Values.FirstOrDefault(v => v.Types.Contains(typeFullName) &&
+                                                          includeDirectories.Contains(v.BaseDirectory));
             return cacheEntry != null;
         }
 

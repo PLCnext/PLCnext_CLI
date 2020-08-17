@@ -51,7 +51,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
 
             codeModel.IncludeDirectories = parameter.IncludeDirectories;
 
-            codeModel.RegisterIncludeTypeFinder(FindIncludeType);
+            codeModel.RegisterIncludeTypeFinder(s => FindIncludeType(s, parameter.IncludeDirectories));
             this.codeModel = codeModel;
 
             return codeSpecificExceptions;
@@ -196,9 +196,12 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
             }
         }
 
-        private IType FindIncludeType(string fullName)
+        private IType FindIncludeType(string fullName, IDictionary<string, VirtualDirectory> includeDirectories)
         {
-            if (includeCache.TryGetCacheEntryWithTypeName(fullName, out IncludeCacheEntry cacheEntry))
+            if (includeCache.TryGetCacheEntryWithTypeName(fullName, includeDirectories.Values
+                                                                                      .Select(d => d?.FullName??string.Empty)
+                                                                                      .ToArray(), 
+                                                          out IncludeCacheEntry cacheEntry))
             {
                 log.LogInformation($"Parse type {fullName} from {cacheEntry.File}");
                 VirtualFile cacheFile = fileSystem.GetFile(cacheEntry.File);
