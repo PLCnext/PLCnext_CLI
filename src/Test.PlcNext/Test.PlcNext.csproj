@@ -578,6 +578,7 @@
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.hpp" Link="Deployment\Templates\AcfProjectTemplate\Library.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.cpp" Link="Deployment\Templates\ProjectTemplate\Library.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.hpp" Link="Deployment\Templates\ProjectTemplate\Library.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\ADD_DEPENDENT_LIBRARIES_HERE" Link="Deployment\Templates\BaseProjectTemplate\ADD_DEPENDENT_LIBRARIES_HERE" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\plcnext.proj" />
     <EmbeddedResource Include="Deployment\HiddenPlm\plcnext.proj" />
@@ -644,6 +645,7 @@
     <Folder Include="Deployment\Templates\BaseTemplates\" />
     <Folder Include="Deployment\Templates\ComponentTemplate\" />
     <Folder Include="Deployment\Templates\AcfProjectTemplate\" />
+    <Folder Include="Deployment\Templates\BaseProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProgramTemplate\" />
     <Folder Include="Tools\XUnit\" />

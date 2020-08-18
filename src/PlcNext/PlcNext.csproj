@@ -90,6 +90,9 @@
     <None Update="Templates\BaseComponentTemplate\TemplateDescription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
+    <None Update="Templates\BaseProjectTemplate\ADD_DEPENDENT_LIBRARIES_HERE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
     <None Update="Templates\BaseProjectTemplate\CMakeLists.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>

@@ -282,7 +282,8 @@ namespace PlcNext.Common.Build
                         }
 
                         Dictionary<Version, VirtualDirectory> versions = new Dictionary<Version, VirtualDirectory>();
-                        foreach (VirtualDirectory directory in buildInformation.RootFileEntity.Directory.Directory("external").Directories)
+                        VirtualDirectory externalDirectory = buildInformation.RootFileEntity.Directory.Directory("external");
+                        foreach (VirtualDirectory directory in externalDirectory.Directories)
                         {
                             Match patternMatch = IncludeDirectoryPattern.Match(directory.Name);
                             if (!patternMatch.Success ||
@@ -314,10 +315,13 @@ namespace PlcNext.Common.Build
                             {
                                 path = directory.FullName;
                             }
-                            return true;
+                        }
+                        else
+                        {
+                            path = externalDirectory.FullName;
                         }
 
-                        return false;
+                        return true;
                     }
                 }
 
