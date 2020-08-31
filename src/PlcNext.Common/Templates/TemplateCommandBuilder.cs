@@ -225,7 +225,7 @@ namespace PlcNext.Common.Templates
                 foreach (TemplateDescription description in descriptions)
                 {
                     IEnumerable<templateArgumentDefinition> arguments = (description.DeployPostStep ?? Enumerable.Empty<templateDeployPostStep>())
-                       .SelectMany(d => d.Arguments);
+                       .SelectMany(d => d.Arguments??Enumerable.Empty<templateArgumentDefinition>());
                     foreach (templateArgumentDefinition argument in arguments)
                     {
                         if (!defaultArguments.Contains(argument.name.ToUpperInvariant()))
@@ -254,7 +254,7 @@ namespace PlcNext.Common.Templates
                         continue;
                     }
                     IEnumerable<templateExample> examples = (description.DeployPostStep ?? Enumerable.Empty<templateDeployPostStep>())
-                                                            .SelectMany(d => d.Example);
+                                                            .SelectMany(d => d.Example?? Enumerable.Empty<templateExample>());
                     foreach (templateExample example in examples)
                     {
                         StringBuilder command = new StringBuilder("deploy");
@@ -279,7 +279,7 @@ namespace PlcNext.Common.Templates
             CommandDefinitionBuilder AddDefaultArguments(CommandDefinitionBuilder builder, IEnumerable<TemplateDescription> descriptions, List<char> shortNames)
             {
                 IEnumerable<templateArgumentDefinition> arguments = descriptions.SelectMany(x => (x.DeployPostStep ?? Enumerable.Empty<templateDeployPostStep>())
-                       .SelectMany(d => d.Arguments));
+                       .SelectMany(d => d.Arguments??Enumerable.Empty<templateArgumentDefinition>()));
 
                 if (!ArgumentAvailableFromDescription(EntityKeys.PathKey))
                 {

@@ -324,7 +324,7 @@ namespace PlcNext.Common.Templates
                     return;
                 }
 
-                foreach (templateGeneratedFile file in template.GeneratedFile)
+                foreach (templateGeneratedFile file in template.GeneratedFile??Enumerable.Empty<templateGeneratedFile>())
                 {
                     if (generator != "all" && !file.generator.Equals(generator, StringComparison.OrdinalIgnoreCase))
                     {

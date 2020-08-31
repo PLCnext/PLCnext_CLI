@@ -121,7 +121,7 @@ namespace PlcNext.Common.Templates
             switch (key)
             {
                 case EntityKeys.TemplateFilesKey:
-                    Entity[] files = ownerTemplate.File.Concat(ownerTemplate.GeneratedFile)
+                    Entity[] files = ownerTemplate.File.Concat(ownerTemplate.GeneratedFile??Enumerable.Empty<templateGeneratedFile>())
                                                   .Select(tf => owner.Create("TemplateFile", tf.template, tf))
                                                   .ToArray();
                     return owner.Create("TemplateFiles", (IEnumerable<Entity>) files);
