@@ -18,15 +18,15 @@ using namespace Arp::Plc::Commons::Meta;
                     DataType::Struct, CTN<EnumTest::EnumTestProgram::EnumStruct>(), sizeof(::EnumTest::EnumTestProgram::EnumStruct), alignof(::EnumTest::EnumTestProgram::EnumStruct), StandardAttribute::None,
                     {
                         // FieldDefinitions:
-                        { "EnumValue", offsetof(::EnumTest::EnumTestProgram::EnumStruct, EnumValue), DataType::Enum | DataType::Int32, "", sizeof(int32), alignof(int32), {  }, StandardAttribute::None },
+                        { "EnumValue", offsetof(::EnumTest::EnumTestProgram::EnumStruct, EnumValue), DataType::Enum | DataType::Int32, String::Empty, sizeof(int32), alignof(int32), {  }, StandardAttribute::None },
                     }
                 },
                 {   // ProgramDefinition: EnumTest::EnumTestProgram
                     DataType::Program, CTN<EnumTest::EnumTestProgram>(), sizeof(::EnumTest::EnumTestProgram), alignof(::EnumTest::EnumTestProgram), StandardAttribute::None,
                     {
                         // FieldDefinitions:
-                        { "OhMyPort", offsetof(::EnumTest::EnumTestProgram, port), DataType::Enum | DataType::Int32, "", sizeof(int32), alignof(int32), {  }, StandardAttribute::Output },
-                        { "OtherPort", offsetof(::EnumTest::EnumTestProgram, port2), DataType::Enum | DataType::Int32, "", sizeof(int32), alignof(int32), {  }, StandardAttribute::Input },
+                        { "OhMyPort", offsetof(::EnumTest::EnumTestProgram, port), DataType::Enum | DataType::Int32, String::Empty, sizeof(int32), alignof(int32), {  }, StandardAttribute::Output },
+                        { "OtherPort", offsetof(::EnumTest::EnumTestProgram, port2), DataType::Enum | DataType::Int32, String::Empty, sizeof(int32), alignof(int32), {  }, StandardAttribute::Input },
                         { "StructPort", offsetof(::EnumTest::EnumTestProgram, port3), DataType::Struct, CTN<EnumTest::EnumTestProgram::EnumStruct>(), sizeof(EnumTest::EnumTestProgram::EnumStruct), alignof(EnumTest::EnumTestProgram::EnumStruct), {  }, StandardAttribute::Input },
                     }
                 },

@@ -18,8 +18,8 @@ using namespace Arp::Plc::Commons::Meta;
                     DataType::Program, CTN<ProgramWithArrayInitializedPort::MyComponent::MyProgram>(), sizeof(::ProgramWithArrayInitializedPort::MyComponent::MyProgram), alignof(::ProgramWithArrayInitializedPort::MyComponent::MyProgram), StandardAttribute::None,
                     {
                         // FieldDefinitions:
-                        { "intArray", offsetof(::ProgramWithArrayInitializedPort::MyComponent::MyProgram, intArray), DataType::Int16 | DataType::Array, "", sizeof(int16), alignof(int16), { 12 }, StandardAttribute::Input | StandardAttribute::Retain },
-                        { "Var_ARRAY_UDINT1", offsetof(::ProgramWithArrayInitializedPort::MyComponent::MyProgram, Var_ARRAY_UDINT1), DataType::UInt32 | DataType::Array, "", sizeof(uint32), alignof(uint32), { {3},{2} }, StandardAttribute::Retain },
+                        { "intArray", offsetof(::ProgramWithArrayInitializedPort::MyComponent::MyProgram, intArray), DataType::Int16 | DataType::Array, String::Empty, sizeof(int16), alignof(int16), { 12 }, StandardAttribute::Input | StandardAttribute::Retain },
+                        { "Var_ARRAY_UDINT1", offsetof(::ProgramWithArrayInitializedPort::MyComponent::MyProgram, Var_ARRAY_UDINT1), DataType::UInt32 | DataType::Array, String::Empty, sizeof(uint32), alignof(uint32), { {3},{2} }, StandardAttribute::Retain },
                     }
                 },
             }

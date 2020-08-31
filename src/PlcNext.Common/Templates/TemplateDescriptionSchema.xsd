@@ -406,6 +406,13 @@
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
+	  <xs:attribute name="condition" type="xs:string" use="optional">
+		  <xs:annotation>
+			  <xs:documentation>
+				  File will be created only if condition is true.
+			  </xs:documentation>
+		  </xs:annotation>
+	  </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="templateReference">

@@ -20,6 +20,8 @@ namespace PlcNext.Common.Tools
         public const string TemplateFilesKey = "files";
         public const string HiearchyKey = "hierarchy";
         public const string RelatedKey = "related";
+        public const string BigDataProjectKey = "big-data-project";
+        public const string NormalProjectKey = "normal-project";
 
         //RootContentProvider
         public const string RootKey = "root";
@@ -31,6 +33,9 @@ namespace PlcNext.Common.Tools
         public const string IsRootedKey = "isrooted";
         public const string InternalDirectoryKey = "__internaldirectory__";
         public const string InternalTempDirectoryKey = "__internaltempdirectory__";
+        public const string ChunkStartKey = "start";
+        public const string ChunkEndKey = "end";
+        public const string CountKey = "count";
 
         //SettingsContentProvider
         public const string SettingsKey = "settings";

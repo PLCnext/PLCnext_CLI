@@ -59,7 +59,9 @@ namespace PlcNext.Common.CodeModel
                    key == EntityKeys.FilterHiddenTypesFormatKey && owner.All(e => e.HasValue<IType>()) ||
                    key == EntityKeys.IsFieldKey ||
                    key == EntityKeys.IsTypeKey ||
-                   key == EntityKeys.BaseDirectoryKey && HasBaseDirectory(owner, out _);
+                   key == EntityKeys.BaseDirectoryKey && HasBaseDirectory(owner, out _) ||
+                   key == EntityKeys.BigDataProjectKey ||
+                   key == EntityKeys.NormalProjectKey;
 
             bool CanResolveSymbol()
             {
@@ -174,6 +176,15 @@ namespace PlcNext.Common.CodeModel
             {
                 return owner.Create(key, CodeEntity.Decorate(owner).AsType != null);
             }
+            if (key == EntityKeys.BigDataProjectKey)
+            {
+                return GetBigDataProjectEntity();
+            }
+            if (key == EntityKeys.NormalProjectKey)
+            {
+                return GetNormalProjectEntity();
+            }
+
 
             ISymbol symbol = owner.Value<ISymbol>();
             if (symbol != null)
@@ -760,6 +771,32 @@ namespace PlcNext.Common.CodeModel
                 }
 
                 return (enumDataType, formattedBaseType);
+            }
+
+            Entity GetBigDataProjectEntity()
+            {
+                if (HasMoreThan1000Fields())
+                {
+                    return owner.Create(key, "true", true);
+                }
+                return owner.Create(key, "false", false);
+            }
+
+            Entity GetNormalProjectEntity()
+            {
+                if (HasMoreThan1000Fields())
+                {
+                    return owner.Create(key, "false", false);
+                }
+                return owner.Create(key, "true", true);
+            }
+            bool HasMoreThan1000Fields()
+            {
+                ICodeModel model = owner.Value<ICodeModel>();
+                if (model == null ||
+                    GetAllPorts().Concat(GetPortStructures().SelectMany(s => s.Fields)).Count() <= 1000)
+                    return false;
+                return true;
             }
         }
     }

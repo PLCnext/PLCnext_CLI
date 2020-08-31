@@ -470,6 +470,15 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Generate_optimized_typemeta_information_for_project_with_1000_fields()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StructWith1000Fields"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_typemeta_method_looks_like_NAME("StructWith1000FieldsLibrary.meta.cpp")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_compmeta_without_proj()
         {
             await Runner.AddSteps(

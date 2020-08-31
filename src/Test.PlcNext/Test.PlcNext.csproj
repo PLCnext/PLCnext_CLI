@@ -74,6 +74,12 @@
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.cpp" />
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
     <None Remove="Deployment\ExternalLibrary\ExternalStruct.hpp" />
+    <None Remove="Deployment\StructWith1000Fields\CMakeLists.txt" />
+    <None Remove="Deployment\StructWith1000Fields\external\ADD_DEPENDENT_LIBRARIES_HERE" />
+    <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsComponent.cpp" />
+    <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsComponent.hpp" />
+    <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.cpp" />
+    <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.hpp" />
     <None Remove="Deployment\TestResults\DemoLibraryCommandArgs.txt" />
     <None Remove="Deployment\TestResults\DemoLibraryCommandArgsWithSpecificId.txt" />
     <None Remove="Deployment\TestResults\DemoLibraryDifferentPathsCommandArgs.txt" />
@@ -93,6 +99,7 @@
     <None Remove="Deployment\TestResults\PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt" />
     <None Remove="Deployment\ExternalLibrary\My\Company\Name\Helper.hpp" />
     <None Remove="Deployment\TestResults\ArrayInitializer.meta.cpp" />
+    <None Remove="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
     <EmbeddedResource Include="Deployment\Demo\bin\AXCF2152_20.6.0.12345\Debug\libDemo.so" />
@@ -163,6 +170,12 @@
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.hpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.cpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\StructWith1000Fields\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\StructWith1000Fields\external\ADD_DEPENDENT_LIBRARIES_HERE" />
+    <EmbeddedResource Include="Deployment\StructWith1000Fields\src\StructWith1000FieldsComponent.cpp" />
+    <EmbeddedResource Include="Deployment\StructWith1000Fields\src\StructWith1000FieldsComponent.hpp" />
+    <EmbeddedResource Include="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.cpp" />
+    <EmbeddedResource Include="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.hpp" />
     <EmbeddedResource Include="Deployment\TestResults\ArrayInitializer.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\DemoLibraryWithExternalLibsForAllTargets.txt" />
     <EmbeddedResource Include="Deployment\TestResults\PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt" />
@@ -528,6 +541,7 @@
     <EmbeddedResource Include="Deployment\TestResults\EnumTestLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\EsmLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\HiddenPlm.meta.cpp" />
+    <EmbeddedResource Include="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponent._meta.cpp" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponentProgramProvider.cpp" />
@@ -567,10 +581,12 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.progmeta" Link="Deployment\Templates\ProgramTemplate\Program.progmeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\.proj" Link="Deployment\Templates\ProjectTemplate\.proj" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.libmeta" Link="Deployment\Templates\ProjectTemplate\Library.libmeta" />
-    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
+	  <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
+	  <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Optimized_Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
+	  <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
+	  <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\acf.config" Link="Deployment\Templates\AcfProjectTemplate\acf.config" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\BaseComponentTemplate\Component.meta.cpp" />
@@ -580,6 +596,7 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.hpp" Link="Deployment\Templates\ProjectTemplate\Library.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\ADD_DEPENDENT_LIBRARIES_HERE" Link="Deployment\Templates\BaseProjectTemplate\ADD_DEPENDENT_LIBRARIES_HERE" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\StructWith1000Fields\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\plcnext.proj" />
     <EmbeddedResource Include="Deployment\HiddenPlm\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\plcnext.proj" />

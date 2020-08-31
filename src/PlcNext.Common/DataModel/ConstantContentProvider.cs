@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 
@@ -27,7 +28,10 @@ namespace PlcNext.Common.DataModel
             EntityKeys.ActiveDirectoryKey,
             EntityKeys.IsRootedKey,
             EntityKeys.InternalDirectoryKey,
-            EntityKeys.InternalTempDirectoryKey
+            EntityKeys.InternalTempDirectoryKey,
+            EntityKeys.ChunkStartKey,
+            EntityKeys.ChunkEndKey, 
+            EntityKeys.CountKey
         };
 
         public ConstantContentProvider(IFileSystem fileSystem)
@@ -104,6 +108,12 @@ namespace PlcNext.Common.DataModel
                     return owner.Create(key, fileSystem.GetDirectory(path, createNew: false));
                 case EntityKeys.InternalTempDirectoryKey:
                     return owner.Create(key, TempDirectory);
+                case EntityKeys.ChunkStartKey:
+                    return owner.Create(key, owner.Value<DataChunk>().Start);
+                case EntityKeys.ChunkEndKey:
+                    return owner.Create(key, owner.Value<DataChunk>().End);
+                case EntityKeys.CountKey:
+                    return owner.Create(key, owner.Count.ToString(CultureInfo.InvariantCulture), owner.Count);
                 default:
                     throw new ContentProviderException(key, owner);
             }

@@ -331,8 +331,17 @@ namespace PlcNext.Common.Templates
                         continue;
                     }
 
-                    (string content, Encoding encoding) = await GetResolvedTemplateContent(generatableEntity, file, template).ConfigureAwait(false);
+                    if (!string.IsNullOrEmpty(file.condition)) 
+                    {
+                        string condition = await resolver.ResolveAsync(file.condition, generatableEntity).ConfigureAwait(false);
+                        if (condition.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+                    }
 
+                    (string content, Encoding encoding) = await GetResolvedTemplateContent(generatableEntity, file, template).ConfigureAwait(false);
+                    
                     VirtualDirectory baseDirectory = GetBaseDirectory(file);
                     VirtualFile destination = await GetFile(generatableEntity, file, true, baseDirectory.FullName, template).ConfigureAwait(false);
                     rootDirectories.Add(baseDirectory);

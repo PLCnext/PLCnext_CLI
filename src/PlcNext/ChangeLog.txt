@@ -1,4 +1,20 @@
-﻿eclipse - 20.0.0
+﻿plcncli - 2021.0
+----------------
+
+Known Issues
+ + projects with more than 1000 port or struct fields do not compile with a 
+   SDK prior 2020.3.
+   Workaround - only necessary when a project with more than 1000 port or 
+   struct fields should be compiled for an SDK prior 2020.3:
+   In the PLCnCLI installation folder, go to 
+   Templates/ProjectTemplate/TemplateDescription.xml
+   or for acfprojects
+   Templates/AcfProjectTemplate/TemplateDescription.xml
+   search for: template="Optimized_Library.meta.cpp"
+   and replace it with: template="Library.meta.cpp"
+
+
+eclipse - 20.0.0
 ----------------
 Tested with: Eclipse Photon - Java 12 / Eclipse 2019.9 - Java 12
 

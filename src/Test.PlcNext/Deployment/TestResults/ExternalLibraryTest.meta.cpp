@@ -19,8 +19,8 @@ using namespace Arp::Plc::Commons::Meta;
                     DataType::Struct, CTN<My::Company::Name::ExternalStruct>(), sizeof(::My::Company::Name::ExternalStruct), alignof(::My::Company::Name::ExternalStruct), StandardAttribute::None,
                     {
                         // FieldDefinitions:
-                        { "Member1", offsetof(::My::Company::Name::ExternalStruct, Member1), DataType::Int64, "", sizeof(int64), alignof(int64), {  }, StandardAttribute::None },
-                        { "Member2", offsetof(::My::Company::Name::ExternalStruct, Member2), DataType::Int16, "", sizeof(int16), alignof(int16), {  }, StandardAttribute::None },
+                        { "Member1", offsetof(::My::Company::Name::ExternalStruct, Member1), DataType::Int64, String::Empty, sizeof(int64), alignof(int64), {  }, StandardAttribute::None },
+                        { "Member2", offsetof(::My::Company::Name::ExternalStruct, Member2), DataType::Int16, String::Empty, sizeof(int16), alignof(int16), {  }, StandardAttribute::None },
                     }
                 },
                 {   // ProgramDefinition: ExternalLibraryTest::ExternalLibraryTestProgram

@@ -9,6 +9,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -203,8 +205,19 @@ namespace PlcNext.Common.Templates
                     string elementName = nameSplit[0].Trim();
                     string[] ofTypeSplit =
                         nameSplit[1].Split(new[] {"[of-type]"}, StringSplitOptions.RemoveEmptyEntries);
-                    string collection = ofTypeSplit[0].Trim();
-                    string filter = ofTypeSplit.Length == 2 ? ofTypeSplit[1].Trim() : string.Empty;
+                    string splitPart = ofTypeSplit.Length == 2 ? ofTypeSplit[1] : ofTypeSplit[0];
+                    string[] split = splitPart.Split(new[] { "[split]" }, StringSplitOptions.RemoveEmptyEntries);
+                    string collection = ofTypeSplit.Length == 2 ? ofTypeSplit[0].Trim() : split[0].Trim();
+                    string filter = string.Empty;
+                    string splitSize = split.Length == 2 ? split[1].Trim() : string.Empty;
+                    if (!int.TryParse(splitSize, out int chunksize))
+                    {
+                        chunksize = -1;
+                    }
+                    if (ofTypeSplit.Length == 2)
+                    {
+                        filter = split.Length == 2 ? split[0].Trim() : ofTypeSplit[1].Trim();
+                    }
 
                     string[] path = collection.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
                     IEnumerable<Entity> data = ResolveRecursively(path);
@@ -215,16 +228,50 @@ namespace PlcNext.Common.Templates
                     }
 
                     ForeachItemContainer container = new ForeachItemContainer(elementName);
-                    using (dataSource.AddTemporaryDataSource(container))
-                    using (dataSource.SkipCaching(elementName))
+
+                    if (chunksize > 0)
                     {
-                        foreach (Entity entity in data)
+                        var query = data.Select((entity, idx) => new { idx, entity });
+                        IEnumerable<IEnumerable<Entity>> dataChunks = query.GroupBy(x => x.idx / chunksize, a => a.entity);
+                        using (dataSource.AddTemporaryDataSource(container))
+                        using (dataSource.SkipCaching(elementName))
                         {
-                            container.Current = entity;
-                            foreachResult.Append(Resolve(content, dataSource));
+                            foreach (IEnumerable<Entity> chunk in dataChunks)
+                            {
+
+                                using (dataSource.SkipCaching(EntityKeys.ChunkStartKey))
+                                using (dataSource.SkipCaching(EntityKeys.ChunkEndKey))
+                                {
+                                    string start = data.TakeWhile(x => !x.Equals(chunk.FirstOrDefault())).Count().ToString(CultureInfo.InvariantCulture);
+                                    string end = data.TakeWhile(x => !x.Equals(chunk.LastOrDefault())).Count().ToString(CultureInfo.InvariantCulture);
+
+                                    if (dataSource is Entity)
+                                    {
+                                        Entity dataSourceEntity = dataSource as Entity;
+                                        container.Current = dataSourceEntity.Create(Guid.NewGuid().ToByteString(), chunk);
+                                        using (container.Current.AddTemporaryDataSource(new DataChunk(start, end)))
+                                            foreachResult.Append(Resolve(content, dataSource));
+                                    }
+                                    else
+                                    {
+                                        throw new FormattableException($"The datasource should be an entity but is of type {dataSource.GetType()}");
+                                    }
+                                }
+                            }
                         }
                     }
-
+                    else
+                    {
+                        using (dataSource.AddTemporaryDataSource(container))
+                        using (dataSource.SkipCaching(elementName))
+                        {
+                            foreach (Entity entity in data)
+                            {
+                                container.Current = entity;
+                                foreachResult.Append(Resolve(content, dataSource));
+                            }
+                        }
+                    }
                     return foreachResult.ToString();
 
                     bool TemplateEqualsFilter(Entity entity)
