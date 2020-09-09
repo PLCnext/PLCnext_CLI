@@ -28,7 +28,7 @@ namespace PlcNext.Common {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class ExceptionTexts {
@@ -696,6 +696,15 @@ namespace PlcNext.Common {
         internal static string TemplateIdentifierNotFound {
             get {
                 return ResourceManager.GetString("TemplateIdentifierNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The template &apos;{0}&apos; is incompatible with the project type &apos;{1}&apos;..
+        /// </summary>
+        internal static string TemplateIncompatible {
+            get {
+                return ResourceManager.GetString("TemplateIncompatible", resourceCulture);
             }
         }
         

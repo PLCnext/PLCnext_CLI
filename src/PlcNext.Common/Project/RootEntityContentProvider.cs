@@ -474,38 +474,8 @@ namespace PlcNext.Common.Project
 
                 Entity CreateRootBasedOnTemplate(VirtualDirectory baseDirectory)
                 {
-                    TemplateDescription template = owner.Template();
-                    IEnumerable<TemplateDescription> possibleTemplates = FindAllRootTemplates();
+                    IEnumerable<TemplateDescription> possibleTemplates = templateRepository.Templates.Where(t => t.isRoot);
                     return IdentifyRoot(possibleTemplates, baseDirectory);
-
-                    IEnumerable<TemplateDescription> FindAllRootTemplates()
-                    {
-                        TemplateDescription rootTemplate = FindRootTemplate(template);
-                        if (rootTemplate == null)
-                        {
-                            throw new RootTemplateNotFoundException(template.name);
-                        }
-
-                        List<TemplateDescription> result = new List<TemplateDescription>();
-                        Stack<TemplateDescription> unvisited = new Stack<TemplateDescription>();
-                        unvisited.Push(rootTemplate);
-                        while (unvisited.Any())
-                        {
-                            TemplateDescription current = unvisited.Pop();
-                            result.Add(current);
-                            foreach (TemplateDescription description in templateRepository.Templates
-                                                                                          .Where(t => t.basedOn
-                                                                                                      ?.Equals(current.name,
-                                                                                                               StringComparison
-                                                                                                                  .OrdinalIgnoreCase)
-                                                                                                      == true))
-                            {
-                                unvisited.Push(description);
-                            }
-                        }
-
-                        return result;
-                    }
                 }
             }
         }

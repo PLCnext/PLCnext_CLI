@@ -44,6 +44,7 @@ namespace PlcNext.Common.Templates
                                    .Argument<BoolArgument>(TemplateCommandBuilder.ForcedArgumentName)
                                    .Value;
             TemplateDescription template = dataModel.Template();
+            CheckCompatibility(template, dataModel);
 
             List<VirtualFile> generatedFiles = new List<VirtualFile>(await InitializeFiles().ConfigureAwait(false));
             generatedFiles.AddRange(await InitializeSubTemplates().ConfigureAwait(false));
@@ -246,6 +247,61 @@ namespace PlcNext.Common.Templates
                         }
                     }
                 }
+            }
+        }
+
+        private void CheckCompatibility(TemplateDescription template, Entity dataModel)
+        {
+            IEnumerable<TemplateDescription> roots = FindCompatibleRoots();
+            TemplateEntity templateEntity = TemplateEntity.Decorate(dataModel.Root);
+            List<TemplateDescription> dataModelTemplates = GetTemplateHierarchy();
+            if (templateEntity.HasTemplate &&
+                !roots.Any(dataModelTemplates.Contains))
+            {
+                throw new TemplateIncompatibleException(template.name, templateEntity.Template.name);
+            }
+
+            List<TemplateDescription> GetTemplateHierarchy()
+            {
+                List<TemplateDescription> result = new List<TemplateDescription>();
+                if (!templateEntity.HasTemplate)
+                {
+                    return result;
+                }
+
+                TemplateDescription current = templateEntity.Template;
+                result.Add(current);
+                while (!string.IsNullOrEmpty(current?.basedOn))
+                {
+                    current = repository.Template(current.basedOn);
+                    result.Add(current);
+                }
+
+                return result;
+            }
+
+            IEnumerable<TemplateDescription> FindCompatibleRoots()
+            {
+                List<TemplateDescription> unvisited = new List<TemplateDescription>(new []{template});
+                List<TemplateDescription> visited = new List<TemplateDescription>();
+                List<TemplateDescription> result = new List<TemplateDescription>();
+                while (unvisited.Except(visited).Any())
+                {
+                    TemplateDescription visiting = unvisited.Except(visited).First();
+                    visited.Add(visiting);
+                    if (visiting.isRoot)
+                    {
+                        result.Add(visiting);
+                    }
+                    else
+                    {
+                        unvisited.AddRange(visiting.Relationship
+                                                   .Where(relationship => repository.Template(relationship.type) != null)
+                                                   .Select(relationship => repository.Template(relationship.type)));
+                    }
+                }
+
+                return result.Distinct();
             }
         }
 

@@ -203,12 +203,30 @@
     <EmbeddedResource Include="Deployment\TestResults\GetTargetsReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetCompilerSpecsReply.json" />
     <EmbeddedResource Include="Deployment\TestResults\GetSingleSettingReply.json" />
+    <None Remove="Deployment\ConsumableLibrary\external\ADD_DEPENDENT_LIBRARIES_HERE" />
+    <EmbeddedResource Include="Deployment\ConsumableLibrary\external\ADD_DEPENDENT_LIBRARIES_HERE" />
+    <None Remove="Deployment\ConsumableLibrary\include\ConsumableLibrary\ConsumableLibraryClass.hpp" />
+    <EmbeddedResource Include="Deployment\ConsumableLibrary\include\ConsumableLibrary\ConsumableLibraryClass.hpp" />
+    <None Remove="Deployment\ConsumableLibrary\include\ADD_PUBLIC_HEADERS_HERE" />
+    <EmbeddedResource Include="Deployment\ConsumableLibrary\include\ADD_PUBLIC_HEADERS_HERE" />
+    <None Remove="Deployment\ConsumableLibrary\src\ConsumableLibraryClass.cpp" />
+    <EmbeddedResource Include="Deployment\ConsumableLibrary\src\ConsumableLibraryClass.cpp" />
+    <None Remove="Deployment\ConsumableLibrary\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\ConsumableLibrary\CMakeLists.txt" />
+    <None Remove="Deployment\ConsumableLibrary\Config.cmake.in" />
+    <EmbeddedResource Include="Deployment\ConsumableLibrary\Config.cmake.in" />
+    <None Remove="Deployment\ConsumableLibrary\How_to_use.txt" />
+    <EmbeddedResource Include="Deployment\ConsumableLibrary\How_to_use.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\CMakeLists.txt" Link="Deployment\Templates\ConsumableLibraryTemplate\CMakeLists.txt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\How_to_use.txt" Link="Deployment\Templates\ConsumableLibraryTemplate\How_to_use.txt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\TemplateDescription.xml" Link="Deployment\Templates\ConsumableLibraryTemplate\TemplateDescription.xml" />
     <Content Include="appSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Deployment\ConsumableLibrary\plcnext.proj" />
     <Content Include="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -595,6 +613,11 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.cpp" Link="Deployment\Templates\ProjectTemplate\Library.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.hpp" Link="Deployment\Templates\ProjectTemplate\Library.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseProjectTemplate\ADD_DEPENDENT_LIBRARIES_HERE" Link="Deployment\Templates\BaseProjectTemplate\ADD_DEPENDENT_LIBRARIES_HERE" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\.proj" Link="Deployment\Templates\ConsumableLibraryTemplate\.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\ADD_PUBLIC_HEADERS_HERE" Link="Deployment\Templates\ConsumableLibraryTemplate\ADD_PUBLIC_HEADERS_HERE" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Class.cpp" Link="Deployment\Templates\ConsumableLibraryTemplate\Class.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Class.hpp" Link="Deployment\Templates\ConsumableLibraryTemplate\Class.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Config.cmake.in" Link="Deployment\Templates\ConsumableLibraryTemplate\Config.cmake.in" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StructWith1000Fields\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\plcnext.proj" />
@@ -663,6 +686,7 @@
     <Folder Include="Deployment\Templates\ComponentTemplate\" />
     <Folder Include="Deployment\Templates\AcfProjectTemplate\" />
     <Folder Include="Deployment\Templates\BaseProjectTemplate\" />
+    <Folder Include="Deployment\Templates\ConsumableLibraryTemplate" />
     <Folder Include="Deployment\Templates\ProjectTemplate\" />
     <Folder Include="Deployment\Templates\ProgramTemplate\" />
     <Folder Include="Tools\XUnit\" />
