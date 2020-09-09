@@ -1238,7 +1238,7 @@ namespace Test.PlcNext.SystemTests.Tools
             await CommandLineParser.Parse(args.ToArray());
         }
 
-        public async Task InstallSdk(string sdk, string destination)
+        public async Task InstallSdk(string sdk, string destination, bool force = false)
         {
             string path = Path.Combine(fileSystemAbstraction.CurrentDirectory.FullName, sdk);
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Test.PlcNext.Deployment.{sdk}"))
@@ -1248,7 +1248,13 @@ namespace Test.PlcNext.SystemTests.Tools
                 else
                     fileSystemAbstraction.FileSystem.GetFile(sdk);
             }
-            await CommandLineParser.Parse("install", "sdk", "--path", sdk, "--destination", destination);
+
+            List<string> args = new List<string>(new[] {"install", "sdk", "--path", sdk, "--destination", destination});
+            if (force)
+            {
+                args.Add("--force");
+            }
+            await CommandLineParser.Parse(args.ToArray());
         }
 
         public void CheckSdkInLocation(string location)
@@ -1265,6 +1271,13 @@ namespace Test.PlcNext.SystemTests.Tools
             path = Path.Combine(location, "DummySdk", "sysroots", "x86_64-dummysdk-mingw32", "usr", "site-config-dummysdk-neon-pxc-linux-gnueabi");
             fileSystemAbstraction.FindFile(ref path).Should().BeTrue($"The site-config-dummysdk-neon-pxc-linux-gnueabi file is expected to exist in path {path}.");
 
+        }
+
+        public void CheckFileExists(string file, bool exists)
+        {
+            string searchedFile = file;
+            fileSystemAbstraction.FindFile(ref searchedFile).Should()
+                                 .Be(exists, $"File {file} was {(exists ? "expected" : "not expected")} to exist.");
         }
 
         public void CreateFile(string relativeFilePath)

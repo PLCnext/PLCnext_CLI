@@ -458,6 +458,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckSdkInLocation(location);
         }
 
+        protected void Then_the_file_does_not_exist(string file)
+        {
+            ScenarioContext.CheckFileExists(file, false);
+        }
+
         protected void Then_the_user_was_informed_that_the_library_option_is_malformatted()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(MalformedExternalLibrariesOptionException));
