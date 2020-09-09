@@ -43,6 +43,12 @@ namespace PlcNext.Common.Installation.SDK
                     throw new FileExistsException(destination.FullName);
                 }
 
+                if(force)
+                {
+                    destination.Clear();
+                    observable.OnNext(new Change(destination.UnClear, "Cleared destination directory."));
+                }
+
                 using (IProgressNotifier progressNotifier = Console.IsInputRedirected || Console.IsOutputRedirected ? null : progressVisualizer.Spawn(1, "Install SDK.", null))
                 {
                     await fileUnpackService.Unpack(packedSdk, destination, progressNotifier, observable).ConfigureAwait(false);

@@ -29,7 +29,7 @@ namespace PlcNext.CommandLine
             Required = true)]
         public string Destination { get; set; }
 
-        [Option(CommandLineConstants.ForceChar, CommandLineConstants.ForceOption, HelpText = "Overrides existing files with same name.")]
+        [Option(CommandLineConstants.ForceChar, CommandLineConstants.ForceOption, HelpText = "Clears the destination directory if it contains any files.")]
         public bool Force { get; set; }
 
         [Usage]

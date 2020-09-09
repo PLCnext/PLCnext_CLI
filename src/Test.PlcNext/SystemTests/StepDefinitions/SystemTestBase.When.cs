@@ -289,6 +289,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             await ScenarioContext.InstallSdk(sdk, destination);
         }
 
+        protected async Task When_I_force_install_SDK_to_DESTINATION(string sdk, string destination)
+        {
+            await ScenarioContext.InstallSdk(sdk, destination, true);
+        }
+
         protected async Task When_I_update_the_project_targets()
         {
             await ScenarioContext.UpdateTargets(false);
