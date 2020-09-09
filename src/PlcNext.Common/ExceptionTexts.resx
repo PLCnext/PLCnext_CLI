@@ -364,4 +364,7 @@
   <data name="MultipleRootNamespacesForTarget" xml:space="preserve">
     <value>The following possible namespaces were found for the project. Only one namespace is allowed for targets prior to 2020.6.0.{0}</value>
   </data>
+  <data name="TemplateIncompatible" xml:space="preserve">
+    <value>The template '{0}' is incompatible with the project type '{1}'.</value>
+  </data>
 </root>

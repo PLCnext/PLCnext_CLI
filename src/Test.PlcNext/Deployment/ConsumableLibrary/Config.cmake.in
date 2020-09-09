@@ -1,0 +1,6 @@
+﻿@PACKAGE_INIT@
+include( "@PACKAGE_LIB_INSTALL_DIR@/ConsumableLibrary-targets.cmake" )
+
+set_and_check(ConsumableLibrary_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+
+check_required_components(ConsumableLibrary)

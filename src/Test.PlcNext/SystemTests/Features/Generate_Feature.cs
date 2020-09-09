@@ -475,7 +475,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("StructWith1000Fields"),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_the_typemeta_method_looks_like_NAME("StructWith1000FieldsLibrary.meta.cpp")).RunAsyncWithTimeout();
+                _ => Then_the_typemeta_method_looks_like_NAME("StructWith1000FieldsLibrary.meta.cpp")).RunAsyncWithTimeout(20000);
         }
 
         [Scenario]

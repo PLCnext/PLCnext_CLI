@@ -98,6 +98,28 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Inform_user_of_incompatible_template_without_proj()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AcfProject"),
+                _ => Given_is_the_working_directory_PATH("AcfProject"),
+                _ => When_I_create_a_new_component_with_name("PlmComponent", false),
+                _ => Then_the_user_was_informed_that_the_template_is_incompatible())
+                        .RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Inform_user_of_incompatible_template()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ConsumableLibrary"),
+                _ => Given_is_the_working_directory_PATH("ConsumableLibrary"),
+                _ => When_I_create_a_new_component_with_name("PlmComponent", false),
+                _ => Then_the_user_was_informed_that_the_template_is_incompatible())
+                        .RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Create_new_component_without_proj_and_without_codefiles()
         {
             await Runner.AddSteps(

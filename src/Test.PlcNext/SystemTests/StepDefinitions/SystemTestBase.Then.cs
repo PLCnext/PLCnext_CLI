@@ -499,6 +499,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfError(typeof(CodeSpecificException));
         }
 
+        protected void Then_the_user_was_informed_that_the_template_is_incompatible()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(TemplateIncompatibleException));
+        }
+
         protected void Then_the_files_exist_in_location(Dictionary<string, string> filesAndContent)
         {
             ScenarioContext.CheckFilesExistInLocation(filesAndContent);
