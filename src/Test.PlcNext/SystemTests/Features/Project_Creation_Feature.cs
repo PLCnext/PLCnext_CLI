@@ -124,6 +124,16 @@ namespace Test.PlcNext.SystemTests.Features
                 ).RunAsyncWithTimeout();
         }
 
+        [Scenario]
+        public async Task Create_help_files_for_consumable_libraries()
+        {
+	        await Runner.AddSteps(
+		        _ => Given_is_an_empty_workspace(),
+		        _ => When_I_create_a_new_consumable_library_with_the_name("FancyLibrary"),
+		        _ => Then_the_files_exist_in_location("FancyLibrary/How_to_use.txt","FancyLibrary/include/ADD_PUBLIC_HEADERS_HERE.txt","FancyLibrary/external/ADD_DEPENDENT_LIBRARIES_HERE.txt")
+	        ).RunAsyncWithTimeout();
+        }
+
         public Project_Creation_Feature(ITestOutputHelper helper) : base(helper)
         {
         }

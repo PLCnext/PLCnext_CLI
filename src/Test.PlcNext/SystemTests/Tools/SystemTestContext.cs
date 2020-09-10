@@ -177,15 +177,34 @@ namespace Test.PlcNext.SystemTests.Tools
 
         private string knownProjectName;
 
+        public enum ProjectType
+        {
+            PlmProject,
+            AcfProject,
+            ConsumableLibrary
+        }
+
         public async Task CreateProject(string projectName = null, string componentName = null, string programName = null,
-            bool forced = false, string folder = null, bool acfproject = false)
+            bool forced = false, string folder = null, ProjectType type = ProjectType.PlmProject)
         {
 
             string[] args;
-            if (acfproject)
-                args = new string[] { "new", "acfproject" };
-            else
-                args = new string[] { "new", "project" };
+            switch (type)
+            {
+                case ProjectType.PlmProject:
+                    args = new string[] { "new", "project" };
+                    break;
+                case ProjectType.AcfProject:
+                    args = new string[] { "new", "acfproject" };
+                    break;
+                case ProjectType.ConsumableLibrary:
+                    args = new string[] { "new", "consumablelibrary" };
+                    break;
+                default:
+                    true.Should().BeFalse($"Project type {type} is unknown.");
+                    args = new string[0];
+                    break;
+            }
 
             if (!string.IsNullOrEmpty(projectName))
             {
