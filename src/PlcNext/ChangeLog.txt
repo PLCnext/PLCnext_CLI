@@ -1,5 +1,23 @@
-﻿plcncli - 2021.0
+﻿Visual Studio - 2021.0
+----------------------
+
+New features:
+ + Generate port comments
+ + Add/Remove project targets
+ + Install or add new SDKs to the CLI through a dialog
+ 
+eclipse - 2021.0
 ----------------
+
+ + Add consumable libraries template 
+
+plcncli - 2021.0
+----------------
+
+New features:
+ + Include external libraries into .pcwlx file
+ + Added template for 'consumablelibraries'
+ + Optimize library meta file for project with more than 1000 port fields to improve performance
 
 Known Issues
  + projects with more than 1000 port or struct fields do not compile with a 
@@ -12,7 +30,21 @@ Known Issues
    Templates/AcfProjectTemplate/TemplateDescription.xml
    search for: template="Optimized_Library.meta.cpp"
    and replace it with: template="Library.meta.cpp"
+   
+Visual Studio - 2020.6
+----------------------
 
+ + Initial release
+
+plcncli - 20.6.0
+----------------
+
+New features:
+ + new 'deploy' command replaces old 'generate library' command
+ + new 'new minimumproject' is available. To use it its necessary to include MinimalAcfTemplates.xml
+ 
+Fixed Bugs
+ + Fixed an issue when '\u' is used in the output path
 
 eclipse - 20.0.0
 ----------------
