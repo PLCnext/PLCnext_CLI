@@ -31,11 +31,17 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 
         protected async Task When_I_create_a_new_acfproject_with_componentname(string componentName)
         {
-            await ScenarioContext.CreateProject("Project", componentName: componentName, acfproject: true);
+            await ScenarioContext.CreateProject("Project", componentName: componentName, type: SystemTestContext.ProjectType.AcfProject);
         }
+
+        protected async Task When_I_create_a_new_consumable_library_with_the_name(string name)
+        {
+            await ScenarioContext.CreateProject(name, type: SystemTestContext.ProjectType.ConsumableLibrary);
+        }
+        
         protected async Task When_I_create_a_new_acfproject_with_name(string name)
         {
-            await ScenarioContext.CreateProject(name, acfproject: true);
+            await ScenarioContext.CreateProject(name, type:SystemTestContext.ProjectType.AcfProject);
         }
         protected async Task When_I_create_a_new_project_with_name_and_componentname(string name, string componentname)
         {
