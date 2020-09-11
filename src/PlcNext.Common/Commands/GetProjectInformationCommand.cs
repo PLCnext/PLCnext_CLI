@@ -35,7 +35,7 @@ namespace PlcNext.Common.Commands
                                           ExecutionContext executionContext, 
                                           ICommandResultVisualizer commandResultVisualizer, 
                                           IEntityFactory entityFactory, IProjectPropertiesProvider propertiesProvider)
-            : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer)
+            : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer, true)
         {
             this.entityFactory = entityFactory;
             this.propertiesProvider = propertiesProvider;

@@ -26,7 +26,7 @@ namespace PlcNext.Common.Commands
         private readonly ITargetParser targetParser;
         private readonly ISdkRepository sdkRepository;
 
-        public GetSdksCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, IEntityFactory entityFactory, ITargetParser targetParser, ISdkRepository sdkRepository) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer)
+        public GetSdksCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, IEntityFactory entityFactory, ITargetParser targetParser, ISdkRepository sdkRepository) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer, true)
         {
             this.entityFactory = entityFactory;
             this.targetParser = targetParser;

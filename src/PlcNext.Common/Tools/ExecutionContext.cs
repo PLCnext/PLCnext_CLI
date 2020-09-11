@@ -17,7 +17,7 @@ namespace PlcNext.Common.Tools
 {
     public class ExecutionContext: IUserInterface, ILog
     {
-        private readonly IUserInterface userInterface;
+        private IUserInterface userInterface;
         private ChangeObservable observable;
         private readonly ILog log;
 
@@ -27,9 +27,16 @@ namespace PlcNext.Common.Tools
             this.log = log;
         }
 
-        public ExecutionContext RedirectOutput(IUserInterface newUserInterface)
+        public ExecutionContext WithRedirectedOutput(IUserInterface newUserInterface)
         {
             return new ExecutionContext(newUserInterface, log) {observable = observable};
+        }
+
+        public IDisposable RedirectOutput(IUserInterface newUserInterface)
+        {
+            IUserInterface original = userInterface;
+            userInterface = newUserInterface;
+            return new DisposeAction(() => userInterface = original);
         }
 
         public ChangeObservable Observable

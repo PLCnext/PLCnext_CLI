@@ -52,7 +52,7 @@ namespace PlcNext.Common.Tools.Process
             parameters.Add(fileName, Constants.CommandKey);
             parameters.Add(arguments, Constants.CommandArgumentsKey);
             IUserInterface formatterUserInterface = formatterPool.GetFormatter(parameters, userInterface);
-            ExecutionContext redirectedContext = executionContext.RedirectOutput(formatterUserInterface);
+            ExecutionContext redirectedContext = executionContext.WithRedirectedOutput(formatterUserInterface);
 
             return new ProcessFacade(fileName, arguments, workingDirectory, redirectedContext, null, showOutput, showError, killOnDispose,
                 environmentService.Platform, cancellationToken);
@@ -82,8 +82,8 @@ namespace PlcNext.Common.Tools.Process
             FormatterParameters parameters = new FormatterParameters();
             parameters.Add(commandName, Constants.CommandKey);
             parameters.Add(arguments, Constants.CommandArgumentsKey);
-            IUserInterface formatterUserInterface = formatterPool.GetFormatter(parameters, userInterface);
-            ExecutionContext redirectedContext = executionContext.RedirectOutput(formatterUserInterface);
+            IUserInterface formatterUserInterface = formatterPool.GetFormatter(parameters, executionContext);
+            ExecutionContext redirectedContext = executionContext.WithRedirectedOutput(formatterUserInterface);
 
             if (environmentService.Platform == OSPlatform.Linux && setup != null)
             {

@@ -19,7 +19,7 @@ namespace PlcNext.Common.Commands
     internal abstract class AsyncCommand<T> : Command<T>
         where T : CommandArgs
     {
-        protected AsyncCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer, true)
+        protected AsyncCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, bool hasDetailedResult = false) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer, true, hasDetailedResult)
         {
         }
     }

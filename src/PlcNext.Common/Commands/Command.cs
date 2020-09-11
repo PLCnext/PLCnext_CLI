@@ -25,17 +25,19 @@ namespace PlcNext.Common.Commands
         protected readonly ExecutionContext ExecutionContext;
         private readonly ICommandResultVisualizer commandResultVisualizer;
         private readonly bool executeAsync;
+        private readonly bool hasDetailedResult;
 
         protected Command(ITransactionFactory transactionFactory,
                           IExceptionHandler exceptionHandler,
                           ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer,
-                          bool executeAsync)
+                          bool executeAsync, bool hasDetailedResult = false)
         {
             this.transactionFactory = transactionFactory;
             this.exceptionHandler = exceptionHandler;
             this.ExecutionContext = executionContext;
             this.commandResultVisualizer = commandResultVisualizer;
             this.executeAsync = executeAsync;
+            this.hasDetailedResult = hasDetailedResult;
         }
 
         public Type CommandArgsType => typeof(T);
@@ -47,15 +49,25 @@ namespace PlcNext.Common.Commands
             using (ITransaction transaction = transactionFactory.StartTransaction(out ChangeObservable observable))
             using (ExecutionContext.RegisterObservable(observable))
             {
+                IDisposable redirectedToken = null;
                 try
                 {
+                    StringBuilderUserInterface stringBuilderUserInterface = new StringBuilderUserInterface(
+                        ExecutionContext,
+                        true, true,
+                        true, true);
+                    if (hasDetailedResult)
+                    {
+                        redirectedToken = ExecutionContext.RedirectOutput(stringBuilderUserInterface);
+                    }
                     CommandResult commandResult = executeAsync
                                                       ? await ExecuteDetailedAsync((T) args, observable).ConfigureAwait(false)
                                                       : await Task.Run(() => ExecuteDetailed((T) args, observable)).ConfigureAwait(false);
                     result = commandResult.ExternalResult;
                     if (commandResult.DetailedResult != null)
                     {
-                        commandResultVisualizer.Visualize(commandResult.DetailedResult, args);
+                        redirectedToken?.Dispose();
+                        commandResultVisualizer.Visualize(commandResult.DetailedResult, args, stringBuilderUserInterface.Error);
                         visualized = true;
                     }
 
@@ -73,6 +85,7 @@ namespace PlcNext.Common.Commands
                 }
                 finally
                 {
+                    redirectedToken?.Dispose();
                     if (!visualized && args.Deprecated)
                     {
                         ExecutionContext.WriteWarning($"This command is deprecated. Please use '{args.DeprecatedAlternative}' instead.");
