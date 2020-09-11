@@ -24,7 +24,7 @@ namespace PlcNext.Common.Commands
     {
         private readonly ISettingsProvider settingsProvider;
 
-        public GetSettingsCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, ISettingsProvider settingsProvider) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer)
+        public GetSettingsCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, ISettingsProvider settingsProvider) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer, true)
         {
             this.settingsProvider = settingsProvider;
         }

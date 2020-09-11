@@ -224,7 +224,7 @@ namespace PlcNext.NamedPipeServer.CommandLine
                 return new NopDisposable();
             }
 
-            public void Visualize(object result, CommandArgs args)
+            public void Visualize(object result, CommandArgs args, string errorMessage)
             {
                 CommandResult = JObject.FromObject(result, JsonSerializer.Create(new JsonSerializerSettings
                 {

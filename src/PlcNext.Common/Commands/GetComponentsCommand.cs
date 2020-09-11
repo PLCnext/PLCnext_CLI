@@ -25,7 +25,7 @@ namespace PlcNext.Common.Commands
     {
         private readonly IEntityFactory entityFactory;
 
-        public GetComponentsCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, IEntityFactory entityFactory) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer)
+        public GetComponentsCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, IEntityFactory entityFactory) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer, true)
         {
             this.entityFactory = entityFactory;
         }

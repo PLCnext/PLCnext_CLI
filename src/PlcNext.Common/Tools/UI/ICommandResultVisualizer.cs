@@ -13,6 +13,6 @@ namespace PlcNext.Common.Tools.UI
 {
     public interface ICommandResultVisualizer
     {
-        void Visualize(object result, CommandArgs args);
+        void Visualize(object result, CommandArgs args, string errorMessage);
     }
 }

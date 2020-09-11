@@ -23,12 +23,16 @@ namespace PlcNext.Common.Tools.UI
             this.executionContext = executionContext;
         }
 
-        public void Visualize(object result, CommandArgs args)
+        public void Visualize(object result, CommandArgs args, string errorMessage)
         {
             if (result.GetType().GetCustomAttribute<CustomFormatDataStructureAttribute>() != null)
             {
                 executionContext.WriteInformation(result.ToString());
                 executionContext.WriteWarning($"This command is deprecated. Please use '{args.DeprecatedAlternative}' instead.");
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    executionContext.WriteError(errorMessage);
+                }
             }
             else
             {
@@ -41,6 +45,11 @@ namespace PlcNext.Common.Tools.UI
                 if (args.Deprecated)
                 {
                     formattedObject.Add("deprecated",new JValue($"This command is deprecated. Please use '{args.DeprecatedAlternative}' instead."));
+                }
+
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    formattedObject.Add("error", new JValue(errorMessage));
                 }
                 executionContext.WriteInformation(formattedObject.ToString(Formatting.Indented));
             }
