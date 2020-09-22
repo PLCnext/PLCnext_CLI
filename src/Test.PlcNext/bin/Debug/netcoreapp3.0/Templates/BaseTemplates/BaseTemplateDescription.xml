@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TemplateDescription name="template" isHidden="true" xmlns="http://www.phoenixcontact.com/schema/clitemplates" supportedFirmwareVersions="0" requiredCliVersion="19.0.0.660" version="1.0">
-	<Arguments>
-		<Argument name="name" short-name="n" default="$(root.name.format.lastNamespacePart.format.escapeProjectName)$(template.name.format.startUppercase)" help="Name of the $(template.name)." has-value="true"/>
-		<Argument name="output" short-name="o" default="$(active-directory)" help="Absolute path or relative path to the directory of the $(root.template.name)." has-value="true"/>
-	</Arguments>
-</TemplateDescription>
