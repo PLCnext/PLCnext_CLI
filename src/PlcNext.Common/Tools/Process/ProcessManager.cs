@@ -82,7 +82,7 @@ namespace PlcNext.Common.Tools.Process
             FormatterParameters parameters = new FormatterParameters();
             parameters.Add(commandName, Constants.CommandKey);
             parameters.Add(arguments, Constants.CommandArgumentsKey);
-            IUserInterface formatterUserInterface = formatterPool.GetFormatter(parameters, executionContext);
+            IUserInterface formatterUserInterface = formatterPool.GetFormatter(parameters, userInterface);
             ExecutionContext redirectedContext = executionContext.WithRedirectedOutput(formatterUserInterface);
 
             if (environmentService.Platform == OSPlatform.Linux && setup != null)

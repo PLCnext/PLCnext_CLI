@@ -192,9 +192,10 @@ namespace PlcNext.Common.Tools.SDK
                                new CompilerInformation(definition.CompilerSpec.compilerPath,
                                             definition.CompilerSpec.compilerSysroot,
                                             definition.CompilerSpec.compilerFlags,
-                                            definition.CompilerSpec.IncludePath,
-                                            definition.CompilerSpec.CompilerMacro
-                                                      .Select(m => new CompilerMakro(m.name, m.value))));
+                                            definition.CompilerSpec.IncludePath??Enumerable.Empty<string>(),
+                                            definition.CompilerSpec.CompilerMacro?
+                                                      .Select(m => new CompilerMakro(m.name, m.value))
+                                            ??Enumerable.Empty<CompilerMakro>()));
             }
         }
     }
