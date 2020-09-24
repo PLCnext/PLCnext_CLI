@@ -25,7 +25,7 @@ namespace PlcNext.Common.Tools.UI
 
         public void Visualize(object result, CommandArgs args, string errorMessage)
         {
-            if (result.GetType().GetCustomAttribute<CustomFormatDataStructureAttribute>() != null)
+            if (result?.GetType().GetCustomAttribute<CustomFormatDataStructureAttribute>() != null)
             {
                 executionContext.WriteInformation(result.ToString());
                 executionContext.WriteWarning($"This command is deprecated. Please use '{args.DeprecatedAlternative}' instead.");
@@ -36,12 +36,14 @@ namespace PlcNext.Common.Tools.UI
             }
             else
             {
-                JObject formattedObject = JObject.FromObject(result, new JsonSerializer
-                {
-                    NullValueHandling = NullValueHandling.Include,
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    StringEscapeHandling = StringEscapeHandling.EscapeHtml
-                });
+                JObject formattedObject = result != null
+                                              ? JObject.FromObject(result, new JsonSerializer
+                                              {
+                                                  NullValueHandling = NullValueHandling.Include,
+                                                  ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                  StringEscapeHandling = StringEscapeHandling.EscapeHtml
+                                              })
+                                              : new JObject();
                 if (args.Deprecated)
                 {
                     formattedObject.Add("deprecated",new JValue($"This command is deprecated. Please use '{args.DeprecatedAlternative}' instead."));

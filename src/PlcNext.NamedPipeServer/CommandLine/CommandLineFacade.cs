@@ -226,12 +226,14 @@ namespace PlcNext.NamedPipeServer.CommandLine
 
             public void Visualize(object result, CommandArgs args, string errorMessage)
             {
-                CommandResult = JObject.FromObject(result, JsonSerializer.Create(new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    StringEscapeHandling = StringEscapeHandling.EscapeHtml
-                }));
+                CommandResult = result != null
+                                    ? JObject.FromObject(result, JsonSerializer.Create(new JsonSerializerSettings
+                                    {
+                                        NullValueHandling = NullValueHandling.Ignore,
+                                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                        StringEscapeHandling = StringEscapeHandling.EscapeHtml
+                                    }))
+                                    : new JObject();
             }
 
             private class ProgressNotifierReporter : IProgressNotifier

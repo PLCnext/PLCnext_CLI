@@ -60,19 +60,38 @@ namespace PlcNext.Common.Commands
                     {
                         redirectedToken = ExecutionContext.RedirectOutput(stringBuilderUserInterface);
                     }
-                    CommandResult commandResult = executeAsync
-                                                      ? await ExecuteDetailedAsync((T) args, observable).ConfigureAwait(false)
-                                                      : await Task.Run(() => ExecuteDetailed((T) args, observable)).ConfigureAwait(false);
-                    result = commandResult.ExternalResult;
-                    if (commandResult.DetailedResult != null)
+
+                    CommandResult commandResult = null;
+                    try
                     {
-                        redirectedToken?.Dispose();
-                        commandResultVisualizer.Visualize(commandResult.DetailedResult, args, stringBuilderUserInterface.Error);
+                        commandResult = executeAsync
+                                            ? await ExecuteDetailedAsync((T) args, observable).ConfigureAwait(false)
+                                            : await Task.Run(() => ExecuteDetailed((T) args, observable)).ConfigureAwait(false);
+                        result = commandResult.ExternalResult;
+                    }
+                    catch (Exception e)
+                    {
+                        //Include exceptions in error output to include them in the json output later when detailed results are available
+                        if (!exceptionHandler.HandleException(e))
+                        {
+                            throw;
+                        }
+
+                        result = -1;
+                    }
+                    
+                    if (redirectedToken != null)
+                    {
+                        redirectedToken.Dispose();
+                        commandResultVisualizer.Visualize(commandResult?.DetailedResult, args, stringBuilderUserInterface.Error);
                         visualized = true;
                     }
 
-                    commandResult.Exceptions.ThrowIfNotEmpty();
-                    transaction.OnCompleted();
+                    commandResult?.Exceptions.ThrowIfNotEmpty();
+                    if(result != -1)
+                    {
+                        transaction.OnCompleted();
+                    }
                 }
                 catch (Exception e)
                 {
