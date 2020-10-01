@@ -531,5 +531,10 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfWarning($"{externalLibrary} must be transferred to the device", 
                                                        "message of manually transferring library to device expected");
         }
+
+        protected void Then_the_user_was_informed_that_the_library_generation_failed()
+        {
+            ScenarioContext.CheckUserInformedOfError("Deploying library failed!", "message of failing deploy expected");
+        }
     }
 }

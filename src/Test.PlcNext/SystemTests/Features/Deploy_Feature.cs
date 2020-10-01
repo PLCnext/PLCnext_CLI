@@ -542,6 +542,18 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_user_was_informed_that_the_target_version_was_not_found()
                 ).RunAsyncWithTimeout();
         }
+
+        [Scenario]
+        public async Task Deploy_when_librarybuilder_exits_with_error()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("Demo"),
+                _ => Given_is_the_working_directory_PATH("Demo"),
+                _ => When_the_librarybuilder_exits_with_error(),
+                _ => When_I_deploy(new DeployCommandArgs { BuildType = "Debug" }),
+                _ => Then_the_user_was_informed_that_the_library_generation_failed()
+            ).RunAsyncWithTimeout();
+        }
     }
 
     public class DeployCommandArgs

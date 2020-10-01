@@ -34,7 +34,10 @@ namespace PlcNext.Common.Deploy
 
         public void Execute(Entity dataModel, ChangeObservable observable)
         {
-            builder.Execute(dataModel);
+            int exitCode = builder.Execute(dataModel);
+            if (exitCode != 0)
+                throw new FormattableException("Deploying library failed!");
+
         }
     }
 }
