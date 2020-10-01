@@ -74,7 +74,8 @@ namespace PlcNext.Common.CodeModel.Cpp
 
                     basePath = relative.Replace('\\', '/');
                 }
-                else if (commandEntity.IsCommandArgumentSpecified(EntityKeys.OutputKey))
+                else if (commandEntity.IsCommandArgumentSpecified(EntityKeys.OutputKey) &&
+                         templateOrigin != templateOrigin.Root)
                 {
                     string output = commandEntity.Output;
                     string rootPath = templateOrigin.Root.Path;
