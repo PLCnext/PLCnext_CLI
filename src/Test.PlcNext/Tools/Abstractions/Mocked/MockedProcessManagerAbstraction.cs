@@ -42,6 +42,8 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
 
         public bool ThrowError { get; set; }
 
+        public string ExitWithErrorForCommand { get; set; }
+
         public bool CommandExecuted(string command, params string[] args)
         {
             return executedCommands.Any(c => c.Executable.Contains(command) && args.All(c.Arguments.Contains));
@@ -66,6 +68,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
         public MockedProcessManagerAbstraction()
         {
             ThrowError = false;
+            ExitWithErrorForCommand = string.Empty;
             // mock the failure of a process
             processManager.StartProcess(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IUserInterface>(), Arg.Any<string>(), showOutput: Arg.Any<bool>(), showError: Arg.Any<bool>(), killOnDispose: Arg.Any<bool>())
                           .Returns(callinfo =>
@@ -79,9 +82,10 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                                executedCommands.Add(new Command(callinfo.ArgAt<string>(0), callinfo.ArgAt<string>(1)));
                                ProcessCommand(callinfo.ArgAt<string>(1), callinfo.Arg<IUserInterface>());
                                IProcess process = Substitute.For<IProcess>();
-                               if ((callinfo.ArgAt<string>(0) == "which" ||
+                               if (((callinfo.ArgAt<string>(0) == "which" ||
                                     callinfo.ArgAt<string>(0) == "where") &&
-                                   !callinfo.ArgAt<string>(1).Contains("cmake"))
+                                   !callinfo.ArgAt<string>(1).Contains("cmake")) ||
+                                    (!string.IsNullOrEmpty(ExitWithErrorForCommand) && callinfo.ArgAt<string>(0).EndsWith(ExitWithErrorForCommand) ))
                                {
                                    process.ExitCode.Returns(-1);
                                }

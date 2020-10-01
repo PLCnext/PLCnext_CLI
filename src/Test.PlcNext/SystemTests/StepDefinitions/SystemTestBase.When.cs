@@ -314,5 +314,10 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         {
             await ScenarioContext.Deploy(args);
         }
+
+        protected void When_the_librarybuilder_exits_with_error()
+        {
+            ScenarioContext.ExitProcessWithErrorForCommand("LibraryBuilder.Core");
+        }
     }
 }

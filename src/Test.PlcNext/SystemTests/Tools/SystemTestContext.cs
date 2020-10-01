@@ -661,6 +661,11 @@ namespace Test.PlcNext.SystemTests.Tools
             processManagerAbstraction.ThrowError = true;
         }
 
+        public void ExitProcessWithErrorForCommand(string command)
+        {
+            processManagerAbstraction.ExitWithErrorForCommand = command;
+        }
+
         public void CheckForError(ErrorInformation error)
         {
             string errors = userInterfaceAbstraction.Errors.Aggregate(string.Empty, (s, s1) => $"{s}{Environment.NewLine}{s1}");
