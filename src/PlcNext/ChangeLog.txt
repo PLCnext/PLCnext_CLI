@@ -5,6 +5,14 @@ New features:
  + Generate port comments
  + Add/Remove project targets
  + Install or add new SDKs to the CLI through a dialog
+
+ Known Issues
+  + When starting Visual Studio and immediately afterwards building a 
+    PLCnext C++ project the following error might occur:
+        The "GenerateTask" task failed unexpectedly.
+        Cannot start process because a file name has not been provided.
+    Workaround: Wait until startup process is completely finished 
+    and try again.
  
 eclipse - 2021.0
 ----------------
@@ -60,7 +68,7 @@ New features:
 
 Fixed Bugs
  + Fixed problem in Linux that errors were not parsed correctly
- + Fixed that it was not possible to change the target in the project 
+ + Fixed that it was not possible to change the target in the project
    properties and at the same time the includes
  + Fixed the situation where there were two messages that the PLCnCLI tool was
    not found at the start of eclipse
