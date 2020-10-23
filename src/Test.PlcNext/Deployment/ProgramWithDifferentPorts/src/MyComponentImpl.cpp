@@ -1,6 +1,6 @@
 #include "MyComponent.hpp"
 
-namespace ProgramWithOneStructPort
+namespace ProgramWithDifferentPorts
 {
 
 void MyComponent::Initialize(void)
@@ -43,4 +43,4 @@ void MyComponent::PowerDown(void)
 {
 }
 
-} // end of namespace $(namespace0)
+} // end of namespace ProgramWithDifferentPorts

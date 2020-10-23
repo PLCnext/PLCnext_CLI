@@ -26,5 +26,8 @@ namespace PlcNext.Common.Templates
                                                           TemplateDescription currentRootTemplate,
                                                           CommandDefinition baseCommand,
                                                           ICollection<TemplateDescription> allTemplates);
+
+        IEnumerable<CommandDefinition> CreateGenerateCommandDefinitions(ICollection<CommandDefinition> baseCommands,
+                                                                        IEnumerable<TemplateDescription> allTemplates);
     }
 }

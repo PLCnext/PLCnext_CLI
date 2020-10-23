@@ -88,7 +88,7 @@ namespace PlcNext.Common.Templates
         private string FormatValue(Entity valueProvider, formatTemplate template)
         {
             Entity original = CheckTarget();
-            IEnumerable<string> values = GetValues();
+            IEnumerable<(string, Entity)> values = GetValues();
             IEnumerable<string> formattedValues = values.Select(Format);
             string formattedValue = string.Join(template.seperator, formattedValues);
             return ApplyPrefixSuffix(formattedValue, true);
@@ -110,13 +110,13 @@ namespace PlcNext.Common.Templates
                 return result;
             }
 
-            IEnumerable<string> GetValues()
+            IEnumerable<(string, Entity)> GetValues()
             {
                 return template.multiplicity == multiplicity.OneOrMore
                            ? (template.Split?.Any() == true
-                                  ? valueProvider.Value<string>().Split(template.Split.Select(Resolve).ToArray(), StringSplitOptions.None)
-                                  : valueProvider.Select(e => e.Value<string>()))
-                           : new[] {valueProvider.Value<string>()};
+                                  ? valueProvider.Value<string>().Split(template.Split.Select(Resolve).ToArray(), StringSplitOptions.None).Select(s => (s, (Entity)null))
+                                  : valueProvider.Select(e => (e.Value<string>(), e)))
+                           : new[] {(valueProvider.Value<string>(), (Entity)null)};
 
                 string Resolve(string split)
                 {
@@ -137,7 +137,7 @@ namespace PlcNext.Common.Templates
                 return prefix + mainString + suffix;
             }
 
-            string Format(string value)
+            string Format((string value, Entity entity) value)
             {
                 string result = ApplyPatterns();
                 return ApplyPrefixSuffix(result, false);
@@ -149,9 +149,10 @@ namespace PlcNext.Common.Templates
                         if (bool.TryParse(resolver.Resolve(format.condition, original), out bool applies) &&
                             applies)
                         {
-                            using (original.AddTemporaryDataSource(new FormatValueAccess(value)))
+                            Entity currentProvider = value.entity ?? original;
+                            using (currentProvider.AddTemporaryDataSource(new FormatValueAccess(value.value)))
                             {
-                                return resolver.Resolve(format.template, original);
+                                return resolver.Resolve(format.template, currentProvider);
                             }
                         }
                     }
@@ -170,14 +171,15 @@ namespace PlcNext.Common.Templates
                         Match match = CreateMatch(format.pattern, format.ignorecase, out Regex _);
                         if (match.Success)
                         {
-                            using (original.AddTemporaryDataSource(new FormatValueAccess(value)))
+                            Entity currentProvider = value.entity ?? original;
+                            using (currentProvider.AddTemporaryDataSource(new FormatValueAccess(value.value)))
                             {
-                                return resolver.Resolve(format.template, original);
+                                return resolver.Resolve(format.template, currentProvider);
                             }
                         }
                     }
 
-                    return value;
+                    return value.value;
 
                     Match CreateMatch(string pattern, bool ignorecase, out Regex regex)
                     {
@@ -192,7 +194,7 @@ namespace PlcNext.Common.Templates
                         }
                         RegexOptions options = ignorecase ? RegexOptions.IgnoreCase : RegexOptions.None;
                         regex = new Regex(pattern, options);
-                        return regex.Match(value);
+                        return regex.Match(value.value);
                     }
                 }
             }

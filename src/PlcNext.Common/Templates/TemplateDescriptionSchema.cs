@@ -49,6 +49,8 @@ namespace PlcNext.Common.Templates.Description {
         
         private templateDeployPostStep[] deployPostStepField;
         
+        private templateGenerateStep[] generateStepField;
+        
         private string nameField;
         
         private string supportedFirmwareVersionsField;
@@ -158,6 +160,17 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.deployPostStepField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("GenerateStep")]
+        public templateGenerateStep[] GenerateStep {
+            get {
+                return this.generateStepField;
+            }
+            set {
+                this.generateStepField = value;
             }
         }
         
@@ -537,13 +550,13 @@ namespace PlcNext.Common.Templates.Description {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.phoenixcontact.com/schema/clitemplates")]
-    public partial class templateDeployPostStep {
+    public partial class templateGenerateStep {
         
         private templateArgumentDefinition[] argumentsField;
         
         private templateExample[] exampleField;
         
-        private string identifierField;
+        private string generatorField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("Argument", IsNullable=false)]
@@ -569,12 +582,12 @@ namespace PlcNext.Common.Templates.Description {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string identifier {
+        public string generator {
             get {
-                return this.identifierField;
+                return this.generatorField;
             }
             set {
-                this.identifierField = value;
+                this.generatorField = value;
             }
         }
     }
@@ -774,6 +787,54 @@ namespace PlcNext.Common.Templates.Description {
         
         /// <remarks/>
         OneOrMore,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.7.3081.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.phoenixcontact.com/schema/clitemplates")]
+    public partial class templateDeployPostStep {
+        
+        private templateArgumentDefinition[] argumentsField;
+        
+        private templateExample[] exampleField;
+        
+        private string identifierField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("Argument", IsNullable=false)]
+        public templateArgumentDefinition[] Arguments {
+            get {
+                return this.argumentsField;
+            }
+            set {
+                this.argumentsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Example")]
+        public templateExample[] Example {
+            get {
+                return this.exampleField;
+            }
+            set {
+                this.exampleField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string identifier {
+            get {
+                return this.identifierField;
+            }
+            set {
+                this.identifierField = value;
+            }
+        }
     }
     
     /// <remarks/>

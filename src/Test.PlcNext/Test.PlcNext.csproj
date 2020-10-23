@@ -87,6 +87,7 @@
     <None Remove="Deployment\TestResults\DemoLibraryWithExternalLibsForAllTargets.txt" />
     <None Remove="Deployment\TestResults\DemoLibraryWithExternalLibsMultibinary.txt" />
     <None Remove="Deployment\TestResults\DemoWithMultibinaryLibraryCommandArgs.txt" />
+    <None Remove="Deployment\TestResults\EnumTestDataTypes.dt" />
     <None Remove="Deployment\TestResults\ExternalLibraryTest.meta.cpp" />
     <None Remove="Deployment\TestResults\GetComponentsReply.json" />
     <None Remove="Deployment\TestResults\GetProgramsReply.json" />
@@ -99,6 +100,8 @@
     <None Remove="Deployment\TestResults\PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt" />
     <None Remove="Deployment\ExternalLibrary\My\Company\Name\Helper.hpp" />
     <None Remove="Deployment\TestResults\ArrayInitializer.meta.cpp" />
+    <None Remove="Deployment\TestResults\ProgramWithDifferentPortsDataTypes.dt" />
+    <None Remove="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
     <None Remove="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
@@ -559,6 +562,9 @@
     <EmbeddedResource Include="Deployment\TestResults\EnumTestLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\EsmLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\HiddenPlm.meta.cpp" />
+    <EmbeddedResource Include="Deployment\TestResults\ProgramWithDifferentPortsDataTypes.dt" />
+    <EmbeddedResource Include="Deployment\TestResults\EnumTestDataTypes.dt" />
+    <EmbeddedResource Include="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponent._meta.cpp" />
@@ -602,6 +608,7 @@
 	  <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
 	  <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Optimized_Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
+	<EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\DataTypes.dt" Link="Deployment\Templates\ProjectTemplate\DataTypes.dt" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
 	  <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
 	  <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" />

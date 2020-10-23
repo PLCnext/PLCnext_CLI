@@ -3,7 +3,7 @@
 #include "Arp/Plc/Esm/ProgramBase.hpp"
 #include "Arp/System/Commons/Logging.h"
 
-namespace ProgramWithOneStructPort { namespace MyComponent {
+namespace ProgramWithDifferentPorts { namespace MyComponent {
 
 using namespace Arp;
 using namespace Arp::Plc::Esm;
@@ -48,4 +48,4 @@ private: // fields
 ///////////////////////////////////////////////////////////////////////////////
 // inline methods of class ProgramBase
 
-}} // end of namespace ProgramWithOneStructPort::MyComponent
+}} // end of namespace ProgramWithDifferentPorts::MyComponent

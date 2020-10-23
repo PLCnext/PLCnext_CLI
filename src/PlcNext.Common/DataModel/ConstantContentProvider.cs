@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
@@ -31,7 +32,11 @@ namespace PlcNext.Common.DataModel
             EntityKeys.InternalTempDirectoryKey,
             EntityKeys.ChunkStartKey,
             EntityKeys.ChunkEndKey, 
-            EntityKeys.CountKey
+            EntityKeys.CountKey,
+            EntityKeys.IncrementKey,
+            EntityKeys.DecrementKey,
+            EntityKeys.NegateKey,
+            EntityKeys.Origin
         };
 
         public ConstantContentProvider(IFileSystem fileSystem)
@@ -114,8 +119,48 @@ namespace PlcNext.Common.DataModel
                     return owner.Create(key, owner.Value<DataChunk>().End);
                 case EntityKeys.CountKey:
                     return owner.Create(key, owner.Count.ToString(CultureInfo.InvariantCulture), owner.Count);
+                case EntityKeys.IncrementKey:
+                    return IncrementValue();
+                case EntityKeys.DecrementKey:
+                    return DecrementValue();
+                case EntityKeys.NegateKey:
+                    if(bool.TryParse(owner.Value<string>(), out bool value))
+                    {
+                        return owner.Create(key, (!value).ToString(CultureInfo.InvariantCulture), !value);
+                    }
+                    throw new ContentProviderException(key, owner);
+                case EntityKeys.Origin:
+                    return owner.Origin;
                 default:
                     throw new ContentProviderException(key, owner);
+
+                    Entity IncrementValue()
+                    {
+                        string number = owner.Value<string>();
+                        if (number != null)
+                        {
+                            if (int.TryParse(number, out int result))
+                            {
+                                result++;
+                                return owner.Create(key, result.ToString(CultureInfo.InvariantCulture), result);
+                            }
+                        }
+                        throw new FormattableException("Owner value could not be cast to int.");
+                    }
+
+                    Entity DecrementValue()
+                    {
+                        string number = owner.Value<string>();
+                        if (number != null)
+                        {
+                            if (int.TryParse(number, out int result))
+                            {
+                                result--;
+                                return owner.Create(key, result.ToString(CultureInfo.InvariantCulture), result);
+                            }
+                        }
+                        throw new FormattableException("Owner value could not be cast to int.");
+                    }
             }
         }
     }

@@ -39,6 +39,7 @@ namespace PlcNext.Common.Tools
         public const string ClassExtension = "cpp";
         public const string ScriptFileExtensionWin = "bat";
         public const string ScriptFileExtensionLinux = "sh";
+        public const string DatatypeWorksheetExtension = "dt";
 
         //other
         public const string Tab = "    ";
@@ -101,6 +102,7 @@ namespace PlcNext.Common.Tools
         public const string CompmetaFileType = "MetaComponent";
         public const string ComponentFolderType = "MetaComponentFolder";
         public const string ProgramFolderType = "MetaProgramFolder";
+        public const string DataTypeWorksheetType = "DataTypeWorksheet";
 
         //Output formatter
         public const string CommandKey = "command";

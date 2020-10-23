@@ -177,6 +177,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             await ScenarioContext.GenerateMeta(true, includes: includes);
         }
 
+        protected async Task When_I_generate_all_metafiles_with_no_datatypes_worksheet()
+        {
+            await ScenarioContext.GenerateMeta(true, noDatatypesWorksheet: true);
+        }
+
         protected async Task When_I_generate_all_codefiles()
         {
             await ScenarioContext.GenerateCode(true);

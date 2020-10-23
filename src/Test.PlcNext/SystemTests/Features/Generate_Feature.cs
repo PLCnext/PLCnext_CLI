@@ -36,7 +36,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ProgramWithOneStructPort"),
                 _ => When_I_generate_all_metafiles(),
                 _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("Example",
-                                                                                 new []
+                                                                                 new[]
                                                                                  {
                                                                                      new TypeMember("value1","int32"),
                                                                                      new TypeMember("value2","bit", string.Empty),
@@ -99,7 +99,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                        new TypeMember("blubber","nested"),
                                                                                                        new TypeMember("test","supernested"),
                                                                                                    }))).RunAsyncWithTimeout();
-        }        
+        }
 
         [Scenario]
         [ClassData(typeof(ErrorDataGenerator))]
@@ -180,7 +180,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("TwoComponentsAndPrograms"),
                 _ => When_I_generate_all_codefiles(),
                 _ => Then_the_provider_files_are_generated_for_component("MyComponent", new[] { "MyProgram", "MyProgram2" }),
-                _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram"})).RunAsyncWithTimeout();
+                _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram" })).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -191,8 +191,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("ProgramWithDifferentPorts"),
                 _ => When_I_generate_all_files_from_inside_the_project_folder(),
                 _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("MyProgram",
-                                                                                  new [] {"MyComponent", "MyProgram"},
-                                                                                  new []
+                                                                                  new[] { "MyComponent", "MyProgram" },
+                                                                                  new[]
                                                                                   {
                                                                                       new Portmeta("InCpp<INT","Example","Input|Opc"),
                                                                                       new Portmeta("examplePort2","Example","Output", "1"),
@@ -242,16 +242,16 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("EnumTest"),
                 _ => Given_is_the_working_directory_PATH("EnumTest"),
                 _ => When_I_generate_all_files_from_inside_the_project_folder(),
-                _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("EnumStruct", new[]
+                _ => Then_the_typemeta_file_contains_only_the_following_structure(new StructTypemetaStructure("EnumStruct", new[]
                                                                                                    {
                                                                                                        new TypeMember("EnumValue", "OtherEnum"),
                                                                                                    }),
                                                                              new EnumTypemetaStructure("OhMy", "int32",
-                                                                                                       new []
+                                                                                                       new[]
                                                                                                        {
-                                                                                                           new EnumSymbol("Hoho",0), 
-                                                                                                           new EnumSymbol("Haha",1), 
-                                                                                                           new EnumSymbol("Hihi",12), 
+                                                                                                           new EnumSymbol("Hoho",0),
+                                                                                                           new EnumSymbol("Haha",1),
+                                                                                                           new EnumSymbol("Hihi",12),
                                                                                                        }),
                                                                              new EnumTypemetaStructure("OtherEnum", "int32",
                                                                                                        new[]
@@ -293,12 +293,12 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                     new Portmeta("examplePort2","Example","Output", "1"),
                                                                                     new Portmeta("examplePort3","Example","Output", "5")
                                                                                 },
-                                                                                new[] { "MyProgram", "MyProgram2"}
-                                                                                ), 
+                                                                                new[] { "MyProgram", "MyProgram2" }
+                                                                                ),
                                                                               new CompmetaData("MyOtherComponent",
                                                                                 new string[] { "MyOtherComponent" },
-                                                                                new[] { new Portmeta("examplePort4","int32","", string.Empty) },
-                                                                                new[] { "MyOtherProgram"}
+                                                                                new[] { new Portmeta("examplePort4", "int32", "", string.Empty) },
+                                                                                new[] { "MyOtherProgram" }
                                                                                 ))).RunAsyncWithTimeout();
         }
 
@@ -311,7 +311,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_generate_all_files_from_inside_the_project_folder(),
                 _ => Then_there_are_compmeta_files_with_the_following_content(new CompmetaData("AlmostAmbiguousComponent",
                                                                                 new string[] { "AlmostAmbiguousComponent" },
-                                                                                new Portmeta[0], 
+                                                                                new Portmeta[0],
                                                                                 new[] { "AlmostAmbiguousProgram" }
                                                                                 ),
                                                                               new CompmetaData("AlmostAmbiguousComp",
@@ -344,7 +344,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                    new Portmeta("value1","int32","Input"),
                                                                                                    new Portmeta("NamedPort","boolean","Output|Opc"),
                                                                                                },
-                                                                                        new[]{"HiddenPlmProgram"}))).RunAsyncWithTimeout();
+                                                                                        new[] { "HiddenPlmProgram" }))).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -389,7 +389,7 @@ namespace Test.PlcNext.SystemTests.Features
         public async Task Generate_library_meta_information_for_external_struct()
         {
             await Runner.AddSteps(
-                _ => Given_is_the_project_with_the_additional_library_in_the_directory("ExternalLibraryTest","lib","ExternalLibrary"),
+                _ => Given_is_the_project_with_the_additional_library_in_the_directory("ExternalLibraryTest", "lib", "ExternalLibrary"),
                 _ => When_I_generate_all_codefiles_with_includes("lib/ExternalLibrary"),
                 _ => Then_the_typemeta_method_looks_like_NAME("ExternalLibraryTest.meta.cpp")).RunAsyncWithTimeout();
         }
@@ -417,7 +417,7 @@ namespace Test.PlcNext.SystemTests.Features
         public async Task Generate_typemeta_information_for_external_struct_using_cmake()
         {
             await Runner.AddSteps(
-                _ => Given_is_the_project_with_the_additional_library_in_the_directory("ExternalLibraryTest","lib","ExternalLibrary"),
+                _ => Given_is_the_project_with_the_additional_library_in_the_directory("ExternalLibraryTest", "lib", "ExternalLibrary"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_include_paths("ExternalLibraryTest", "lib/ExternalLibrary"),
                 _ => When_I_generate_all_codefiles(),
                 _ => Then_the_typemeta_method_looks_like_NAME("ExternalLibraryTest.meta.cpp")).RunAsyncWithTimeout();
@@ -485,7 +485,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ComponentInSourceFolder"),
                 _ => When_I_generate_all_metafiles(),
                 _ => Then_there_are_compmeta_files_with_the_following_content(new CompmetaData("Component",
-                                                                                new [] { "Component" },
+                                                                                new[] { "Component" },
                                                                                 new Portmeta[] { },
                                                                                 new string[] { }
                                                                                 ))).RunAsyncWithTimeout();
@@ -541,7 +541,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("MultipleNamespaces"),
                 _ => Given_is_the_working_directory_PATH("MultipleNamespaces"),
-                _ => When_I_generate_all_codefiles_with_the_source_directories("src","extern"),
+                _ => When_I_generate_all_codefiles_with_the_source_directories("src", "extern"),
                 _ => Then_the_library_files_are_generated_containing_the_components("MultipleNamespacesComponent")).RunAsyncWithTimeout();
         }
 
@@ -551,7 +551,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("MultipleNamespaces190"),
                 _ => Given_is_the_working_directory_PATH("MultipleNamespaces190"),
-                _ => When_I_generate_all_codefiles_with_the_source_directories("src","extern"),
+                _ => When_I_generate_all_codefiles_with_the_source_directories("src", "extern"),
                 _ => Then_the_user_was_informed_that_there_are_multiple_root_namespaces_for_target_version()).RunAsyncWithTimeout();
         }
 
@@ -561,7 +561,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("MultipleNamespaces206"),
                 _ => Given_is_the_working_directory_PATH("MultipleNamespaces206"),
-                _ => When_I_generate_all_codefiles_with_the_source_directories("src","extern"),
+                _ => When_I_generate_all_codefiles_with_the_source_directories("src", "extern"),
                 _ => Then_the_library_files_are_generated_containing_the_components("MultipleNamespacesComponent")).RunAsyncWithTimeout();
         }
 
@@ -615,6 +615,44 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_generate_all_codefiles_from_inside_the_project_folder(),
                 _ => Then_the_provider_files_are_generated_for_component("MyComponent", new[] { "MyProgram", "MyProgram2" }),
                 _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram" })).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_for_nested_structs()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ProgramWithNestedAndStructInStruct"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("ProgramWithNestedAndStructInStructDataTypes.dt")).RunAsyncWithTimeout();
+
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_for_arrays()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ProgramWithDifferentPorts"),
+                _ => Given_is_the_working_directory_PATH("ProgramWithDifferentPorts"),
+                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("ProgramWithDifferentPortsDataTypes.dt")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_for_enum()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("EnumTest"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("EnumTestDataTypes.dt")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_no_datatypes_worksheet()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("Standard"),
+                _ => When_I_generate_all_metafiles_with_no_datatypes_worksheet(),
+                _ => Then_the_datatypes_worksheet_was_not_generated()).RunAsyncWithTimeout();
         }
 
         public Generate_Feature(ITestOutputHelper helper) : base(helper)

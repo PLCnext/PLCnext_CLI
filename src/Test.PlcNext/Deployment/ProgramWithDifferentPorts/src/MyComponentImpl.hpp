@@ -8,7 +8,7 @@ using namespace Arp;
 using namespace Arp::System::Acf;
 using namespace Arp::Plc::Esm;
 
-namespace ProgramWithOneStructPort
+namespace ProgramWithDifferentPorts
 {
 	
 //#component
@@ -61,4 +61,4 @@ inline String * MyComponent::GetFoo()
 	return &this->foo;
 }
 
-} // end of namespace ProgramWithOneStructPort
+} // end of namespace ProgramWithDifferentPorts

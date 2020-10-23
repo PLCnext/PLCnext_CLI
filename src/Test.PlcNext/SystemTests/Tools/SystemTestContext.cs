@@ -489,7 +489,8 @@ namespace Test.PlcNext.SystemTests.Tools
                                  .Be(countDeleted, "there should be the specified number of initially deleted files");
         }
 
-        public async Task GenerateMeta(bool addPath, string[] sourceDirectories = null, string[] includes = null, bool autoDetection = true)
+        public async Task GenerateMeta(bool addPath, string[] sourceDirectories = null, string[] includes = null, 
+                                       bool autoDetection = true, bool noDatatypesWorksheet = false)
         {
             List<string> arguments = new List<string>(new[] { "generate", "config" });
             if (addPath)
@@ -515,6 +516,11 @@ namespace Test.PlcNext.SystemTests.Tools
             if (!autoDetection)
             {
                 arguments.Add("-n");
+            }
+
+            if(noDatatypesWorksheet)
+            {
+                arguments.Add("-d");
             }
 
             await CommandLineParser.Parse(arguments.ToArray());
@@ -583,7 +589,7 @@ namespace Test.PlcNext.SystemTests.Tools
             await CommandLineParser.Parse("build", "-p", knownProjectName, "-b", buildType);
         }
 
-        public void CheckTypemetaFile(TypemetaStructure[] typemetaStructures)
+        public void CheckTypemetaFile(TypemetaStructure[] typemetaStructures, bool structureIsComplete = false)
         {
             knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
             string path = GetPathOfGeneratedFile($"{knownProjectName}.{Constants.TypemetaExtension}", Constants.MetadataFolderName);
@@ -598,6 +604,12 @@ namespace Test.PlcNext.SystemTests.Tools
                 {
                     typesDefinition?.Items.Should().BeNullOrEmpty($"no structure definition was expected.");
                     return;
+                }
+
+                if (structureIsComplete)
+                {
+                    typesDefinition.Items?.OfType<StructTypeDefinition>().Should().HaveCount(typemetaStructures.OfType<StructTypemetaStructure>().Count());
+                    typesDefinition.Items?.OfType<EnumerationTypeDefinition>().Should().HaveCount(typemetaStructures.OfType<EnumTypemetaStructure>().Count());
                 }
 
                 foreach (StructTypemetaStructure structure in typemetaStructures.OfType<StructTypemetaStructure>())
@@ -954,6 +966,28 @@ namespace Test.PlcNext.SystemTests.Tools
                 //StringBuilder builder = new StringBuilder(reader.ReadToEnd());
                 reader.EndOfStream.Should().BeFalse("content already read");
                 while (!reader.EndOfStream)
+                {
+                    string actualContent = reader.ReadLine();
+                    string expectedContent = resourceReader.EndOfStream ? string.Empty : resourceReader.ReadLine();
+                    actualContent.Should().Be(expectedContent);
+                }
+            }
+        }
+
+        public void CheckDatatypeWorksheet(string compareFile)
+        {
+            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            string libraryName = knownProjectName.Split('.', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+            libraryName.Should().NotBeNullOrEmpty("Library name cannot be determined.");
+            string path = GetPathOfGeneratedFile($"{libraryName}DataTypes.dt", Constants.MetadataFolderName);
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            using(Stream stream = fileSystemAbstraction.Open(path))
+            using(StreamReader reader = new StreamReader(stream))
+            using(Stream resourceStream = assembly.GetManifestResourceStream($"Test.PlcNext.Deployment.TestResults.{compareFile}"))
+            using(StreamReader resourceReader = new StreamReader(resourceStream))
+            {
+                reader.EndOfStream.Should().BeFalse("file should not be empty or already read.");
+                while(!reader.EndOfStream)
                 {
                     string actualContent = reader.ReadLine();
                     string expectedContent = resourceReader.EndOfStream ? string.Empty : resourceReader.ReadLine();
@@ -1497,6 +1531,13 @@ namespace Test.PlcNext.SystemTests.Tools
 
                 }
             }
+        }
+
+        public void CheckNoDatatypeWorksheetGenerated()
+        {
+            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            string path = GetPathOfGeneratedFile($"{knownProjectName}DataTypes.{Constants.DatatypeWorksheetExtension}", 
+                                                 false, Constants.MetadataFolderName);
         }
     }
 }

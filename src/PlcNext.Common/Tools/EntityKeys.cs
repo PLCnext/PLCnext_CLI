@@ -20,8 +20,6 @@ namespace PlcNext.Common.Tools
         public const string TemplateFilesKey = "files";
         public const string HiearchyKey = "hierarchy";
         public const string RelatedKey = "related";
-        public const string BigDataProjectKey = "big-data-project";
-        public const string NormalProjectKey = "normal-project";
 
         //RootContentProvider
         public const string RootKey = "root";
@@ -36,6 +34,10 @@ namespace PlcNext.Common.Tools
         public const string ChunkStartKey = "start";
         public const string ChunkEndKey = "end";
         public const string CountKey = "count";
+        public const string IncrementKey = "increment";
+        public const string DecrementKey = "decrement";
+        public const string NegateKey = "negate";
+        public const string Origin = "origin";
 
         //SettingsContentProvider
         public const string SettingsKey = "settings";
@@ -43,6 +45,7 @@ namespace PlcNext.Common.Tools
         //CodeModelContentProvider
         public const string PortStructsKey = "portstructs";
         public const string PortEnumsKey = "portenums";
+        public const string PortArraysKey = "portarrays";
         public const string FieldsKey = "fields";
         public const string AttributesKey = "attributes";
         public const string BaseTypeKey = "basetype";
@@ -59,6 +62,11 @@ namespace PlcNext.Common.Tools
         public const string ResolvedTypeKey = "__internalresolvedtype__";
         public const string IsFieldKey = "isfield";
         public const string IsTypeKey = "istype";
+        public const string BigDataProjectKey = "big-data-project";
+        public const string NormalProjectKey = "normal-project";
+        public const string IecDataTypeFormatKey = "iecdatatypeformat";
+        public const string IsArray = "isarray";
+        public const string UsedInStruct = "usedinstruct";
 
         //CppContentProvider
         public const string IncludeKey = "include";
@@ -79,6 +87,9 @@ namespace PlcNext.Common.Tools
         public const string InternalBuildSystemDirectoryKey = "__internalbuildsystemdirectory__";
         public const string InternalExternalLibrariesKey = "__internalexternallibraries__";
         public const string InternalInstallationPathsKey = "__internalstagingprefix__";
+
+        //CommandDefinitionContentProvider
+        public const string GenerateDatatypesArgumentName = "no-datatypes-worksheet";
 
         //TargetParser
         public const string TargetFullNameKey = "targetfullname";

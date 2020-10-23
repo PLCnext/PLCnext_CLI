@@ -186,7 +186,7 @@ namespace PlcNext.Common.Templates
                                                                                              "Deploys files for production.")
                                                                                         .EnableUseChildVerbsAsCategory()
                 .AddExample($"deploy --path Path/To/Project", "Deploy files for all targets supported by project")
-                .AddExample($"deploy --path Path/To/Project --files doc/HelpText.txt|doc", "Deploy doc/HelpText.txt to the doc directory in the deploy directory aditonally to the normally deployed files.")
+                .AddExample($"deploy --path Path/To/Project --files doc/HelpText.txt|doc", "Deploy doc/HelpText.txt to the doc directory in the deploy directory additionally to the normally deployed files.")
                 .AddExample($"deploy --path Path/To/Project --target AXCF2152 RFC4072S", "Deploy library for targets AXCF2152 and RFC4072S"),
                                                                 allTemplates.Where(t => !t.isHidden & t.isRoot),
                                                                 shortNames),
@@ -370,6 +370,160 @@ namespace PlcNext.Common.Templates
                     GenerateArgumentFromDefinition(templateEntity, builder, argument, shortNames);
                     return true;
                 }
+            }
+        }
+
+        public IEnumerable<CommandDefinition> CreateGenerateCommandDefinitions(ICollection<CommandDefinition> generateCommands, 
+                                                                               IEnumerable<TemplateDescription> allTemplates)
+        {
+            HashSet<string> generators = new HashSet<string>();
+            Dictionary<string, List<templateGenerateStep>> generatorsDictionary = new Dictionary<string, List<templateGenerateStep>>();
+            foreach (TemplateDescription template in allTemplates)
+            {
+                if (template.isHidden)
+                {
+                    continue;
+                }
+
+                foreach (string generator in (template.GeneratedFile ?? Enumerable.Empty<templateGeneratedFile>())
+                                                      .Select(g => g.generator.ToLowerInvariant()))
+                {
+                    generators.Add(generator);
+                }
+
+                foreach (string generator in generators)
+                {
+                    if (generatorsDictionary.ContainsKey(generator))
+                    {
+                        if (template.GenerateStep != null && template.GenerateStep.Where(step => step.generator == generator).Any())
+                        {
+                            if (generatorsDictionary[generator] == null)
+                                generatorsDictionary[generator] = new List<templateGenerateStep>(template.GenerateStep.Where(step => step.generator == generator));
+                            else
+                                generatorsDictionary[generator].AddRange(template.GenerateStep.Where(step => step.generator == generator));
+                        }
+                    }
+                    else
+                    {
+                        generatorsDictionary.Add(generator, template.GenerateStep != null
+                                         ? new List<templateGenerateStep>(template.GenerateStep.Where(step => step.generator == generator))
+                                         : null);
+                    }
+                }
+            }
+
+            generateCommands.Clear();
+            foreach (string generator in generatorsDictionary.Keys)
+            {
+                generateCommands.Add(AddArguments(CommandDefinitionBuilder.Create()
+                                                                          .SetName(generator)
+                                                                          .SetHelp($"Generates all files with the '{generator}' generator.")
+                                                                          .AddExample($"generate {generator} --{EntityKeys.PathKey} Path/To/Project",
+                                                                                      $"generate all {generator} files in default location."),
+                                                  generator,
+                                                  generatorsDictionary[generator]));
+            }
+
+            generateCommands.Add(AddArguments(CommandDefinitionBuilder.Create()
+                                                                      .SetName("all")
+                                                                      .SetHelp($"Generates all files.")
+                                                                      .AddExample($"generate all --{EntityKeys.PathKey} Path/To/Project",
+                                                                                  $"generate all files in default location."),
+                                                                      "all",
+                                                                      allTemplates.Where(t => !t.isHidden && t.GenerateStep != null)
+                                                                                  .SelectMany(t => t.GenerateStep)
+                                                                                  .Where(t => t !=null)
+                                                                      ));
+
+            return generateCommands;
+
+            CommandDefinition AddArguments(CommandDefinitionBuilder definitionBuilder, 
+                                           string generatorName, 
+                                           IEnumerable<templateGenerateStep> generateSteps = null)
+            {
+                definitionBuilder = definitionBuilder.CreateArgument()
+                                        .SetName(EntityKeys.PathKey)
+                                        .SetShortName('p')
+                                        .SetHelp(
+                                             "The path to the project settings file or the project root directory. " +
+                                             "Default is the current directory.")
+                                        .SetArgumentType(ArgumentType.SingleValue)
+                                        .Build()
+                                        .CreateArgument()
+                                        .SetName(EntityKeys.SourceDirectoryKey)
+                                        .SetShortName('s')
+                                        .SetHelp(
+                                             "The path of the source directories separated by ','. Default is the 'src' directory " +
+                                             "if such a directory exists. If not, the directory " +
+                                             "defined with the '--path' option is used. Relative paths are relative " +
+                                             "to the directory defined with the '--path' option. If any path contains a ' ' quotation " +
+                                             "marks should be used around all paths, e.g. \"path1,path With Space,path2\".")
+                                        .SetArgumentType(ArgumentType.MultipleValue)
+                                        .Build()
+                                        .CreateArgument()
+                                        .SetName(EntityKeys.IncludeDirectoryKey)
+                                        .SetShortName('i')
+                                        .SetHelp(
+                                             "Overrides the includes used to find header files. Usually CMake is used to determine " +
+                                             "the include paths. If that is not possible or wanted the value of this argument is " +
+                                             "used instead of the CMake determined include paths. Relative paths are relative " +
+                                             "to the directory defined with the '--path' option. If any path contains a ' ' quotation " +
+                                             "marks should be used around all paths, e.g. \"path1,path With Space,path2\". Additionally " +
+                                             "to these paths the include paths determined by the SDK will always be considered and " +
+                                             "do not need to be specified additionally.")
+                                        .SetArgumentType(ArgumentType.MultipleValue)
+                                        .Build()
+                                        .CreateArgument()
+                                        .SetName(Constants.NoIncludePathDetection)
+                                        .SetShortName('n')
+                                        .SetHelp("Disables the automatic include path detection using CMake. This option is not necessary if the " +
+                                                 $"'-{EntityKeys.IncludeDirectoryKey}' option is used, as that option will automatically disable " +
+                                                 "the CMake detection. The system paths defined by the SDK are still used.")
+                                        .SetArgumentType(ArgumentType.Bool)
+                                        .Build()
+                                        .CreateArgument()
+                                        .SetName(Constants.OutputArgumentName)
+                                        .SetShortName('o')
+                                        .SetHelp("The path where the files will be generated in. " +
+                                                 "Default is the 'intermediate' directory. Relative paths are relative " +
+                                                 "to the directory defined with the '--path' option.")
+                                        .SetArgumentType(ArgumentType.SingleValue)
+                                        .Build();
+
+                if (generateSteps != null)
+                {
+                    foreach (templateArgumentDefinition argument in generateSteps.Where(step => step.Arguments != null)
+                                                                                .SelectMany(step => step.Arguments))
+                    {
+                        ArgumentBuilder argumentBuilder = definitionBuilder.CreateArgument()
+                                                                .SetName(argument.name);
+                        if (argument.shortnameSpecified)
+                        {
+                            argumentBuilder = argumentBuilder.SetShortName(argument.shortname[0]);
+                        }
+                        if (argument.helpSpecified)
+                        {
+                            argumentBuilder = argumentBuilder.SetHelp(argument.help);
+                        }
+
+                        ArgumentType argumentType = argument.hasvalueSpecified && argument.hasvalue
+                                                    ? argument.multiplicitySpecified && argument.multiplicity == multiplicity.OneOrMore
+                                                        ? ArgumentType.MultipleValue
+                                                        : ArgumentType.SingleValue
+                                                    : ArgumentType.Bool;
+                        argumentBuilder = argumentBuilder.SetArgumentType(argumentType);
+                        definitionBuilder = argumentBuilder.Build();
+                    }
+
+                    foreach (templateExample example in generateSteps.Where(step => step.Example != null)
+                                                                     .SelectMany(step => step.Example))
+                    {
+                        StringBuilder exampleBuilder = new StringBuilder($"generate {generatorName.ToLowerInvariant()}");
+                        ParseExample(null, example, exampleBuilder, false);
+                        definitionBuilder.AddExample(exampleBuilder.ToString(), example.Description ?? string.Empty);
+                    }
+                }
+                return definitionBuilder.Build();
             }
         }
 

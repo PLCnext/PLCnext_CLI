@@ -1,0 +1,10 @@
+TYPE
+    EnumStruct : STRUCT
+        EnumValue : OtherEnum;
+    END_STRUCT
+
+    OhMy : (Hoho := 0, Haha := 1, Hihi := 12) OF DINT;
+
+    OtherEnum : (What := 0, That := 1, Not := 12) OF DINT;
+
+END_TYPE

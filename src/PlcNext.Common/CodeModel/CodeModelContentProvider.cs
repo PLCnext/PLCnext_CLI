@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -33,6 +34,7 @@ namespace PlcNext.Common.CodeModel
         private readonly IDatatypeConversion datatypeConversion;
 
         private static readonly Regex UnkownDataTypeRegex = new Regex(@"^unkown\((?<dataType>.*)\)$", RegexOptions.Compiled);
+        private static readonly Regex UnknownDataTypeRegex = new Regex(@"^unknown\((?<dataType>.*)\)$", RegexOptions.Compiled);
 
         public CodeModelContentProvider(ITemplateRepository templateRepository, ITemplateResolver resolver, IDatatypeConversion datatypeConversion)
         {
@@ -48,20 +50,24 @@ namespace PlcNext.Common.CodeModel
             return owner.HasValue<ICodeModel>() &&
                    (key == EntityKeys.NamespaceKey ||
                     key == EntityKeys.PortStructsKey ||
-                    key == EntityKeys.PortEnumsKey) ||
+                    key == EntityKeys.PortEnumsKey ||
+                    key == EntityKeys.PortArraysKey) ||
                    owner.HasValue<IType>() && CanResolveType() ||
                    owner.HasValue<IField>() && CanResolveField() ||
                    owner.HasValue<IDataType>() && CanResolveDataType() ||
                    owner.HasValue<ISymbol>() && CanResolveSymbol() ||
                    key == EntityKeys.FieldArpDataTypeKey && owner.Type == EntityKeys.FormatKey ||
                    key == EntityKeys.TypeMetaDataFormatKey && owner.Type == EntityKeys.FormatKey ||
+                   key == EntityKeys.IecDataTypeFormatKey && owner.Type == EntityKeys.FormatKey ||
                    key == EntityKeys.ExpandHiddenTypesFormatKey && owner.All(e => e.HasValue<IField>()) ||
                    key == EntityKeys.FilterHiddenTypesFormatKey && owner.All(e => e.HasValue<IType>()) ||
                    key == EntityKeys.IsFieldKey ||
                    key == EntityKeys.IsTypeKey ||
                    key == EntityKeys.BaseDirectoryKey && HasBaseDirectory(owner, out _) ||
                    key == EntityKeys.BigDataProjectKey ||
-                   key == EntityKeys.NormalProjectKey;
+                   key == EntityKeys.NormalProjectKey ||
+                   (key == EntityKeys.IsArray && owner.HasValue<IField>()) ||
+                   key == EntityKeys.UsedInStruct;
 
             bool CanResolveSymbol()
             {
@@ -160,6 +166,10 @@ namespace PlcNext.Common.CodeModel
             {
                 return ResolveTypeMetaDataFormat();
             }
+            if(key == EntityKeys.IecDataTypeFormatKey && owner.Type == EntityKeys.FormatKey)
+            {
+                return ResolveIECDataType();
+            }
             if (key == EntityKeys.ExpandHiddenTypesFormatKey)
             {
                 return ExpandHiddenTypes();
@@ -183,6 +193,20 @@ namespace PlcNext.Common.CodeModel
             if (key == EntityKeys.NormalProjectKey)
             {
                 return GetNormalProjectEntity();
+            }
+            if (key == EntityKeys.IsArray)
+            {
+                if (owner.Value<IField>().Multiplicity.Any())
+                    return owner.Create(key, true.ToString(CultureInfo.InvariantCulture), true);
+                return owner.Create(key, false.ToString(CultureInfo.InvariantCulture), false);
+            }
+            if(key == EntityKeys.UsedInStruct)
+            {
+                bool result = GetPortStructures(owner.Root).SelectMany(p => p.Fields)
+                                   .Where(t => t.AsField != null &&
+                                               t.AsField.Multiplicity.Count > 0)
+                                   .Where(t => t.Name == owner.Name).Any();
+                return owner.Create(key, result.ToString(CultureInfo.InvariantCulture), result);
             }
 
 
@@ -233,26 +257,37 @@ namespace PlcNext.Common.CodeModel
                 return GetAllPorts().Concat(GetPortStructures().SelectMany(p => p.Fields))
                                     .Select(f => f.ResolvedType)
                                     .Where(t => t.AsEnum != null)
+                                    .Distinct(new FullNameCodeEntityComparer());
+            }
+
+            IEnumerable<CodeEntity> GetPortArrays()
+            {
+                return GetAllPorts().Concat(GetPortStructures().SelectMany(p => p.Fields))
+                                    .Where(t => t.AsField != null &&
+                                                t.AsField.Multiplicity.Count > 0)
                                     .Distinct();
             }
 
-            IEnumerable<CodeEntity> GetAllPorts()
+            IEnumerable<CodeEntity> GetAllPorts(Entity baseEntity = null)
             {
+                if (baseEntity == null)
+                    baseEntity = owner;
+
                 bool IsPort(CodeEntity fieldEntity)
                 {
                     return fieldEntity.AsField != null &&
                            fieldEntity.AsField.HasAttributeWithoutValue(EntityKeys.PortAttributeKey);
                 }
 
-                return TemplateEntity.Decorate(owner).EntityHierarchy
+                return TemplateEntity.Decorate(baseEntity).EntityHierarchy
                               .Select(CodeEntity.Decorate)
                               .SelectMany(c => c.Fields)
                               .Where(IsPort);
             }
 
-            IEnumerable<CodeEntity> GetPortStructures()
+            IEnumerable<CodeEntity> GetPortStructures(Entity baseEntity = null)
             {
-                HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetAllPorts()
+                HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetAllPorts(baseEntity)
                                                               .Select(f => f.ResolvedType)
                                                               .Where(t => t.AsType != null && 
                                                                           t.AsEnum == null),
@@ -620,6 +655,10 @@ namespace PlcNext.Common.CodeModel
                     {
                         return owner.Create(key, GetPortEnums().Select(c => c.Base));
                     }
+                    case EntityKeys.PortArraysKey:
+                    {
+                            return owner.Create(key, GetPortArrays().Select(c => c.Base));
+                    }
                     case EntityKeys.NamespaceKey:
                     {
                         bool prior206Target = CheckProjectTargets();
@@ -753,6 +792,53 @@ namespace PlcNext.Common.CodeModel
                 }
 
                 return (true, result);
+            }
+
+            (bool success, string value) FormatIecDataType(string unformattedValue)
+            {
+                (bool success, string value) = FormatDataType(unformattedValue);
+                if (!success)
+                {
+                    return (success, value);
+                }
+
+                string result = owner.Create("temporaryIecFormatContainer", value).Format()["iecDataType"].Value<string>();
+                Match unknownMatch = UnknownDataTypeRegex.Match(result);
+
+                if (unknownMatch.Success)
+                {
+                    return (false, unknownMatch.Groups["dataType"].Value);
+                }
+
+                return (true, result);
+            }
+
+
+            Entity ResolveIECDataType()
+            {
+                IEntityBase dataSource = ownerTemplateEntity.FormatOrigin;
+                IDataType dataSourceDataType = dataSource.HasValue<IDataType>()
+                                                   ? dataSource.Value<IDataType>()
+                                                   : dataSource.Value<IField>().DataType;
+
+                (bool success, string dataTypeName) = FormatIecDataType(dataSourceDataType.Name);
+
+                if(!success)
+                { 
+                    ICodeModel rootCodeModel = dataSource.Root.Value<ICodeModel>();
+                    IType knownType = dataSourceDataType.PotentialFullNames
+                                      .Select(n => rootCodeModel.Type(n))
+                                      .FirstOrDefault(t => t != null);
+                    if(knownType == null)
+                    {
+                        throw new UnknownIecDataTypeException(dataTypeName);
+                    }
+                }
+                dataTypeName = dataTypeName.Contains("::")
+                    ? dataTypeName.Substring(dataTypeName.LastIndexOf("::", StringComparison.InvariantCulture) + "::".Length)
+                    : dataTypeName;
+
+                return owner.Create(key, dataTypeName);   
             }
 
             (IDataType, string) GetEnumBaseType(IEnum @enum)

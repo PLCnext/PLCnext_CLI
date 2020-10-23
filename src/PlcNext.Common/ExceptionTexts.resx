@@ -367,4 +367,7 @@
   <data name="TemplateIncompatible" xml:space="preserve">
     <value>The template '{0}' is incompatible with the project type '{1}'.</value>
   </data>
+  <data name="UnknownIecDataType" xml:space="preserve">
+    <value>The data type '{0}' cannot be converted to IEC61131. For ports and port structures only known data types can be used.</value>
+  </data>
 </root>

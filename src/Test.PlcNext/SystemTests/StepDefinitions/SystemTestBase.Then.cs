@@ -156,6 +156,12 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckTypemetaFile(typemetaStructures);
         }
 
+        protected void Then_the_typemeta_file_contains_only_the_following_structure(
+            params TypemetaStructure[] typemetaStructures)
+        {
+            ScenarioContext.CheckTypemetaFile(typemetaStructures, true);
+        }
+
         protected void Then_the_typemeta_file_is_empty()
         {
             ScenarioContext.CheckTypemetaFile(null);
@@ -535,6 +541,16 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_user_was_informed_that_the_library_generation_failed()
         {
             ScenarioContext.CheckUserInformedOfError("Deploying library failed!", "message of failing deploy expected");
+		}
+
+        protected void Then_the_datatype_worksheet_looks_like_NAME(string name)
+        {
+            ScenarioContext.CheckDatatypeWorksheet(name);
+        }
+
+        protected void Then_the_datatypes_worksheet_was_not_generated()
+        {
+            ScenarioContext.CheckNoDatatypeWorksheetGenerated();
         }
     }
 }

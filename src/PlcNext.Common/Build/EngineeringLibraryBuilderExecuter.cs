@@ -328,6 +328,10 @@ namespace PlcNext.Common.Build
                             destinationPath = $"{metaFile.Parent.Parent.Name}/{metaFile.Parent.Name}";
                             fileType = Constants.ProgmetaFileType;
                             break;
+                        case ".DT":
+                            destinationPath = string.Empty;
+                            fileType = Constants.DataTypeWorksheetType;
+                            break;
                         default:
                             //do nothing all other files are not interesting
                             continue;

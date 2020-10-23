@@ -30,7 +30,8 @@
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="Example" type="templateExample"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="DeployPostStep" type="templateDeployPostStep"/>
-      </xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="GenerateStep" type="templateGenerateStep"/>
+	  </xs:sequence>
       <xs:attribute name="name" type="templateName" use="required">
         <xs:annotation>
           <xs:documentation>
@@ -142,6 +143,25 @@
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
+
+	<xs:complexType name="templateGenerateStep">
+		<xs:annotation>
+			<xs:documentation>
+				Definition of a generate step which may add additional arguments to a generator.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="0" name="Arguments" type="templateArgumentDefinitions"/>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="Example" type="templateExample"/>
+		</xs:sequence>
+		<xs:attribute name="generator" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					The generator to which the arguments are added.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
 
   <xs:complexType name="templateRelationshipBase">
     <xs:annotation>
@@ -322,7 +342,7 @@
         <xs:attribute name="has-value" type="xs:boolean" use="optional" default="false">
           <xs:annotation>
             <xs:documentation>
-              The attribute shows whether the atrribute has a value or not.
+              The attribute shows whether the attribute has a value or not.
               Default is false.
             </xs:documentation>
           </xs:annotation>

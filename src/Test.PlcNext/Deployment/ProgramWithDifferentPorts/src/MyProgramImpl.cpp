@@ -2,7 +2,7 @@
 #include "Arp/System/Commons/Logging.h"
 #include "Arp/System/Core/ByteConverter.hpp"
 
-namespace ProgramWithOneStructPort { namespace MyComponent {
+namespace ProgramWithDifferentPorts { namespace MyComponent {
 
 MyProgram::MyProgram(const String& name) : ProgramBase(name)
 {
@@ -14,4 +14,4 @@ void MyProgram::Execute()
    //implement program 
 }
 
-}} // end of namespace MyLibrary::MyComponent
+}} // end of namespace ProgramWithDifferentPorts::MyComponent
