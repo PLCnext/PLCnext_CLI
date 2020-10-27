@@ -108,7 +108,7 @@ namespace PlcNext.Common.Tools.SDK
             foreach (string sdkPath in e.SplitValue)
             {
                 string path = Path.GetFullPath(sdkPath.CleanPath());
-                sdkRepository.Update(path).ConfigureAwait(false).GetAwaiter().GetResult();
+                sdkRepository.Update(path, true).ConfigureAwait(false).GetAwaiter().GetResult();
                 addedPaths.Add(path);
             }
 
