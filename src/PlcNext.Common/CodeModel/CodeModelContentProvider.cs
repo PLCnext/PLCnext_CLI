@@ -65,9 +65,7 @@ namespace PlcNext.Common.CodeModel
                    key == EntityKeys.IsTypeKey ||
                    key == EntityKeys.BaseDirectoryKey && HasBaseDirectory(owner, out _) ||
                    key == EntityKeys.BigDataProjectKey ||
-                   key == EntityKeys.NormalProjectKey ||
-                   (key == EntityKeys.IsArray && owner.HasValue<IField>()) ||
-                   key == EntityKeys.UsedInStruct;
+                   key == EntityKeys.NormalProjectKey ;
 
             bool CanResolveSymbol()
             {
@@ -89,6 +87,7 @@ namespace PlcNext.Common.CodeModel
                        key == EntityKeys.DataTypeKey ||
                        key == EntityKeys.MultiplicityKey ||
                        key == EntityKeys.ResolvedTypeKey ||
+                       key == EntityKeys.IsArray ||
                        metaDataTemplate != null;
             }
 
@@ -194,21 +193,6 @@ namespace PlcNext.Common.CodeModel
             {
                 return GetNormalProjectEntity();
             }
-            if (key == EntityKeys.IsArray)
-            {
-                if (owner.Value<IField>().Multiplicity.Any())
-                    return owner.Create(key, true.ToString(CultureInfo.InvariantCulture), true);
-                return owner.Create(key, false.ToString(CultureInfo.InvariantCulture), false);
-            }
-            if(key == EntityKeys.UsedInStruct)
-            {
-                bool result = GetPortStructures(owner.Root).SelectMany(p => p.Fields)
-                                   .Where(t => t.AsField != null &&
-                                               t.AsField.Multiplicity.Count > 0)
-                                   .Where(t => t.Name == owner.Name).Any();
-                return owner.Create(key, result.ToString(CultureInfo.InvariantCulture), result);
-            }
-
 
             ISymbol symbol = owner.Value<ISymbol>();
             if (symbol != null)
@@ -268,26 +252,23 @@ namespace PlcNext.Common.CodeModel
                                     .Distinct();
             }
 
-            IEnumerable<CodeEntity> GetAllPorts(Entity baseEntity = null)
+            IEnumerable<CodeEntity> GetAllPorts()
             {
-                if (baseEntity == null)
-                    baseEntity = owner;
-
                 bool IsPort(CodeEntity fieldEntity)
                 {
                     return fieldEntity.AsField != null &&
                            fieldEntity.AsField.HasAttributeWithoutValue(EntityKeys.PortAttributeKey);
                 }
 
-                return TemplateEntity.Decorate(baseEntity).EntityHierarchy
+                return TemplateEntity.Decorate(owner).EntityHierarchy
                               .Select(CodeEntity.Decorate)
                               .SelectMany(c => c.Fields)
                               .Where(IsPort);
             }
 
-            IEnumerable<CodeEntity> GetPortStructures(Entity baseEntity = null)
+            IEnumerable<CodeEntity> GetPortStructures()
             {
-                HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetAllPorts(baseEntity)
+                HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetAllPorts()
                                                               .Select(f => f.ResolvedType)
                                                               .Where(t => t.AsType != null && 
                                                                           t.AsEnum == null),
@@ -572,6 +553,10 @@ namespace PlcNext.Common.CodeModel
                     {
                         return owner.Create(key, field.Multiplicity.Select(m => owner.Create(key, new Func<string>(m.ToString), m)));
                     }
+                    case EntityKeys.IsArray:
+                        if (field.Multiplicity.Any())
+                            return owner.Create(key, true.ToString(CultureInfo.InvariantCulture), true);
+                        return owner.Create(key, false.ToString(CultureInfo.InvariantCulture), false);
                     default:
                     {
                         metaDataTemplate metaDataTemplate = templateRepository.FieldTemplates
@@ -796,6 +781,11 @@ namespace PlcNext.Common.CodeModel
 
             (bool success, string value) FormatIecDataType(string unformattedValue)
             {
+                if(unformattedValue.StartsWith("StaticString<", StringComparison.InvariantCulture)
+                    && !unformattedValue.Contains("<80>"))
+                {
+                    throw new UnknownIecDataTypeException(unformattedValue);
+                }
                 (bool success, string value) = FormatDataType(unformattedValue);
                 if (!success)
                 {

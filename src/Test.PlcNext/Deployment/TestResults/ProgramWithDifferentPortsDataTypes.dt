@@ -6,9 +6,9 @@ TYPE
         value4 : value4Array;
     END_STRUCT
 
-    examplePort2 : ARRAY [0..0] OF Example;
+    examplePort2Array : ARRAY [0..0] OF Example;
 
-    examplePort3 : ARRAY [0..4] OF Example;
+    examplePort3Array : ARRAY [0..4] OF Example;
 
     value3Array : ARRAY [0..5] OF LINT;
 

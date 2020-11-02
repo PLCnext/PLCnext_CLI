@@ -37,7 +37,7 @@ namespace PlcNext.Common.Tools
         public const string IncrementKey = "increment";
         public const string DecrementKey = "decrement";
         public const string NegateKey = "negate";
-        public const string Origin = "origin";
+        public const string OriginKey = "origin";
 
         //SettingsContentProvider
         public const string SettingsKey = "settings";
@@ -66,7 +66,7 @@ namespace PlcNext.Common.Tools
         public const string NormalProjectKey = "normal-project";
         public const string IecDataTypeFormatKey = "iecdatatypeformat";
         public const string IsArray = "isarray";
-        public const string UsedInStruct = "usedinstruct";
+        public const string ThrowIfMultidimensionalKey = "throwifmultidimensional";
 
         //CppContentProvider
         public const string IncludeKey = "include";

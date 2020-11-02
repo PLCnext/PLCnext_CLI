@@ -367,6 +367,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A datatypes worksheet cannot be generated because a multidimensional array was used. Use array of arrays instead or disable generation of datatypes worksheet..
+        /// </summary>
+        internal static string MultidimensionalArrayNotSupported {
+            get {
+                return ResourceManager.GetString("MultidimensionalArrayNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following possible namespaces were found for the project. Only one namespace is allowed.{0}.
         /// </summary>
         internal static string MultipleRootNamespaces {

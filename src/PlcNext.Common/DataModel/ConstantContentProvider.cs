@@ -36,7 +36,8 @@ namespace PlcNext.Common.DataModel
             EntityKeys.IncrementKey,
             EntityKeys.DecrementKey,
             EntityKeys.NegateKey,
-            EntityKeys.Origin
+            EntityKeys.OriginKey,
+            EntityKeys.ThrowIfMultidimensionalKey
         };
 
         public ConstantContentProvider(IFileSystem fileSystem)
@@ -129,8 +130,12 @@ namespace PlcNext.Common.DataModel
                         return owner.Create(key, (!value).ToString(CultureInfo.InvariantCulture), !value);
                     }
                     throw new ContentProviderException(key, owner);
-                case EntityKeys.Origin:
+                case EntityKeys.OriginKey:
                     return owner.Origin;
+                case EntityKeys.ThrowIfMultidimensionalKey:
+                    if (owner.Value<string>()?.Contains(",") == true)
+                        throw new MultidimensionalArrayNotSupportedException();
+                    return owner;
                 default:
                     throw new ContentProviderException(key, owner);
 

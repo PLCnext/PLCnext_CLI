@@ -268,7 +268,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithArrayInitializedPort"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithArrayInitializedPort"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_all_files_except_datatypes_worksheet_from_inside_the_project_folder(),
                 _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("MyProgram",
                                                                                                new[] { "MyComponent", "MyProgram" },
                                                                                                new[]
@@ -451,7 +451,7 @@ namespace Test.PlcNext.SystemTests.Features
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("Arp.Plc.Esm"),
-                _ => When_I_generate_all_metafiles(),
+                _ => When_I_generate_all_metafiles_with_no_datatypes_worksheet(),
                 _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("TaskInfo",
                                                                                                    new[]
                                                                                                    {

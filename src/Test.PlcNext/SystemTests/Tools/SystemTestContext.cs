@@ -520,7 +520,7 @@ namespace Test.PlcNext.SystemTests.Tools
 
             if(noDatatypesWorksheet)
             {
-                arguments.Add("-d");
+                arguments.Add("--no-datatypes-worksheet");
             }
 
             await CommandLineParser.Parse(arguments.ToArray());

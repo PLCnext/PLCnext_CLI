@@ -215,9 +215,14 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.StartProcessThrowsError();
         }
 
-	    protected async Task When_I_generate_all_files_from_inside_the_project_folder()
+	    protected async Task When_I_generate_all_files_except_datatypes_worksheet_from_inside_the_project_folder()
 	    {
-	        await ScenarioContext.GenerateMeta(false);
+	        await ScenarioContext.GenerateMeta(false, noDatatypesWorksheet: true);
+        }
+
+        protected async Task When_I_generate_all_files_from_inside_the_project_folder()
+        {
+            await ScenarioContext.GenerateMeta(false);
         }
 
         protected async Task When_I_build_the_project()
