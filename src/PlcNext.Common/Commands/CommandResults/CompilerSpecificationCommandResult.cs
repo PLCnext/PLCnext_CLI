@@ -26,7 +26,8 @@ namespace PlcNext.Common.Commands.CommandResults
 
     public class CompilerSpecificationResult
     {
-        public CompilerSpecificationResult(string compilerPath, string language, string compilerSystemRoot, string compilerFlags, IEnumerable<Path> includePaths, IEnumerable<CompilerMacroResult> compilerMacros)
+        public CompilerSpecificationResult(string compilerPath, string language, string compilerSystemRoot, string compilerFlags,
+                                           IEnumerable<Path> includePaths, IEnumerable<CompilerMacroResult> compilerMacros, IEnumerable<TargetResult> targets)
         {
             CompilerPath = compilerPath;
             Language = language;
@@ -34,6 +35,7 @@ namespace PlcNext.Common.Commands.CommandResults
             CompilerFlags = compilerFlags;
             IncludePaths = includePaths;
             CompilerMacros = compilerMacros;
+            Targets = targets;
         }
 
         [JsonProperty(PropertyName = "compilerPath")]
@@ -53,6 +55,9 @@ namespace PlcNext.Common.Commands.CommandResults
         
         [JsonProperty(PropertyName = "compilerMacros")]
         public IEnumerable<CompilerMacroResult> CompilerMacros { get; }
+
+        [JsonProperty(PropertyName ="targets")]
+        public IEnumerable<TargetResult> Targets { get; }
     }
 
     public class CompilerMacroResult

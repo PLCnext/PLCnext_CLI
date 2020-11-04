@@ -9,6 +9,7 @@
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Collections.Generic;
 
 namespace PlcNext.Common.Commands.CommandResults
 {
@@ -32,5 +33,16 @@ namespace PlcNext.Common.Commands.CommandResults
 
         [JsonProperty(PropertyName = "exists")]
         public bool Exists { get; }
+    }
+
+    public class IncludePath : UncheckedPath
+    {
+        public IncludePath(string pathValue, bool exists, IEnumerable<TargetResult> targets) : base(pathValue, exists)
+        {
+            Targets = targets;
+        }
+
+        [JsonProperty(PropertyName = "targets")]
+        public IEnumerable<TargetResult> Targets { get; }
     }
 }

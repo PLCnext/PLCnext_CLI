@@ -9,13 +9,14 @@
 
 using System.Collections.Generic;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.SDK;
 
 namespace PlcNext.Common.CodeModel
 {
     public interface IParser
     {
         ICodeModel Parse(ICollection<VirtualDirectory> sourceDirectories,
-                         IDictionary<string, VirtualDirectory> includeDirectories,
+                         IEnumerable<IncludePath> includeDirectories,
                          out IEnumerable<CodeSpecificException> loggableExceptions);
     }
 }

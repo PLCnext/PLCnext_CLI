@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Text;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.SDK;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
 {
@@ -22,14 +23,14 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
 
     internal class IncludeManagerParameter
     {
-        public IncludeManagerParameter(IDictionary<string, VirtualDirectory> includeDirectories, IEnumerable<string> knownIncludes, IEnumerable<IncludeDefinition> includeDefinitions)
+        public IncludeManagerParameter(IEnumerable<IncludePath> includeDirectories, IEnumerable<string> knownIncludes, IEnumerable<IncludeDefinition> includeDefinitions)
         {
             IncludeDirectories = includeDirectories;
             KnownIncludes = knownIncludes;
             IncludeDefinitions = includeDefinitions;
         }
 
-        public IDictionary<string, VirtualDirectory> IncludeDirectories { get; }
+        public IEnumerable<IncludePath> IncludeDirectories { get; }
         public IEnumerable<string> KnownIncludes { get; }
         public IEnumerable<IncludeDefinition> IncludeDefinitions { get; }
     }

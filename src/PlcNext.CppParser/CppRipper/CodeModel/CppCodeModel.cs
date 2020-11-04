@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Text;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.SDK;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
@@ -48,7 +49,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                    .Concat(structures.Values.Select(t => ((IType) t.Item1, t.Item2)))
                    .ToDictionary(t => t.Item1, t => t.Item2);
 
-        public IDictionary<string, VirtualDirectory> IncludeDirectories { get; internal set; }
+        public IEnumerable<IncludePath> IncludeDirectories { get; internal set; }
 
         public  IEnumerable<VirtualDirectory> SourceDirectories { get; internal set; }
 

@@ -14,6 +14,7 @@ using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace PlcNext.Common.Project
 
         Dictionary<CodeEntity, IEnumerable<Entity>> ProjectCodeEntities { get; }
 
-        IDictionary<string, bool> IncludePaths { get; }
+        List<IncludePath> IncludePaths { get; }
 
         void Initialize(Entity root);
 
@@ -76,8 +77,8 @@ namespace PlcNext.Common.Project
             void SetProjectNamespace()
             {
                 ProjectNamespace = CodeEntity.Decorate(project).Namespace;
-            }     
-            
+            }
+
             void SetProjectType()
             {
                 ProjectType = project.Type;
@@ -110,24 +111,54 @@ namespace PlcNext.Common.Project
                     .Where(e => !e.Item1.Type.Contains("project")).ToDictionary(p => p.Item1, p => p.Item2);
 
             }
-            
+
             void SetProjectIncludes()
             {
+                IncludePaths = new List<IncludePath>();
                 IEnumerable<SdkInformation> relevantSdks = ProjectTargets.Select(t => availableTargets.FirstOrDefault(at => t.Target.Name == at.Name && at.LongVersion == t.Target.LongVersion))
                                              .Where(t => t != null)
                                              .Select(sdkRepository.GetSdk)
                                              .Where(sdk => sdk != null)
                                              .Distinct();
-                IncludePaths = relevantSdks.SelectMany(sdk => sdk.IncludePaths)
-                                           .Concat(relevantSdks.SelectMany(sdk => sdk.CompilerInformation.IncludePaths))
-                                           .Distinct()
-                                           .ToDictionary(x => x, x => true);
-                
-                    foreach (KeyValuePair<string, VirtualDirectory> codeModelIncludeDirectory in codeModel.IncludeDirectories)
+                var targetsWithIncludePaths = relevantSdks.Select(sdk => (sdk.Targets, sdk.IncludePaths.Concat(sdk.CompilerInformation.IncludePaths).Distinct()));
+
+                foreach (var item in targetsWithIncludePaths)
+                {
+                    foreach (Target target in item.Targets)
                     {
-                        if(!IncludePaths.ContainsKey(codeModelIncludeDirectory.Key))
-                            IncludePaths.Add(codeModelIncludeDirectory.Key, codeModelIncludeDirectory.Value!=null);
+                        foreach (string includePath in item.Item2)
+                        {
+                            IncludePath existingIncludePath = IncludePaths.Where(i => i.PathValue.Equals(includePath, StringComparison.InvariantCulture)).FirstOrDefault();
+
+                            if (existingIncludePath == null)
+                            {
+                                existingIncludePath = new IncludePath(includePath, true, new List<Target>());
+                                IncludePaths.Add(existingIncludePath);
+                            }
+                            existingIncludePath.Targets = existingIncludePath.Targets.Concat(new[] { target });
+                        }
                     }
+                }
+                
+                foreach (IncludePath codeModelIncludeDirectory in codeModel.IncludeDirectories)
+                {
+                    IncludePath existingIncludePath = IncludePaths.Where(p => p.PathValue.Equals(codeModelIncludeDirectory.PathValue, StringComparison.InvariantCulture)).FirstOrDefault();
+
+                    if (existingIncludePath == null)
+                    {
+                        IncludePaths.Add(codeModelIncludeDirectory);
+                    }
+                    else
+                    {
+                        foreach (Target target in codeModelIncludeDirectory.Targets)
+                        {
+                            if (!existingIncludePath.Targets.Contains(target))
+                            {
+                                existingIncludePath.Targets = existingIncludePath.Targets.Concat(new[] { target });
+                            }
+                        }
+                    }  
+                }
             }
         }
 
@@ -141,7 +172,7 @@ namespace PlcNext.Common.Project
 
         public Dictionary<CodeEntity, IEnumerable<Entity>> ProjectCodeEntities { get; private set; }
 
-        public IDictionary<string, bool> IncludePaths { get; private set; }
+        public List<IncludePath> IncludePaths { get; private set; }
 
         public IEnumerable<Exception> Exceptions { get; private set; }
     }

@@ -60,7 +60,16 @@ namespace PlcNext.Common.Commands
                                                                                                                           kvp.Key.Namespace,
                                                                                                                           kvp.Key.Type,
                                                                                                                           kvp.Value.Select(en => en.Name))),
-                                                    propertiesProvider.IncludePaths.Select(p => new CommandResults.UncheckedPath(p.Key, p.Value))
+                                                    propertiesProvider.IncludePaths.Select(p => new CommandResults.IncludePath(p.PathValue, 
+                                                                                                                               (p.Exists!= null ? (bool)p.Exists : false), 
+                                                                                                                               p.Targets
+                                                                                                                                .Select(t => new TargetResult(t.Name, 
+                                                                                                                                                              t.Version, 
+                                                                                                                                                              t.LongVersion, 
+                                                                                                                                                              t.ShortVersion)
+                                                                                                                                        )
+                                                                                                                                )
+                                                                                           )
                                                     ),
                 propertiesProvider.Exceptions);
         }

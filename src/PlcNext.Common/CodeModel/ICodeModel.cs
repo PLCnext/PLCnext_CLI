@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.SDK;
 
 namespace PlcNext.Common.CodeModel
 {
@@ -23,7 +24,7 @@ namespace PlcNext.Common.CodeModel
         IEnum GetEnum(string enumName);
         IType Type(string typeName);
         VirtualDirectory GetBaseDirectory(IType type);
-        IDictionary<string, VirtualDirectory> IncludeDirectories { get; }
+        IEnumerable<IncludePath> IncludeDirectories { get; }
         IEnumerable<VirtualDirectory> SourceDirectories { get; }
     }
 }

@@ -183,11 +183,11 @@ namespace PlcNext.Common.Project
                         throw;
                     }
 
-                    IDictionary<string, VirtualDirectory> GetIncludeDirectories(VirtualDirectory baseDirectory)
+                    IEnumerable<IncludePath> GetIncludeDirectories(VirtualDirectory baseDirectory)
                     {
-                        IEnumerable<string> includes = HasIncludeDirectoriesCommandArgument(owner)
-                                                           ? GetIncludeDirectoriesCommandArgument(owner)
-                                                           : Enumerable.Empty<string>();
+                        IEnumerable<IncludePath> includes = HasIncludeDirectoriesCommandArgument(owner)
+                                                           ? GetIncludeDirectoriesCommandArgument(owner).Select(x => new IncludePath(x))
+                                                           : Enumerable.Empty<IncludePath>();
                         Target[] projectTargets = GetProjectTargets();
 
                         if (projectTargets.Any())
@@ -196,7 +196,12 @@ namespace PlcNext.Common.Project
                             {
                                 try
                                 {
-                                    includes = informationService.RetrieveBuildSystemProperties(root, projectTargets[0], executionContext.Observable).IncludePaths;
+                                    foreach (Target target in projectTargets)
+                                    {
+                                        includes = includes.Concat(informationService.RetrieveBuildSystemProperties(root, target, executionContext.Observable)
+                                                                                     .IncludePaths
+                                                                                     .Select(x => new IncludePath(x, targets: new[] { target })));
+                                    }
                                 }
                                 catch (Exception e)
                                 {
@@ -218,21 +223,28 @@ namespace PlcNext.Common.Project
                         }
                         includes = includes.Concat(new[]
                         {
-                            Path.Combine(Constants.IntermediateFolderName, Constants.GeneratedCodeFolderName)
+                            new IncludePath(Path.Combine(Constants.IntermediateFolderName, Constants.GeneratedCodeFolderName))
                         });
 
-                        includes = includes.Concat(GetTargetIncludes());
-                        
-                        IDictionary<string, VirtualDirectory> includeDirectories = includes.Distinct().ToDictionary(x => x, GetIncludeDirectory);
-                        return includeDirectories;
+                        includes = includes.Concat(GetTargetIncludes()).ToList();
 
-                        IEnumerable<string> GetTargetIncludes()
+                        foreach (IncludePath includePath in includes)
+                        {
+                            includePath.Directory = GetIncludeDirectory(includePath.PathValue);
+                        }
+                        return includes;
+
+                        IEnumerable<IncludePath> GetTargetIncludes()
                         {
                             SdkInformation[] projectSdks = projectTargets.Select(sdkRepository.GetSdk)
                                                               .Distinct()
                                                               .ToArray();
 
-                            return projectSdks.SelectMany(s => s.IncludePaths.Concat(s.CompilerInformation.IncludePaths));
+                            return projectSdks.SelectMany(s => s.IncludePaths
+                                                                .Select(x =>new IncludePath(x, targets: s.Targets))
+                                                                .Concat(s.CompilerInformation
+                                                                         .IncludePaths
+                                                                         .Select(x => new IncludePath(x, targets: s.Targets))));
                         }
 
                         VirtualDirectory GetIncludeDirectory(string path)

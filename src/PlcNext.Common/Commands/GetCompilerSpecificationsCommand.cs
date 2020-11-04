@@ -38,20 +38,21 @@ namespace PlcNext.Common.Commands
         {
             ProjectEntity project = ProjectEntity.Decorate(entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root);
             TargetsResult targetsResult = targetParser.Targets(project);
-            IEnumerable<CompilerInformation> compilers = targetsResult.ValidTargets
+            IEnumerable<(CompilerInformation, IEnumerable<Target>)> compilersAndTargets = targetsResult.ValidTargets
                                                      .Select(sdkRepository.GetSdk)
                                                      .Where(sdk => sdk != null)
                                                      .Distinct()
-                                                     .Select(sdk => sdk.CompilerInformation);
+                                                     .Select(sdk => (sdk.CompilerInformation, sdk.Targets));
 
             return new CommandResult(0,
                                      new CompilerSpecificationCommandResult(
-                                         compilers.Select(c => new CompilerSpecificationResult(c.CompilerPath,
+                                         compilersAndTargets.Select(c => new CompilerSpecificationResult(c.Item1.CompilerPath,
                                                                                                "cpp",
-                                                                                               c.Sysroot,
-                                                                                               c.Flags,
-                                                                                               c.IncludePaths.Select(p => new Path(p)),
-                                                                                               c.Makros.Select(m => new CompilerMacroResult(m.Name, m.Value))))),
+                                                                                               c.Item1.Sysroot,
+                                                                                               c.Item1.Flags,
+                                                                                               c.Item1.IncludePaths.Select(p => new Path(p)),
+                                                                                               c.Item1.Makros.Select(m => new CompilerMacroResult(m.Name, m.Value)),
+                                                                                               c.Item2.Select(t => new TargetResult(t.Name, t.Version, t.LongVersion, t.ShortVersion))))),
                 targetsResult.Errors);
         }
     }

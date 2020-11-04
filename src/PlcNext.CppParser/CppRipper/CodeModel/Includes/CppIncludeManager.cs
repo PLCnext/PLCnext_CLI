@@ -15,6 +15,7 @@ using System.Text;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
@@ -171,7 +172,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
                         }
 
                         //Parse relative to include path
-                        foreach (VirtualDirectory includeDirectory in parameter.IncludeDirectories.Values.Where(v => v != null))
+                        foreach (VirtualDirectory includeDirectory in parameter.IncludeDirectories.Select(x => x.Directory).Where(v => v != null))
                         {
                             if (includeDirectory.TryGetFileFromPath(current.Include, out file))
                             {
@@ -196,9 +197,9 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
             }
         }
 
-        private IType FindIncludeType(string fullName, IDictionary<string, VirtualDirectory> includeDirectories)
+        private IType FindIncludeType(string fullName, IEnumerable<IncludePath> includeDirectories)
         {
-            if (includeCache.TryGetCacheEntryWithTypeName(fullName, includeDirectories.Values
+            if (includeCache.TryGetCacheEntryWithTypeName(fullName, includeDirectories.Select(x => x.Directory)
                                                                                       .Select(d => d?.FullName??string.Empty)
                                                                                       .ToArray(), 
                                                           out IncludeCacheEntry cacheEntry))
