@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NSubstitute;
+using NSubstitute.Core;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Process;
 using PlcNext.Common.Tools.UI;
@@ -71,30 +72,36 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
             ExitWithErrorForCommand = string.Empty;
             // mock the failure of a process
             processManager.StartProcess(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IUserInterface>(), Arg.Any<string>(), showOutput: Arg.Any<bool>(), showError: Arg.Any<bool>(), killOnDispose: Arg.Any<bool>())
-                          .Returns(callinfo =>
-                           {
-                               if (ThrowError && callinfo.ArgAt<string>(0) != "which" && callinfo.ArgAt<string>(0) != "where")
-                               {
-                                   ThrowError = false;
-                                   throw new FormattableException("mock process throws exception");
-                               }
+                          .Returns(callinfo => MockProcess(callinfo));
+            processManager.StartProcessWithSetup(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IUserInterface>(), Arg.Any<string>(),
+                                                 Arg.Any<string>(), showOutput: Arg.Any<bool>(), showError: Arg.Any<bool>(),
+                                                 killOnDispose: Arg.Any<bool>())
+                           .Returns(callinfo => MockProcess(callinfo));
 
-                               executedCommands.Add(new Command(callinfo.ArgAt<string>(0), callinfo.ArgAt<string>(1)));
-                               ProcessCommand(callinfo.ArgAt<string>(1), callinfo.Arg<IUserInterface>());
-                               IProcess process = Substitute.For<IProcess>();
-                               if (((callinfo.ArgAt<string>(0) == "which" ||
-                                    callinfo.ArgAt<string>(0) == "where") &&
-                                   !callinfo.ArgAt<string>(1).Contains("cmake")) ||
-                                    (!string.IsNullOrEmpty(ExitWithErrorForCommand) && callinfo.ArgAt<string>(0).EndsWith(ExitWithErrorForCommand) ))
-                               {
-                                   process.ExitCode.Returns(-1);
-                               }
-                               else
-                               {
-                                   process.ExitCode.Returns(0);
-                               }
-                               return process;
-                           });
+            IProcess MockProcess(CallInfo callinfo)
+            {
+                if (ThrowError && callinfo.ArgAt<string>(0) != "which" && callinfo.ArgAt<string>(0) != "where")
+                {
+                    ThrowError = false;
+                    throw new FormattableException("mock process throws exception");
+                }
+
+                executedCommands.Add(new Command(callinfo.ArgAt<string>(0), callinfo.ArgAt<string>(1)));
+                ProcessCommand(callinfo.ArgAt<string>(1), callinfo.Arg<IUserInterface>());
+                IProcess process = Substitute.For<IProcess>();
+                if (((callinfo.ArgAt<string>(0) == "which" ||
+                     callinfo.ArgAt<string>(0) == "where") &&
+                    !callinfo.ArgAt<string>(1).Contains("cmake")) ||
+                     (!string.IsNullOrEmpty(ExitWithErrorForCommand) && callinfo.ArgAt<string>(0).EndsWith(ExitWithErrorForCommand)))
+                {
+                    process.ExitCode.Returns(-1);
+                }
+                else
+                {
+                    process.ExitCode.Returns(0);
+                }
+                return process;
+            }
             void ProcessCommand(string command, IUserInterface userInterface)
             {
                 if (command == "get setting --all" || command == "get setting -a")

@@ -552,5 +552,10 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         {
             ScenarioContext.CheckNoDatatypeWorksheetGenerated();
         }
+
+        protected void Then_the_cmake_args_are_used(IEnumerable<string> args)
+        {
+            ScenarioContext.CheckCmakeArgumentsUsed(args);
+        }
     }
 }

@@ -149,6 +149,8 @@ namespace PlcNext.Common.Build
 
             VirtualDirectory cmakeFolder = CreateCmakeFolder();
 
+            LoadCmakeOptions();
+
             bool success = ConfigureCMake();
 
             return (success, cmakeFolder);
@@ -185,6 +187,34 @@ namespace PlcNext.Common.Build
                                        ? buildInformation.BuildType
                                        : Constants.ReleaseFolderName;
                 return buildType;
+            }
+
+            void LoadCmakeOptions()
+            {
+                if (!string.IsNullOrEmpty(buildInformation.BuildProperties))
+                {
+                    return;
+                }
+
+                if(buildInformation.RootFileEntity?.Directory?.FileExists(Constants.CMakeCommandArgsFileName) == true)
+                {
+                    string cmakeArgs = string.Empty;
+                    VirtualFile commandArgsFile = buildInformation.RootFileEntity.Directory.File(Constants.CMakeCommandArgsFileName);
+                    using (Stream fileStream = commandArgsFile.OpenRead())
+                    using (StreamReader streamReader = new StreamReader(fileStream))
+                    {
+                        while (!streamReader.EndOfStream)
+                        {
+                            string line = streamReader.ReadLine();
+                            if (string.IsNullOrEmpty(line))
+                            {
+                                continue;
+                            }
+                            cmakeArgs = string.Join(" ", cmakeArgs, line);
+                        }
+                    }
+                    buildInformation.BuildProperties = cmakeArgs;
+                }
             }
 
             bool ConfigureCMake()

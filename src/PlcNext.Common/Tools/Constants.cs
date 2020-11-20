@@ -32,7 +32,6 @@ namespace PlcNext.Common.Tools
         public const string LibmetaExtension = "libmeta";
         public const string CompmetaExtension = "compmeta";
         public const string ProgmetaExtension = "progmeta";
-        public const string CMakeFileName = "CMakeLists.txt";
         public const string SharedObjectExtension = "so";
         public const string EngineeringLibraryExtension = "pcwlx";
         public const string HeaderExtension = "hpp";
@@ -62,6 +61,8 @@ namespace PlcNext.Common.Tools
         public const string ProjectFileName = "plcnext.proj";
         public const string FileNamesFile = "file-names.xml";
         public const string EnvironmentSetupScriptFile = "EnvironmentSetup";
+        public const string CMakeFileName = "CMakeLists.txt";
+        public const string CMakeCommandArgsFileName = "CMakeFlags.txt";
 
         //progress visualizer
         public const double ProgressBarDelay = 300;

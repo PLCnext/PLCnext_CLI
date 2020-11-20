@@ -14,6 +14,13 @@
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.cpp" />
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.hpp" />
     <None Remove="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
+    <None Remove="Deployment\CMakeArgsFile\CMakeLists.txt" />
+    <None Remove="Deployment\CMakeArgsFile\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <None Remove="Deployment\CMakeArgsFile\src\CMakeArgsFileComponent.cpp" />
+    <None Remove="Deployment\CMakeArgsFile\src\CMakeArgsFileComponent.hpp" />
+    <None Remove="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.cpp" />
+    <None Remove="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.hpp" />
+    <None Remove="Deployment\CMakeArgsFile\CMakeFlags.txt" />
     <None Remove="Deployment\Demo\bin\AXCF2152_20.6.0.12345\Debug\libDemo.so" />
     <None Remove="Deployment\HiddenPlm\CMakeLists.txt" />
     <None Remove="Deployment\HiddenPlm\src\HiddenPlmComponent.cpp" />
@@ -105,6 +112,13 @@
     <None Remove="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
+    <EmbeddedResource Include="Deployment\CMakeArgsFile\CMakeFlags.txt" />
+    <EmbeddedResource Include="Deployment\CMakeArgsFile\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\CMakeArgsFile\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileComponent.cpp" />
+    <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileComponent.hpp" />
+    <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.cpp" />
+    <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.hpp" />
     <EmbeddedResource Include="Deployment\Demo\bin\AXCF2152_20.6.0.12345\Debug\libDemo.so" />
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\Helper.hpp" />
     <EmbeddedResource Include="Deployment\HiddenPlm\CMakeLists.txt" />
@@ -625,6 +639,7 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Class.cpp" Link="Deployment\Templates\ConsumableLibraryTemplate\Class.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Class.hpp" Link="Deployment\Templates\ConsumableLibraryTemplate\Class.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Config.cmake.in" Link="Deployment\Templates\ConsumableLibraryTemplate\Config.cmake.in" />
+    <EmbeddedResource Include="Deployment\CMakeArgsFile\plcnext.proj" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StructWith1000Fields\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\plcnext.proj" />

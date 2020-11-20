@@ -557,38 +557,37 @@ namespace Test.PlcNext.SystemTests.Tools
             await CommandLineParser.Parse(arguments.ToArray());
         }
 
-        public async Task Build(bool addPath)
+        public async Task Build(bool addPath = true, string target = null, string version = null, string buildType = null, string cmakeArgs = null)
         {
+            List<string> arguments = new List<string>(new[] { "build", "--verbose"});
             if (addPath)
             {
-                await CommandLineParser.Parse("build", "-p", knownProjectName, "--verbose");
+                arguments.Add("-p");
+                arguments.Add(knownProjectName);
             }
-            else
+
+            if(!string.IsNullOrEmpty(target))
             {
-                await CommandLineParser.Parse("build", "--verbose");
+                string targetName = string.IsNullOrEmpty(version) ? target : $"{target},{version}";
+                arguments.Add("-t");
+                arguments.Add(targetName);
             }
-        }
 
-        public async Task BuildForTarget(bool addPath, string target, string version = null)
-        {
-            string targetName = string.IsNullOrEmpty(version) ? target : $"{target},{version}";
-            List<string> args = new List<string>(new[] { "build", "-t", targetName });
-
-            if (addPath)
+            if (!string.IsNullOrEmpty(buildType))
             {
-                args.Add("-p");
-                args.Add(knownProjectName);
+                arguments.Add("-b");
+                arguments.Add(buildType);
             }
-            
-            await CommandLineParser.Parse(args.ToArray());
 
+            if (!string.IsNullOrEmpty(cmakeArgs))
+            {
+                arguments.Add("--");
+                arguments.Add(cmakeArgs);
+            }
+
+            await CommandLineParser.Parse(arguments.ToArray());
         }
-
-        public async Task BuildWithBuildType(string buildType)
-        {
-            await CommandLineParser.Parse("build", "-p", knownProjectName, "-b", buildType);
-        }
-
+        
         public void CheckTypemetaFile(TypemetaStructure[] typemetaStructures, bool structureIsComplete = false)
         {
             knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
@@ -1538,6 +1537,14 @@ namespace Test.PlcNext.SystemTests.Tools
             knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
             string path = GetPathOfGeneratedFile($"{knownProjectName}DataTypes.{Constants.DatatypeWorksheetExtension}", 
                                                  false, Constants.MetadataFolderName);
+        }
+
+        public void CheckCmakeArgumentsUsed(IEnumerable<string> expectedArgs)
+        {
+            string cmakeArg = processManagerAbstraction.GetLastCommandArgs("cmake");
+
+            IEnumerable<string> cmakeArgs = cmakeArg.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            cmakeArgs.Should().Contain(expectedArgs);
         }
     }
 }

@@ -130,6 +130,26 @@ namespace Test.PlcNext.SystemTests.Features
                 ).RunAsyncWithTimeout();
         }
 
+        [Scenario]
+        public async Task Build_project_with_cmake_command_args_option()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("Standard"),
+                _ => When_I_build_the_project_with_cmake_args("-this -is a -test"),
+                _ => Then_the_cmake_args_are_used(new string[] { "-this", "-is", "a", "-test"})
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Build_project_with_cmake_command_args_file()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("CMakeArgsFile"),
+                _ => When_I_build_the_project(),
+                _ => Then_the_cmake_args_are_used(new string[] { "-this", "-is", "a", "-test" })
+                ).RunAsyncWithTimeout();
+        }
+
         public Build_Feature(ITestOutputHelper helper) : base(helper)
         {
         }

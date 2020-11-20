@@ -237,17 +237,22 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 
         protected async Task When_I_build_the_project_for_target(string target)
         {
-            await ScenarioContext.BuildForTarget(true, target);
+            await ScenarioContext.Build(true, target:target);
         }
 
         protected async Task When_I_build_the_project_from_inside_the_project_folder_for_target(string target, string version)
         {
-            await ScenarioContext.BuildForTarget(false, target, version);
+            await ScenarioContext.Build(false, target:target, version:version);
         }
 
         protected async Task When_I_build_the_project_with_build_type(string buildType)
         {
-            await ScenarioContext.BuildWithBuildType(buildType);
+            await ScenarioContext.Build(buildType:buildType);
+        }
+
+        protected async Task When_I_build_the_project_with_cmake_args(string args)
+        {
+            await ScenarioContext.Build(cmakeArgs: args);
         }
 
 	    protected async Task When_I_update_the_CLI_to_the_latest_version()
