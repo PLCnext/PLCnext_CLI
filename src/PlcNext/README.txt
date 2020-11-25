@@ -9,33 +9,35 @@ How to setup the CLIF
 ---------------------
 
 + When SDKs are not yet installed, install them with the following command:
-  'plcncli install sdk -d "<path/to/destination/directory>" "<path/to/tar.gz/or/sh>"'
+  'plcncli install sdk -d "<path/to/destination/directory>" -p "<path/to/tar.gz/or/sh>"'
 + When SDKs are already installed, add each SDK to the settings with the 
   command: 
   'plcncli set setting --add SdkPaths "<path\to\SDK>"'
-+ If a previous version of the CLIF was installed (19.0.X), before executing
-  any command, execute the command 'migrate-old-cli'
++ If a lower version than 2020.0 LTS of the toolchain was installed, execute the command 'migrate-old-cli' before executing
+  any other commands
 
 ----------------------------------
 Example on how to create a library
 ----------------------------------
 
-<Path to command> new project -n My.Company.Product
-<Path to command> set target -n AXCF2152 --add -p My.Company.Product
-<Path to command> generate all -p My.Company.Product
-<Path to command> build -p My.Company.Product
-<Path to command> deploy -p My.Company.Product
+plcncli new project -n My.Company.Product
+plcncli set target -n AXCF2152 --add -p My.Company.Product
+plcncli generate all -p My.Company.Product
+plcncli build -p My.Company.Product
+plcncli deploy -p My.Company.Product
 
 --------------------------------------
 How to define a component/program port
 --------------------------------------
 
-+ Place a comment above the field of the port
-+ The comment need to have the format '//#port'
-+ Attributes can be defined with the comment '//#attributes(<attributes>)'
-	+ Everything inside the bracket will be used as attributes for the port,
-	  such as Input, separated by '|'
-+ The port field need to be public
+1. Place a comment above the field of the port
+2. The comment need to have the format '//#port'
+3. Attributes can be defined with the comment '//#attributes(<attributes>)'
+4. Everything inside the bracket will be used as attributes for the port,
+  such as Input, separated by '|'
+5. The port field need to be public
+
+or simply use the right click context menu in Visual Studio or Eclipse and start the "Add Port" wizard.
 
 -------------
 Miscellaneous
