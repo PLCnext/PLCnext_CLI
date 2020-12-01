@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -94,6 +95,8 @@ namespace PlcNext.Common.Tools.UI
 
             void RemoveOldFiles(JArray files, int catalogSize, string logFilesDirectory)
             {
+                RemoveFilesOlderThanSixMonthsFromCatalog();
+
                 int removableFiles = Math.Min(Math.Max(files.Count + 1 - catalogSize, 0), files.Count);
                 List<string> filesToDelete = new List<string>();
                 for (int i = 0; i < removableFiles; i++)
@@ -129,6 +132,26 @@ namespace PlcNext.Common.Tools.UI
                 foreach (string file in filesToDelete)
                 {
                     SafeDeleteFile(file);
+                }
+
+                void RemoveFilesOlderThanSixMonthsFromCatalog()
+                {
+                    for(int i=files.Count - 1; i >= 0; i--)
+                    {
+                        JToken fileToken = files[i];
+                        if (fileToken is JObject file)
+                        {
+                            if (file.ContainsKey("Date") &&
+                            file["Date"].Type == JTokenType.Date)
+                            {
+                                DateTime fileDate = DateTime.Parse(file["Date"].Value<string>(), CultureInfo.InvariantCulture);
+                                if (fileDate.CompareTo(DateTime.Today.AddMonths(-6)) <= 0)
+                                {
+                                    files.RemoveAt(i);
+                                }
+                            }
+                        }
+                    }
                 }
 
                 void SafeDeleteFile(string file)
