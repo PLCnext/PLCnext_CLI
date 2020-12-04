@@ -63,6 +63,7 @@ namespace PlcNext.Common.Tools
         public const string EnvironmentSetupScriptFile = "EnvironmentSetup";
         public const string CMakeFileName = "CMakeLists.txt";
         public const string CMakeCommandArgsFileName = "CMakeFlags.txt";
+        public const string CMakeTimestampFileName = "FlagsTimestamp.txt";
 
         //progress visualizer
         public const double ProgressBarDelay = 300;

@@ -31,6 +31,8 @@ namespace PlcNext.Common.Build
         public bool Configure { get; }
         public bool NoConfigure { get; }
         public string BuildProperties { get; set; }
+
+        public bool BuildPropertiesSetByFile { get; set; } = false;
         public string Output { get; }
 
         public BuildInformation(Entity rootEntity, string buildType, bool configure, bool noConfigure,

@@ -65,7 +65,8 @@ namespace PlcNext.CommandLine
                                           "It is necessary to set these options with a leading ' -- '. " +
                                           "Quotation marks will not be preserved. To add quotation marks " +
                                           "to the options, use the escape string '%22' instead. NO other " +
-                                          "escape sequences such as '%20' will be unescaped.")]
+                                          "escape sequences such as '%20' will be unescaped. " +
+                                          "If this option is used, CMake options in CMakeFlags.txt are ignored.")]
         public IEnumerable<string> BuildProperties { get; set; }
 
         [Usage]

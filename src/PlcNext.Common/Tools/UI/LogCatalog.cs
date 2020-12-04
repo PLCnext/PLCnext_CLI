@@ -144,7 +144,7 @@ namespace PlcNext.Common.Tools.UI
                             if (file.ContainsKey("Date") &&
                             file["Date"].Type == JTokenType.Date)
                             {
-                                DateTime fileDate = DateTime.Parse(file["Date"].Value<string>(), CultureInfo.InvariantCulture);
+                                DateTime fileDate = file["Date"].Value<DateTime>();
                                 if (fileDate.CompareTo(DateTime.Today.AddMonths(-6)) <= 0)
                                 {
                                     files.RemoveAt(i);

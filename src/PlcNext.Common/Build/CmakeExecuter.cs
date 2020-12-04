@@ -14,15 +14,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PlcNext.Common.Project;
 using PlcNext.Common.Project.Persistence;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Process;
-using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.Common.Build
@@ -214,6 +212,7 @@ namespace PlcNext.Common.Build
                         }
                     }
                     buildInformation.BuildProperties = cmakeArgs;
+                    buildInformation.BuildPropertiesSetByFile = true;
                 }
             }
 
@@ -222,21 +221,24 @@ namespace PlcNext.Common.Build
                 executionContext.WriteInformation("Checking if CMake needs to be reconfigured...", showMessagesToUser);
                 if ((!cmakeFolder.FileExists("CMakeCache.txt") ||
                      buildInformation.Configure ||
+                     !CacheHasValidTimestamp() ||
                      !IsCorrectlyConfigured() ||
                      OutputOptionDiffersFromStagingPrefix()) &&
                     !buildInformation.NoConfigure)
                 {
                     string cmakeCommand = GenerateCmakeCommand(buildInformation.Target.Name,
                                                                buildInformation.Target.LongVersion);
+                    
+                    executionContext.WriteInformation("Configuring CMake...", showMessagesToUser);
 
-                    if (showMessagesToUser)
-                    {
-                        executionContext.WriteInformation("Configuring CMake...");
-                    }
-                    return CallCmake(cmakeFolder, cmakeCommand, showMessagesToUser, throwOnError, showWarningsToUser);
+                    bool result = CallCmake(cmakeFolder, cmakeCommand, showMessagesToUser, throwOnError, showWarningsToUser);
+
+                    AddTimestamp();
+
+                    return result;
                 }
 
-                if (!string.IsNullOrEmpty(buildInformation.BuildProperties))
+                if (!string.IsNullOrEmpty(buildInformation.BuildProperties) && !buildInformation.BuildPropertiesSetByFile)
                 {
                     executionContext.WriteWarning($"The specified build options will not be used, " +
                                                   $"because no reconfiguration is necessary. " +
@@ -392,6 +394,81 @@ namespace PlcNext.Common.Build
                                exception is AggregateException aggregate &&
                                aggregate.InnerExceptions.Any(e => e is TimeoutException);
                     }
+                }
+
+                void AddTimestamp()
+                {
+                    if (buildInformation.RootFileEntity?.Directory?.FileExists(Constants.CMakeCommandArgsFileName) == true)
+                    {
+                        VirtualFile commandArgsFile = buildInformation.RootFileEntity.Directory.File(Constants.CMakeCommandArgsFileName);
+                        VirtualFile timestampFile = cmakeFolder.File(Constants.CMakeTimestampFileName);
+
+                        JObject timestamp = new JObject
+                            {
+                                new JProperty("FlagsWriteTime", new JValue(commandArgsFile.LastWriteTime))
+                            };
+
+                        using (Stream fileStream = timestampFile.OpenWrite())
+                        using (StreamWriter streamWriter = new StreamWriter(fileStream, Encoding.UTF8))
+                        using (JsonWriter jsonWriter = new JsonTextWriter(streamWriter))
+                        {
+                            fileStream.SetLength(0);
+                            jsonWriter.Formatting = Formatting.Indented;
+                            timestamp.WriteTo(jsonWriter);
+                        }
+                    }
+                    else
+                    {
+                        if (cmakeFolder.FileExists(Constants.CMakeTimestampFileName))
+                        {
+                            cmakeFolder.File(Constants.CMakeTimestampFileName).Delete();
+                        }
+                    }
+                }
+
+                bool CacheHasValidTimestamp()
+                {
+                    if(buildInformation.RootFileEntity?.Directory?.FileExists(Constants.CMakeCommandArgsFileName) == true)
+                    {
+                        DateTime commandArgsLastWriteTime = buildInformation.RootFileEntity
+                                                                            .Directory
+                                                                            .File(Constants.CMakeCommandArgsFileName)
+                                                                            .LastWriteTime;
+                        if (cmakeFolder.FileExists(Constants.CMakeTimestampFileName))
+                        {
+                            VirtualFile timestampFile = cmakeFolder.File(Constants.CMakeTimestampFileName);
+                            try
+                            {
+                                using(Stream fileStream = timestampFile.OpenRead())
+                                using (StreamReader reader = new StreamReader(fileStream))
+                                using (JsonReader jsonReader = new JsonTextReader(reader))
+                                {
+                                    JObject fileContent = JObject.Load(jsonReader);
+                                    if(fileContent.ContainsKey("FlagsWriteTime") &&
+                                        fileContent["FlagsWriteTime"].Type == JTokenType.Date)
+                                    {
+                                        DateTime savedTimeStamp = fileContent["FlagsWriteTime"].Value<DateTime>();
+                                        if(savedTimeStamp.CompareTo(commandArgsLastWriteTime) == 0)
+                                        {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                            catch (JsonReaderException)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!cmakeFolder.FileExists(Constants.CMakeTimestampFileName))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
                 }
             }
         }
