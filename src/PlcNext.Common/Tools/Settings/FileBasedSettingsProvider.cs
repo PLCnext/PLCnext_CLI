@@ -148,40 +148,46 @@ namespace PlcNext.Common.Tools.Settings
 
             using (Stream stream = file.OpenRead())
             {
-                XDocument document = XDocument.Load(stream);
-                IEnumerable<string> paths = document.Descendants("SDKS").Any()
-                                                ? document.Descendants("SDK").Select(d => d.Value)
-                                                : Settings.SdkPathsDefault;
-                IEnumerable<string> templates = document.Descendants("Templates").Any()
-                                                    ? document.Descendants("Template").Select(d => d.Value)
-                                                    : Settings.TemplateLocationsDefault;
-                string attributePrefix = document.Descendants("Settings").FirstOrDefault()?
-                                                 .Attribute("AttributePrefix")?.Value
-                                         ?? Settings.AttributePrefixDefault;
-                string cliRpositoryRoot = document.Descendants("Settings").FirstOrDefault()?
-                                            .Element("CliRepositoryRoot")?.Value
-                                         ?? Settings.CliRepositoryRootDefault;
-                string cliRpositoryFileName = document.Descendants("Settings").FirstOrDefault()?
-                                             .Element("CliRepositoryFileName")?.Value
-                                          ?? Settings.CliRepositoryFileNameDefault;
-                string cliRpositorySignatureFileName = document.Descendants("Settings").FirstOrDefault()?
-                                                 .Element("CliRepositorySignatureFileName")?.Value
-                                              ?? Settings.CliRepositorySignatureFileNameDefault;
-                string httpProxy = document.Descendants("Settings").FirstOrDefault()?
-                                                          .Element("HttpProxy")?.Value
-                                        ?? Settings.HttpProxyDefault;
-                string logFilePath = document.Descendants("Settings").FirstOrDefault()?
-                                        .Element("LogFilePath")?.Value
-                                     ?? Settings.LogFilePathDefault;
-                bool systemCommands = bool.TryParse(document.Descendants("Settings").FirstOrDefault()?
-                                                       .Element("SystemCommands")?.Value, out bool parsed)
-                                          ? parsed
-                                          : Settings.UseSystemCommandsDefault;
+                try
+                {
+                    XDocument document = XDocument.Load(stream);
+                    IEnumerable<string> paths = document.Descendants("SDKS").Any()
+                                                    ? document.Descendants("SDK").Select(d => d.Value)
+                                                    : Settings.SdkPathsDefault;
+                    IEnumerable<string> templates = document.Descendants("Templates").Any()
+                                                        ? document.Descendants("Template").Select(d => d.Value)
+                                                        : Settings.TemplateLocationsDefault;
+                    string attributePrefix = document.Descendants("Settings").FirstOrDefault()?
+                                                     .Attribute("AttributePrefix")?.Value
+                                             ?? Settings.AttributePrefixDefault;
+                    string cliRpositoryRoot = document.Descendants("Settings").FirstOrDefault()?
+                                                .Element("CliRepositoryRoot")?.Value
+                                             ?? Settings.CliRepositoryRootDefault;
+                    string cliRpositoryFileName = document.Descendants("Settings").FirstOrDefault()?
+                                                 .Element("CliRepositoryFileName")?.Value
+                                              ?? Settings.CliRepositoryFileNameDefault;
+                    string cliRpositorySignatureFileName = document.Descendants("Settings").FirstOrDefault()?
+                                                     .Element("CliRepositorySignatureFileName")?.Value
+                                                  ?? Settings.CliRepositorySignatureFileNameDefault;
+                    string httpProxy = document.Descendants("Settings").FirstOrDefault()?
+                                                              .Element("HttpProxy")?.Value
+                                            ?? Settings.HttpProxyDefault;
+                    string logFilePath = document.Descendants("Settings").FirstOrDefault()?
+                                            .Element("LogFilePath")?.Value
+                                         ?? Settings.LogFilePathDefault;
+                    bool systemCommands = bool.TryParse(document.Descendants("Settings").FirstOrDefault()?
+                                                           .Element("SystemCommands")?.Value, out bool parsed)
+                                              ? parsed
+                                              : Settings.UseSystemCommandsDefault;
 
-                log.LogInformation($"Used settings {file.FullName}:");
-                Settings result = new Settings(attributePrefix, paths.ToArray(), cliRpositoryRoot, cliRpositoryFileName, cliRpositorySignatureFileName, httpProxy, logFilePath, templates.ToArray(), systemCommands);
-                log.LogInformation(JsonConvert.SerializeObject(result, Formatting.Indented));
-                return result;
+                    log.LogInformation($"Used settings {file.FullName}:");
+                    Settings result = new Settings(attributePrefix, paths.ToArray(), cliRpositoryRoot, cliRpositoryFileName, cliRpositorySignatureFileName, httpProxy, logFilePath, templates.ToArray(), systemCommands);
+                    log.LogInformation(JsonConvert.SerializeObject(result, Formatting.Indented));
+                    return result;
+                }catch(System.Xml.XmlException e)
+                {
+                    throw new FormattableException($"XML error in settings file {path}.", e);
+                }
             }
         }
 
