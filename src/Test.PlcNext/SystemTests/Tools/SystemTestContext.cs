@@ -68,6 +68,7 @@ namespace Test.PlcNext.SystemTests.Tools
         private readonly IExceptionHandlerAbstraction exceptionHandlerAbstraction;
         private readonly IGuidFactoryAbstraction guidFactoryAbstraction;
         private readonly ICMakeConversationAbstraction cmakeConversationAbstraction;
+        private readonly ISdkExplorerAbstraction sdkExplorerAbstraction;
         private readonly bool autoActivatedComponents;
         private IContainer host;
 
@@ -96,7 +97,7 @@ namespace Test.PlcNext.SystemTests.Tools
             IProcessManagerAbstraction processManagerAbstraction, IUserInterfaceAbstraction userInterfaceAbstraction,
             IEnvironmentServiceAbstraction environmentServiceAbstraction, IExceptionHandlerAbstraction exceptionHandlerAbstraction,
             IGuidFactoryAbstraction guidFactoryAbstraction, ICMakeConversationAbstraction cmakeConversationAbstraction,
-            bool autoActivatedComponents = true)
+            ISdkExplorerAbstraction sdkExplorerAbstraction, bool autoActivatedComponents = true)
         {
             this.fileSystemAbstraction = fileSystemAbstraction;
             this.downloadServiceAbstraction = downloadServiceAbstraction;
@@ -106,6 +107,7 @@ namespace Test.PlcNext.SystemTests.Tools
             this.exceptionHandlerAbstraction = exceptionHandlerAbstraction;
             this.guidFactoryAbstraction = guidFactoryAbstraction;
             this.cmakeConversationAbstraction = cmakeConversationAbstraction;
+            this.sdkExplorerAbstraction = sdkExplorerAbstraction;
             this.autoActivatedComponents = autoActivatedComponents;
         }
 
@@ -138,10 +140,10 @@ namespace Test.PlcNext.SystemTests.Tools
             exceptionHandlerAbstraction.Initialize(exportProvider, printMessage);
             guidFactoryAbstraction.Initialize(exportProvider, printMessage);
             cmakeConversationAbstraction.Initialize(exportProvider, printMessage);
+            sdkExplorerAbstraction.Initialize(exportProvider, printMessage);
             ILog log = new LogTracer(printMessage);
             exportProvider.AddInstance(Substitute.For<IProgressVisualizer>());
             exportProvider.AddInstance(log);
-            exportProvider.AddInstance(CreateExplorer());
             ContainerBuilder builder = new ContainerBuilder();
             builder.RegisterModule(new DiModule(exportProvider, autoActivatedComponents));
             if (withUpdateModule)
@@ -153,14 +155,6 @@ namespace Test.PlcNext.SystemTests.Tools
             Host = builder.Build();
             Initialized = true;
             exceptionHandlerAbstraction.UserInterface = Host.ResolveOptional<IUserInterface>();
-
-            ISdkExplorer CreateExplorer()
-            {
-                ISdkExplorer explorer = Substitute.For<ISdkExplorer>();
-                explorer.ExploreSdk(null, false)
-                        .ReturnsForAnyArgs(Task.FromResult((SdkSchema)null));
-                return explorer;
-            }
         }
 
         public void Dispose()
@@ -1545,6 +1539,11 @@ namespace Test.PlcNext.SystemTests.Tools
 
             IEnumerable<string> cmakeArgs = cmakeArg.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             cmakeArgs.Should().Contain(expectedArgs);
+        }
+
+        public void FindTargetOnExplore(string name, string version)
+        {
+            sdkExplorerAbstraction.FindTargetOnExplore(name, version);
         }
     }
 }

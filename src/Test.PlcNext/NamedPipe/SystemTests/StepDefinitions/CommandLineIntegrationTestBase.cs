@@ -28,6 +28,7 @@ namespace Test.PlcNext.NamedPipe.SystemTests.StepDefinitions
                                                                                                                   new MockedExceptionHandlerAbstraction(),
                                                                                                                   new MockedGuidAbstraction(),
                                                                                                                   new MockedCMakeConversationAbstraction(),
+                                                                                                                  new MockedSdkExplorerAbstraction(),
                                                                                                                   false),
                                                                               withUpdates, withWaitingProcess),
             helper)

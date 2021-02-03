@@ -147,5 +147,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         {
             ScenarioContext.SetCodeModel(projectName, includePaths:includePaths);
         }
-    }
+
+		protected void Given_is_that_sdk_exploration_finds_TARGET(string name, string version)
+        {
+			ScenarioContext.FindTargetOnExplore(name, version);
+        }
+
+	}
 }

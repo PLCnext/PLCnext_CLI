@@ -115,6 +115,15 @@ namespace PlcNext.Common.Tools.SDK
             SdkSchema sdkSchema = await sdkExplorer.ExploreSdk(sdkPath, forced).ConfigureAwait(false);
             if (sdkSchema != null)
             {
+                IEnumerable<Target> targets = GetAllTargets();
+                foreach (TargetSchema targetSchema in sdkSchema.Target)
+                {
+                    Target target = new Target(targetSchema.name, targetSchema.version);
+                    if (targets.Contains(target))
+                    {
+                        throw new TargetAlreadyInstalledException(target.GetLongFullName());
+                    }
+                }
                 sdkContainer.Add(sdkPath, sdkSchema);
             }
         }

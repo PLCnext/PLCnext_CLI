@@ -601,6 +601,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The target {0} is already installed. Check your installed targets with &apos;get targets&apos;..
+        /// </summary>
+        internal static string TargetAlreadyInstalled {
+            get {
+                return ResourceManager.GetString("TargetAlreadyInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The target {0} is already supported by the project..
         /// </summary>
         internal static string TargetAlreadySupported {

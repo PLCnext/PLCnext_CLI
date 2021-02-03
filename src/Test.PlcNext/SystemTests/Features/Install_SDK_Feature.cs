@@ -56,6 +56,17 @@ namespace Test.PlcNext.SystemTests.Features
             ).RunAsyncWithTimeout();
         }
 
+        [Scenario]
+        public async Task Install_SDK_twice()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_an_empty_workspace(),
+                _ => Given_is_that_sdk_exploration_finds_TARGET("AXCF2152", "1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)"),
+                _ => When_I_install_SDK_to_DESTINATION("Dummy_AXCF2152_Sdk.tar.xz", "C:/foo/ba"),
+                _ => Then_the_user_was_informed_that_the_target_is_already_installed()
+                ).RunAsyncWithTimeout();
+        }
+
         public Install_Sdk_Feature(ITestOutputHelper helper) : base(helper)
         {
         }

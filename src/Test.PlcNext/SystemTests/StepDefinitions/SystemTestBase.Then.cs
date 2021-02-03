@@ -557,5 +557,10 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         {
             ScenarioContext.CheckCmakeArgumentsUsed(args);
         }
+
+        protected void Then_the_user_was_informed_that_the_target_is_already_installed()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(TargetAlreadyInstalledException));
+        }
     }
 }
