@@ -781,7 +781,8 @@ namespace PlcNext.Common.CodeModel
 
             (bool success, string value) FormatIecDataType(string unformattedValue)
             {
-                if(unformattedValue.StartsWith("StaticString<", StringComparison.InvariantCulture)
+                if((unformattedValue.StartsWith("StaticString<", StringComparison.InvariantCulture) 
+                    || unformattedValue.StartsWith("StaticWString<", StringComparison.InvariantCulture))
                     && !unformattedValue.Contains("<80>"))
                 {
                     throw new UnknownIecDataTypeException(unformattedValue);
