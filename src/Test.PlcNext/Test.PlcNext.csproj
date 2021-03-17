@@ -81,6 +81,12 @@
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.cpp" />
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
     <None Remove="Deployment\ExternalLibrary\ExternalStruct.hpp" />
+    <None Remove="Deployment\StaticStringTest\CMakeLists.txt" />
+    <None Remove="Deployment\StaticStringTest\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <None Remove="Deployment\StaticStringTest\src\StaticStringTestComponent.cpp" />
+    <None Remove="Deployment\StaticStringTest\src\StaticStringTestComponent.hpp" />
+    <None Remove="Deployment\StaticStringTest\src\StaticStringTestProgram.cpp" />
+    <None Remove="Deployment\StaticStringTest\src\StaticStringTestProgram.hpp" />
     <None Remove="Deployment\StructWith1000Fields\CMakeLists.txt" />
     <None Remove="Deployment\StructWith1000Fields\external\ADD_DEPENDENT_LIBRARIES_HERE" />
     <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsComponent.cpp" />
@@ -109,6 +115,7 @@
     <None Remove="Deployment\TestResults\ArrayInitializer.meta.cpp" />
     <None Remove="Deployment\TestResults\ProgramWithDifferentPortsDataTypes.dt" />
     <None Remove="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
+    <None Remove="Deployment\TestResults\StaticStringTestDataTypes.dt" />
     <None Remove="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
@@ -187,6 +194,12 @@
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.hpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.cpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent\MyProgram.hpp" />
+    <EmbeddedResource Include="Deployment\StaticStringTest\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\StaticStringTest\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <EmbeddedResource Include="Deployment\StaticStringTest\src\StaticStringTestComponent.cpp" />
+    <EmbeddedResource Include="Deployment\StaticStringTest\src\StaticStringTestComponent.hpp" />
+    <EmbeddedResource Include="Deployment\StaticStringTest\src\StaticStringTestProgram.cpp" />
+    <EmbeddedResource Include="Deployment\StaticStringTest\src\StaticStringTestProgram.hpp" />
     <EmbeddedResource Include="Deployment\StructWith1000Fields\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\StructWith1000Fields\external\ADD_DEPENDENT_LIBRARIES_HERE" />
     <EmbeddedResource Include="Deployment\StructWith1000Fields\src\StructWith1000FieldsComponent.cpp" />
@@ -579,6 +592,7 @@
     <EmbeddedResource Include="Deployment\TestResults\ProgramWithDifferentPortsDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\EnumTestDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
+    <EmbeddedResource Include="Deployment\TestResults\StaticStringTestDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponent._meta.cpp" />
@@ -641,6 +655,7 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Config.cmake.in" Link="Deployment\Templates\ConsumableLibraryTemplate\Config.cmake.in" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\plcnext.proj" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\StaticStringTest\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StructWith1000Fields\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\plcnext.proj" />
     <EmbeddedResource Include="Deployment\HiddenPlm\plcnext.proj" />

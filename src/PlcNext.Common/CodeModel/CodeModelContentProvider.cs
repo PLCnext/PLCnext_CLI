@@ -36,6 +36,8 @@ namespace PlcNext.Common.CodeModel
         private static readonly Regex UnkownDataTypeRegex = new Regex(@"^unkown\((?<dataType>.*)\)$", RegexOptions.Compiled);
         private static readonly Regex UnknownDataTypeRegex = new Regex(@"^unknown\((?<dataType>.*)\)$", RegexOptions.Compiled);
 
+        private static readonly Regex StaticStringRegex = new Regex(@"^Static(W)?String<(?<length>\d+)>$", RegexOptions.Compiled);
+
         public CodeModelContentProvider(ITemplateRepository templateRepository, ITemplateResolver resolver, IDatatypeConversion datatypeConversion)
         {
             this.templateRepository = templateRepository;
@@ -51,7 +53,8 @@ namespace PlcNext.Common.CodeModel
                    (key == EntityKeys.NamespaceKey ||
                     key == EntityKeys.PortStructsKey ||
                     key == EntityKeys.PortEnumsKey ||
-                    key == EntityKeys.PortArraysKey) ||
+                    key == EntityKeys.PortArraysKey ||
+                    key == EntityKeys.VariablePortStringsKey) ||
                    owner.HasValue<IType>() && CanResolveType() ||
                    owner.HasValue<IField>() && CanResolveField() ||
                    owner.HasValue<IDataType>() && CanResolveDataType() ||
@@ -249,6 +252,15 @@ namespace PlcNext.Common.CodeModel
                 return GetAllPorts().Concat(GetPortStructures().SelectMany(p => p.Fields))
                                     .Where(t => t.AsField != null &&
                                                 t.AsField.Multiplicity.Count > 0)
+                                    .Distinct();
+            }
+
+            IEnumerable<CodeEntity> GetVariablePortStrings()
+            {
+                return GetAllPorts().Where(t => t.AsField != null &&
+                                                StaticStringRegex.IsMatch(t.AsField.DataType.Name) &&
+                                                StaticStringRegex.Match(t.AsField.DataType.Name).Groups["length"].Value != "80" &&
+                                                t.AsField.Multiplicity.Count == 0)
                                     .Distinct();
             }
 
@@ -642,7 +654,11 @@ namespace PlcNext.Common.CodeModel
                     }
                     case EntityKeys.PortArraysKey:
                     {
-                            return owner.Create(key, GetPortArrays().Select(c => c.Base));
+                        return owner.Create(key, GetPortArrays().Select(c => c.Base));
+                    }
+                    case EntityKeys.VariablePortStringsKey:
+                    {
+                        return owner.Create(key, GetVariablePortStrings().Select(c => c.Base));
                     }
                     case EntityKeys.NamespaceKey:
                     {
@@ -781,13 +797,14 @@ namespace PlcNext.Common.CodeModel
 
             (bool success, string value) FormatIecDataType(string unformattedValue)
             {
-                if((unformattedValue.StartsWith("StaticString<", StringComparison.InvariantCulture) 
-                    || unformattedValue.StartsWith("StaticWString<", StringComparison.InvariantCulture))
-                    && !unformattedValue.Contains("<80>"))
+                string formattedString = FormatStringDataType(unformattedValue);
+                if (formattedString != null)
                 {
-                    throw new UnknownIecDataTypeException(unformattedValue);
+                    return (true, formattedString);
                 }
+
                 (bool success, string value) = FormatDataType(unformattedValue);
+                
                 if (!success)
                 {
                     return (success, value);
@@ -804,6 +821,16 @@ namespace PlcNext.Common.CodeModel
                 return (true, result);
             }
 
+            string FormatStringDataType(string unformattedValue)
+            {
+                Match stringMatch = StaticStringRegex.Match(unformattedValue);
+                if(stringMatch.Success)
+                {
+                    return owner.Create("temporaryStaticStringFormatContainer", unformattedValue)
+                                .Format()["iecStringDataType"].Value<string>();
+                }
+                return null;
+            }
 
             Entity ResolveIECDataType()
             {

@@ -46,6 +46,7 @@ namespace PlcNext.Common.Tools
         public const string PortStructsKey = "portstructs";
         public const string PortEnumsKey = "portenums";
         public const string PortArraysKey = "portarrays";
+        public const string VariablePortStringsKey = "variableportstrings";
         public const string FieldsKey = "fields";
         public const string AttributesKey = "attributes";
         public const string BaseTypeKey = "basetype";

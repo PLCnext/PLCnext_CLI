@@ -375,6 +375,16 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_typemeta_method_looks_like_NAME("ArrayInitializer.meta.cpp")).RunAsyncWithTimeout();
         }
 
+        //[Scenario]
+        //public async Task Generate_typemeta_information_for_StaticString()
+        //{
+        //    await Runner.AddSteps(
+        //        _ => Given_is_the_project("StaticStringTest"),
+        //        _ => When_I_generate_all_codefiles(),
+        //        _ => Then_the_typemeta_method_looks_like_NAME("StaticStringTest.meta.cpp")
+        //        ).RunAsyncWithTimeout();
+        //}
+
         [Scenario]
         public async Task Generate_typemeta_information_in_method()
         {
@@ -644,6 +654,16 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("EnumTest"),
                 _ => When_I_generate_all_metafiles(),
                 _ => Then_the_datatype_worksheet_looks_like_NAME("EnumTestDataTypes.dt")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatypes_worksheet_for_StaticString()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StaticStringTest"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("StaticStringTestDataTypes.dt")
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]
