@@ -674,6 +674,15 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_generate_all_metafiles_with_no_datatypes_worksheet(),
                 _ => Then_the_datatypes_worksheet_was_not_generated()).RunAsyncWithTimeout();
         }
+        
+        [Scenario]
+        public async Task Port_Comment_Is_Only_Valid_In_Own_Visibility_Context()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("CommentedPort"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_libmeta_file_is_generated_with_the_components("CommentedPortComponent")).RunAsyncWithTimeout();
+        }
 
         public Generate_Feature(ITestOutputHelper helper) : base(helper)
         {

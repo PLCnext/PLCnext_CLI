@@ -31,6 +31,17 @@ namespace PlcNext.CppParser.CppRipper
             }
         }
 
+        internal static IEnumerable<ParseNode> SkipAfterLastVisibilityGroup(this IReadOnlyCollection<ParseNode> nodes)
+        {
+            ParseNode lastVisibilityGroup = nodes.LastOrDefault(n => n.RuleName == "node" &&
+                                                                     n.ChildrenSkipUnnamed().FirstOrDefault()
+                                                                     ?.RuleName == "visibility_group");
+            return lastVisibilityGroup != null
+                       ? nodes.SkipWhile(n => n != lastVisibilityGroup)
+                              .Skip(1)
+                       : nodes;
+        }
+        
         internal static IEnumerable<ParseNode> ChildrenSkipUnnamed(this ParseNode parent)
         {
             foreach (ParseNode child in parent)

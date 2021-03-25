@@ -247,6 +247,16 @@
     <EmbeddedResource Include="Deployment\ConsumableLibrary\Config.cmake.in" />
     <None Remove="Deployment\ConsumableLibrary\How_to_use.txt" />
     <EmbeddedResource Include="Deployment\ConsumableLibrary\How_to_use.txt" />
+    <None Remove="Deployment\CommentedPort\src\CommentedPortComponent.cpp" />
+    <EmbeddedResource Include="Deployment\CommentedPort\src\CommentedPortComponent.cpp" />
+    <None Remove="Deployment\CommentedPort\src\CommentedPortComponent.hpp" />
+    <EmbeddedResource Include="Deployment\CommentedPort\src\CommentedPortComponent.hpp" />
+    <None Remove="Deployment\CommentedPort\src\CommentedPortProgram.cpp" />
+    <EmbeddedResource Include="Deployment\CommentedPort\src\CommentedPortProgram.cpp" />
+    <None Remove="Deployment\CommentedPort\src\CommentedPortProgram.hpp" />
+    <EmbeddedResource Include="Deployment\CommentedPort\src\CommentedPortProgram.hpp" />
+    <None Remove="Deployment\CommentedPort\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\CommentedPort\CMakeLists.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -257,6 +267,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Deployment\ConsumableLibrary\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\CommentedPort\plcnext.proj" />
     <Content Include="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

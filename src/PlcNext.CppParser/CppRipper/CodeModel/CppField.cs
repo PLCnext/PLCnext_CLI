@@ -83,7 +83,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             IComment[] GetComments()
             {
                 ParseNode content = declaration.ChildrenSkipUnnamed().First(n => n.RuleType == "plus" && n.RuleName == "declaration_content");
-                return content.ChildrenSkipUnnamed()
+                return content.ChildrenSkipUnnamed().ToArray()
+                              .SkipAfterLastVisibilityGroup()
                               .Where(IsComment)
                               .Where(c => !string.IsNullOrEmpty(c.ToString()))
                               .Select(CppComment.Parse)
