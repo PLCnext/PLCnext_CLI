@@ -17,6 +17,7 @@ namespace PlcNext.Common.Tools.FileSystem
     {
         string FullName { get; }
         bool Created { get; }
+        bool Exists { get; }
 
         void Delete();
 

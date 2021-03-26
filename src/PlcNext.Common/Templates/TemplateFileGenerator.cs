@@ -30,12 +30,14 @@ namespace PlcNext.Common.Templates
         private readonly ITemplateResolver resolver;
         private readonly ITemplateRepository repository;
         private readonly IFileSystem fileSystem;
+        private readonly ExecutionContext executionContext;
 
-        public TemplateFileGenerator(ITemplateResolver resolver, ITemplateRepository repository, IFileSystem fileSystem)
+        public TemplateFileGenerator(ITemplateResolver resolver, ITemplateRepository repository, IFileSystem fileSystem, ExecutionContext executionContext)
         {
             this.resolver = resolver;
             this.repository = repository;
             this.fileSystem = fileSystem;
+            this.executionContext = executionContext;
         }
 
         public async Task<IEnumerable<VirtualFile>> InitalizeTemplate(Entity dataModel, ChangeObservable observable)
@@ -66,6 +68,13 @@ namespace PlcNext.Common.Templates
                 foreach (templateFile file in template.File)
                 {
                     (string content, Encoding encoding) = await GetResolvedTemplateContent(dataModel, file, template).ConfigureAwait(false);
+
+                    if (Equals(content, default) && Equals(encoding,default))
+                    {
+                        //skip file
+                        executionContext.WriteWarning($"The template file {file.template} of the template {template.name} was not found. Creation will be skipped.");
+                        continue;
+                    }
 
                     VirtualFile destination = await GetFile(dataModel, file, forced, basePath, template).ConfigureAwait(false);
                     observable.OnNext(new Change(() => destination.Restore(),
@@ -309,6 +318,11 @@ namespace PlcNext.Common.Templates
         {
             string content;
             Encoding encoding;
+            VirtualFile virtualFile = fileSystem.GetFile(file.template, repository.GetTemplateBase(template));
+            if (!virtualFile.Exists)
+            {
+                return default;
+            }
             using (Stream fileStream = fileSystem.GetFile(file.template, repository.GetTemplateBase(template)).OpenRead())
             using (StreamReader reader = new StreamReader(fileStream, Encoding.UTF8, true))
             {
@@ -397,6 +411,13 @@ namespace PlcNext.Common.Templates
                     }
 
                     (string content, Encoding encoding) = await GetResolvedTemplateContent(generatableEntity, file, template).ConfigureAwait(false);
+
+                    if (Equals(content, default) && Equals(encoding,default))
+                    {
+                        //skip file
+                        executionContext.WriteWarning($"The template file {file.template} of the template {template.name} was not found. Creation will be skipped.");
+                        continue;
+                    }
                     
                     VirtualDirectory baseDirectory = GetBaseDirectory(file);
                     VirtualFile destination = await GetFile(generatableEntity, file, true, baseDirectory.FullName, template).ConfigureAwait(false);

@@ -21,6 +21,15 @@ namespace PlcNext.Common.Tools.FileSystem
         protected readonly ILog Log;
         public bool Created { get; }
 
+        public bool Exists
+        {
+            get
+            {
+                entryInfo.Refresh();
+                return entryInfo.Exists;
+            }
+        }
+
         protected FileSystemInfoContentResolver(FileSystemInfo entryInfo, bool created, ILog log)
         {
             this.entryInfo = entryInfo;
@@ -34,7 +43,7 @@ namespace PlcNext.Common.Tools.FileSystem
         {
             try
             {
-                if (entryInfo.Exists)
+                if (Exists)
                 {
                     entryInfo.Delete();
                 }

@@ -28,6 +28,8 @@ namespace PlcNext.Common.Tools.FileSystem
             Parent = parent;
         }
 
+        public bool Exists => entryContentResolver.Exists;
+
         public string Name { get; }
 
         public string FullName => entryContentResolver.FullName;

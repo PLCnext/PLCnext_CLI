@@ -111,6 +111,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
             {
                 directoryContentResolver.FullName.Returns(fullName);
                 directoryContentResolver.Created.Returns(create);
+                directoryContentResolver.Exists.Returns(info => DirectoryExists(fullName, string.Empty));
                 directoryContentResolver.GetContent().Returns((callinfo) => directoryContents[currentDirectory]);
                 directoryContentResolver.Create<VirtualDirectory>(null).ReturnsForAnyArgs(info =>
                 {
@@ -142,6 +143,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                     VirtualFile file = new VirtualFile(fileName, fileContentResolver);
                     fileContentResolver.FullName.Returns(fileFullName);
                     fileContentResolver.Created.Returns(create);
+                    fileContentResolver.Exists.Returns(info => FileExists(fileFullName));
                     fileContentResolver.CheckAccess().Returns(true);
                     fileContents[file] = new MemoryStream();
                     fileContentResolver.GetContent()
