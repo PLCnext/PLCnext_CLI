@@ -41,6 +41,8 @@ private: // static methods
 private: // methods
 
 public: // fields
+    using value_type = int32;
+    
     int64               TaskInterval = 0;
     int16               TaskPriority = 0;
     int64               TaskWatchdogTime = 0;

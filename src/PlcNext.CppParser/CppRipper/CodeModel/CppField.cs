@@ -44,6 +44,11 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             }
 
             ParseNode[] identifiers = GetIdentifier();
+            if (identifiers.FirstOrDefault()?.ToString() == "using")
+            {
+                //using directive inside class/struct
+                return Enumerable.Empty<CppField>();
+            }
             ParseNode[] typeNodes = GetTypeDeclarationName() ?? GetTypeNodes(identifiers);
             if (identifiers.SequenceEqual(typeNodes))
             {
