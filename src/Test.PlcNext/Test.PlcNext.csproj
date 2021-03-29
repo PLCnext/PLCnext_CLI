@@ -257,6 +257,16 @@
     <EmbeddedResource Include="Deployment\CommentedPort\src\CommentedPortProgram.hpp" />
     <None Remove="Deployment\CommentedPort\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\CommentedPort\CMakeLists.txt" />
+    <None Remove="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumComponent.cpp" />
+    <EmbeddedResource Include="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumComponent.cpp" />
+    <None Remove="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumComponent.hpp" />
+    <EmbeddedResource Include="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumComponent.hpp" />
+    <None Remove="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumProgram.cpp" />
+    <EmbeddedResource Include="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumProgram.cpp" />
+    <None Remove="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumProgram.hpp" />
+    <EmbeddedResource Include="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumProgram.hpp" />
+    <None Remove="Deployment\FullyQualifiedEnum\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\FullyQualifiedEnum\CMakeLists.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -268,6 +278,7 @@
     </Content>
     <EmbeddedResource Include="Deployment\ConsumableLibrary\plcnext.proj" />
     <EmbeddedResource Include="Deployment\CommentedPort\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\FullyQualifiedEnum\plcnext.proj" />
     <Content Include="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

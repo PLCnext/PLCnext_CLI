@@ -71,7 +71,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
                 ParseNode Identifier(ParseNode node)
                 {
-                    if (node.RuleType == "leaf" && node.RuleName == "identifier")
+                    if (node.RuleName == "identifier" ||
+                        node.RuleName == "generic")
                     {
                         return node;
                     }
@@ -113,7 +114,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                     if (parent.RuleType == "choice" && parent.RuleName == "node")
                     {
                         ParseNode result = parent.FirstOrDefault();
-                        if (result?.RuleType == "leaf" && result.RuleName == "identifier")
+                        if (result?.RuleName == "identifier" ||
+                            result?.RuleName == "generic")
                         {
                             return result;
                         }

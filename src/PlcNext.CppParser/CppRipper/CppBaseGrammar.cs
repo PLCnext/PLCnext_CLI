@@ -107,8 +107,7 @@ namespace PlcNext.CppParser.CppRipper
         public Rule ident_next_char;
         public Rule identifier_extension;
         public Rule identifier;
-        public Rule identifier_extension_without_angle;
-        public Rule identifier_without_angle;
+        public Rule generic;
         #endregion
 
         #region numbers
@@ -241,10 +240,11 @@ namespace PlcNext.CppParser.CppRipper
             letter = lower_case_letter | upper_case_letter;
             ident_first_char = CharSet("_") | letter;
             ident_next_char = ident_first_char | digit;
-            identifier_extension = CharSeq("::") | CharSet("<") + Recursive(() => identifier | literal);
-            identifier = Leaf(ident_first_char + Star(ident_next_char) + Star(identifier_extension) + Star(CharSet(">")));
-            identifier_extension_without_angle = CharSeq("::") + Recursive(() => identifier);
-            identifier_without_angle = Leaf(ident_first_char + Star(ident_next_char) + Star(identifier_extension_without_angle));
+            identifier_extension = CharSeq("::") + Recursive(() => identifier);
+            identifier = Leaf(ident_first_char + Star(ident_next_char) + Star(identifier_extension));
+            
+            generic
+                = identifier + Nested("<", ">");
             #endregion
 
             #region numbers

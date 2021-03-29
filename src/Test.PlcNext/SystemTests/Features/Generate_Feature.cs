@@ -263,6 +263,23 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Generate_typemeta_for_enum_types_with_fully_qualified_base_type()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("FullyQualifiedEnum"),
+                _ => Given_is_the_working_directory_PATH("FullyQualifiedEnum"),
+                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => Then_the_typemeta_file_contains_only_the_following_structure(
+                                                                             new EnumTypemetaStructure("QualityState", "uint8",
+                                                                                                       new[]
+                                                                                                       {
+                                                                                                           new EnumSymbol("None",0x00),
+                                                                                                           new EnumSymbol("Good",0x01),
+                                                                                                           new EnumSymbol("Bad",0xFF),
+                                                                                                       }))).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_port_information_with_array_initializer()
         {
             await Runner.AddSteps(

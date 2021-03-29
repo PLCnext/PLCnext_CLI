@@ -59,6 +59,18 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             }
 
             value = value.Trim().Trim('\'', '"');
+            if (!long.TryParse(value, out _))
+            {
+                try
+                {
+                    long convertedValue = Convert.ToInt64(value, 16);
+                    value = convertedValue.ToString("D", CultureInfo.InvariantCulture);
+                }
+                catch (FormatException)
+                {
+                    //do nothing
+                }
+            }
             return new CppSymbol(name, value);
         }
 

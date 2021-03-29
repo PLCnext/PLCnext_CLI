@@ -36,7 +36,6 @@ namespace PlcNext.CppParser.CppRipper
         public Rule base_type;
         public Rule angle_operators;
         public Rule identifier_seq;
-        public Rule generic;
 
         public Rule Delimiter(string s)
         {
@@ -45,9 +44,6 @@ namespace PlcNext.CppParser.CppRipper
 
         public CppStructuralGrammar()
         {
-            generic
-                = identifier_without_angle + Nested("<", ">") + ws;
-
             comment_set
                 = Star(comment + Eat(multiline_ws)) + Eat(multiline_ws);
 
@@ -81,18 +77,19 @@ namespace PlcNext.CppParser.CppRipper
 
             class_decl
                 = CLASS + Opt((generic | identifier) + Opt(Eat(multiline_ws) + COLON +
-                                               Plus(Eat(multiline_ws) + base_type + Eat(multiline_ws) + Opt(symbol)))) + Eat(multiline_ws);
+                                               Plus(Eat(multiline_ws) + base_type + Eat(multiline_ws) + Opt(COMMA)))) + Eat(multiline_ws);
 
             struct_decl
                 = STRUCT + Opt((generic | identifier) + Opt(Eat(multiline_ws) + COLON +
-                                               Plus(Eat(multiline_ws) + base_type + Eat(multiline_ws) + Opt(symbol)))) + Eat(multiline_ws);
+                                               Plus(Eat(multiline_ws) + base_type + Eat(multiline_ws) + Opt(COMMA)))) + Eat(multiline_ws);
 
             union_decl
                 = UNION + Opt(identifier) + Eat(multiline_ws);
 
             enum_decl
                 = ENUM + Opt(CLASS|STRUCT) + Opt(identifier + Opt(Eat(multiline_ws) + COLON +
-                                               Plus(Eat(multiline_ws) + base_type + Eat(multiline_ws) + Opt(symbol)))) + Eat(multiline_ws);
+                                              Eat(multiline_ws) + base_type + Eat(multiline_ws) +
+                                               Star(COMMA + Eat(multiline_ws) + base_type + Eat(multiline_ws)))) + Eat(multiline_ws);
 
             label
                 = identifier + ws + COLON + Eat(multiline_ws);
@@ -109,7 +106,7 @@ namespace PlcNext.CppParser.CppRipper
                 = Not(CharSeq("/*") | CharSeq("//")) + (CharSeq("<<=") | CharSeq(">>=") | CharSeq("<<") | CharSeq(">>") | CharSeq("<=") | CharSeq(">=") | CharSeq("<") | CharSeq(">")) + Eat(multiline_ws);
 
             identifier_seq
-                = identifier + Plus(CharSeq("->") + identifier);
+                = (generic | identifier) + Plus(CharSeq("->") + (generic | identifier));
 
             node 
                 = bracketed_group
@@ -123,6 +120,7 @@ namespace PlcNext.CppParser.CppRipper
                 | visibility_group
                 | label
                 | identifier_seq
+                | generic
                 | identifier
                 | angle_operators;
 
