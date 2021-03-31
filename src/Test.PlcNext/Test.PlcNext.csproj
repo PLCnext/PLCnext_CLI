@@ -10,6 +10,27 @@
     <Compile Remove="TestResults\**" />
     <EmbeddedResource Remove="TestResults\**" />
     <None Remove="TestResults\**" />
+    <None Remove="Deployment\AcfProjectv210\CMakeLists.txt" />
+    <None Remove="Deployment\AcfProjectv210\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <None Remove="Deployment\AcfProjectv210\How_to_deploy.txt" />
+    <None Remove="Deployment\AcfProjectv210\src\AcfProjectv210Component.cpp" />
+    <None Remove="Deployment\AcfProjectv210\src\AcfProjectv210Component.hpp" />
+    <None Remove="Deployment\AcfProjectv210\src\AcfProjectv210Library.acf.config" />
+    <None Remove="Deployment\AcfProjectv216withoutproj\CMakeLists.txt" />
+    <None Remove="Deployment\AcfProjectv216withoutproj\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <None Remove="Deployment\AcfProjectv216withoutproj\How_to_deploy.txt" />
+    <None Remove="Deployment\AcfProjectv216withoutproj\src\AcfProjectv216Component.cpp" />
+    <None Remove="Deployment\AcfProjectv216withoutproj\src\AcfProjectv216Component.hpp" />
+    <None Remove="Deployment\AcfProjectv216withoutproj\src\AcfProjectv216Library.acf.config" />
+    <None Remove="Deployment\AcfProjectv216withoutproj\src\AcfProjectv216withoutprojComponent.cpp" />
+    <None Remove="Deployment\AcfProjectv216withoutproj\src\AcfProjectv216withoutprojComponent.hpp" />
+    <None Remove="Deployment\AcfProjectv216withoutproj\src\AcfProjectv216withoutprojLibrary.acf.config" />
+    <None Remove="Deployment\AcfProjectv216\CMakeLists.txt" />
+    <None Remove="Deployment\AcfProjectv216\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <None Remove="Deployment\AcfProjectv216\How_to_deploy.txt" />
+    <None Remove="Deployment\AcfProjectv216\src\AcfProjectv216Component.cpp" />
+    <None Remove="Deployment\AcfProjectv216\src\AcfProjectv216Component.hpp" />
+    <None Remove="Deployment\AcfProjectv216\src\AcfProjectv216Library.acf.config" />
     <None Remove="Deployment\AcfProject\MySettings.txt" />
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.cpp" />
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.hpp" />
@@ -117,6 +138,24 @@
     <None Remove="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
     <None Remove="Deployment\TestResults\StaticStringTestDataTypes.dt" />
     <None Remove="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
+    <EmbeddedResource Include="Deployment\AcfProjectv210\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\AcfProjectv210\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <EmbeddedResource Include="Deployment\AcfProjectv210\How_to_deploy.txt" />
+    <EmbeddedResource Include="Deployment\AcfProjectv210\src\AcfProjectv210Component.cpp" />
+    <EmbeddedResource Include="Deployment\AcfProjectv210\src\AcfProjectv210Component.hpp" />
+    <EmbeddedResource Include="Deployment\AcfProjectv210\src\AcfProjectv210Library.acf.config" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216withoutproj\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216withoutproj\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216withoutproj\How_to_deploy.txt" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216withoutproj\src\AcfProjectv216withoutprojComponent.cpp" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216withoutproj\src\AcfProjectv216withoutprojComponent.hpp" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216withoutproj\src\AcfProjectv216withoutprojLibrary.acf.config" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216\How_to_deploy.txt" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216\src\AcfProjectv216Component.cpp" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216\src\AcfProjectv216Component.hpp" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216\src\AcfProjectv216Library.acf.config" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\CMakeFlags.txt" />
@@ -655,17 +694,20 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\Program.progmeta" Link="Deployment\Templates\ProgramTemplate\Program.progmeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\.proj" Link="Deployment\Templates\ProjectTemplate\.proj" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.libmeta" Link="Deployment\Templates\ProjectTemplate\Library.libmeta" />
-	  <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
-	  <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Optimized_Library.meta.cpp" />
+	<EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
+	<EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Optimized_Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
 	<EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\DataTypes.dt" Link="Deployment\Templates\ProjectTemplate\DataTypes.dt" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
-	  <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
-	  <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" />
+	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
+	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\acf.config" Link="Deployment\Templates\AcfProjectTemplate\acf.config" />
-    <EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.typemeta" Link="Deployment\Templates\AcfProjectTemplate\Library.typemeta" />
+	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.libmeta" Link="Deployment\Templates\AcfProjectTemplate\Library.libmeta" />
+	<EmbeddedResource Include="Deployment\AlmostAmbiguous\plcnext.proj" />
     <EmbeddedResource Include="..\PlcNext\Templates\BaseComponentTemplate\Component.meta.cpp" Link="Deployment\Templates\BaseComponentTemplate\Component.meta.cpp" />
-    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\old_Library.cpp" Link="Deployment\Templates\AcfProjectTemplate\old_Library.cpp" />
+	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.hpp" Link="Deployment\Templates\AcfProjectTemplate\Library.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.cpp" Link="Deployment\Templates\ProjectTemplate\Library.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.hpp" Link="Deployment\Templates\ProjectTemplate\Library.hpp" />
@@ -676,6 +718,8 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Class.hpp" Link="Deployment\Templates\ConsumableLibraryTemplate\Class.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Config.cmake.in" Link="Deployment\Templates\ConsumableLibraryTemplate\Config.cmake.in" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\AcfProjectv216\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\AcfProjectv210\plcnext.proj" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StaticStringTest\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StructWith1000Fields\plcnext.proj" />

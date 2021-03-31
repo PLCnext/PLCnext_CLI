@@ -410,6 +410,9 @@ namespace PlcNext.Common.Templates
                         }
                     }
 
+                    if (!CheckProjectVersionRestrictions(file))
+                        continue;
+
                     (string content, Encoding encoding) = await GetResolvedTemplateContent(generatableEntity, file, template).ConfigureAwait(false);
 
                     if (Equals(content, default) && Equals(encoding,default))
@@ -445,6 +448,50 @@ namespace PlcNext.Common.Templates
                         generatorPath = Path.Combine(generatorPath, file.generator.ToLowerInvariant());
                     }
                     return fileSystem.GetDirectory(generatorPath, rootEntity.Path);
+                }
+
+                bool CheckProjectVersionRestrictions(templateGeneratedFile file)
+                {
+                    if (!string.IsNullOrEmpty(file.maxversion))
+                    {
+                        if (!string.IsNullOrEmpty(file.minversion) || !string.IsNullOrEmpty(file.equalsversion))
+                        {
+                            throw new FormattableException($"Error in template {template.name}: " +
+                                "Only one of the attributes minversion, maxversion, equalsversion can be used per file. ");
+                        }
+
+                        ProjectEntity project = ProjectEntity.Decorate(generatableEntity.IsRoot() ? generatableEntity : generatableEntity.Root);
+                        if (!project.Settings.IsPersistent || project.Version > new Version(file.maxversion))
+                        {
+                            return false;
+                        }
+                        return true;
+                    }
+
+                    if (!string.IsNullOrEmpty(file.minversion))
+                    {
+                        if (!string.IsNullOrEmpty(file.equalsversion))
+                        {
+                            throw new FormattableException($"Error in template {template.name}: " +
+                                "Only one of the attributes minversion, maxversion, equalsversion can be used per file. ");
+                        }
+                        ProjectEntity project = ProjectEntity.Decorate(generatableEntity.IsRoot() ? generatableEntity : generatableEntity.Root);
+                        if (project.Settings.IsPersistent && project.Version < new Version(file.minversion))
+                        {
+                            return false;
+                        }
+                        return true;
+                    }
+
+                    if (!string.IsNullOrEmpty(file.equalsversion))
+                    {
+                        ProjectEntity project = ProjectEntity.Decorate(generatableEntity.IsRoot() ? generatableEntity : generatableEntity.Root);
+                        if (!project.Settings.IsPersistent || project.Version != new Version(file.equalsversion))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
                 }
             }
         }

@@ -39,6 +39,7 @@ namespace PlcNext.Common.Tools
         public const string ScriptFileExtensionWin = "bat";
         public const string ScriptFileExtensionLinux = "sh";
         public const string DatatypeWorksheetExtension = "dt";
+        public const string AcfConfigExtension = ".acf.config";
 
         //other
         public const string Tab = "    ";
@@ -105,6 +106,7 @@ namespace PlcNext.Common.Tools
         public const string ComponentFolderType = "MetaComponentFolder";
         public const string ProgramFolderType = "MetaProgramFolder";
         public const string DataTypeWorksheetType = "DataTypeWorksheet";
+        public const string AcfConfigurationType = "AcfConfiguration";
 
         //Output formatter
         public const string CommandKey = "command";

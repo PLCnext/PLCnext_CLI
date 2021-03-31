@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Deploy;
+using PlcNext.Common.Generate;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
@@ -32,12 +33,16 @@ namespace PlcNext.Common.Templates
         private readonly IDeployService deployService;
         private readonly IEnumerable<IDeployStep> deploySteps;
         private readonly ExecutionContext executionContext;
+        private readonly IEnumerable<IGenerateStep> generateSteps;
 
         private CommandDefinition newCommand;
         private CommandDefinition deployCommand;
         private readonly List<CommandDefinition> generateCommands = new List<CommandDefinition>();
 
-        public TemplateCommandProvider(ITemplateCommandBuilder templateCommandBuilder, ITemplateRepository repository, IEntityFactory entityFactory, ITemplateFileGenerator templateFileGenerator, IUserInterface userInterface, IDeployService deployService, IEnumerable<IDeployStep> deploySteps, ExecutionContext executionContext)
+        public TemplateCommandProvider(ITemplateCommandBuilder templateCommandBuilder, ITemplateRepository repository,
+            IEntityFactory entityFactory, ITemplateFileGenerator templateFileGenerator, IUserInterface userInterface,
+            IDeployService deployService, IEnumerable<IDeployStep> deploySteps, ExecutionContext executionContext,
+            IEnumerable<IGenerateStep> generateSteps)
         {
             this.templateCommandBuilder = templateCommandBuilder;
             this.repository = repository;
@@ -47,6 +52,7 @@ namespace PlcNext.Common.Templates
             this.deployService = deployService;
             this.deploySteps = deploySteps;
             this.executionContext = executionContext;
+            this.generateSteps = generateSteps;
         }
 
         public IEnumerable<CommandDefinition> GetCommands(IEnumerable<string> context)
@@ -136,6 +142,27 @@ namespace PlcNext.Common.Templates
                 SingleValueArgument singleValueArgument = definition.Argument<SingleValueArgument>(Constants.OutputArgumentName);
                 await templateFileGenerator.GenerateFiles(dataModel.Root, definition.Name, singleValueArgument.Value, singleValueArgument.IsDefined, observable)
                                            .ConfigureAwait(false);
+
+                Entity root = dataModel.Root;
+                TemplateDescription template = TemplateEntity.Decorate(root).Template;
+                foreach (templateGenerateStep generateStep in template.GenerateStep ?? Enumerable.Empty<templateGenerateStep>())
+                {
+                    if (definition.Name == "all" || generateStep.generator == definition.Name)
+                    {
+                        IGenerateStep step = generateSteps.FirstOrDefault(s => s.Identifier == generateStep.identifier);
+                        if (step != null)
+                        {
+                            step.Execute(dataModel, observable);
+                        }
+                        else
+                        {
+                            executionContext.WriteWarning(
+                                $"Generate step '{generateStep.identifier}' could not be executed because there is no implementation. " +
+                                $"Available implementations are:{Environment.NewLine}" +
+                                $"{string.Join(Environment.NewLine, generateSteps.Select(d => d.Identifier))}");
+                        }
+                    }
+                }
 
                 userInterface.WriteInformation(definition.Name == "all"
                                                    ? $"Successfully generated all files for {dataModel.Root.Path}."

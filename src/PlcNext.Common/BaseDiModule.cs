@@ -19,6 +19,7 @@ using PlcNext.Common.CodeModel.Cpp;
 using PlcNext.Common.Commands;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Deploy;
+using PlcNext.Common.Generate;
 using PlcNext.Common.Installation;
 using PlcNext.Common.Installation.SDK;
 using PlcNext.Common.MetaData;
@@ -122,8 +123,10 @@ namespace PlcNext.Common
             builder.RegisterType<CollectiveEntityContentProvider>().As<IEntityContentProvider>().InstancePerLifetimeScope();
             builder.RegisterType<DeployService>().As<IDeployService>().InstancePerLifetimeScope();
             builder.RegisterType<EngineeringLibraryBuilderDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
+            builder.RegisterType<AcfEngineeringLibraryBuilderDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
             builder.RegisterType<ProjectPropertiesProvider>().As<IProjectPropertiesProvider>().InstancePerLifetimeScope();
             builder.RegisterType<CopyDependenciesDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
+            builder.RegisterType<AcfGenerateStep>().As<IGenerateStep>().InstancePerLifetimeScope();
             if (activateAutoComponents)
             {
                 AddAutoActivatedComponents(builder, noSdkExploration);

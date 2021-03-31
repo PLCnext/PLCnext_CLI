@@ -376,4 +376,7 @@
   <data name="TargetAlreadyInstalled" xml:space="preserve">
     <value>The target {0} is already installed. Check your installed targets with 'get targets'.</value>
   </data>
+  <data name="OldAcfConfig" xml:space="preserve">
+    <value>Since version 2021.6 the component type attribute inside the .acf.config file must use the namespace separator '.' instead of '::'!</value>
+  </data>
 </root>

@@ -12,13 +12,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json.Linq;
-using PlcNext.Common.CodeModel;
 using PlcNext.Common.Commands;
 using PlcNext.Common.Deploy;
 using PlcNext.Common.MetaData;
@@ -409,6 +406,152 @@ namespace PlcNext.Common.Build
                 }
 
                 return command;
+            }
+        }
+        
+        public int ExecuteAcf(Entity dataModel)
+        {
+            ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
+            CodeEntity projectCodeEntity = CodeEntity.Decorate(project);
+            string projectName = projectCodeEntity.Namespace;
+            List<VirtualFile> processedMetaFiles = new List<VirtualFile>();
+            HashSet<VirtualDirectory> createdDirectories = new HashSet<VirtualDirectory>();
+            IEnumerable<Entity> targets = project.Targets.ToArray();
+            if (!targets.Any())
+            {
+                throw new FormattableException("Please use --target to specify for which targets the library shall be generated.");
+            }
+            
+            CheckMetaFiles(targets.First());
+
+            string commandOptionsFile = GenerateCommandOptionsForAcf();
+            int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project);
+
+            RemoveMetaFilesFromDeployDirectory();
+
+            return result;
+
+            void CheckMetaFiles(Entity target)
+            {
+                TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
+                VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
+
+                if (!fileSystem.FileExists(Path.Combine(deployDirectory.FullName, $"{projectName}.libmeta")))
+                {
+                    throw new MetaLibraryNotFoundException(deployDirectory.FullName);
+                }
+
+                IEnumerable<VirtualFile> metaFiles = deployDirectory.Files(searchRecursive: true);
+
+                IEnumerable<Entity> componentsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
+                                                                                     .Where(e => e.Type.Equals("acfcomponent", StringComparison.OrdinalIgnoreCase))
+                                                                                     .Where(c => !metaFiles.Any(f => f.Name.Equals($"{c.Name}.{Constants.CompmetaExtension}",
+                                                                                                                                   StringComparison.Ordinal)))
+                                                                                     .ToArray();
+                if (componentsWithoutMetaFile.Any())
+                {
+                    throw new MetaFileNotFoundException(deployDirectory.FullName, $"{componentsWithoutMetaFile.First().Name}.{Constants.CompmetaExtension}");
+                }
+            }
+            
+            string GenerateCommandOptionsForAcf()
+            {
+                FileEntity projectFileEntity = FileEntity.Decorate(project);
+                VirtualFile commandOptions = projectFileEntity.TempDirectory.File("CommandOptions.txt");
+                CommandEntity commandOrigin = CommandEntity.Decorate(project.Origin);
+                VirtualDirectory outputRoot = fileSystem.GetDirectory(commandOrigin.Output, project.Path, false);
+                executionContext.Observable.OnNext(new Change(() => { }, $"Create command options file {commandOptions.FullName}"));
+
+                using (Stream stream = commandOptions.OpenWrite())
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    writer.WriteLine($"{Constants.OutputOption} \"{MakeRelative(Path.Combine(outputRoot.FullName, projectName))}.{Constants.EngineeringLibraryExtension}\"");
+                    writer.WriteLine($"{Constants.GuidOption} {project.Id:D}");
+
+                    WriteMetadata(writer);
+                }
+
+                return commandOptions.FullName;
+
+
+                void WriteMetadata(StreamWriter writer)
+                {
+                    VirtualDirectory deployDirectory = DeployEntity.Decorate(targets.First()).DeployDirectory;
+                    foreach (VirtualFile metaFile in deployDirectory.Files(searchRecursive: true))
+                    {
+                        string destinationPath;
+                        string fileType;
+                        switch (Path.GetExtension(metaFile.Name)?.ToUpperInvariant() ?? string.Empty)
+                        {
+                            case ".LIBMETA":
+                                destinationPath = string.Empty;
+                                fileType = Constants.LibmetaFileType;
+                                break;
+                            case ".TYPEMETA":
+                                destinationPath = string.Empty;
+                                fileType = Constants.TypemetaFileType;
+                                break;
+                            case ".COMPMETA":
+                                CreateComponentDirectory(metaFile.Parent);
+                                destinationPath = metaFile.Parent.Name;
+                                fileType = Constants.CompmetaFileType;
+                                break;
+                            case ".CONFIG":
+                                if (!metaFile.Name.EndsWith(".acf.config", StringComparison.OrdinalIgnoreCase))
+                                    continue;
+                                destinationPath = string.Empty;
+                                fileType = Constants.AcfConfigurationType;
+                                break;
+                            default:
+                                //do nothing all other files are not interesting
+                                continue;
+                        }
+                        writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                       Constants.FileOptionPattern,
+                                                       fileType,
+                                                       MakeRelative(metaFile.FullName),
+                                                       guidFactory.Create().ToString("D", CultureInfo.InvariantCulture),
+                                                       destinationPath));
+                        processedMetaFiles.Add(metaFile);
+                    }
+
+                    void CreateComponentDirectory(VirtualDirectory componentDirectory)
+                    {
+                        if (createdDirectories.Contains(componentDirectory))
+                        {
+                            return;
+                        }
+
+                        writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                       Constants.DirectoryOptionPattern,
+                                                       $"Logical Elements/{componentDirectory.Name}",
+                                                       Constants.ComponentFolderType,
+                                                       guidFactory.Create().ToString("D", CultureInfo.InvariantCulture)));
+                        createdDirectories.Add(componentDirectory);
+                    }
+                }
+
+                string MakeRelative(string path)
+                {
+                    return path.GetRelativePath(projectFileEntity.Directory.FullName);
+                }
+            }
+        
+            void RemoveMetaFilesFromDeployDirectory()
+            {
+                VirtualDirectory deployDirectory = DeployEntity.Decorate(targets.First()).DeployDirectory;
+
+                
+                foreach (VirtualFile metaFile in 
+                    processedMetaFiles.Where(file => !file.Name.EndsWith(".acf.config", StringComparison.OrdinalIgnoreCase)))
+                {
+                    metaFile.Delete();
+                }
+
+                foreach (VirtualDirectory directory in createdDirectories.Where(d => !d.Entries.Any()))
+                {
+                    directory.Delete();
+                }
             }
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Build", "CA1308:In method 'Execute', replace the call to 'ToLowerInvariant' with 'ToUpperInvariant'.", Justification = "Lower case is not used as comparsion but as value.")]

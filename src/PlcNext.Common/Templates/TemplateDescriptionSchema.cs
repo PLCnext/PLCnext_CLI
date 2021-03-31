@@ -558,6 +558,8 @@ namespace PlcNext.Common.Templates.Description {
         
         private string generatorField;
         
+        private string identifierField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("Argument", IsNullable=false)]
         public templateArgumentDefinition[] Arguments {
@@ -588,6 +590,17 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.generatorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string identifier {
+            get {
+                return this.identifierField;
+            }
+            set {
+                this.identifierField = value;
             }
         }
     }
@@ -858,6 +871,12 @@ namespace PlcNext.Common.Templates.Description {
         
         private string conditionField;
         
+        private string minversionField;
+        
+        private string maxversionField;
+        
+        private string equalsversionField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string name {
@@ -921,6 +940,39 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.conditionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string minversion {
+            get {
+                return this.minversionField;
+            }
+            set {
+                this.minversionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string maxversion {
+            get {
+                return this.maxversionField;
+            }
+            set {
+                this.maxversionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string equalsversion {
+            get {
+                return this.equalsversionField;
+            }
+            set {
+                this.equalsversionField = value;
             }
         }
     }

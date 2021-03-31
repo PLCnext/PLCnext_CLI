@@ -7,16 +7,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using PlcNext.Common.Build;
-using PlcNext.Common.Commands;
 using PlcNext.Common.DataModel;
-using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
-using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.Events;
 
 namespace PlcNext.Common.Deploy

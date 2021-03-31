@@ -400,7 +400,7 @@ namespace Test.PlcNext.SystemTests.Tools
             }
         }
 
-        internal void CheckLibraryIsGenerated(string[] components)
+        internal void CheckLibraryIsGenerated(string[] components, bool useCommonTypeName = true)
         {
             knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
             string projectName = knownProjectName.Split('.', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
@@ -415,11 +415,23 @@ namespace Test.PlcNext.SystemTests.Tools
                     content.Should().Contain($"{libName}::{libName}(AppDomain& appDomain)");
                     foreach (string component in components)
                     {
-                        (content.Contains($"this->componentFactory.AddFactoryMethod(TypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);") ||
-                         content.Contains($"this->componentFactory.AddFactoryMethod(CommonTypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);"))
+                        if(useCommonTypeName)
+                        {
+                         content.Contains($"this->componentFactory.AddFactoryMethod(CommonTypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);")
+                               .Should().BeTrue($"Could not find line 'this->componentFactory.AddFactoryMethod" +
+                                                $"(CommonTypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);' " +
+                                                $"in {libName}.{Constants.ClassExtension}");
+
+                        }
+                        else
+                        {
+                            content.Contains($"this->componentFactory.AddFactoryMethod(TypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);")
                                .Should().BeTrue($"Could not find line 'this->componentFactory.AddFactoryMethod" +
                                                 $"(TypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);' " +
                                                 $"in {libName}.{Constants.ClassExtension}");
+
+                        }
+
                     }
                 }
             }
@@ -932,8 +944,8 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 string content = reader.ReadToEnd();
                 content.Contains("<AcfConfigurationDocument").Should().BeTrue($"Content '<AcfConfigurationDocument' was expected to exist. Actual content{Environment.NewLine}{content}");
-                content.Contains($"<Component name=\"{componentname}1\" type=\"{string.Join("::", ns.Split('.'))}::{componentname}\" library=\"{ns}")
-                    .Should().BeTrue($"Content '<Component name=\"{componentname}1\" type=\"{string.Join("::", ns.Split('.'))}{componentname}\" library=\"{ns}' was expected to exist. Actual content{Environment.NewLine}{content}");
+                content.Contains($"<Component name=\"{componentname}1\" type=\"{ns}.{componentname}\" library=\"{ns}")
+                    .Should().BeTrue($"Content '<Component name=\"{componentname}1\" type=\"{ns}.{componentname}\" library=\"{ns}' was expected to exist. Actual content{Environment.NewLine}{content}");
             }
         }
 

@@ -27,5 +27,7 @@ namespace PlcNext.Common.Build
                     Dictionary<Target, IEnumerable<VirtualFile>> externalLibraries, string buildType);
 
         int Execute(Entity dataModel);
+
+        int ExecuteAcf(Entity dataModel);
     }
 }

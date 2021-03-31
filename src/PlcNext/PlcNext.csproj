@@ -25,6 +25,26 @@
     <None Include="Templates\ProjectTemplate\.proj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
+    <None Update="Templates\AcfComponentTemplate\Component.compmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <None Update="Templates\AcfProjectTemplate\Library.libmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <None Update="Templates\AcfProjectTemplate\Library.typemeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+    <None Update="Templates\AcfProjectTemplate\old_Library.cpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
     <None Update="Templates\ConsumableLibraryTemplate\ADD_PUBLIC_HEADERS_HERE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
@@ -239,10 +259,6 @@
     <None Update="Templates\Templates.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Templates\AcfComponentTemplate\" />
   </ItemGroup>
 
   <Import Project="..\_Build_\CodeAnalysis.targets" Condition="Exists('..\_Build_\CodeAnalysis.targets')" />

@@ -439,6 +439,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Since version 2021.6 the component type attribute inside the .acf.config file must use the namespace separator &apos;.&apos; instead of &apos;::&apos;!.
+        /// </summary>
+        internal static string OldAcfConfig {
+            get {
+                return ResourceManager.GetString("OldAcfConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No project was found inside the directory {0}..
         /// </summary>
         internal static string ProjectMissing {

@@ -164,12 +164,42 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Generate_acflibrary_files_on_generate()
+        public async Task Generate_acflibrary_files_on_generate_for_old_project_without_proj()
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("AcfProject"),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_the_library_files_are_generated_containing_the_components("AcfProjectComponent")
+                _ => Then_the_user_was_informed_that_the_acf_config_needs_an_update()
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_acflibrary_files_on_generate_for_old_project()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AcfProjectv210"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_library_files_are_generated_for_old_projects_containing_the_components("AcfProjectv210Component")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_acflibrary_files_on_generate_for_project()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AcfProjectv216"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_library_files_are_generated_containing_the_components("AcfProjectv216Component")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_acflibrary_files_on_generate_for_project_without_proj_file()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AcfProjectv216withoutproj"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_library_files_are_generated_containing_the_components("AcfProjectv216withoutprojComponent")
                 ).RunAsyncWithTimeout();
         }
 

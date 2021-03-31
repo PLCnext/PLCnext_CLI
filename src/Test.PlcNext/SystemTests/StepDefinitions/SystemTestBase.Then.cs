@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Deploy;
+using PlcNext.Common.Generate;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
@@ -231,6 +232,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_library_files_are_generated_containing_the_components(params string[] components)
         {
             ScenarioContext.CheckLibraryIsGenerated(components);
+        }
+
+        protected void Then_the_library_files_are_generated_for_old_projects_containing_the_components(params string[] components)
+        {
+            ScenarioContext.CheckLibraryIsGenerated(components, false);
         }
 
         protected void Then_the_provider_files_are_generated_for_component(string component, string[] programs)
@@ -561,6 +567,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_user_was_informed_that_the_target_is_already_installed()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(TargetAlreadyInstalledException));
+        }
+
+        protected void Then_the_user_was_informed_that_the_acf_config_needs_an_update()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(OldAcfConfigException));
         }
     }
 }

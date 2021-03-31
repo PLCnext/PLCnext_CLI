@@ -144,24 +144,31 @@
     </xs:attribute>
   </xs:complexType>
 
-	<xs:complexType name="templateGenerateStep">
-		<xs:annotation>
-			<xs:documentation>
-				Definition of a generate step which may add additional arguments to a generator.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element minOccurs="0" name="Arguments" type="templateArgumentDefinitions"/>
-			<xs:element minOccurs="0" maxOccurs="unbounded" name="Example" type="templateExample"/>
-		</xs:sequence>
-		<xs:attribute name="generator" type="xs:string" use="required">
-			<xs:annotation>
-				<xs:documentation>
-					The generator to which the arguments are added.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-	</xs:complexType>
+  <xs:complexType name="templateGenerateStep">
+	<xs:annotation>
+	  <xs:documentation>
+		Definition of a generate step which may add additional arguments to a generator.
+	  </xs:documentation>
+	</xs:annotation>
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="Arguments" type="templateArgumentDefinitions"/>
+	  <xs:element minOccurs="0" maxOccurs="unbounded" name="Example" type="templateExample"/>
+	</xs:sequence>
+	<xs:attribute name="generator" type="xs:string" use="required">
+	  <xs:annotation>
+		<xs:documentation>
+		  The generator to which the arguments are added.
+		</xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+	<xs:attribute name="identifier" type="xs:string" use="optional">
+	  <xs:annotation>
+		<xs:documentation>
+		  The identifier of the generate step implementation.
+		</xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+  </xs:complexType>
 
   <xs:complexType name="templateRelationshipBase">
     <xs:annotation>
@@ -426,13 +433,34 @@
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
-	  <xs:attribute name="condition" type="xs:string" use="optional">
-		  <xs:annotation>
-			  <xs:documentation>
-				  File will be created only if condition is true.
-			  </xs:documentation>
-		  </xs:annotation>
-	  </xs:attribute>
+	<xs:attribute name="condition" type="xs:string" use="optional">
+	  <xs:annotation>
+		<xs:documentation>
+		  File will be created only if condition is true.
+		</xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+	<xs:attribute name="minversion" type="version" use="optional">
+	  <xs:annotation>
+		<xs:documentation>
+		  File will be created only if project version is at least the entered value.
+		</xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+	<xs:attribute name="maxversion" type="version" use="optional">
+	  <xs:annotation>
+		<xs:documentation>
+		  File will be created only if project version is at most the entered value.
+		</xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
+	<xs:attribute name="equalsversion" type="version" use="optional">
+	  <xs:annotation>
+		<xs:documentation>
+		  File will be created only if project version is equal to the entered value.
+		</xs:documentation>
+	  </xs:annotation>
+	</xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="templateReference">
