@@ -145,7 +145,7 @@ namespace PlcNext.Common.Templates
 
                 Entity root = dataModel.Root;
                 TemplateDescription template = TemplateEntity.Decorate(root).Template;
-                foreach (templateGenerateStep generateStep in template.GenerateStep ?? Enumerable.Empty<templateGenerateStep>())
+                foreach (templateGenerateStep generateStep in template.GenerateStep?.Where(s => !String.IsNullOrEmpty(s.identifier)) ?? Enumerable.Empty<templateGenerateStep>())
                 {
                     if (definition.Name == "all" || generateStep.generator == definition.Name)
                     {
