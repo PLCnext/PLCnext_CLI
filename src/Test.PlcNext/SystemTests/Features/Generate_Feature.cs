@@ -422,15 +422,15 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_typemeta_method_looks_like_NAME("ArrayInitializer.meta.cpp")).RunAsyncWithTimeout();
         }
 
-        //[Scenario]
-        //public async Task Generate_typemeta_information_for_StaticString()
-        //{
-        //    await Runner.AddSteps(
-        //        _ => Given_is_the_project("StaticStringTest"),
-        //        _ => When_I_generate_all_codefiles(),
-        //        _ => Then_the_typemeta_method_looks_like_NAME("StaticStringTest.meta.cpp")
-        //        ).RunAsyncWithTimeout();
-        //}
+        [Scenario]
+        public async Task Generate_typemeta_information_for_StaticString()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StaticStringTest"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_typemeta_method_looks_like_NAME("StaticStringTestLibrary.meta.cpp")
+                ).RunAsyncWithTimeout();
+        }
 
         [Scenario]
         public async Task Generate_typemeta_information_in_method()

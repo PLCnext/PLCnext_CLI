@@ -137,6 +137,7 @@
     <None Remove="Deployment\TestResults\ProgramWithDifferentPortsDataTypes.dt" />
     <None Remove="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
     <None Remove="Deployment\TestResults\StaticStringTestDataTypes.dt" />
+    <None Remove="Deployment\TestResults\StaticStringTestLibrary.meta.cpp" />
     <None Remove="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\AcfProjectv210\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\AcfProjectv210\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
@@ -654,6 +655,7 @@
     <EmbeddedResource Include="Deployment\TestResults\EnumTestDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\StaticStringTestDataTypes.dt" />
+    <EmbeddedResource Include="Deployment\TestResults\StaticStringTestLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponent._meta.cpp" />

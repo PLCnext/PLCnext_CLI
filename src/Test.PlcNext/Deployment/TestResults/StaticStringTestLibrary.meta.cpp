@@ -30,6 +30,13 @@ using namespace Arp::Plc::Commons::Meta;
                     {
                         // FieldDefinitions:
                         { "NameOfPort", offsetof(::StaticStringTest::StaticStringTestProgram, portField), DataType::Struct, CTN<StaticStringTest::MyStruct>(), sizeof(StaticStringTest::MyStruct), alignof(StaticStringTest::MyStruct), {  }, StandardAttribute::Input | StandardAttribute::Retain },
+                        { "myDefaultStringPort", offsetof(::StaticStringTest::StaticStringTestProgram, myDefaultStringPort), DataType::StaticString, String::Empty, sizeof(StaticString<>), alignof(StaticString<>), {  }, StandardAttribute::Input },
+                        { "myDefaultWStringPort", offsetof(::StaticStringTest::StaticStringTestProgram, myDefaultWStringPort), DataType::StaticWString, String::Empty, sizeof(StaticWString<>), alignof(StaticWString<>), {  }, StandardAttribute::Input },
+                        { "myStringPort", offsetof(::StaticStringTest::StaticStringTestProgram, myStringPort), DataType::StaticString, String::Empty, sizeof(StaticString<10>), alignof(StaticString<10>), {  }, StandardAttribute::Input },
+                        { "myStringPort2", offsetof(::StaticStringTest::StaticStringTestProgram, myStringPort2), DataType::StaticString, String::Empty, sizeof(StaticString<10>), alignof(StaticString<10>), {  }, StandardAttribute::Input },
+                        { "myStringPort3", offsetof(::StaticStringTest::StaticStringTestProgram, myStringPort3), DataType::StaticString, String::Empty, sizeof(StaticString<80>), alignof(StaticString<80>), {  }, StandardAttribute::Input },
+                        { "myWStringPort", offsetof(::StaticStringTest::StaticStringTestProgram, myWStringPort), DataType::StaticWString, String::Empty, sizeof(StaticWString<100>), alignof(StaticWString<100>), {  }, StandardAttribute::Input },
+                        { "myWStringArrayPort", offsetof(::StaticStringTest::StaticStringTestProgram, myWStringArrayPort), DataType::StaticWString | DataType::Array, String::Empty, sizeof(StaticWString<14>), alignof(StaticWString<14>), { 2 }, StandardAttribute::Input },
                     }
                 },
             }
