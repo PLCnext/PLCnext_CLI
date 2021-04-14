@@ -379,4 +379,7 @@
   <data name="OldAcfConfig" xml:space="preserve">
     <value>Since version 2021.6 the component type attribute inside the .acf.config file must use the namespace separator '.' instead of '::'!</value>
   </data>
+  <data name="IECDatatypeMismatch" xml:space="preserve">
+    <value>The datatype {0} can not be converted to the IEC type {1}.</value>
+  </data>
 </root>

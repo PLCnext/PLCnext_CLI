@@ -350,6 +350,7 @@
     <EmbeddedResource Include="..\PlcNext\Templates\AcfComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\AcfComponentTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProgramTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProgramTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\ProjectTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FormatTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FormatTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\AcfProjectTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\Templates.xml" Link="Deployment\Templates\Templates.xml" />
     <EmbeddedResource Include="Deployment\AlmostAmbiguous\CMakeLists.txt" />

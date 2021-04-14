@@ -260,5 +260,16 @@ namespace PlcNext.Common.Templates
             result = (true, null, value);
             return true;
         }
+        public static bool Verify(
+            this Format.formatTemplate conversionTable, string raw, string converted)
+        {
+            return conversionTable.RegexConversion.Where(entry => entry.pattern.Equals(raw, entry.ignorecase
+                                                                               ? StringComparison.OrdinalIgnoreCase
+                                                                               : StringComparison.Ordinal)
+                                                        && entry.converted.Equals(converted, entry.ignorecase
+                                                                               ? StringComparison.OrdinalIgnoreCase
+                                                                               : StringComparison.Ordinal))
+                                           .Any();
+        }
     }
 }

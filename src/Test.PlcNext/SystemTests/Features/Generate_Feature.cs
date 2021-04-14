@@ -228,6 +228,8 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                       new Portmeta("examplePort2","Example","Output", "1"),
                                                                                       new Portmeta("examplePort3","Example","Output", "5"),
                                                                                       new Portmeta("examplePort4","int32","", string.Empty),
+                                                                                      new Portmeta("examplePort5","uint64","", "3"),
+                                                                                      new Portmeta("examplePort6","uint64","", "3"),
                                                                                   }))).RunAsyncWithTimeout();
         }
 

@@ -23,6 +23,8 @@ using namespace Arp::Plc::Commons::Meta;
                         { "someWString", offsetof(::StaticStringTest::MyStruct, someWString), DataType::StaticWString, String::Empty, sizeof(StaticWString<>), alignof(StaticWString<>), {  }, StandardAttribute::None },
                         { "someString23", offsetof(::StaticStringTest::MyStruct, someString23), DataType::StaticString, String::Empty, sizeof(StaticString<23>), alignof(StaticString<23>), {  }, StandardAttribute::None },
                         { "someWString109", offsetof(::StaticStringTest::MyStruct, someWString109), DataType::StaticWString, String::Empty, sizeof(StaticWString<109>), alignof(StaticWString<109>), {  }, StandardAttribute::None },
+                        { "myData", offsetof(::StaticStringTest::MyStruct, myData), DataType::UInt16, String::Empty, sizeof(uint16), alignof(uint16), {  }, StandardAttribute::None },
+                        { "myOtherData", offsetof(::StaticStringTest::MyStruct, myOtherData), DataType::UInt16, String::Empty, sizeof(uint16), alignof(uint16), {  }, StandardAttribute::None },
                     }
                 },
                 {   // ProgramDefinition: StaticStringTest::StaticStringTestProgram

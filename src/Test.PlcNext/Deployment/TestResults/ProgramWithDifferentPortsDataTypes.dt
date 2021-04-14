@@ -10,6 +10,10 @@ TYPE
 
     examplePort3Array : ARRAY [0..4] OF Example;
 
+    examplePort5Array : ARRAY [0..2] OF LWORD;
+
+    examplePort6Array : ARRAY [0..2] OF ULINT;
+
     value3Array : ARRAY [0..5] OF LINT;
 
     value4Array : ARRAY [0..0] OF LINT;

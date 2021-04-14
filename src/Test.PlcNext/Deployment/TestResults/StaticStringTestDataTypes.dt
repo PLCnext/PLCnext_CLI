@@ -5,6 +5,8 @@
         someWString : WSTRING;
         someString23 : STRING[23];
         someWString109 : WSTRING[109];
+        myData : WORD;
+        myOtherData : UINT;
     END_STRUCT
 
     myWStringArrayPortArray : ARRAY [0..1] OF WSTRING[14];

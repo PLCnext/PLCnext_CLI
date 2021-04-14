@@ -20,6 +20,7 @@ using PlcNext.Common.Project;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Templates.Field;
+using PlcNext.Common.Templates.Format;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Priority;
@@ -32,17 +33,20 @@ namespace PlcNext.Common.CodeModel
         private readonly ITemplateRepository templateRepository;
         private readonly ITemplateResolver resolver;
         private readonly IDatatypeConversion datatypeConversion;
+        private readonly ExecutionContext executionContext;
 
         private static readonly Regex UnkownDataTypeRegex = new Regex(@"^unkown\((?<dataType>.*)\)$", RegexOptions.Compiled);
         private static readonly Regex UnknownDataTypeRegex = new Regex(@"^unknown\((?<dataType>.*)\)$", RegexOptions.Compiled);
 
-        private static readonly Regex StaticStringRegex = new Regex(@"^Static(W)?String<(?<length>\d+)>$", RegexOptions.Compiled);
+        private static readonly Regex StaticStringRegex = new Regex(@"^(?:(?:::)?Arp\S*::)?Static(W)?String<(?<length>\d*)>$", RegexOptions.Compiled);
 
-        public CodeModelContentProvider(ITemplateRepository templateRepository, ITemplateResolver resolver, IDatatypeConversion datatypeConversion)
+        public CodeModelContentProvider(ITemplateRepository templateRepository, ITemplateResolver resolver, IDatatypeConversion datatypeConversion,
+                                        ExecutionContext executionContext)
         {
             this.templateRepository = templateRepository;
             this.resolver = resolver;
             this.datatypeConversion = datatypeConversion;
+            this.executionContext = executionContext;
         }
 
         public override SubjectIdentifier LowerPrioritySubject => nameof(ConstantContentProvider);
@@ -260,6 +264,7 @@ namespace PlcNext.Common.CodeModel
                 return GetAllPorts().Where(t => t.AsField != null &&
                                                 StaticStringRegex.IsMatch(t.AsField.DataType.Name) &&
                                                 StaticStringRegex.Match(t.AsField.DataType.Name).Groups["length"].Value != "80" &&
+                                                !string.IsNullOrEmpty(StaticStringRegex.Match(t.AsField.DataType.Name).Groups["length"].Value) &&
                                                 t.AsField.Multiplicity.Count == 0)
                                     .Distinct();
             }
@@ -795,30 +800,62 @@ namespace PlcNext.Common.CodeModel
                 return (true, result);
             }
 
-            (bool success, string value) FormatIecDataType(string unformattedValue)
+            (bool success, string value) FormatIecDataType(string unformattedValue, IAttribute attribute)
             {
+                
                 string formattedString = FormatStringDataType(unformattedValue);
                 if (formattedString != null)
                 {
-                    return (true, formattedString);
+                    if (attribute != null)
+                    {
+                        executionContext.WriteWarning($"The //#{EntityKeys.IECDataTypeAttributeNameKey}(...) can not be set for string datatypes and will be ignored.");
+                    }
+                        return (true, formattedString);
                 }
 
                 (bool success, string value) = FormatDataType(unformattedValue);
-                
+
                 if (!success)
                 {
                     return (success, value);
                 }
 
-                string result = owner.Create("temporaryIecFormatContainer", value).Format()["iecDataType"].Value<string>();
-                Match unknownMatch = UnknownDataTypeRegex.Match(result);
 
-                if (unknownMatch.Success)
+                if (attribute != null)
                 {
-                    return (false, unknownMatch.Groups["dataType"].Value);
+                    string attributeValue = attribute.Values.First();
+
+                    ValidateIECDataTypeAttribute(value, attributeValue);
+
+                    return (true, attributeValue);
+                }
+                else
+                {
+                    string result = owner.Create("temporaryIecFormatContainer", value).Format()["iecDataType"].Value<string>();
+                    Match unknownMatch = UnknownDataTypeRegex.Match(result);
+
+                    if (unknownMatch.Success)
+                    {
+                        return (false, unknownMatch.Groups["dataType"].Value);
+                    }
+
+                    return (true, result);
                 }
 
-                return (true, result);
+                void ValidateIECDataTypeAttribute(string raw, string converted)
+                {
+                    formatTemplate conversionTable = templateRepository.FormatTemplates
+                                                                        .FirstOrDefault(t => t.name.Equals("AllowedcpptoIECDataTypeConversions",
+                                                                                                           StringComparison.OrdinalIgnoreCase));
+                    if (conversionTable != null)
+                    {
+                        success = conversionTable.Verify(raw, converted);
+                        if (!success)
+                        {
+                            throw new IECAttributeMismatchException(raw, converted);
+                        }
+                    }
+                }
             }
 
             string FormatStringDataType(string unformattedValue)
@@ -835,19 +872,38 @@ namespace PlcNext.Common.CodeModel
             Entity ResolveIECDataType()
             {
                 IEntityBase dataSource = ownerTemplateEntity.FormatOrigin;
-                IDataType dataSourceDataType = dataSource.HasValue<IDataType>()
-                                                   ? dataSource.Value<IDataType>()
-                                                   : dataSource.Value<IField>().DataType;
+                IDataType dataSourceDataType;
+                IAttribute attribute;
+                if (dataSource.HasValue<IEnum>())
+                {
+                    IEnum dataSourceEnum = dataSource.Value<IEnum>();
+                    dataSourceDataType = dataSourceEnum.BaseTypes.FirstOrDefault();
+                    attribute = dataSourceEnum.Attributes?
+                                              .FirstOrDefault(a => a.Name.Equals(EntityKeys.IECDataTypeAttributeNameKey,
+                                                                                 StringComparison.OrdinalIgnoreCase));
+                }
+                else
+                {
+                    dataSourceDataType = dataSource.HasValue<IDataType>()
+                                                       ? dataSource.Value<IDataType>()
+                                                       : dataSource.Value<IField>().DataType;
 
-                (bool success, string dataTypeName) = FormatIecDataType(dataSourceDataType.Name);
+                    attribute = dataSource.HasValue<IField>() 
+                                ? dataSource.Value<IField>()
+                                            .Attributes?
+                                            .FirstOrDefault(a => a.Name.Equals(EntityKeys.IECDataTypeAttributeNameKey, StringComparison.OrdinalIgnoreCase)) 
+                                : null;
+                }
 
-                if(!success)
-                { 
+                (bool success, string dataTypeName) = FormatIecDataType(dataSourceDataType.Name, attribute);
+
+                if (!success)
+                {
                     ICodeModel rootCodeModel = dataSource.Root.Value<ICodeModel>();
                     IType knownType = dataSourceDataType.PotentialFullNames
                                       .Select(n => rootCodeModel.Type(n))
                                       .FirstOrDefault(t => t != null);
-                    if(knownType == null)
+                    if (knownType == null)
                     {
                         throw new UnknownIecDataTypeException(dataTypeName);
                     }
@@ -856,7 +912,7 @@ namespace PlcNext.Common.CodeModel
                     ? dataTypeName.Substring(dataTypeName.LastIndexOf("::", StringComparison.InvariantCulture) + "::".Length)
                     : dataTypeName;
 
-                return owner.Create(key, dataTypeName);   
+                return owner.Create(key, dataTypeName);
             }
 
             (IDataType, string) GetEnumBaseType(IEnum @enum)

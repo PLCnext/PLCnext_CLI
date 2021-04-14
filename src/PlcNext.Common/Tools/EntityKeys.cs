@@ -68,6 +68,7 @@ namespace PlcNext.Common.Tools
         public const string IecDataTypeFormatKey = "iecdatatypeformat";
         public const string IsArray = "isarray";
         public const string ThrowIfMultidimensionalKey = "throwifmultidimensional";
+        public const string IECDataTypeAttributeNameKey = "iecdatatype";
 
         //CppContentProvider
         public const string IncludeKey = "include";

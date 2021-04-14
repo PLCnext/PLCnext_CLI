@@ -277,6 +277,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The datatype {0} can not be converted to the IEC type {1}..
+        /// </summary>
+        internal static string IECDatatypeMismatch {
+            get {
+                return ResourceManager.GetString("IECDatatypeMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The if-xxx control sequence must be in the form $([if-xxx]&lt;content-name&gt;). An empty content-name is not allowed..
         /// </summary>
         internal static string IfSequenceParameterMismatch {

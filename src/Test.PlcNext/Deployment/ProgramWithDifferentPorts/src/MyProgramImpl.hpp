@@ -43,6 +43,11 @@ private: // fields
 	Example examplePort2[1], examplePort3[5];
 	//#port
 	int32 examplePort4 = 3;
+	//#port
+	//#iecdatatype(LWORD)
+	uint64 examplePort5[3];
+	//#port
+	uint64 examplePort6[3];
 };
 
 ///////////////////////////////////////////////////////////////////////////////

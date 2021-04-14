@@ -15,8 +15,14 @@ struct MyStruct {
     public: bool something = true;
 	StaticString<> someString;
 	StaticWString<> someWString;
+    //#iecdatatyPe(STRING)
 	StaticString<23> someString23;
 	StaticWString<109> someWString109;
+
+    //#IECDataType(WORD)
+    uint16 myData;
+
+    uint16 myOtherData;
 };
 
 //#program
@@ -82,7 +88,6 @@ public: /* Ports
         //#port
         //#attributes(Input)
         StaticWString<14> myWStringArrayPort[2];
-
 
 private: // fields
     StaticStringTest::StaticStringTestComponent& staticStringTestComponent;
