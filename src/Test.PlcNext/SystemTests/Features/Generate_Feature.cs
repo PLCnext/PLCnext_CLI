@@ -733,6 +733,15 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_libmeta_file_is_generated_with_the_components("CommentedPortComponent")).RunAsyncWithTimeout();
         }
 
+        [Scenario]
+        public async Task Generate_typeinformation_for_dynamic_port_structs()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("DynamicPorts"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_typemeta_method_looks_like_NAME("DynamicPortsLibrary.meta.cpp")).RunAsyncWithTimeout();
+        }
+
         public Generate_Feature(ITestOutputHelper helper) : base(helper)
         {
         }

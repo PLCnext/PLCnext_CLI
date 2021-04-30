@@ -43,6 +43,12 @@
     <None Remove="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.hpp" />
     <None Remove="Deployment\CMakeArgsFile\CMakeFlags.txt" />
     <None Remove="Deployment\Demo\bin\AXCF2152_20.6.0.12345\Debug\libDemo.so" />
+    <None Remove="Deployment\DynamicPorts\CMakeLists.txt" />
+    <None Remove="Deployment\DynamicPorts\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <None Remove="Deployment\DynamicPorts\src\DynamicPortsComponent.cpp" />
+    <None Remove="Deployment\DynamicPorts\src\DynamicPortsComponent.hpp" />
+    <None Remove="Deployment\DynamicPorts\src\DynamicPortsProgram.cpp" />
+    <None Remove="Deployment\DynamicPorts\src\DynamicPortsProgram.hpp" />
     <None Remove="Deployment\HiddenPlm\CMakeLists.txt" />
     <None Remove="Deployment\HiddenPlm\src\HiddenPlmComponent.cpp" />
     <None Remove="Deployment\HiddenPlm\src\HiddenPlmComponent.hpp" />
@@ -121,6 +127,7 @@
     <None Remove="Deployment\TestResults\DemoLibraryWithExternalLibsForAllTargets.txt" />
     <None Remove="Deployment\TestResults\DemoLibraryWithExternalLibsMultibinary.txt" />
     <None Remove="Deployment\TestResults\DemoWithMultibinaryLibraryCommandArgs.txt" />
+    <None Remove="Deployment\TestResults\DynamicPortsLibrary.meta.cpp" />
     <None Remove="Deployment\TestResults\EnumTestDataTypes.dt" />
     <None Remove="Deployment\TestResults\ExternalLibraryTest.meta.cpp" />
     <None Remove="Deployment\TestResults\GetComponentsReply.json" />
@@ -167,6 +174,12 @@
     <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.cpp" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.hpp" />
     <EmbeddedResource Include="Deployment\Demo\bin\AXCF2152_20.6.0.12345\Debug\libDemo.so" />
+    <EmbeddedResource Include="Deployment\DynamicPorts\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\DynamicPorts\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
+    <EmbeddedResource Include="Deployment\DynamicPorts\src\DynamicPortsComponent.cpp" />
+    <EmbeddedResource Include="Deployment\DynamicPorts\src\DynamicPortsComponent.hpp" />
+    <EmbeddedResource Include="Deployment\DynamicPorts\src\DynamicPortsProgram.cpp" />
+    <EmbeddedResource Include="Deployment\DynamicPorts\src\DynamicPortsProgram.hpp" />
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\Helper.hpp" />
     <EmbeddedResource Include="Deployment\HiddenPlm\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\HiddenPlm\src\HiddenPlmComponent.cpp" />
@@ -248,6 +261,7 @@
     <EmbeddedResource Include="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.hpp" />
     <EmbeddedResource Include="Deployment\TestResults\ArrayInitializer.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\DemoLibraryWithExternalLibsForAllTargets.txt" />
+    <EmbeddedResource Include="Deployment\TestResults\DynamicPortsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\DemoLibraryCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\DemoLibraryCommandArgsWithSpecificId.txt" />
@@ -724,6 +738,7 @@
     <EmbeddedResource Include="Deployment\AcfProjectv216\plcnext.proj" />
     <EmbeddedResource Include="Deployment\AcfProjectv210\plcnext.proj" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\DynamicPorts\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StaticStringTest\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StructWith1000Fields\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PartiallyBuildProjectWithCustomNamespace\plcnext.proj" />

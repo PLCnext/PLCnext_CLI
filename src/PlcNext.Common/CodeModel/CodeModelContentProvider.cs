@@ -56,6 +56,7 @@ namespace PlcNext.Common.CodeModel
             return owner.HasValue<ICodeModel>() &&
                    (key == EntityKeys.NamespaceKey ||
                     key == EntityKeys.PortStructsKey ||
+                    key == EntityKeys.PortAndTypeDefinitionStructs ||
                     key == EntityKeys.PortEnumsKey ||
                     key == EntityKeys.PortArraysKey ||
                     key == EntityKeys.VariablePortStringsKey) ||
@@ -72,7 +73,7 @@ namespace PlcNext.Common.CodeModel
                    key == EntityKeys.IsTypeKey ||
                    key == EntityKeys.BaseDirectoryKey && HasBaseDirectory(owner, out _) ||
                    key == EntityKeys.BigDataProjectKey ||
-                   key == EntityKeys.NormalProjectKey ;
+                   key == EntityKeys.NormalProjectKey;
 
             bool CanResolveSymbol()
             {
@@ -105,7 +106,7 @@ namespace PlcNext.Common.CodeModel
                     return false;
                 }
                 IType type = owner.Value<IType>();
-                
+
                 metaDataTemplate metaDataTemplate = templateRepository.FieldTemplates
                                                                 .FirstOrDefault(t => t.name.Plural().Equals(key,
                                                                                                             StringComparison
@@ -172,7 +173,7 @@ namespace PlcNext.Common.CodeModel
             {
                 return ResolveTypeMetaDataFormat();
             }
-            if(key == EntityKeys.IecDataTypeFormatKey && owner.Type == EntityKeys.FormatKey)
+            if (key == EntityKeys.IecDataTypeFormatKey && owner.Type == EntityKeys.FormatKey)
             {
                 return ResolveIECDataType();
             }
@@ -287,9 +288,55 @@ namespace PlcNext.Common.CodeModel
             {
                 HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetAllPorts()
                                                               .Select(f => f.ResolvedType)
-                                                              .Where(t => t.AsType != null && 
+                                                              .Where(t => t.AsType != null &&
                                                                           t.AsEnum == null),
                     new FullNameCodeEntityComparer());
+
+                HashSet<CodeEntity> visited = new HashSet<CodeEntity>(new FullNameCodeEntityComparer());
+                while (structures.Except(visited).Any())
+                {
+                    foreach (CodeEntity structure in structures.Except(visited).ToArray())
+                    {
+                        foreach (CodeEntity structureField in structure.Fields)
+                        {
+                            CodeEntity structureDataType = structureField.ResolvedType;
+                            if (structureDataType.AsType != null && structureDataType.AsEnum == null)
+                            {
+                                structures.Add(structureDataType);
+                            }
+                        }
+
+                        visited.Add(structure);
+                    }
+                }
+                return structures;
+            }
+
+            IEnumerable<CodeEntity> GetPortAndTypeDefinitionStructures()
+            {
+                IEnumerable<CodeEntity> GetAllFields()
+                {
+                    return TemplateEntity.Decorate(owner).EntityHierarchy
+                                     .Select(CodeEntity.Decorate)
+                                     .SelectMany(c => c.Fields);
+                }
+
+                bool HasTypeDefinitionAttribute(CodeEntity structEntity)
+                {
+                    return structEntity.AsType != null &&
+                           structEntity.AsType.HasAttributeWithoutValue(EntityKeys.TypeDefinitionAttributeKey);
+                }
+                
+                HashSet<CodeEntity> typedefAttributedStructures = new HashSet<CodeEntity>(GetAllFields()
+                                                              .Select(f => f.ResolvedType)
+                                                              .Where(t => t.AsType != null &&
+                                                                          t.AsEnum == null)
+                                                              .Where(HasTypeDefinitionAttribute),
+                    new FullNameCodeEntityComparer());
+
+                HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetPortStructures().Concat(typedefAttributedStructures),
+                    new FullNameCodeEntityComparer());
+ 
 
                 HashSet<CodeEntity> visited = new HashSet<CodeEntity>(new FullNameCodeEntityComparer());
                 while (structures.Except(visited).Any())
@@ -653,6 +700,10 @@ namespace PlcNext.Common.CodeModel
                     {
                         return owner.Create(key, GetPortStructures().Select(c => c.Base));
                     }
+                    case EntityKeys.PortAndTypeDefinitionStructs:
+                    {
+                        return owner.Create(key, GetPortAndTypeDefinitionStructures().Select(c => c.Base));
+                    }
                     case EntityKeys.PortEnumsKey:
                     {
                         return owner.Create(key, GetPortEnums().Select(c => c.Base));
@@ -954,7 +1005,7 @@ namespace PlcNext.Common.CodeModel
             {
                 ICodeModel model = owner.Value<ICodeModel>();
                 if (model == null ||
-                    GetAllPorts().Concat(GetPortStructures().SelectMany(s => s.Fields)).Count() <= 1000)
+                    GetAllPorts().Concat(GetPortAndTypeDefinitionStructures().SelectMany(s => s.Fields)).Count() <= 1000)
                     return false;
                 return true;
             }
