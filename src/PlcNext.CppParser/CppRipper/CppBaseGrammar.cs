@@ -108,6 +108,10 @@ namespace PlcNext.CppParser.CppRipper
         public Rule identifier_extension;
         public Rule identifier;
         public Rule generic;
+        public Rule operator_char;
+        public Rule operator_prefix;
+        public Rule operator_seq;
+        public Rule @operator;
         #endregion
 
         #region numbers
@@ -233,26 +237,26 @@ namespace PlcNext.CppParser.CppRipper
         /// </summary>
         public CppBaseGrammar()
         {
-            #region identifiers
-            digit = CharRange('0', '9');
-            lower_case_letter = CharRange('a', 'z');
-            upper_case_letter = CharRange('A', 'Z');
-            letter = lower_case_letter | upper_case_letter;
-            ident_first_char = CharSet("_") | letter;
-            ident_next_char = ident_first_char | digit;
-            identifier_extension = CharSeq("::") + Recursive(() => identifier);
-            identifier = Leaf(ident_first_char + Star(ident_next_char) + Star(identifier_extension));
-            
-            generic
-                = identifier + Nested("<", ">");
-            #endregion
-
             #region numbers
+            digit = CharRange('0', '9');
             octal_digit = CharRange('0', '7');
             nonzero_digit = CharRange('1', '9');
             hex_digit = digit | CharRange('a', 'f') | CharRange('A', 'F');
             sign = CharSet("+-");
             #endregion numbers
+            
+            #region identifiers
+            lower_case_letter = CharRange('a', 'z');
+            upper_case_letter = CharRange('A', 'Z');
+            letter = lower_case_letter | upper_case_letter;
+            ident_first_char = CharSet("_") | letter;
+            ident_next_char = ident_first_char | digit;
+            identifier_extension = CharSeq("::") + Recursive(() => Opt(identifier));
+            identifier = Leaf(ident_first_char + Star(ident_next_char) + Star(identifier_extension));
+            
+            generic
+                = identifier + Nested("<", ">");
+            #endregion
 
             #region whitespace
             tab = CharSeq("\t");
@@ -445,6 +449,15 @@ namespace PlcNext.CppParser.CppRipper
             #region symbols
             semicolon = CharSeq(";");
             eos = Word(";");
+            #endregion
+
+            #region operators
+
+            operator_char = CharSet("=<>!-+*/[]%&|^~?");
+            operator_prefix = Leaf(Star(ident_first_char + Star(ident_next_char) + CharSeq("::")));
+            operator_seq = Leaf(operator_char + Opt(operator_char));
+            @operator = operator_prefix + OPERATOR + operator_seq;
+
             #endregion
 
             InitializeRules<CppBaseGrammar>();

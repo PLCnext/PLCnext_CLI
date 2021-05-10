@@ -117,6 +117,7 @@ namespace PlcNext.CppParser.CppRipper
                 | template_decl
                 | literal
                 | symbol
+                | @operator
                 | visibility_group
                 | label
                 | identifier_seq
