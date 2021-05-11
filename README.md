@@ -5,7 +5,7 @@ The PLCnext CLI (PLCnext Command Line Interface) provides the entire toolchain f
 ## Installation & First Steps
 
 If you want the latest release version, you can download it from the the [PLCnext Technology controller download area](https://www.phoenixcontact.com/qr/2404267/softw).
-For more information and first steps with PLCnext Technology please visit our [PLCnext Community](https://www.plcnext-community.net/en/hn-knowledge-base/hn-get-started/hn-get-started-programming.html).
+For more information and first steps with PLCnext Technology please visit our [PLCnext Community](https://www.plcnext.help/te/Programming/Introduction.htm).
 
 ## Test a local build
 
