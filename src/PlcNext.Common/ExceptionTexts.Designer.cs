@@ -376,7 +376,7 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A datatypes worksheet cannot be generated because a multidimensional array was used. Use array of arrays instead or disable generation of datatypes worksheet..
+        ///   Looks up a localized string similar to A datatypes worksheet cannot be generated because a multidimensional array was used as port type..
         /// </summary>
         internal static string MultidimensionalArrayNotSupported {
             get {

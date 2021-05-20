@@ -371,7 +371,7 @@
     <value>The data type '{0}' cannot be converted to IEC61131. For ports and port structures only known data types can be used.</value>
   </data>
   <data name="MultidimensionalArrayNotSupported" xml:space="preserve">
-    <value>A datatypes worksheet cannot be generated because a multidimensional array was used. Use array of arrays instead or disable generation of datatypes worksheet.</value>
+    <value>A datatypes worksheet cannot be generated because a multidimensional array was used as port type.</value>
   </data>
   <data name="TargetAlreadyInstalled" xml:space="preserve">
     <value>The target {0} is already installed. Check your installed targets with 'get targets'.</value>
