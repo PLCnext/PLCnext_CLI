@@ -276,6 +276,11 @@ namespace PlcNext.CommandLine
                     {
                         RemoveVersion(helpLines);
                     }
+                    else
+                    {
+                        AddDashesToVersion(helpLines);
+                    }
+                    AddDashesToHelp(helpLines);
                     helpText.AddRange(helpLines);
                 }
                 else
@@ -311,6 +316,7 @@ namespace PlcNext.CommandLine
 
                             List<string> helpLines = new List<string>(helpTextBody.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None));
                             RemoveVersion(helpLines);
+                            AddDashesToHelp(helpLines);
                             helpText.AddRange(helpLines);
                         }
                     }
@@ -325,6 +331,7 @@ namespace PlcNext.CommandLine
                         helpTextBody.AddOptions(result);
                         List<string> helpLines = new List<string>(helpTextBody.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None));
                         RemoveVersion(helpLines);
+                        AddDashesToHelp(helpLines);
                         helpText.AddRange(helpLines);
                     }
                 }
@@ -341,6 +348,27 @@ namespace PlcNext.CommandLine
                     {
                         list.RemoveAt(index - 1);
                     } while (!string.IsNullOrEmpty(list[index - 1]));
+                }
+            }
+
+            void AddDashesToHelp(List<string> list)
+            {
+                string helpLine = list.FirstOrDefault(l => l.Trim().StartsWith("help ", StringComparison.Ordinal));
+                if (!string.IsNullOrEmpty(helpLine))
+                {
+                    int index = helpLine.IndexOf("help ", StringComparison.Ordinal);
+                    list[list.IndexOf(helpLine)] = helpLine.Substring(0,index) + "--help " + helpLine.Substring(index + "help ".Length +2);
+                }
+            }
+
+            void AddDashesToVersion(List<string> list)
+            {
+                string versionLine = list.FirstOrDefault(l => l.Trim().StartsWith("version ", StringComparison.Ordinal) 
+                                                     && string.IsNullOrWhiteSpace(list[list.IndexOf(l)-1]) );
+                if (!string.IsNullOrEmpty(versionLine))
+                {
+                    int index = versionLine.IndexOf("version ", StringComparison.Ordinal);
+                    list[list.IndexOf(versionLine)] = versionLine.Substring(0, index) + "--version " + versionLine.Substring(index + "version ".Length + 2);
                 }
             }
 
