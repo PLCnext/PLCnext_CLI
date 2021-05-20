@@ -742,6 +742,26 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_typemeta_method_looks_like_NAME("DynamicPortsLibrary.meta.cpp")).RunAsyncWithTimeout();
         }
 
+        [Scenario]
+        public async Task Generate_typeinformation_for_StaticString()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StaticStringTest"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("MyStruct",
+                                                                                                        new[]
+                                                                                                         {
+                                                                                                            new TypeMember("something", "boolean"),
+                                                                                                            new TypeMember("someString", "StaticString"),
+                                                                                                            new TypeMember("someWString", "StaticWString"),
+                                                                                                            new TypeMember("someString23", "StaticString23"),
+                                                                                                            new TypeMember("someWString109", "StaticWString109"),
+                                                                                                            new TypeMember("myData", "uint16"),
+                                                                                                            new TypeMember("myOtherData", "uint16")
+                                                                                                        }))
+                ).RunAsyncWithTimeout();
+        }
+
         public Generate_Feature(ITestOutputHelper helper) : base(helper)
         {
         }
