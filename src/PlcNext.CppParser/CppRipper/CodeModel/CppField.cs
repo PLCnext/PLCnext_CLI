@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools;
 
@@ -20,6 +21,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     internal class CppField : CppCodeEntity, IField
     {
+        private static readonly Regex EqualsMatch = new Regex("^\\s?=\\s?$", RegexOptions.Compiled);
         public CppField(string name, IDataType dataType, IComment[] comments, int[] multiplicity, string attributePrefix, IType containingType) : base(name, attributePrefix)
         {
             DataType = dataType;
@@ -36,7 +38,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                                                   List<ParserMessage> messages, string attributePrefix,
                                                   CppType containingType)
         {
-            if (declaration.GetHierarchy().Any(n => n.RuleName == "paran_group") ||
+            if ((declaration.GetHierarchy().Any(n => IsForbiddenParanthesisGroup(n)))||
                 declaration.GetHierarchy().Any(n => n.RuleName == "typedef_decl") ||
                 declaration.GetHierarchy().Any(n => n.RuleName == "pp_directive"))
             {
@@ -111,6 +113,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 }
 
                 return content.ChildrenSkipUnnamed()
+                              .TakeWhile(n => !EqualsMatch.IsMatch(n.ToString()))
                               .Select(Identifier).Where(n => n != null)
                               .ToArray();
 
@@ -166,6 +169,23 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 return parseNodes.TakeWhile(n => n.ToString().EndsWith("::", StringComparison.Ordinal))
                                  .Concat(parseNodes.SkipWhile(n => n.ToString().EndsWith("::", StringComparison.Ordinal)).Take(1))
                                  .ToArray();
+            }
+
+            bool IsForbiddenParanthesisGroup(ParseNode n)
+            {
+                if (n.RuleName != "paran_group")
+                {
+                    return false;
+                }
+
+                ParseNode parent = n.GetParent();
+                while (parent.Count(c => c.RuleName != "comment_set") == 1)
+                {
+                    n = parent;
+                    parent = n.GetParent();
+                }
+                
+                return parent.TakeWhile(c => c != n).All(c => !EqualsMatch.IsMatch(c.ToString()));
             }
         }
     }

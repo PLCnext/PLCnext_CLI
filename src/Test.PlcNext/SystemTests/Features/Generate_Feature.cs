@@ -328,6 +328,21 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Generate_port_information_with_struct_initializer()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("InitializedStructPortField"),
+                _ => Given_is_the_working_directory_PATH("InitializedStructPortField"),
+                _ => When_I_generate_all_files_except_datatypes_worksheet_from_inside_the_project_folder(),
+                _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("InitializedStructPortFieldProgram",
+                                                                                               new[] { "InitializedStructPortFieldComponent", "InitializedStructPortFieldProgram" },
+                                                                                               new[]
+                                                                                               {
+                                                                                                   new Portmeta("PortName","PortStruct","Output")
+                                                                                               }))).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_compmeta_information_on_generate_from_inside_project()
         {
             await Runner.AddSteps(
@@ -518,8 +533,10 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                        new TypeMember("TaskPriority","int16"),
                                                                                                        new TypeMember("TaskWatchdogTime","int64"),
                                                                                                        new TypeMember("LastExecutionTime","int64"),
+                                                                                                       new TypeMember("MinExecutionTime","int64"),
                                                                                                        new TypeMember("MaxExecutionTime","int64"),
                                                                                                        new TypeMember("LastTaskActivationDelay","int64"),
+                                                                                                       new TypeMember("MinTaskActivationDelay","int64"),
                                                                                                        new TypeMember("MaxTaskActivationDelay","int64"),
                                                                                                        new TypeMember("ExecutionTimeThreshold","int64"),
                                                                                                        new TypeMember("ExecutionTimeThresholdCount","uint32"),

@@ -321,6 +321,16 @@
     <EmbeddedResource Include="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumProgram.hpp" />
     <None Remove="Deployment\FullyQualifiedEnum\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\FullyQualifiedEnum\CMakeLists.txt" />
+    <None Remove="Deployment\InitializedStructPortField\src\InitializedStructPortFieldComponent.cpp" />
+    <EmbeddedResource Include="Deployment\InitializedStructPortField\src\InitializedStructPortFieldComponent.cpp" />
+    <None Remove="Deployment\InitializedStructPortField\src\InitializedStructPortFieldComponent.hpp" />
+    <EmbeddedResource Include="Deployment\InitializedStructPortField\src\InitializedStructPortFieldComponent.hpp" />
+    <None Remove="Deployment\InitializedStructPortField\src\InitializedStructPortFieldProgram.cpp" />
+    <EmbeddedResource Include="Deployment\InitializedStructPortField\src\InitializedStructPortFieldProgram.cpp" />
+    <None Remove="Deployment\InitializedStructPortField\src\InitializedStructPortFieldProgram.hpp" />
+    <EmbeddedResource Include="Deployment\InitializedStructPortField\src\InitializedStructPortFieldProgram.hpp" />
+    <None Remove="Deployment\InitializedStructPortField\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\InitializedStructPortField\CMakeLists.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -333,6 +343,7 @@
     <EmbeddedResource Include="Deployment\ConsumableLibrary\plcnext.proj" />
     <EmbeddedResource Include="Deployment\CommentedPort\plcnext.proj" />
     <EmbeddedResource Include="Deployment\FullyQualifiedEnum\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\InitializedStructPortField\plcnext.proj" />
     <Content Include="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

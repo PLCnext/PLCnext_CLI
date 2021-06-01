@@ -835,7 +835,7 @@ namespace Test.PlcNext.SystemTests.Tools
                     ProgramDefinition programDefinition = document.Item as ProgramDefinition;
                     programDefinition.Should().NotBeNull("metadata content should be a ProgramDefinition");
 
-                    IEnumerable<PortDefinition> ports = programDefinition.Items.SelectMany(pl => pl.Port).ToArray();
+                    IEnumerable<PortDefinition> ports = programDefinition.Items.SelectMany(pl => pl.Port??Array.Empty<PortDefinition>()).Where(p => p != null).ToArray();
                     ports.Should().HaveSameCount(progmetaData.Portmetas, $"defined port count should match. Available definitions:{Environment.NewLine}{DefinitionsToString(ports)}");
                     foreach (Portmeta portmeta in progmetaData.Portmetas)
                     {
