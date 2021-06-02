@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Agents.Net;
 using Autofac;
 using PlcNext.CliNamedPipeMediator;
 using PlcNext.Common.CommandLine;
@@ -31,6 +32,7 @@ namespace PlcNext
             builder.RegisterModule<CppParser.DiModule>();
             builder.RegisterModule<UpdateDiModule>();
             builder.RegisterModule<CommandLineDiModule>();
+            builder.RegisterType<MessageBoard>().As<IMessageBoard>().InstancePerLifetimeScope();
         }
     }
 }

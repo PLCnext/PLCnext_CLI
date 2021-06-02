@@ -32,5 +32,10 @@ namespace PlcNext.Common.Tools.SDK
         public bool? Exists { get; set; }
         public IEnumerable<Target> Targets { get; set; }
         public VirtualDirectory Directory { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(PathValue)}: {PathValue}, {nameof(Exists)}: {Exists}";
+        }
     }
 }

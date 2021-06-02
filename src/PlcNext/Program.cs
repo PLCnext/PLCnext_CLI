@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Agents.Net;
 using Autofac;
 using PlcNext.CommandLine;
 using PlcNext.Common;
@@ -25,6 +26,8 @@ using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
 using PlcNext.CppParser;
 using PlcNext.Migration;
+using Serilog;
+using Serilog.Formatting.Compact;
 
 namespace PlcNext
 {
@@ -46,8 +49,6 @@ namespace PlcNext
             {
                 return Migrate() ? 0 : 1;
             }
-
-            Agents.Net.CommunityAnalysis.Analyse(Array.Empty<Assembly>());
 #if DEBUG
             Stopwatch stopwatch = Stopwatch.StartNew();
 #endif
@@ -55,6 +56,7 @@ namespace PlcNext
             {
                 bool noSdkExploration = args.Any(a => a.Contains("--no-sdk-exploration", StringComparison.Ordinal));
                 ILog log = CreateLog();
+                ConfigureSerilog(log);
                 ContainerBuilder builder = new ContainerBuilder();
                 builder.RegisterInstance(log);
                 builder.RegisterModule(new DiModule(noSdkExploration));
@@ -64,6 +66,12 @@ namespace PlcNext
                     try
                     {
                         ICommandLineParser commandLineParser = container.Resolve<ICommandLineParser>();
+                        
+                        IMessageBoard messageBoard = container.Resolve<IMessageBoard>();
+                        Agent[] agents = container.Resolve<IEnumerable<Agent>>().ToArray();
+                        messageBoard.Register(agents);
+                        messageBoard.Start();
+                        
 #if DEBUG
                         Console.WriteLine($@"Startup timer {stopwatch.Elapsed}");
                         Console.WriteLine($@"Arguments: {args.Aggregate(string.Empty, (s, s1) => s + "_" + s1)}");
@@ -96,6 +104,20 @@ namespace PlcNext
                 ILog result = LogCatalog.CreateNewLog(path, string.Join(" ", args));
                 result.AddInitialLog(args);
                 return result;
+            }
+
+            void ConfigureSerilog(ILog log)
+            {
+                if (args.All(a => a.Trim() != "--verbose"))
+                {
+                    return;
+                }
+                string logFile = Path.GetTempFileName();
+                log.LogVerbose($"Logging agent framework in {logFile}");
+                Log.Logger = new LoggerConfiguration()
+                            .MinimumLevel.Verbose()
+                            .WriteTo.Async(l => l.File(new CompactJsonFormatter(), logFile))
+                            .CreateLogger();
             }
 
             bool Migrate()

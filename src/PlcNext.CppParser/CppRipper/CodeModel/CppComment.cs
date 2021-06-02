@@ -24,7 +24,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             Content = content;
         }
 
-        public static IComment Parse(ParseNode commentNode)
+        public static CppComment Parse(ParseNode commentNode)
         {
             return new CppComment(new CodePosition(commentNode.Position.line, commentNode.Position.column), commentNode.ToString());
         }

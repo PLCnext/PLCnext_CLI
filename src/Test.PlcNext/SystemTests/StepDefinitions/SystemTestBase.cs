@@ -48,7 +48,7 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 
         public void Dispose()
         {
-            ScenarioExtensions.RunWithTimeout(() => testContext?.Dispose(), 1000);
+            ScenarioExtensions.RunWithTimeout(() => testContext?.Dispose(), 1000, false);
         }
     }
 }

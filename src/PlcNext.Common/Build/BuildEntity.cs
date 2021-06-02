@@ -14,6 +14,7 @@ using System.Text;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.SDK;
 
 namespace PlcNext.Common.Build
 {

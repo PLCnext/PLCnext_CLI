@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mono.Unix.Native;
 
 namespace PlcNext.CppParser.CppRipper
 {
@@ -29,6 +30,45 @@ namespace PlcNext.CppParser.CppRipper
             {
                 return typeNode.RuleType == "sequence" && typeNode.RuleName == "base_type";
             }
+        }
+        
+        internal static ParseNode GetDeclarationContentParent(this ParseNode current)
+        {
+            while (current != null &&
+                   current.RuleType != "plus" &&
+                   current.RuleName != "declaration_content")
+            {
+                current = current.GetParent();
+            }
+
+            return current;
+        }
+        
+        internal static ParseNode Identifier(this ParseNode parent)
+        {
+            if (parent.RuleType == "choice" && parent.RuleName == "node")
+            {
+                ParseNode result = parent.FirstOrDefault();
+                if (result?.RuleType == "leaf" && result.RuleName == "identifier")
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        internal static ParseNode GetDeclarationList(this ParseNode content, ParseNode typeDeclaration)
+        {
+            return (from node in
+                        content.ChildrenSkipUnnamed()
+                               .SkipWhile(c => !c.GetHierarchy().Contains(typeDeclaration))
+                               .Where(c => c.RuleType == "choice" && c.RuleName == "node")
+                    select node.FirstOrDefault()
+                    into nodeContent
+                    where nodeContent?.RuleType == "sequence" && nodeContent.RuleName == "brace_group"
+                    select nodeContent.FirstOrDefault(n => n.RuleType == "recursive" && n.RuleName == "declaration_list"))
+               .FirstOrDefault();
         }
 
         internal static IEnumerable<ParseNode> SkipAfterLastVisibilityGroup(this IReadOnlyCollection<ParseNode> nodes)

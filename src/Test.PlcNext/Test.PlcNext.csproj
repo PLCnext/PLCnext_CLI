@@ -321,6 +321,18 @@
     <EmbeddedResource Include="Deployment\FullyQualifiedEnum\src\FullyQualifiedEnumProgram.hpp" />
     <None Remove="Deployment\FullyQualifiedEnum\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\FullyQualifiedEnum\CMakeLists.txt" />
+    <None Remove="Deployment\PpDirectives\src\Directives.hpp" />
+    <EmbeddedResource Include="Deployment\PpDirectives\src\Directives.hpp" />
+    <None Remove="Deployment\PpDirectives\src\PpDirectivesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\PpDirectives\src\PpDirectivesComponent.cpp" />
+    <None Remove="Deployment\PpDirectives\src\PpDirectivesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\PpDirectives\src\PpDirectivesComponent.hpp" />
+    <None Remove="Deployment\PpDirectives\src\PpDirectivesProgram.cpp" />
+    <EmbeddedResource Include="Deployment\PpDirectives\src\PpDirectivesProgram.cpp" />
+    <None Remove="Deployment\PpDirectives\src\PpDirectivesProgram.hpp" />
+    <EmbeddedResource Include="Deployment\PpDirectives\src\PpDirectivesProgram.hpp" />
+    <None Remove="Deployment\PpDirectives\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\PpDirectives\CMakeLists.txt" />
     <None Remove="Deployment\InitializedStructPortField\src\InitializedStructPortFieldComponent.cpp" />
     <EmbeddedResource Include="Deployment\InitializedStructPortField\src\InitializedStructPortFieldComponent.cpp" />
     <None Remove="Deployment\InitializedStructPortField\src\InitializedStructPortFieldComponent.hpp" />
@@ -343,7 +355,7 @@
     <EmbeddedResource Include="Deployment\ConsumableLibrary\plcnext.proj" />
     <EmbeddedResource Include="Deployment\CommentedPort\plcnext.proj" />
     <EmbeddedResource Include="Deployment\FullyQualifiedEnum\plcnext.proj" />
-    <EmbeddedResource Include="Deployment\InitializedStructPortField\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\PpDirectives\plcnext.proj" />
     <Content Include="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -787,6 +799,10 @@
     <PackageReference Include="Mono.Cecil" Version="0.10.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NSubstitute" Version="4.0.0" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="1.4.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>

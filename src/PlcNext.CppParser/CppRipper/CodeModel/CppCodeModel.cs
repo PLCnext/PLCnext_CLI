@@ -29,11 +29,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         public CppCodeModel(Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes,
                             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures,
-                            Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)> enums)
+                            Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)> enums,
+                            Dictionary<string, string> defineStatements)
         {
             this.classes = classes;
             this.structures = structures;
             this.enums = enums;
+            DefineStatements = defineStatements;
         }
 
         public IDictionary<IStructure, VirtualFile> Structures =>
@@ -50,33 +52,63 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                    .ToDictionary(t => t.Item1, t => t.Item2);
 
         public IEnumerable<IncludePath> IncludeDirectories { get; internal set; }
+        public Dictionary<string, string> DefineStatements { get; }
 
         public  IEnumerable<VirtualDirectory> SourceDirectories { get; internal set; }
 
-        public IStructure GetStructure(string structureName)
+        internal void AddDefineStatements(IEnumerable<KeyValuePair<string, string>> statements)
+        {
+            foreach (KeyValuePair<string,string> statement in statements.Where(kv => !DefineStatements.ContainsKey(kv.Key)))
+            {
+                DefineStatements.Add(statement.Key, statement.Value);
+            }
+        }
+
+        IStructure ICodeModel.GetStructure(string structureName)
         {
             return structures.TryGetValue(structureName, out (CppStructure structure, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.structure
                        : findTypeInIncludes?.Invoke(structureName) as IStructure;
         }
 
-        public IClass GetClass(string className)
+        private IStructure GetStructure(string structureName)
+        {
+            return structures.TryGetValue(structureName, out (CppStructure structure, VirtualFile _, VirtualDirectory d) tuple)
+                       ? tuple.structure
+                       : null;
+        }
+
+        IClass ICodeModel.GetClass(string className)
         {
             return classes.TryGetValue(className, out (CppClass cppClass, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.cppClass
                        : findTypeInIncludes?.Invoke(className) as IClass;
         }
 
-        public IEnum GetEnum(string enumName)
+        private IClass GetClass(string className)
+        {
+            return classes.TryGetValue(className, out (CppClass cppClass, VirtualFile _, VirtualDirectory d) tuple)
+                       ? tuple.cppClass
+                       : null;
+        }
+        
+        IEnum ICodeModel.GetEnum(string enumName)
         {
             return enums.TryGetValue(enumName, out (CppEnum cppEnum, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.cppEnum
                        : findTypeInIncludes?.Invoke(enumName) as IEnum;
         }
 
+        private IEnum GetEnum(string enumName)
+        {
+            return enums.TryGetValue(enumName, out (CppEnum cppEnum, VirtualFile _, VirtualDirectory d) tuple)
+                       ? tuple.cppEnum
+                       : null;
+        }
+
         public IType Type(string typeName)
         {
-            return GetStructure(typeName) ?? (IType) GetClass(typeName) ?? GetEnum(typeName);
+            return GetStructure(typeName) ?? (IType) GetClass(typeName) ?? GetEnum(typeName) ?? findTypeInIncludes?.Invoke(typeName);
         }
 
         public VirtualDirectory GetBaseDirectory(IType type)

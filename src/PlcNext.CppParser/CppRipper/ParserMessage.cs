@@ -26,5 +26,10 @@ namespace PlcNext.CppParser.CppRipper
         {
             return new CodeSpecificException(file.FullName, errorCode, line, column, additionalInformation);
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(errorCode)}: {errorCode}, {nameof(line)}: {line}, {nameof(column)}: {column??-1}";
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace PlcNext.Common.Tools.FileSystem
         private readonly List<VirtualEntry> entries = new List<VirtualEntry>();
         private List<VirtualEntry> entriesWhenCleared = new List<VirtualEntry>();
         private bool resolved;
+        private readonly object resolveLock = new object();
 
         public VirtualDirectory(string name, IDirectoryContentResolver contentResolver) : base(name, contentResolver)
         {
@@ -32,8 +33,18 @@ namespace PlcNext.Common.Tools.FileSystem
         {
             get
             {
-                if (!resolved)
+                if (resolved)
                 {
+                    return entries;
+                }
+
+                lock (resolveLock)
+                {
+                    if (resolved)
+                    {
+                        return entries;
+                    }
+
                     foreach (VirtualEntry entry in contentResolver.GetContent())
                     {
                         AddEntry(entry);

@@ -9,6 +9,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
+    <NoWarn>1701;1702;CA2000;CA1812</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,8 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Agents.Net" Version="2021.6.0-prerelease-20210601080504" />
     <PackageReference Include="Autofac" Version="4.9.2" />
+    <PackageReference Include="ConcurrentHashSet" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
   </ItemGroup>
 
   <ItemGroup>

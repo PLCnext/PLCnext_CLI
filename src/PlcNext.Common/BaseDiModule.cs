@@ -108,6 +108,7 @@ namespace PlcNext.Common
             builder.Register(c => c.ResolveNamed<IEnumerable<IEntityContentProvider>>("Implementation")).As<IEnumerable<IEntityContentProvider>>().InstancePerLifetimeScope();
             builder.RegisterType<CMakeBuildContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<CodeModelContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
+            builder.RegisterType<DefineStatementsContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<CommandDefinitionContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<ConstantContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<FormatTemplateContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();

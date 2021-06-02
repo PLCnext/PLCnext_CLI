@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Agents.Net;
 using Autofac;
 using CSharpx;
 using FluentAssertions;
@@ -34,6 +35,8 @@ using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
 using PlcNext.NamedPipeServer.Communication;
 using PlcNext.NamedPipeServer.Tools;
+using Serilog;
+using Serilog.Formatting.Compact;
 using Test.PlcNext.NamedPipe.Tools;
 using Test.PlcNext.SystemTests.Features;
 using Test.PlcNext.Tools;
@@ -153,8 +156,26 @@ namespace Test.PlcNext.SystemTests.Tools
             }
             buildAction?.Invoke(builder);
             Host = builder.Build();
+            
             Initialized = true;
+            
+            ConfigureLogging();
+            
+            IMessageBoard messageBoard = Host.Resolve<IMessageBoard>();
+            Agent[] agents = Host.Resolve<IEnumerable<Agent>>().ToArray();
+            messageBoard.Register(agents);
+            messageBoard.Start();
             exceptionHandlerAbstraction.UserInterface = Host.ResolveOptional<IUserInterface>();
+            
+            void ConfigureLogging()
+            {
+                string logFile = Path.Combine(Path.GetDirectoryName(typeof(SystemTestContext).Assembly.Location), $"{Guid.NewGuid():N}.json");
+                printMessage($"Logging agents in {logFile}");
+                Log.Logger = new LoggerConfiguration()
+                            .MinimumLevel.Verbose()
+                            .WriteTo.Async(l => l.File(new CompactJsonFormatter(), logFile))
+                            .CreateLogger();
+            }
         }
 
         public void Dispose()
@@ -991,6 +1012,7 @@ namespace Test.PlcNext.SystemTests.Tools
             using(Stream resourceStream = assembly.GetManifestResourceStream($"Test.PlcNext.Deployment.TestResults.{compareFile}"))
             using(StreamReader resourceReader = new StreamReader(resourceStream))
             {
+                //StringBuilder builder = new StringBuilder(reader.ReadToEnd());
                 reader.EndOfStream.Should().BeFalse("file should not be empty or already read.");
                 while(!reader.EndOfStream)
                 {

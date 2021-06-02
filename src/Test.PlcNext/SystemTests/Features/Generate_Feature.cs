@@ -251,6 +251,25 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Generate_progmeta_for_static_string_with_define_macros()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PpDirectives"),
+                _ => Given_is_the_working_directory_PATH("PpDirectives"),
+                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("PpDirectivesProgram",
+                                                                                               new[] { "PpDirectivesComponent", "PpDirectivesProgram" },
+                                                                                               new[]
+                                                                                               {
+                                                                                                   new Portmeta("ClassValue","StaticString5",""),
+                                                                                                   new Portmeta("CalculatedValue","StaticString12",""),
+                                                                                                   new Portmeta("BaseValue","StaticString2",""),
+                                                                                                   new Portmeta("ComponentValue","StaticString13",""),
+                                                                                                   new Portmeta("CompilerMacroValue","StaticString1234",""),
+                                                                                               }))).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task UseCorrectPortInformationWhenPortIsDefinedElsewhere()
         {
             await Runner.AddSteps(

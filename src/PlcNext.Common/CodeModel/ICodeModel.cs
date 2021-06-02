@@ -25,6 +25,7 @@ namespace PlcNext.Common.CodeModel
         IType Type(string typeName);
         VirtualDirectory GetBaseDirectory(IType type);
         IEnumerable<IncludePath> IncludeDirectories { get; }
+        Dictionary<string, string> DefineStatements { get; }
         IEnumerable<VirtualDirectory> SourceDirectories { get; }
     }
 }

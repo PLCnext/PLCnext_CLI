@@ -29,12 +29,15 @@ namespace Test.PlcNext
             completedTask.WaitAndUnwrapException(CancellationToken.None);
         } 
 
-        public static void RunWithTimeout(Action runAction, int timeout = 10000)
+        public static void RunWithTimeout(Action runAction, int timeout = 10000, bool checkTimeout = true)
         {
             CancellationTokenSource taskCancel = new CancellationTokenSource();
             Task runnerTask = Task.Run(runAction,taskCancel.Token);
             Task completedTask = Task.WhenAny(runnerTask, Task.Delay(timeout, taskCancel.Token)).GetAwaiter().GetResult();
-            completedTask.Should().Be(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
+            if (checkTimeout)
+            {
+                completedTask.Should().Be(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
+            }
             taskCancel.Cancel();
             completedTask.WaitAndUnwrapException(CancellationToken.None);
         } 
