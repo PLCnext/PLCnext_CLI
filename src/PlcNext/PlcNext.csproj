@@ -15,7 +15,9 @@
 
   <ItemGroup>
     <None Include="Templates\AcfProjectTemplate\.proj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
     <None Include="Templates\ConsumableLibraryTemplate\.proj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -28,7 +30,9 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
     <None Include="Templates\ProjectTemplate\.proj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
     <None Update="Templates\AcfComponentTemplate\Component.compmeta">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -51,10 +55,14 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
     <None Update="Templates\ConsumableLibraryTemplate\ADD_PUBLIC_HEADERS_HERE">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
     <None Update="Templates\ConsumableLibraryTemplate\How_to_use.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
   </ItemGroup>
 
@@ -173,6 +181,11 @@
     </None>
     <None Update="Templates\MinimumProjectTemplate\How_to_deploy.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
+    <None Update="Templates\MinimumProjectTemplate\old_Library.cpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
     <None Update="Templates\MinimumProjectTemplate\Library.cpp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory><ExcludeFromSingleFile>true</ExcludeFromSingleFile>
