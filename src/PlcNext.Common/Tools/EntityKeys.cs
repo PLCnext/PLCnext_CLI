@@ -44,7 +44,7 @@ namespace PlcNext.Common.Tools
 
         //CodeModelContentProvider
         public const string PortStructsKey = "portstructs";
-        public const string PortAndTypeDefinitionStructs = "portandtypedefinitionstructs";
+        public const string PortAndTypeInformationStructs = "portandtypeinformationstructs";
         public const string PortEnumsKey = "portenums";
         public const string PortArraysKey = "portarrays";
         public const string VariablePortStringsKey = "variableportstrings";
@@ -60,7 +60,7 @@ namespace PlcNext.Common.Tools
         public const string FilterHiddenTypesFormatKey = "filterhiddentypes";
         public const string FileKey = "file";
         public const string PortAttributeKey = "port";
-        public const string TypeDefinitionAttributeKey = "typedefinition";
+        public const string TypeInformationAttributeKey = "typeinformation";
         public const string BaseDirectoryKey = "base-directory";
         public const string ResolvedTypeKey = "__internalresolvedtype__";
         public const string IsFieldKey = "isfield";

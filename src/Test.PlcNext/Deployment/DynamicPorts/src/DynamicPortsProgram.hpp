@@ -23,7 +23,7 @@ public: // typedefs
 			supernested fiooba;
 		};
 
-    //#typedefinition
+    //#typeinformation
 		struct instruct{
 			nested blubber;
 			nested::supernested test;

@@ -56,7 +56,7 @@ namespace PlcNext.Common.CodeModel
             return owner.HasValue<ICodeModel>() &&
                    (key == EntityKeys.NamespaceKey ||
                     key == EntityKeys.PortStructsKey ||
-                    key == EntityKeys.PortAndTypeDefinitionStructs ||
+                    key == EntityKeys.PortAndTypeInformationStructs ||
                     key == EntityKeys.PortEnumsKey ||
                     key == EntityKeys.PortArraysKey ||
                     key == EntityKeys.VariablePortStringsKey) ||
@@ -312,7 +312,7 @@ namespace PlcNext.Common.CodeModel
                 return structures;
             }
 
-            IEnumerable<CodeEntity> GetPortAndTypeDefinitionStructures()
+            IEnumerable<CodeEntity> GetPortAndTypeInformationStructures()
             {
                 IEnumerable<CodeEntity> GetAllFields()
                 {
@@ -321,17 +321,17 @@ namespace PlcNext.Common.CodeModel
                                      .SelectMany(c => c.Fields);
                 }
 
-                bool HasTypeDefinitionAttribute(CodeEntity structEntity)
+                bool HasTypeInformationAttribute(CodeEntity structEntity)
                 {
                     return structEntity.AsType != null &&
-                           structEntity.AsType.HasAttributeWithoutValue(EntityKeys.TypeDefinitionAttributeKey);
+                           structEntity.AsType.HasAttributeWithoutValue(EntityKeys.TypeInformationAttributeKey);
                 }
                 
                 HashSet<CodeEntity> typedefAttributedStructures = new HashSet<CodeEntity>(GetAllFields()
                                                               .Select(f => f.ResolvedType)
                                                               .Where(t => t.AsType != null &&
                                                                           t.AsEnum == null)
-                                                              .Where(HasTypeDefinitionAttribute),
+                                                              .Where(HasTypeInformationAttribute),
                     new FullNameCodeEntityComparer());
 
                 HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetPortStructures().Concat(typedefAttributedStructures),
@@ -700,9 +700,9 @@ namespace PlcNext.Common.CodeModel
                     {
                         return owner.Create(key, GetPortStructures().Select(c => c.Base));
                     }
-                    case EntityKeys.PortAndTypeDefinitionStructs:
+                    case EntityKeys.PortAndTypeInformationStructs:
                     {
-                        return owner.Create(key, GetPortAndTypeDefinitionStructures().Select(c => c.Base));
+                        return owner.Create(key, GetPortAndTypeInformationStructures().Select(c => c.Base));
                     }
                     case EntityKeys.PortEnumsKey:
                     {
@@ -1006,7 +1006,7 @@ namespace PlcNext.Common.CodeModel
             {
                 ICodeModel model = owner.Value<ICodeModel>();
                 if (model == null ||
-                    GetAllPorts().Concat(GetPortAndTypeDefinitionStructures().SelectMany(s => s.Fields)).Count() <= 1000)
+                    GetAllPorts().Concat(GetPortAndTypeInformationStructures().SelectMany(s => s.Fields)).Count() <= 1000)
                     return false;
                 return true;
             }
