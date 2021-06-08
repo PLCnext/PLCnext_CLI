@@ -33,11 +33,8 @@ using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
-using PlcNext.NamedPipeServer.Communication;
-using PlcNext.NamedPipeServer.Tools;
 using Serilog;
 using Serilog.Formatting.Compact;
-using Test.PlcNext.NamedPipe.Tools;
 using Test.PlcNext.SystemTests.Features;
 using Test.PlcNext.Tools;
 using Test.PlcNext.Tools.Abstractions;
@@ -149,11 +146,6 @@ namespace Test.PlcNext.SystemTests.Tools
             exportProvider.AddInstance(log);
             ContainerBuilder builder = new ContainerBuilder();
             builder.RegisterModule(new DiModule(exportProvider, autoActivatedComponents));
-            if (withUpdateModule)
-            {
-                builder.RegisterModule<BaseUpdateDiModule>();
-                builder.RegisterInstance(updateEnvironmentInformation).As<IEnvironmentInformation>();
-            }
             buildAction?.Invoke(builder);
             Host = builder.Build();
             
@@ -290,19 +282,19 @@ namespace Test.PlcNext.SystemTests.Tools
 
         internal void CheckUserInformedOfError(string searchstring, string reason)
         {
-            string message = userInterfaceAbstraction.Errors.FirstOrDefault(s => s.ToLowerInvariant().Contains(searchstring.ToLowerInvariant()));
+            string message = userInterfaceAbstraction.Errors.FirstOrDefault(s => s.Contains(searchstring, StringComparison.InvariantCultureIgnoreCase));
             message.Should().NotBeNull(reason);
         }
 
         internal void CheckUserInformed(string searchstring, string reason)
         {
-            string message = userInterfaceAbstraction.Informations.FirstOrDefault(s => s.ToLowerInvariant().Contains(searchstring.ToLowerInvariant()));
+            string message = userInterfaceAbstraction.Informations.FirstOrDefault(s => s.Contains(searchstring, StringComparison.InvariantCultureIgnoreCase));
             message.Should().NotBeNull(reason);
         }
 
         internal void CheckUserInformedOfWarning(string searchstring, string reason)
         {
-            string message = userInterfaceAbstraction.Warnings.FirstOrDefault(s => s.ToLowerInvariant().Contains(searchstring.ToLowerInvariant()));
+            string message = userInterfaceAbstraction.Warnings.FirstOrDefault(s => s.Contains(searchstring, StringComparison.InvariantCultureIgnoreCase));
             message.Should().NotBeNull(reason);
         }
 
@@ -1142,8 +1134,8 @@ namespace Test.PlcNext.SystemTests.Tools
         {
             get
             {
-                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
+                string location = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(location);
                 string path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path);
             }
@@ -1423,14 +1415,6 @@ namespace Test.PlcNext.SystemTests.Tools
         public void WithOtherProgramInstance(int processId)
         {
             processManagerAbstraction.WithOtherProgramInstance(processId);
-        }
-
-        private bool withUpdateModule;
-        private IEnvironmentInformation updateEnvironmentInformation;
-        public void WithUpdateModule(IEnvironmentInformation environmentInformation)
-        {
-            withUpdateModule = true;
-            updateEnvironmentInformation = environmentInformation;
         }
 
         public async Task ExploreSdks()

@@ -68,7 +68,7 @@ namespace PlcNext.CommandLine
                 ParserResult<object> result = parser.ParseVerbs(
                     args, dynamicVerbFactory, typeof(BuildVerb), typeof(GenerateVerb), typeof(GetVerb),
                     typeof(SetVerb), typeof(UpdateVerb), typeof(InstallVerb),
-                    typeof(ScanSdksVerb), typeof(StartServerVerb), typeof(StartClientVerb),
+                    typeof(ScanSdksVerb),
                     typeof(ShowLogVerb), typeof(MigrateCliVerb));
                 return result
                    .MapResult((object verb) => ConvertToString(verb),

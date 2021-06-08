@@ -26,8 +26,8 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
         public MockedEnvironmentServiceAbstraction()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            string codeBase = assembly.CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
+            string location = assembly.CodeBase;
+            UriBuilder uri = new UriBuilder(location);
             string path = Uri.UnescapeDataString(uri.Path);
             environmentService.AssemblyVersion.Returns(new Version(2,0,0));
             environmentService.AssemblyDirectory.Returns(Path.GetDirectoryName(path));

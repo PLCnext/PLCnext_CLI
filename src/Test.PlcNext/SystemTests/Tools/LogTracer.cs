@@ -12,7 +12,7 @@ using System.Diagnostics;
 using PlcNext.Common.Tools.UI;
 using Xunit.Abstractions;
 
-namespace Test.PlcNext.NamedPipe.Tools
+namespace Test.PlcNext.SystemTests.Tools
 {
     internal class LogTracer : ILog
     {

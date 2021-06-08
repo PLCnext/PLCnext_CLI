@@ -174,8 +174,8 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
         {
             get
             {
-                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
+                string location = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(location);
                 string path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path);
             }

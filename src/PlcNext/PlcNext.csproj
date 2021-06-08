@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName Condition="'$(PlcNextToolName)' != ''">$(PlcNextToolName)</AssemblyName>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright (c) 2018 PHOENIX CONTACT GmbH &amp; Co. KG</Copyright>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -71,7 +72,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Agents.Net" Version="2021.6.0-prerelease-20210601080504" />
+    <PackageReference Include="Agents.Net" Version="2021.6.2" />
     <PackageReference Include="Autofac" Version="4.9.2" />
     <PackageReference Include="FeatureToggle" Version="4.0.2" />
     <PackageReference Include="Serilog" Version="2.10.0" />
@@ -83,7 +84,6 @@
   <ItemGroup>
     <ProjectReference Include="..\PlcNext.Common\PlcNext.Common.csproj" />
     <ProjectReference Include="..\PlcNext.CppParser\PlcNext.CppParser.csproj" />
-    <ProjectReference Include="..\PlcNext.NamedPipeServer\PlcNext.NamedPipeServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

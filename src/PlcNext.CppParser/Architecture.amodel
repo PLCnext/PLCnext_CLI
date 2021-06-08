@@ -735,7 +735,8 @@
       "ConsumingMessages": [
         "5826267f-fe08-4d88-bb5c-de4c786bfef3",
         "37509cda-dfc1-49c6-83b6-9b10b128e05d",
-        "6dff2a35-b839-4344-8feb-48ef5b7b474b"
+        "6dff2a35-b839-4344-8feb-48ef5b7b474b",
+        "e93a2050-e255-4aec-9e34-aa874a32f4be"
       ],
       "ProducedMessages": [
         "4bb036e0-e6ab-49dd-ab15-1b6ad9efc3cd",
@@ -879,6 +880,20 @@
       "ConsumingMessages": [],
       "ProducedMessages": [
         "da125178-d7ee-4a00-9a57-43d837bcf6ce"
+      ],
+      "IncomingEvents": [],
+      "ProducedEvents": []
+    },
+    {
+      "Id": "11bdbc46-1bc2-4dc3-9daf-d341d70c18af",
+      "Name": "ExceptionCancelExecuter",
+      "Namespace": ".Agents",
+      "ConsumingMessages": [
+        "6dff2a35-b839-4344-8feb-48ef5b7b474b",
+        "9b1bdc57-5327-40d2-8261-19f70e5ae7d0"
+      ],
+      "ProducedMessages": [
+        "e93a2050-e255-4aec-9e34-aa874a32f4be"
       ],
       "IncomingEvents": [],
       "ProducedEvents": []
@@ -1316,6 +1331,12 @@
     {
       "Id": "5df5c845-62fb-44b8-85ef-83d0d1559ac9",
       "Name": "DefineStatementsParsed",
+      "Namespace": ".Messages",
+      "BuildIn": false
+    },
+    {
+      "Id": "e93a2050-e255-4aec-9e34-aa874a32f4be",
+      "Name": "ExceptionCancellationTokenCreated",
       "Namespace": ".Messages",
       "BuildIn": false
     }

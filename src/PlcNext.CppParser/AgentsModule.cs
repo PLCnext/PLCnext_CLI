@@ -21,6 +21,7 @@ namespace PlcNext.CppParser
             builder.RegisterType<Agents.SourceDirectoryAggregator>().As<Agent>().InstancePerLifetimeScope();
             builder.RegisterType<Agents.CppFileFinder>().As<Agent>().InstancePerLifetimeScope();
             builder.RegisterType<Agents.FileOpener>().As<Agent>().InstancePerLifetimeScope();
+            builder.RegisterType<Agents.ExceptionCancelExecuter>().As<Agent>().InstancePerLifetimeScope();
             builder.RegisterType<CppRipper.Agents.StreamParser>().As<Agent>().InstancePerLifetimeScope();
             builder.RegisterType<CppRipper.Agents.TypeDeclarationFinder>().As<Agent>().InstancePerLifetimeScope();
             builder.RegisterType<CppRipper.Agents.TypeSpecifier>().As<Agent>().InstancePerLifetimeScope();

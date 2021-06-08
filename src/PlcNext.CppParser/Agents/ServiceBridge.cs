@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using Agents.Net;
 using PlcNext.Common.CodeModel;
+using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.Settings;
@@ -25,6 +26,7 @@ namespace PlcNext.CppParser.Agents
     [Consumes(typeof(CodeModelCreated))]
     [Consumes(typeof(IncludeCacheUpdateParsingErrors))]
     [Consumes(typeof(InitializeMessage))]
+    [Consumes(typeof(ExceptionCancellationTokenCreated))]
     [Produces(typeof(AttributePrefixDefined))]
     [Produces(typeof(CodeModelCreationParameters))]
     internal class ServiceBridge : Agent, IParser
@@ -32,6 +34,8 @@ namespace PlcNext.CppParser.Agents
         private readonly ISettingsProvider settingsProvider;
         private readonly ManualResetEventSlim initializeEvent = new ManualResetEventSlim(false);
         private readonly MessageCollector<CodeModelCreated, IncludeCacheUpdateParsingErrors, CodeModelCreationParameters> collector = new MessageCollector<CodeModelCreated, IncludeCacheUpdateParsingErrors, CodeModelCreationParameters>();
+
+        private readonly MessageCollector<CodeModelCreationParameters, ExceptionCancellationTokenCreated> cancelCollector = new MessageCollector<CodeModelCreationParameters, ExceptionCancellationTokenCreated>();
         private InitializeMessage initializeMessage;
         private readonly ILog log;
         
@@ -52,7 +56,8 @@ namespace PlcNext.CppParser.Agents
             }
             else
             {
-                collector.Push(messageData);
+                collector.TryPush(messageData);
+                cancelCollector.TryPush(messageData);
             }
         }
 
@@ -68,11 +73,16 @@ namespace PlcNext.CppParser.Agents
             log.LogVerbose("Start creating code model.");
             Stopwatch parsingStopwatch = new Stopwatch();
             parsingStopwatch.Start();
-                
+
+            CancellationToken token = default;
             OnMessage(parameters);
+            cancelCollector.PushAndExecute(parameters, set =>
+            {
+                token = set.Message2.Token;
+            });
             CodeModelCreated codeModelCreated = null;
             IEnumerable<CodeSpecificException> exceptions = null;
-            collector.PushAndExecute(parameters, set =>
+            bool finished = collector.PushAndExecute(parameters, set =>
             {
                 set.MarkAsConsumed(set.Message1);
                 set.MarkAsConsumed(set.Message2);
@@ -80,12 +90,18 @@ namespace PlcNext.CppParser.Agents
                 
                 codeModelCreated = set.Message1;
                 exceptions = set.Message2.ParsingErrors;
-            });
-                
-            parsingStopwatch.Stop();
-            log.LogVerbose($"Code model created in {parsingStopwatch.ElapsedMilliseconds} ms.");
+            }, token);
                 
             MessageDomain.TerminateDomainsOf(parameters);
+
+            if (!finished)
+            {
+                throw new FormattableException(
+                    "There was an error while creating the code model for this project. More details can be found in the log file if the '--verbose' flag was used.");
+            }
+            
+            parsingStopwatch.Stop();
+            log.LogVerbose($"Code model created in {parsingStopwatch.ElapsedMilliseconds} ms.");
 
             loggableExceptions = exceptions;
                 

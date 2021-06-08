@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName Condition="'$(PlcNextToolName)' != ''">$(PlcNextToolName).CppParser</AssemblyName>
     <Antlr4UseCSharpGenerator>True</Antlr4UseCSharpGenerator>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -19,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Agents.Net" Version="2021.6.0-prerelease-20210601080504" />
+    <PackageReference Include="Agents.Net" Version="2021.6.2" />
     <PackageReference Include="Autofac" Version="4.9.2" />
     <PackageReference Include="ConcurrentHashSet" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
