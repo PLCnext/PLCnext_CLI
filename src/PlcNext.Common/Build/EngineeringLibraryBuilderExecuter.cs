@@ -169,7 +169,8 @@ namespace PlcNext.Common.Build
                 LibraryDefinition definition = (LibraryDefinition) document.Item;
                 IEnumerable<string> dependencies = externalLibraries.Select(Path.GetFileName)
                                                                     .Concat(definition.Dependencies?.Select(d => d.path)??
-                                                                            Enumerable.Empty<string>());
+                                                                            Enumerable.Empty<string>())
+                                                                    .Distinct();
                 definition.Dependencies = dependencies.Select(d => new DependencyDefinition {path = d}).ToArray();
                 
                 using (Stream fileStream = libmetaFile.OpenWrite())
