@@ -19,7 +19,7 @@ namespace Test.PlcNext
 {
     public static class ScenarioExtensions
     {
-        public static async Task RunAsyncWithTimeout(this IScenarioRunner<NoContext> runner, int timeout = 10000)
+        public static async Task RunAsyncWithTimeout(this IScenarioRunner<NoContext> runner, int timeout = 20000)
         {
             CancellationTokenSource taskCancel = new CancellationTokenSource();
             Task runnerTask = runner.RunAsync();
@@ -29,7 +29,7 @@ namespace Test.PlcNext
             completedTask.WaitAndUnwrapException(CancellationToken.None);
         } 
 
-        public static void RunWithTimeout(Action runAction, int timeout = 10000, bool checkTimeout = true)
+        public static void RunWithTimeout(Action runAction, int timeout = 20000, bool checkTimeout = true)
         {
             CancellationTokenSource taskCancel = new CancellationTokenSource();
             Task runnerTask = Task.Run(runAction,taskCancel.Token);
@@ -42,7 +42,7 @@ namespace Test.PlcNext
             completedTask.WaitAndUnwrapException(CancellationToken.None);
         } 
 
-        public static T RunWithTimeout<T>(Func<T> runAction, int timeout = 10000)
+        public static T RunWithTimeout<T>(Func<T> runAction, int timeout = 20000)
         {
             CancellationTokenSource taskCancel = new CancellationTokenSource();
             Task<T> runnerTask = Task.Run(runAction,taskCancel.Token);

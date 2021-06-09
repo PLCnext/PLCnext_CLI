@@ -28,7 +28,7 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
                                                                                                                                    new MockedGuidAbstraction(),
                                                                                                                                    new MockedCMakeConversationAbstraction(),
                                                                                                                                    new MockedSdkExplorerAbstraction()),
-                                                                         2000), helper)
+                                                                         5000), helper)
         {
         }
     }
