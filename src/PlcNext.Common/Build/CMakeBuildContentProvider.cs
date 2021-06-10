@@ -33,6 +33,11 @@ namespace PlcNext.Common.Build
         private static readonly Regex LibrariesRPathDecoder = new Regex("-rpath(?:-link)?,(?<rpath>(?:\\\"[^\\\"]+\\\"|[^ |\\\"]+;?)*)", RegexOptions.Compiled);
         private readonly ICMakeConversation cmakeConversation;
         private readonly ExecutionContext executionContext;
+        private static readonly string[] StaticLibraryFileEndings = new[]
+        {
+            ".a",
+            ".lib"
+        };
 
         public CMakeBuildContentProvider(IFileSystem fileSystem, ICMakeConversation cmakeConversation, ExecutionContext executionContext)
         {
@@ -209,6 +214,13 @@ namespace PlcNext.Common.Build
                 return !path.StartsWith(cmakeSysroot, StringComparison.OrdinalIgnoreCase);
             }
 
+            static bool IsNotStaticLibrary(string path)
+            {
+                path = path.CleanPath();
+
+                return !StaticLibraryFileEndings.Any(e => path.EndsWith(e, StringComparison.Ordinal));
+            }
+
             void AddExternalLib()
             {
                 string path = match.Groups["path"].Value.Trim('\\', '"');
@@ -218,7 +230,7 @@ namespace PlcNext.Common.Build
                 }
 
                 string pathBase = rPaths.FirstOrDefault(p => fileSystem.FileExists(path, p));
-                if (!string.IsNullOrEmpty(pathBase) && IsNotSysrootPath(path))
+                if (!string.IsNullOrEmpty(pathBase) && IsNotSysrootPath(path) && IsNotStaticLibrary(path))
                 {
                     VirtualFile libFile = fileSystem.GetFile(path, pathBase);
                     result.Add(libFile.FullName);
