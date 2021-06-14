@@ -249,30 +249,29 @@ namespace PlcNext.Common.Build
                 writer.WriteLine($"{Constants.OutputOption} \"{MakeRelative(Path.Combine(outputRoot.FullName, projectName))}.{Constants.EngineeringLibraryExtension}\"");
                 writer.WriteLine($"{Constants.GuidOption} {project.Id:D}");
 
-                RenameAndWriteLibraryFile(writer);
+                WriteLibraryFile(writer);
                 WriteMetadata(writer);
                 AddAdditionalFiles(writer);
             }
 
             return commandOptions.FullName;
 
-            void RenameAndWriteLibraryFile(StreamWriter writer)
+            void WriteLibraryFile(StreamWriter writer)
             {
                 foreach (TargetEntity target in projectLibraries.Keys.Select(TargetEntity.Decorate))
                 {
-                    VirtualFile renamedLibrary = projectFileEntity
+                    VirtualFile copiedLibrary = projectFileEntity
                                                 .TempDirectory.Directory(target.FullName.Replace(",", "_"))
-                                                .File("lib" + projectName +
-                                                      Path.GetExtension(projectLibraries[target.Base].Name));
-                    executionContext.Observable.OnNext(new Change(() => { }, $"Rename library file to {renamedLibrary.FullName}"));
+                                                .File(projectLibraries[target.Base].Name);
+                    executionContext.Observable.OnNext(new Change(() => { }, $"Copy library file to {copiedLibrary.FullName}"));
                     using (Stream source = projectLibraries[target.Base].OpenRead(true))
-                    using (Stream destination = renamedLibrary.OpenWrite())
+                    using (Stream destination = copiedLibrary.OpenWrite())
                     {
                         source.CopyTo(destination);
                     }
                     writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
                                                    Constants.PlcnextNativeLibraryOptionPattern,
-                                                   renamedLibrary.Parent.FullName,
+                                                   copiedLibrary.Parent.FullName,
                                                    target.Name,
                                                    target.EngineerVersion,
                                                    guidFactory.Create().ToString("D", CultureInfo.InvariantCulture),
