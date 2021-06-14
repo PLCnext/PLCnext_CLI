@@ -29,6 +29,13 @@
             </xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="Name" type="name">
+          <xs:annotation>
+            <xs:documentation>
+              The name of the project. The default value is the name of the containing directory.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="Extension" type="extension"/>
         <xs:element minOccurs="0" maxOccurs="1" name="Type" type="typeDefinition" default="project"/>
       </xs:sequence>
@@ -102,6 +109,17 @@
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:pattern value="^(\d+)(.\d+)?(.\d+)?(.\d+)?$" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="name">
+    <xs:annotation>
+      <xs:documentation>
+        Simple type used to specify the project name.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^(?:[a-zA-Z][a-zA-Z0-9_]*\.)*[A-Z](?!.*__)[a-zA-Z0-9_]*$" />
     </xs:restriction>
   </xs:simpleType>
 

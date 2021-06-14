@@ -171,7 +171,12 @@ namespace PlcNext.Common.Project
             Entity GetProjectName()
             {
                 ProjectDescription description = owner.Value<ProjectDescription>();
-                return owner.Create(key, description?.Root.Name?? Path.GetFileName(owner.Path));
+                string name = description?.Settings.Name;
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = Path.GetFileName(owner.Path);
+                }
+                return owner.Create(key, name);
             }
 
             Entity GetProjectVersion()

@@ -155,10 +155,12 @@ namespace PlcNext.Common.Build
 
             void GenerateCmakeFile()
             {
+                //It is important to get the name first before the cmake file is created in the next line.
+                string name = buildInformation.RootEntity.Name;
                 VirtualFile cMakeFile = buildInformation.RootFileEntity.Directory.File(Constants.CMakeFileName);
                 //TODO Generate cmakefile with template system
                 //TODO Set src folders in cmake file (consider foreign project structure)
-                CMakeFileGenerator.WriteCMakeFile(cMakeFile, buildInformation.RootEntity.Name);
+                CMakeFileGenerator.WriteCMakeFile(cMakeFile, name);
                 observable?.OnNext(new Change(() => { /*Do not delete, because user need to make changes perhaps*/ }, $"Generated cmake file {cMakeFile.FullName}"));
             }
 

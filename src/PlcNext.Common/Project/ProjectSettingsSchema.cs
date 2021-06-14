@@ -39,6 +39,8 @@ namespace PlcNext.Common.Project {
         
         private string versionField;
         
+        private string nameField;
+        
         private extension[] extensionField;
         
         private string typeField;
@@ -77,6 +79,16 @@ namespace PlcNext.Common.Project {
             }
             set {
                 this.versionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
             }
         }
         
