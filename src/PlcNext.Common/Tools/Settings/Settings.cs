@@ -23,8 +23,9 @@ namespace PlcNext.Common.Tools.Settings
         public static readonly string[] TemplateLocationsDefault = new[] { "./Templates/Templates.xml" };
         public static readonly string[] SdkPathsDefault = System.Array.Empty<string>();
         public const bool UseSystemCommandsDefault = false;
+        public const bool AlwaysWriteExtendedLogDefault = false;
 
-        public Settings(string attributePrefix, string[] sdkPaths, string cliRepositoryRoot, string cliRepositoryFileName, string cliRepositorySignatureFileName, string httpProxy, string logFilePath, string[] templateLocations, bool useSystemCommands)
+        public Settings(string attributePrefix, string[] sdkPaths, string cliRepositoryRoot, string cliRepositoryFileName, string cliRepositorySignatureFileName, string httpProxy, string logFilePath, string[] templateLocations, bool useSystemCommands, bool alwaysWriteExtendedLog)
         {
             AttributePrefix = attributePrefix;
             SdkPaths = sdkPaths;
@@ -35,6 +36,7 @@ namespace PlcNext.Common.Tools.Settings
             LogFilePath = logFilePath;
             TemplateLocations = templateLocations;
             UseSystemCommands = useSystemCommands;
+            AlwaysWriteExtendedLog = alwaysWriteExtendedLog;
         }
 
         public Settings()
@@ -48,6 +50,7 @@ namespace PlcNext.Common.Tools.Settings
             TemplateLocations = TemplateLocationsDefault;
             HttpProxy = HttpProxyDefault;
             UseSystemCommands = UseSystemCommandsDefault;
+            AlwaysWriteExtendedLog = AlwaysWriteExtendedLogDefault;
         }
 
         public IReadOnlyCollection<string> SdkPaths { get; }
@@ -67,6 +70,8 @@ namespace PlcNext.Common.Tools.Settings
         public string LogFilePath { get; }
 
         public bool UseSystemCommands { get; }
+        
+        public bool AlwaysWriteExtendedLog { get; }
 
         public override string ToString()
         {

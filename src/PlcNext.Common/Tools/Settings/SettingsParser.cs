@@ -44,6 +44,8 @@ namespace PlcNext.Common.Tools.Settings
                            new CollectionSettingsProperty(nameof(Settings.TemplateLocations), settings.TemplateLocations.ToList()));
             properties.Add(nameof(Settings.UseSystemCommands),
                            new BoolSettingsProperty(nameof(Settings.UseSystemCommands), settings.UseSystemCommands));
+            properties.Add(nameof(Settings.AlwaysWriteExtendedLog),
+                           new BoolSettingsProperty(nameof(Settings.AlwaysWriteExtendedLog), settings.AlwaysWriteExtendedLog));
         }
 
         public Settings GetSettings()
@@ -56,7 +58,8 @@ namespace PlcNext.Common.Tools.Settings
                                 ((SingleSettingsProperty)properties[nameof(Settings.HttpProxy)]).Value,
                                 ((SingleSettingsProperty)properties[nameof(Settings.LogFilePath)]).Value,
                                 ((CollectionSettingsProperty)properties[nameof(Settings.TemplateLocations)]).Values.ToArray(),
-                                ((BoolSettingsProperty)properties[nameof(Settings.UseSystemCommands)]).Value);
+                                ((BoolSettingsProperty)properties[nameof(Settings.UseSystemCommands)]).Value,
+                ((BoolSettingsProperty)properties[nameof(Settings.AlwaysWriteExtendedLog)]).Value);
         }
 
         public string GetSetting(string key)

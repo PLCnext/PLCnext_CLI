@@ -23,6 +23,7 @@ using PlcNext.Common.CommandLine;
 using PlcNext.Common.Commands;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.Settings;
 using PlcNext.Common.Tools.UI;
 using PlcNext.CppParser;
 using PlcNext.Migration;
@@ -56,7 +57,6 @@ namespace PlcNext
             {
                 bool noSdkExploration = args.Any(a => a.Contains("--no-sdk-exploration", StringComparison.Ordinal));
                 ILog log = CreateLog();
-                ConfigureSerilog(log);
                 ContainerBuilder builder = new ContainerBuilder();
                 builder.RegisterInstance(log);
                 builder.RegisterModule(new DiModule(noSdkExploration));
@@ -66,6 +66,8 @@ namespace PlcNext
                     try
                     {
                         ICommandLineParser commandLineParser = container.Resolve<ICommandLineParser>();
+                        
+                        ConfigureSerilog(log, container.Resolve<ISettingsProvider>());
                         
                         IMessageBoard messageBoard = container.Resolve<IMessageBoard>();
                         Agent[] agents = container.Resolve<IEnumerable<Agent>>().ToArray();
@@ -106,9 +108,10 @@ namespace PlcNext
                 return result;
             }
 
-            void ConfigureSerilog(ILog log)
+            void ConfigureSerilog(ILog log, ISettingsProvider settingsProvider)
             {
-                if (args.All(a => a.Trim() != "--verbose"))
+                if (args.All(a => a.Trim() != "--verbose") &&
+                    !settingsProvider.Settings.AlwaysWriteExtendedLog)
                 {
                     return;
                 }

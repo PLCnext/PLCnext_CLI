@@ -179,9 +179,13 @@ namespace PlcNext.Common.Tools.Settings
                                                            .Element("SystemCommands")?.Value, out bool parsed)
                                               ? parsed
                                               : Settings.UseSystemCommandsDefault;
+                    bool extendedLog = bool.TryParse(document.Descendants("Settings").FirstOrDefault()?
+                                                           .Element(nameof(Settings.AlwaysWriteExtendedLog))?.Value, out parsed)
+                                              ? parsed
+                                              : Settings.AlwaysWriteExtendedLogDefault;
 
                     log.LogInformation($"Used settings {file.FullName}:");
-                    Settings result = new Settings(attributePrefix, paths.ToArray(), cliRpositoryRoot, cliRpositoryFileName, cliRpositorySignatureFileName, httpProxy, logFilePath, templates.ToArray(), systemCommands);
+                    Settings result = new Settings(attributePrefix, paths.ToArray(), cliRpositoryRoot, cliRpositoryFileName, cliRpositorySignatureFileName, httpProxy, logFilePath, templates.ToArray(), systemCommands, extendedLog);
                     log.LogInformation(JsonConvert.SerializeObject(result, Formatting.Indented));
                     return result;
                 }catch(System.Xml.XmlException e)
@@ -207,6 +211,7 @@ namespace PlcNext.Common.Tools.Settings
                                                                 new XElement("HttpProxy", current.HttpProxy??string.Empty),
                                                                 new XElement("LogFilePath", current.LogFilePath ?? "log.txt"),
                                                                 new XElement("SystemCommands", current.UseSystemCommands.ToString(CultureInfo.InvariantCulture)),
+                                                                new XElement("AlwaysWriteExtendedLog", current.AlwaysWriteExtendedLog.ToString(CultureInfo.InvariantCulture)),
                                                                 new XElement("SDKS",
                                                                              current.SdkPaths.Select(p => new XElement("SDK", p))
                                                                                     .Cast<object>().ToArray()),

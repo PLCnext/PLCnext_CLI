@@ -46,7 +46,8 @@ namespace PlcNext.Common.Tools
                                                e.Settings.HttpProxy,
                                                e.Settings.LogFilePath.CleanPath(),
                                                e.Settings.TemplateLocations.Select(p => p.CleanPath()).ToArray(),
-                                               e.Settings.UseSystemCommands);
+                                               e.Settings.UseSystemCommands,
+                                               e.Settings.AlwaysWriteExtendedLog);
         }
 
         private void OnSettingChanging(object sender, SettingsObserverEventArgs e)

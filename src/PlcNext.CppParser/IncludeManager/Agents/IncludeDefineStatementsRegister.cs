@@ -20,7 +20,8 @@ namespace PlcNext.CppParser.IncludeManager.Agents
     [Consumes(typeof(InitialIncludeDefinitionsDefined))]
     internal sealed class IncludeDefineStatementsRegister : InterceptorAgent
     {
-        private readonly MessageCollector<InitialIncludeDefinitionsDefined, IncludeFileProcessed> collector = new MessageCollector<InitialIncludeDefinitionsDefined, IncludeFileProcessed>();
+        private readonly MessageCollector<InitialIncludeDefinitionsDefined, IncludeFileProcessed> collector = new();
+        private readonly object codeModelLock = new();
         public IncludeDefineStatementsRegister(IMessageBoard messageBoard) : base(messageBoard)
         {
         }
@@ -35,7 +36,10 @@ namespace PlcNext.CppParser.IncludeManager.Agents
             collector.PushAndExecute(messageData, set =>
             {
                 set.MarkAsConsumed(set.Message2);
-                set.Message1.CodeModel.AddDefineStatements(set.Message2.CacheEntry.DefineStatements);
+                lock (codeModelLock)
+                {
+                    set.Message1.CodeModel.AddDefineStatements(set.Message2.CacheEntry.DefineStatements);
+                }
             });
             
             return InterceptionAction.Continue;
