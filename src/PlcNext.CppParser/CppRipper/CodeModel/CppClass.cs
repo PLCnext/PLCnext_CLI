@@ -20,6 +20,11 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     internal class CppClass : CppType, IClass
     {
+        public CppClass(string ns, string name, string[] usings, ParseNode content, ParseNode classDeclaration,
+                        List<ParserMessage> messages, string attributePrefix) : base(ns, name, usings, content, messages, classDeclaration, attributePrefix)
+        {
+        }
+
         public CppClass(string ns, string name, IReadOnlyCollection<CppComment> comments, IEnumerable<CppField> fields, IEnumerable<CppDataType> baseTypes, string attributePrefix) : base(ns, name, comments, fields, baseTypes, attributePrefix)
         {
         }

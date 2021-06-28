@@ -53,13 +53,14 @@ namespace PlcNext
 #if DEBUG
             Stopwatch stopwatch = Stopwatch.StartNew();
 #endif
+            AgentFrameworkFeature agentFrameworkFeature = new();
             try
             {
                 bool noSdkExploration = args.Any(a => a.Contains("--no-sdk-exploration", StringComparison.Ordinal));
                 ILog log = CreateLog();
                 ContainerBuilder builder = new ContainerBuilder();
                 builder.RegisterInstance(log);
-                builder.RegisterModule(new DiModule(noSdkExploration));
+                builder.RegisterModule(new DiModule(noSdkExploration, agentFrameworkFeature.FeatureEnabled));
 
                 using (IContainer container = builder.Build())
                 {
@@ -110,7 +111,8 @@ namespace PlcNext
 
             void ConfigureSerilog(ILog log, ISettingsProvider settingsProvider)
             {
-                if (args.All(a => a.Trim() != "--verbose") &&
+                if (!agentFrameworkFeature.FeatureEnabled ||
+                    args.All(a => a.Trim() != "--verbose") &&
                     !settingsProvider.Settings.AlwaysWriteExtendedLog)
                 {
                     return;

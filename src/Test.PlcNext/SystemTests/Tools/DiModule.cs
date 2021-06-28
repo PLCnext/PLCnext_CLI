@@ -32,7 +32,7 @@ namespace Test.PlcNext.SystemTests.Tools
         {
             builder.RegisterSource(registrationSource);
             builder.RegisterModule(new BaseDiModule(false, autoActivatedComponents));
-            builder.RegisterModule<global::PlcNext.CppParser.DiModule>();
+            builder.RegisterModule(new global::PlcNext.CppParser.DiModule(new AgentFrameworkFeature().FeatureEnabled));
             builder.RegisterModule<CommandLineDiModule>();
             builder.RegisterType<MessageBoard>().As<IMessageBoard>().InstancePerLifetimeScope();
         }

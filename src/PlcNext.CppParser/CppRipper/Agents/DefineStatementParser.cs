@@ -21,7 +21,7 @@ namespace PlcNext.CppParser.CppRipper.Agents
     [Produces(typeof(DefineStatementsParsed))]
     internal class DefineStatementParser : Agent
     {
-        private static readonly Regex StatementParser = new Regex(@"^(?<Key>[^\s\(\)]+)\s+(?<Value>.+?)(?:\s*\/\/.*)?$",
+        public static readonly Regex StatementParser = new Regex(@"^(?<Key>[^\s\(\)]+)\s+(?<Value>.+?)(?:\s*\/\/.*)?$",
                                                                   RegexOptions.Compiled);
         public DefineStatementParser(IMessageBoard messageBoard) : base(messageBoard)
         {

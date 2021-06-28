@@ -10,15 +10,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using PlcNext.Common.Tools.FileSystem;
 
 namespace PlcNext.CppParser.IncludeManager
 {
     internal interface IIncludeCache
     {
+        void LoadCache(VirtualFile cacheFile);
         bool TryGetCacheEntry(string pathToInclude, out IncludeCacheEntry cacheEntry);
         bool TryGetCacheEntryWithTypeName(string typeFullName, IReadOnlyCollection<string> includeDirectories,
                                           out IncludeCacheEntry cacheEntry);
-
+        IIncludeCacheTransaction StartTransaction();
         IEnumerable<IncludeCacheEntry> Entries { get; }
         Version Version { get; }
         void SaveCacheTo(Stream saveStream);

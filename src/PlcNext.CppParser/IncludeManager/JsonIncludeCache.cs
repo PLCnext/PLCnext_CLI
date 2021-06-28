@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
 using Serilog;
 
@@ -26,17 +27,56 @@ namespace PlcNext.CppParser.IncludeManager
         private IDictionary<string, IncludeCacheEntry> Cache => cache ?? throw new InvalidOperationException("Include cache not initialized.");
         private readonly object cacheLock = new object();
 
-        private JsonIncludeCache()
+        private VirtualFile cacheFile;
+        private VirtualFile CacheFile => cacheFile ?? throw new InvalidOperationException("Include cache not initialized.");
+
+        private readonly ILog log;
+
+        public JsonIncludeCache(ILog log)
         {
+            this.log = log;
         }
 
-        public static JsonIncludeCache Empty => new JsonIncludeCache {cache = new Dictionary<string, IncludeCacheEntry>()};
+        public static JsonIncludeCache Empty => new JsonIncludeCache(null) {cache = new Dictionary<string, IncludeCacheEntry>()};
 
         public static IIncludeCache LoadCache(Stream readStream)
         {
-            JsonIncludeCache cache = new JsonIncludeCache();
+            JsonIncludeCache cache = new JsonIncludeCache(null);
             cache.LoadFrom(readStream);
             return cache;
+        }
+
+        private void LogInformation(string message)
+        {
+            if (log != null)
+            {
+                log.LogInformation(message);
+            }
+            else
+            {
+                Log.Information(message);
+            }
+        }
+
+        private void LogError(string message, Exception exception)
+        {
+            if (log != null)
+            {
+                log.LogError(message);
+            }
+            else
+            {
+                Log.Error(exception, message);
+            }
+        }
+
+        public void LoadCache(VirtualFile cacheFile)
+        {
+            using (Stream fileStream = cacheFile.OpenRead())
+            {
+                LoadFrom(fileStream);
+            }
+            this.cacheFile = cacheFile;
         }
 
         private void LoadFrom(Stream fileStream)
@@ -64,11 +104,11 @@ namespace PlcNext.CppParser.IncludeManager
                     cache = result?.ToDictionary(r => r.File, r => r)?? new Dictionary<string, IncludeCacheEntry>();
                 }
                 loadWatch.Stop();
-                Log.Information($"Successfully loaded the include cache in {loadWatch.ElapsedMilliseconds} ms.");
+                LogInformation($"Successfully loaded the include cache in {loadWatch.ElapsedMilliseconds} ms.");
             }
             catch (Exception e)
             {
-                Log.Error($"Error while parsing include cache file, using empty cache.{Environment.NewLine}{e}", e);
+                LogError($"Error while parsing include cache file, using empty cache.{Environment.NewLine}{e}", e);
                 cache = new Dictionary<string, IncludeCacheEntry>();
             }
         }
@@ -95,6 +135,11 @@ namespace PlcNext.CppParser.IncludeManager
             return cacheEntry != null;
         }
 
+        public IIncludeCacheTransaction StartTransaction()
+        {
+            return new IncludeCacheTransaction(this);
+        }
+
         public IEnumerable<IncludeCacheEntry> Entries => Cache.Values;
         public Version Version { get; private set; } = new Version(1, 0);
 
@@ -113,11 +158,11 @@ namespace PlcNext.CppParser.IncludeManager
                         Version = CurrentVersion
                     });
                 }
-                Log.Information($"Successfully saved the include cache.");
+                LogInformation($"Successfully saved the include cache.");
             }
             catch (Exception e)
             {
-                Log.Error($"Error while saving include cache file, cache will not be saved.{Environment.NewLine}{e}", e);
+                LogError($"Error while saving include cache file, cache will not be saved.{Environment.NewLine}{e}", e);
             }
         }
 
@@ -140,6 +185,50 @@ namespace PlcNext.CppParser.IncludeManager
                 {
                     Cache.Add(addedEntry.File, addedEntry);
                 }
+            }
+        }
+
+        private void SaveCache()
+        {
+            try
+            {
+                using (Stream fileStream = CacheFile.OpenWrite())
+                {
+                    SaveCacheTo(fileStream);
+                }
+            }
+            catch (IOException e)
+            {
+                LogError($"Error while saving include cache file, cache will not be saved.{Environment.NewLine}{e}", e);
+            }
+        }
+
+        private class IncludeCacheTransaction : IIncludeCacheTransaction
+        {
+            private readonly JsonIncludeCache cache;
+
+            public IncludeCacheTransaction(JsonIncludeCache cache)
+            {
+                this.cache = cache;
+            }
+
+            public void Dispose()
+            {
+                cache.SaveCache();
+            }
+
+            public void DeleteEntry(IncludeCacheEntry cacheEntry)
+            {
+                cache.LogInformation($"Removed the following entry from the include cache:{Environment.NewLine}" +
+                                         $"{JsonConvert.SerializeObject(cacheEntry, Formatting.Indented)}");
+                cache.Cache.Remove(cacheEntry.File);
+            }
+
+            public void AddEntry(IncludeCacheEntry cacheEntry)
+            {
+                cache.LogInformation($"Added the following entry from the include cache:{Environment.NewLine}" +
+                                         $"{JsonConvert.SerializeObject(cacheEntry, Formatting.Indented)}");
+                cache.Cache.Add(cacheEntry.File, cacheEntry);
             }
         }
     }
