@@ -29,6 +29,11 @@ public: // typedefs
 			nested::supernested test;
 		};
 
+        struct irrelevant
+        {
+            int32 x;
+        };
+
 public: // construction/destruction
     DynamicPortsProgram(DynamicPorts::DynamicPortsComponent& dynamicPortsComponentArg, const String& name);
     DynamicPortsProgram(const DynamicPortsProgram& arg) = delete;
@@ -53,8 +58,6 @@ public: /* Ports
            The attributes comment define the port attributes and is optional.
            The name comment defines the name of the port and is optional. Default is the name of the field.
         */
-
-    instruct exampleInput;
 
 private: // fields
     DynamicPorts::DynamicPortsComponent& dynamicPortsComponent;

@@ -314,11 +314,11 @@ namespace PlcNext.Common.CodeModel
 
             IEnumerable<CodeEntity> GetPortAndTypeInformationStructures()
             {
-                IEnumerable<CodeEntity> GetAllFields()
+                IEnumerable<CodeEntity> GetAllStructs()
                 {
-                    return TemplateEntity.Decorate(owner).EntityHierarchy
-                                     .Select(CodeEntity.Decorate)
-                                     .SelectMany(c => c.Fields);
+                    ICodeModel model = owner.Root.Value<ICodeModel>();
+                    IEnumerable<IStructure> structures = model.Structures.Keys;
+                    return structures.Select(s => CodeEntity.Decorate(owner.Create(s?.FullName, s)));
                 }
 
                 bool HasTypeInformationAttribute(CodeEntity structEntity)
@@ -327,14 +327,10 @@ namespace PlcNext.Common.CodeModel
                            structEntity.AsType.HasAttributeWithoutValue(EntityKeys.TypeInformationAttributeKey);
                 }
                 
-                HashSet<CodeEntity> typedefAttributedStructures = new HashSet<CodeEntity>(GetAllFields()
-                                                              .Select(f => f.ResolvedType)
-                                                              .Where(t => t.AsType != null &&
-                                                                          t.AsEnum == null)
-                                                              .Where(HasTypeInformationAttribute),
-                    new FullNameCodeEntityComparer());
+                HashSet<CodeEntity> typeInfoAttributedStructs = new HashSet<CodeEntity>(GetAllStructs().Where(HasTypeInformationAttribute),
+                                                                                          new FullNameCodeEntityComparer());
 
-                HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetPortStructures().Concat(typedefAttributedStructures),
+                HashSet<CodeEntity> structures = new HashSet<CodeEntity>(GetPortStructures().Concat(typeInfoAttributedStructs),
                     new FullNameCodeEntityComparer());
  
 
