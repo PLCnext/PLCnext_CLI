@@ -25,6 +25,7 @@ namespace PlcNext.CppParser.IncludeManager.Agents
     internal sealed class IncludeFileResultEvaluater : InterceptorAgent
     {
         private readonly MessageCollector<InitialIncludeDefinitionsDefined, CppFileResult> collector = new MessageCollector<InitialIncludeDefinitionsDefined, CppFileResult>();
+        private readonly object codeModelLock = new();
         public IncludeFileResultEvaluater(IMessageBoard messageBoard) : base(messageBoard)
         {
         }
@@ -45,9 +46,12 @@ namespace PlcNext.CppParser.IncludeManager.Agents
             {
                 set.MarkAsConsumed(set.Message2);
                 MessageDomain.TerminateDomainsOf(set.Message2);
-                foreach (IType type in set.Message2.FileResult.Types.Keys)
+                lock (codeModelLock)
                 {
-                    set.Message1.CodeModel.AddType(type, set.Message2.FileResult.File, set.Message2.FileResult.RootDirectory);
+                    foreach (IType type in set.Message2.FileResult.Types.Keys)
+                    {
+                        set.Message1.CodeModel.AddType(type, set.Message2.FileResult.File, set.Message2.FileResult.RootDirectory);
+                    }
                 }
 
                 IncludeCacheEntry cacheEntry = new IncludeCacheEntry(set.Message2.FileResult.File.FullName,
