@@ -53,5 +53,13 @@ namespace Test.PlcNext.Tools
             targets.Except(actualTargets).Any().Should().BeFalse();
             return this;
         }
+
+        public ProjectMetaFileChecker HasVersionAndDescription(string version, string description)
+        {
+            settings.Should().NotBeNull($"project settings could not be loaded. {message}");
+            settings.LibraryVersion.Should().BeEquivalentTo(version);
+            settings.LibraryDescription.Should().BeEquivalentTo(description);
+            return this;
+        }
     }
 }

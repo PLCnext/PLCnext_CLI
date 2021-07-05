@@ -10,7 +10,7 @@ using namespace Arp::System::Commons::Diagnostics::Logging;
 using namespace Arp::Plc::Commons::Esm;
 
 //#program
-//#component(MyComponent)
+//#component(StandardComponent)
 class StandardNewProgram : public ProgramBase, private Loggable<StandardNewProgram>
 {
 public: // typedefs

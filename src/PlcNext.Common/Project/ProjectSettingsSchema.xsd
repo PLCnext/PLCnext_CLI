@@ -38,6 +38,8 @@
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="Extension" type="extension"/>
         <xs:element minOccurs="0" maxOccurs="1" name="Type" type="typeDefinition" default="project"/>
+		<xs:element minOccurs="0" maxOccurs="1" name="LibraryDescription" type="libraryDescription"/>
+		<xs:element minOccurs="0" maxOccurs="1" name="LibraryVersion" type="libraryVersion"/>  
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -123,4 +125,23 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="libraryDescription">
+    <xs:annotation>
+	  <xs:documentation>
+        The description of the library that will be used inside the PLCnext Engineer.
+      </xs:documentation>
+    </xs:annotation>
+	<xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="libraryVersion">
+    <xs:annotation>
+      <xs:documentation>
+        The version of the library.
+        This version will be used inside the PLCnext Engineer.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+	
 </xs:schema>

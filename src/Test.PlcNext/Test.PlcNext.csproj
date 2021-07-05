@@ -110,6 +110,13 @@
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.cpp" />
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
     <None Remove="Deployment\ExternalLibrary\ExternalStruct.hpp" />
+    <None Remove="Deployment\StandardLibraryWithVersionAndDescription.txt" />
+    <None Remove="Deployment\StandardNew\bin\AXCF2152_20.6.0.12345\Release\libStandardNew.so" />
+    <None Remove="Deployment\StandardNew\intermediate\config\Standard.libmeta" />
+    <None Remove="Deployment\StandardNew\intermediate\config\Standard.typemeta" />
+    <None Remove="Deployment\StandardNew\intermediate\config\StandardComponent\StandardComponent.compmeta" />
+    <None Remove="Deployment\StandardNew\intermediate\config\StandardComponent\StandardNewProgram\StandardNewProgram.progmeta" />
+    <None Remove="Deployment\StandardNew\intermediate\config\StandardDataTypes.dt" />
     <None Remove="Deployment\StaticStringTest\CMakeLists.txt" />
     <None Remove="Deployment\StaticStringTest\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
     <None Remove="Deployment\StaticStringTest\src\StaticStringTestComponent.cpp" />
@@ -145,6 +152,7 @@
     <None Remove="Deployment\TestResults\ArrayInitializer.meta.cpp" />
     <None Remove="Deployment\TestResults\ProgramWithDifferentPortsDataTypes.dt" />
     <None Remove="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
+    <None Remove="Deployment\TestResults\StandardLibraryWithSavedVersionAndDescription.txt" />
     <None Remove="Deployment\TestResults\StaticStringTestDataTypes.dt" />
     <None Remove="Deployment\TestResults\StaticStringTestLibrary.meta.cpp" />
     <None Remove="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
@@ -244,6 +252,14 @@
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.cpp" />
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
     <EmbeddedResource Include="Deployment\ExternalLibrary\My\Company\Name\ExternalStruct.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithSavedVersionAndDescription.txt" />
+    <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithVersionAndDescription.txt" />
+    <EmbeddedResource Include="Deployment\StandardNew\bin\AXCF2152_20.6.0.12345\Release\libStandardNew.so" />
+    <EmbeddedResource Include="Deployment\StandardNew\intermediate\config\Standard.libmeta" />
+    <EmbeddedResource Include="Deployment\StandardNew\intermediate\config\Standard.typemeta" />
+    <EmbeddedResource Include="Deployment\StandardNew\intermediate\config\StandardComponent\StandardComponent.compmeta" />
+    <EmbeddedResource Include="Deployment\StandardNew\intermediate\config\StandardComponent\StandardNewProgram\StandardNewProgram.progmeta" />
+    <EmbeddedResource Include="Deployment\StandardNew\intermediate\config\StandardDataTypes.dt" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\plcnext.proj" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.cpp" />
     <EmbeddedResource Include="Deployment\StandardWithMissingTarget\src\Standard\MyComponent.hpp" />

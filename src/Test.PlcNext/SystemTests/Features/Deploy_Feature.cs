@@ -554,6 +554,39 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_user_was_informed_that_the_library_generation_failed()
             ).RunAsyncWithTimeout();
         }
+
+        [Scenario]
+        public async Task Deploy_with_library_version_and_description()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StandardNew"),
+                _ => Given_is_the_working_directory_PATH("StandardNew"),
+                _ => When_I_deploy(new DeployCommandArgs {LibraryDescription = "This is an example description", LibraryVersion = "1.2.3.xy" }),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithVersionAndDescription.txt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Deploy_with_library_and_description_saved_in_project_file()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StandardNew"),
+                _ => Given_is_the_working_directory_PATH("StandardNew"),
+                _ => When_I_deploy(new DeployCommandArgs()),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithSavedVersionAndDescription.txt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Deploy_saves_library_version_and_description()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StandardNew"),
+                _ => Given_is_the_working_directory_PATH("StandardNew"),
+                _ => When_I_deploy(new DeployCommandArgs { LibraryDescription = "This is an example description", LibraryVersion = "1.2.3.xy" }),
+                _ => Then_the_library_version_and_description_is_saved("1.2.3.xy", "This is an example description")
+                ).RunAsyncWithTimeout();
+        }
     }
 
     public class DeployCommandArgs
@@ -573,5 +606,9 @@ namespace Test.PlcNext.SystemTests.Features
         public IEnumerable<string> ExternalLibraries { get; internal set; }
 
         public IEnumerable<string> Files { get; internal set; }
+
+        public string LibraryDescription { get; internal set; }
+
+        public string LibraryVersion { get; internal set; }
     }
 }

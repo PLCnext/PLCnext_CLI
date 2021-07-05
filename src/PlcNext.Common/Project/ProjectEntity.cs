@@ -58,5 +58,9 @@ namespace PlcNext.Common.Project
                                                   : Enumerable.Empty<Entity>();
 
         public Guid Id => this[EntityKeys.ProjectIdKey].Value<Guid>();
+
+        public string LibraryDescription => this[EntityKeys.LibraryDescriptionKey].Value<string>();
+
+        public string LibraryVersion => this[EntityKeys.LibraryVersionKey].Value<string>();
     }
 }

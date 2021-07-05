@@ -309,6 +309,17 @@ namespace Test.PlcNext.SystemTests.Tools
             }
         }
 
+        internal void CheckLibraryVersionAndDescriptionIsSaved(string version, string description)
+        {
+            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            using (Stream fileContent = fileSystemAbstraction.Open(projectFileName))
+            {
+                fileContent.Should().NotBeNull($"{projectFileName} file was expected to exist in folder {knownProjectName}");
+                ProjectMetaFileChecker.Check(fileContent)
+                                      .HasVersionAndDescription(version, description);
+            }
+        }
+
         internal void CheckCppAndHppFilesExist()
         {
             CheckComponentHasName("RootComponent");
@@ -1445,6 +1456,18 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 args.Add("--id");
                 args.Add(deployArgs.Id);
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.LibraryVersion))
+            {
+                args.Add("--libraryversion");
+                args.Add(deployArgs.LibraryVersion);
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.LibraryDescription))
+            {
+                args.Add("--librarydescription");
+                args.Add(deployArgs.LibraryDescription);
             }
 
             if (!string.IsNullOrEmpty(deployArgs.LibraryLocation))

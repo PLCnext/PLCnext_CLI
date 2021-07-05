@@ -252,9 +252,33 @@ namespace PlcNext.Common.Build
                 WriteLibraryFile(writer);
                 WriteMetadata(writer);
                 AddAdditionalFiles(writer);
+                AddProperties(writer);
             }
 
             return commandOptions.FullName;
+
+            void AddProperties(StreamWriter writer)
+            {
+                string properties = string.Empty;
+                if (!string.IsNullOrEmpty(project.LibraryVersion))
+                {
+                    properties = string.Format(CultureInfo.InvariantCulture, "{0}=\"{1}\"", Constants.LibraryVersionKey, project.LibraryVersion);
+
+                }
+                if (!string.IsNullOrEmpty(project.LibraryDescription))
+                {
+                    string pattern = string.IsNullOrEmpty(properties) ? "{0}=\"{1}\"" : ",{0}=\"{1}\"";
+                    properties += string.Format(CultureInfo.InvariantCulture,
+                                  pattern, Constants.LibraryDescriptionKey, project.LibraryDescription);
+                }
+
+                if (!string.IsNullOrEmpty(properties))
+                {
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                      Constants.KeyOptionPattern,
+                                                      properties));
+                }
+            }
 
             void WriteLibraryFile(StreamWriter writer)
             {

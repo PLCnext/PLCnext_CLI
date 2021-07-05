@@ -56,6 +56,8 @@ namespace PlcNext.Common.Tools
         public const string BuildTypeArgumentName = "buildtype";
         public const int MaxIORetries = 10;
         public const char OptionsSeparator = ',';
+        public const string DescriptionArgumentKey = "librarydescription";
+        public const string VersionArgumentKey = "libraryversion";
 
         //file names
         public const string PublicKeyFileName = "public_cli_repository_key.xml";
@@ -107,6 +109,10 @@ namespace PlcNext.Common.Tools
         public const string ProgramFolderType = "MetaProgramFolder";
         public const string DataTypeWorksheetType = "DataTypeWorksheet";
         public const string AcfConfigurationType = "AcfConfiguration";
+        //0: Property key=value
+        public const string KeyOptionPattern = "/key \"{0}\"";
+        public const string LibraryVersionKey = "LibraryVersion";
+        public const string LibraryDescriptionKey = "LibraryDescription";
 
         //Output formatter
         public const string CommandKey = "command";

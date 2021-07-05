@@ -81,6 +81,18 @@ namespace PlcNext.Common.Project
             UpdateProjectSettingsFile("Set project id.");
         }
 
+        public void SetLibraryVersion(string version)
+        {
+            Value.LibraryVersion = version;
+            UpdateProjectSettingsFile("Set library version");
+        }
+
+        public void SetLibraryDescription(string description)
+        {
+            Value.LibraryDescription = description;
+            UpdateProjectSettingsFile("Set library description");
+        }
+
         public bool IsPersistent => projectFile != null;
 
         private void UpdateProjectSettingsFile(string message)
