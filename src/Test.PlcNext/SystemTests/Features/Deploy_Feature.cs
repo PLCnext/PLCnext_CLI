@@ -561,7 +561,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("StandardNew"),
                 _ => Given_is_the_working_directory_PATH("StandardNew"),
-                _ => When_I_deploy(new DeployCommandArgs {LibraryDescription = "This is an example description", LibraryVersion = "1.2.3.xy" }),
+                _ => When_I_deploy(new DeployCommandArgs {LibraryDescription = "This is an example description, where something needs to be escaped.", LibraryVersion = "1.2.3.xy" }),
                 _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithVersionAndDescription.txt")
                 ).RunAsyncWithTimeout();
         }

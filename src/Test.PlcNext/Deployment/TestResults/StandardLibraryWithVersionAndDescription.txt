@@ -8,4 +8,4 @@
 /file "MetaComponent:bin\AXCF2152_20.6.0.12345\Release\StandardComponent\StandardComponent.compmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:StandardComponent"
 /file "MetaProgram:bin\AXCF2152_20.6.0.12345\Release\StandardComponent\StandardNewProgram\StandardNewProgram.progmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:StandardComponent/StandardNewProgram"
 /file "DataTypeWorksheet:bin\AXCF2152_20.6.0.12345\Release\StandardDataTypes.dt,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
-/key "LibraryVersion="1.2.3.xy",LibraryDescription="This is an example description""
+/key "LibraryVersion=1.2.3.xy,LibraryDescription=This is an example description&#44; where something needs to be escaped."

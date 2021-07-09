@@ -262,14 +262,14 @@ namespace PlcNext.Common.Build
                 string properties = string.Empty;
                 if (!string.IsNullOrEmpty(project.LibraryVersion))
                 {
-                    properties = string.Format(CultureInfo.InvariantCulture, "{0}=\"{1}\"", Constants.LibraryVersionKey, project.LibraryVersion);
+                    properties = string.Format(CultureInfo.InvariantCulture, "{0}={1}", Constants.LibraryVersionKey, Escape(project.LibraryVersion));
 
                 }
                 if (!string.IsNullOrEmpty(project.LibraryDescription))
                 {
-                    string pattern = string.IsNullOrEmpty(properties) ? "{0}=\"{1}\"" : ",{0}=\"{1}\"";
+                    string pattern = string.IsNullOrEmpty(properties) ? "{0}={1}" : ",{0}={1}";
                     properties += string.Format(CultureInfo.InvariantCulture,
-                                  pattern, Constants.LibraryDescriptionKey, project.LibraryDescription);
+                                  pattern, Constants.LibraryDescriptionKey, Escape(project.LibraryDescription));
                 }
 
                 if (!string.IsNullOrEmpty(properties))
@@ -277,6 +277,13 @@ namespace PlcNext.Common.Build
                     writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
                                                       Constants.KeyOptionPattern,
                                                       properties));
+                }
+
+                string Escape(string value)
+                {
+                    value = value.Replace(",", "&#44;");
+                    value = value.Replace("\"", "\\\"");
+                    return value;
                 }
             }
 
