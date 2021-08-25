@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SolutionMappings xmlns="http://www.phoenixcontact.com/schema/solutionmappingschema">
+	<Mapping>
+		<EngineerVersionRange>[2020.0,2021.0)</EngineerVersionRange>
+		<SolutionVersion>1.4.14.0</SolutionVersion>
+	</Mapping>
+	<Mapping>
+		<EngineerVersionRange>[2021.0,2021.3)</EngineerVersionRange>
+		<SolutionVersion>1.4.18.0</SolutionVersion>
+	</Mapping>
+	<Mapping>
+		<EngineerVersionRange>[2021.3,2021.6)</EngineerVersionRange>
+		<SolutionVersion>1.4.19.0</SolutionVersion>
+	</Mapping>
+	<Mapping>
+		<EngineerVersionRange>[2021.6,2022.0)</EngineerVersionRange>
+		<SolutionVersion>1.4.21.0</SolutionVersion>
+	</Mapping>
+	<Mapping>
+		<EngineerVersionRange>[2022.0,]</EngineerVersionRange>
+		<SolutionVersion>1.4.21.0</SolutionVersion>
+	</Mapping>
+</SolutionMappings>

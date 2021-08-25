@@ -36,7 +36,9 @@ namespace PlcNext.Common.Deploy
             return (key == Constants.OutputArgumentName &&
                     CommandEntity.Decorate(owner).CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase)) ||
                    (key == EntityKeys.InternalDeployPathKey &&
-                   TargetEntity.Decorate(owner).HasFullName);
+                   TargetEntity.Decorate(owner).HasFullName) ||
+                   key == EntityKeys.EngineerVersionKey ||
+                   key == EntityKeys.SolutionVersionKey;
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -52,6 +54,36 @@ namespace PlcNext.Common.Deploy
                                                                    buildEntity.BuildType);
                 return owner.Create(key, deployRoot.FullName, deployRoot);
             }
+
+            if (key == EntityKeys.EngineerVersionKey)
+            {
+                CommandEntity commandOrigin = CommandEntity.Decorate(owner.Origin);
+                string engineerVersion =string.Empty;
+                if (commandOrigin.IsCommandArgumentSpecified(Constants.EngineerVersionArgumentKey))
+                {
+                    if (commandOrigin.IsCommandArgumentSpecified(Constants.SolutionVersionArgumentKey))
+                    {
+                        throw new DeployArgumentsException();
+                    }
+                    engineerVersion = commandOrigin.GetSingleValueArgument(Constants.EngineerVersionArgumentKey);
+                }
+                return owner.Create(key, engineerVersion);
+            }
+            if (key == EntityKeys.SolutionVersionKey)
+            {
+                CommandEntity commandOrigin = CommandEntity.Decorate(owner.Origin);
+                string solutionVersion = string.Empty;
+                if (commandOrigin.IsCommandArgumentSpecified(Constants.SolutionVersionArgumentKey))
+                {
+                    if (commandOrigin.IsCommandArgumentSpecified(Constants.EngineerVersionArgumentKey))
+                    {
+                        throw new DeployArgumentsException();
+                    }
+                    solutionVersion = commandOrigin.GetSingleValueArgument(Constants.SolutionVersionArgumentKey);
+                }
+                return owner.Create(key, solutionVersion);
+            }
+
             CommandEntity command = CommandEntity.Decorate(owner);
             FileEntity projectFileEntity = FileEntity.Decorate(owner.Root);
             string outputDirectory = command.GetSingleValueArgument(Constants.OutputArgumentName);

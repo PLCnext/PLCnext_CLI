@@ -62,5 +62,9 @@ namespace PlcNext.Common.Project
         public string LibraryDescription => this[EntityKeys.LibraryDescriptionKey].Value<string>();
 
         public string LibraryVersion => this[EntityKeys.LibraryVersionKey].Value<string>();
+
+        public string EngineerVersion => this[EntityKeys.EngineerVersionKey].Value<string>();
+
+        public string SolutionVersion => this[EntityKeys.SolutionVersionKey].Value<string>();
     }
 }

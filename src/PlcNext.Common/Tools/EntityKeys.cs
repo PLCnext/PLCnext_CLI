@@ -84,6 +84,8 @@ namespace PlcNext.Common.Tools
         public const string ValidatedTargetsKey = "validatedtargets";
         public const string LibraryDescriptionKey = "__internallibrarydescription__";
         public const string LibraryVersionKey = "__internallibraryversion__";
+        public const string EngineerVersionKey = "__internalengineerversion__";
+        public const string SolutionVersionKey = "__internalsolutionversion__";
 
         //DeployCommandContentProvider
         public const string InternalDeployPathKey = "__internaldeploypath__";

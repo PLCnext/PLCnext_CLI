@@ -587,6 +587,39 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_library_version_and_description_is_saved("1.2.3.xy", "This is an example description")
                 ).RunAsyncWithTimeout();
         }
+
+        [Scenario]
+        public async Task Deploy_with_EngineerVersion()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StandardNew"),
+                _ => Given_is_the_working_directory_PATH("StandardNew"),
+                _ => When_I_deploy(new DeployCommandArgs { EngineerVersion = "2021.3.1" }),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithEngineerVersion.txt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Deploy_with_SolutionVersion()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StandardNew"),
+                _ => Given_is_the_working_directory_PATH("StandardNew"),
+                _ => When_I_deploy(new DeployCommandArgs { SolutionVersion = "1.5.0.0" }),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithSolutionVersion.txt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Deploy_with_EngineerVersion_and_Solutionversion()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StandardNew"),
+                _ => Given_is_the_working_directory_PATH("StandardNew"),
+                _ => When_I_deploy(new DeployCommandArgs { EngineerVersion="1.2.3.4", SolutionVersion="5.6.7.8"}),
+                _ => Then_the_user_was_informed_that_the_deploy_options_are_wrong_combined()
+                ).RunAsyncWithTimeout();
+        }
     }
 
     public class DeployCommandArgs
@@ -610,5 +643,9 @@ namespace Test.PlcNext.SystemTests.Features
         public string LibraryDescription { get; internal set; }
 
         public string LibraryVersion { get; internal set; }
+
+        public string EngineerVersion { get; internal set; }
+
+        public string SolutionVersion { get; internal set; }
     }
 }

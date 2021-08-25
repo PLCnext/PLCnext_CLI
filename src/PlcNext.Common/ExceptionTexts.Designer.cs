@@ -196,6 +196,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use only one of the options --solutionversion and --engineerversion..
+        /// </summary>
+        internal static string DeployArgumentsWrongCombined {
+            get {
+                return ResourceManager.GetString("DeployArgumentsWrongCombined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No deployment source file was found with {0}. Please specify only existing files or paths..
         /// </summary>
         internal static string DeploymentFileNotFound {
@@ -615,6 +624,15 @@ namespace PlcNext.Common {
         internal static string SignatureValidationFailure {
             get {
                 return ResourceManager.GetString("SignatureValidationFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the SolutionMappingsFile in the installation directory..
+        /// </summary>
+        internal static string SolutionMappingsMissing {
+            get {
+                return ResourceManager.GetString("SolutionMappingsMissing", resourceCulture);
             }
         }
         

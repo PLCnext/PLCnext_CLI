@@ -1470,6 +1470,18 @@ namespace Test.PlcNext.SystemTests.Tools
                 args.Add(deployArgs.LibraryDescription);
             }
 
+            if (!string.IsNullOrEmpty(deployArgs.EngineerVersion))
+            {
+                args.Add("--engineerversion");
+                args.Add(deployArgs.EngineerVersion);
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.SolutionVersion))
+            {
+                args.Add("--solutionversion");
+                args.Add(deployArgs.SolutionVersion);
+            }
+
             if (!string.IsNullOrEmpty(deployArgs.LibraryLocation))
             {
                 VirtualDirectory directory = fileSystemAbstraction.FileSystem.GetDirectory(deployArgs.LibraryLocation);

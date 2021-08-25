@@ -58,6 +58,8 @@ namespace PlcNext.Common.Tools
         public const char OptionsSeparator = ',';
         public const string DescriptionArgumentKey = "librarydescription";
         public const string VersionArgumentKey = "libraryversion";
+        public const string EngineerVersionArgumentKey = "engineerversion";
+        public const string SolutionVersionArgumentKey = "solutionversion";
 
         //file names
         public const string PublicKeyFileName = "public_cli_repository_key.xml";
@@ -67,6 +69,7 @@ namespace PlcNext.Common.Tools
         public const string CMakeFileName = "CMakeLists.txt";
         public const string CMakeCommandArgsFileName = "CMakeFlags.txt";
         public const string CMakeTimestampFileName = "FlagsTimestamp.txt";
+        public const string SolutionMappingsFileName = "SolutionMappings.xml";
 
         //progress visualizer
         public const double ProgressBarDelay = 300;

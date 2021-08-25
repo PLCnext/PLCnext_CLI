@@ -41,13 +41,15 @@ namespace PlcNext.Common.Build
         private readonly IBinariesLocator binariesLocator;
         private readonly ICMakeConversation cmakeConversation;
         private readonly ExecutionContext executionContext;
+        private readonly IEnvironmentService environmentService;
 
         private static readonly Regex LibrariesDecoder = new Regex("(?<path>\\\"[^\\\"]+\\\"|[^ |\\\"]+)", RegexOptions.Compiled);
         private static readonly Regex LibrariesRPathDecoder = new Regex("-rpath(?:-link)?,(?<rpath>(?:\\\"[^\\\"]+\\\"|[^ |\\\"]+;?)*)", RegexOptions.Compiled);
 
         public EngineeringLibraryBuilderExecuter(IProcessManager processManager, IFileSystem fileSystem,
                                                  IGuidFactory guidFactory, IBinariesLocator binariesLocator,
-                                                 ICMakeConversation cmakeConversation, ExecutionContext executionContext)
+                                                 ICMakeConversation cmakeConversation, ExecutionContext executionContext,
+                                                 IEnvironmentService environmentService)
         {
             this.processManager = processManager;
             this.fileSystem = fileSystem;
@@ -55,6 +57,7 @@ namespace PlcNext.Common.Build
             this.binariesLocator = binariesLocator;
             this.cmakeConversation = cmakeConversation;
             this.executionContext = executionContext;
+            this.environmentService = environmentService;
         }
 
         //TODO Patch libmeta here
@@ -253,6 +256,7 @@ namespace PlcNext.Common.Build
                 WriteMetadata(writer);
                 AddAdditionalFiles(writer);
                 AddProperties(writer, project);
+                AddSolutionVersion(writer, project);
             }
 
             return commandOptions.FullName;
@@ -412,6 +416,26 @@ namespace PlcNext.Common.Build
                 return value;
             }
         }
+
+        private void AddSolutionVersion(StreamWriter writer, ProjectEntity project)
+        {
+            string solutionVersion;
+            if (!string.IsNullOrEmpty(project.EngineerVersion))
+            {
+                SolutionMappingManager solutionMappingManager = new SolutionMappingManager(environmentService, fileSystem);
+                solutionVersion = solutionMappingManager.GetSolutionVersionFromEngineerVersion(project.EngineerVersion);
+                
+            }else
+            {
+                solutionVersion = project.SolutionVersion;
+            }
+            if (!string.IsNullOrEmpty(solutionVersion))
+            {
+                string result = string.Format(CultureInfo.InvariantCulture, "/ver {0}", solutionVersion);
+                writer.WriteLine(result);
+            }
+        }
+
         private int ExecuteLibraryBuilderWithCommandOptions(string commandOptionsFile, ProjectEntity project)
         {
             FileEntity projectFileEntity = FileEntity.Decorate(project);
@@ -503,6 +527,7 @@ namespace PlcNext.Common.Build
                     WriteMetadata(writer);
 
                     AddProperties(writer, project);
+                    AddSolutionVersion(writer, project);
                 }
 
                 return commandOptions.FullName;

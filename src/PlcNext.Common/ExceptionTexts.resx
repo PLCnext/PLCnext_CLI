@@ -382,4 +382,10 @@
   <data name="IECDatatypeMismatch" xml:space="preserve">
     <value>The datatype {0} can not be converted to the IEC type {1}.</value>
   </data>
+  <data name="SolutionMappingsMissing" xml:space="preserve">
+    <value>Could not find the SolutionMappingsFile in the installation directory.</value>
+  </data>
+  <data name="DeployArgumentsWrongCombined" xml:space="preserve">
+    <value>Use only one of the options --solutionversion and --engineerversion.</value>
+  </data>
 </root>
