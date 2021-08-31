@@ -45,4 +45,15 @@ namespace PlcNext.Common.Commands.CommandResults
         [JsonProperty(PropertyName = "targets")]
         public IEnumerable<TargetResult> Targets { get; }
     }
+
+    public class SdkPath : Path
+    {
+        public SdkPath(string pathValue, IEnumerable<TargetResult> targets) : base(pathValue)
+        {
+            Targets = targets;
+        }
+
+        [JsonProperty(PropertyName = "targets")]
+        public IEnumerable<TargetResult> Targets { get; }
+    }
 }

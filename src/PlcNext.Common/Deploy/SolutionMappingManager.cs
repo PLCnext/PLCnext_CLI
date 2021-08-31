@@ -44,7 +44,7 @@ namespace PlcNext.Common.Deploy
             if (matchingMappings.Count() > 1)
                 throw new FormattableException("The SolutionMappings file contains invalid mappings: There is more than one mapping for version " + engineerVersion);
 
-            if (matchingMappings.Count() < 1)
+            if (!matchingMappings.Any())
                 throw new FormattableException($"The selected Engineer version {engineerVersion} is not in the range of known versions.");
 
             return matchingMappings.FirstOrDefault()?.SolutionVersion;

@@ -35,23 +35,30 @@ namespace PlcNext.Common.Commands
 
         protected override CommandResult ExecuteDetailed(GetSdksCommandArgs args, ChangeObservable observable)
         {
-            string[] sdks;
+            IEnumerable<SdkPath> sdkPaths= Enumerable.Empty<SdkPath>();
             IEnumerable<Exception> exceptions = Enumerable.Empty<Exception>();
             if (args.All)
             {
-                sdks = sdkRepository.Sdks.Select(s => s.Root.FullName).ToArray();
+                sdkPaths = sdkRepository.GetAllTargets()
+                                 .GroupBy(target => sdkRepository.GetSdk(target).Root.FullName)
+                                 .Select(group => new SdkPath(group.Key, group.Select(target => new TargetResult(target.Name,
+                                                                                                                 target.Version,
+                                                                                                                 target.LongVersion,
+                                                                                                                 target.ShortVersion))));
             }
             else
             {
                 ProjectEntity project = ProjectEntity.Decorate(entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root);
                 TargetsResult targetsResult = targetParser.Targets(project);
-                sdks = targetsResult.ValidTargets.Select(sdkRepository.GetSdk).Distinct()
-                                          .Select(s => s.Root.FullName).ToArray();
-
+                sdkPaths = targetsResult.ValidTargets
+                                    .GroupBy(target => sdkRepository.GetSdk(target).Root.FullName)
+                                    .Select(group => new SdkPath(group.Key, group.Select(target => new TargetResult(target.Name,
+                                                                                                                    target.Version,
+                                                                                                                    target.LongVersion,
+                                                                                                                    target.ShortVersion))));
                 exceptions = targetsResult.Errors;
             }
-
-            return new CommandResult(0, new SdksCommandResult(sdks.Select(s => new Path(s))), exceptions);
+            return new CommandResult(0, new SdksCommandResult(sdkPaths));
         }
     }
 }
