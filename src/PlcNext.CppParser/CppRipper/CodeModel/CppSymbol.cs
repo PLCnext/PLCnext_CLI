@@ -45,17 +45,11 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
             if (string.IsNullOrEmpty(value))
             {
-                if (lastSymbol != null)
-                {
-                    if (long.TryParse(lastSymbol.Value, out long numberValue))
-                    {
-                        value = (numberValue + 1).ToString("D", CultureInfo.InvariantCulture);
-                    }
-                }
-                else
-                {
-                    value = "0";
-                }
+                value = lastSymbol != null
+                            ? long.TryParse(lastSymbol.Value, out long numberValue)
+                                  ? (numberValue + 1).ToString("D", CultureInfo.InvariantCulture)
+                                  : "0"
+                            : "0";
             }
 
             value = value.Trim().Trim('\'', '"');

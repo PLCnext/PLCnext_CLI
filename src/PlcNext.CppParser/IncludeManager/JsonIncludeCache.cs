@@ -183,7 +183,8 @@ namespace PlcNext.CppParser.IncludeManager
             {
                 foreach (IncludeCacheEntry addedEntry in addedEntries)
                 {
-                    Cache.Add(addedEntry.File, addedEntry);
+                    //last parsed wins
+                    Cache[addedEntry.File] = addedEntry;
                 }
             }
         }
