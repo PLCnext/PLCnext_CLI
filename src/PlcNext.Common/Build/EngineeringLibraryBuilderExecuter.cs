@@ -387,7 +387,7 @@ namespace PlcNext.Common.Build
             }
         }
 
-        private void AddProperties(StreamWriter writer, ProjectEntity project)
+        private static void AddProperties(StreamWriter writer, ProjectEntity project)
         {
             string properties = string.Empty;
             if (!string.IsNullOrEmpty(project.LibraryVersion))
