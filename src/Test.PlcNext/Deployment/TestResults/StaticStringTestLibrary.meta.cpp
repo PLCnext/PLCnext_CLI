@@ -25,6 +25,8 @@ using namespace Arp::Plc::Commons::Meta;
                         { "someWString109", offsetof(::StaticStringTest::MyStruct, someWString109), DataType::StaticWString, String::Empty, sizeof(StaticWString<109>), alignof(StaticWString<109>), {  }, StandardAttribute::None },
                         { "myData", offsetof(::StaticStringTest::MyStruct, myData), DataType::UInt16, String::Empty, sizeof(uint16), alignof(uint16), {  }, StandardAttribute::None },
                         { "myOtherData", offsetof(::StaticStringTest::MyStruct, myOtherData), DataType::UInt16, String::Empty, sizeof(uint16), alignof(uint16), {  }, StandardAttribute::None },
+                        { "someStringFromDefine", offsetof(::StaticStringTest::MyStruct, someStringFromDefine), DataType::StaticString, String::Empty, sizeof(StaticString<MY_VALUE>), alignof(StaticString<MY_VALUE>), {  }, StandardAttribute::None },
+                        { "someWStringFromDefine", offsetof(::StaticStringTest::MyStruct, someWStringFromDefine), DataType::StaticWString, String::Empty, sizeof(StaticWString<MY_VALUE>), alignof(StaticWString<MY_VALUE>), {  }, StandardAttribute::None },
                     }
                 },
                 {   // ProgramDefinition: StaticStringTest::StaticStringTestProgram
@@ -39,6 +41,8 @@ using namespace Arp::Plc::Commons::Meta;
                         { "myStringPort3", offsetof(::StaticStringTest::StaticStringTestProgram, myStringPort3), DataType::StaticString, String::Empty, sizeof(StaticString<80>), alignof(StaticString<80>), {  }, StandardAttribute::Input },
                         { "myWStringPort", offsetof(::StaticStringTest::StaticStringTestProgram, myWStringPort), DataType::StaticWString, String::Empty, sizeof(StaticWString<100>), alignof(StaticWString<100>), {  }, StandardAttribute::Input },
                         { "myWStringArrayPort", offsetof(::StaticStringTest::StaticStringTestProgram, myWStringArrayPort), DataType::StaticWString | DataType::Array, String::Empty, sizeof(StaticWString<14>), alignof(StaticWString<14>), { 2 }, StandardAttribute::Input },
+                        { "myStringFromDefine", offsetof(::StaticStringTest::StaticStringTestProgram, myStringFromDefine), DataType::StaticString, String::Empty, sizeof(StaticString<MY_VALUE>), alignof(StaticString<MY_VALUE>), {  }, StandardAttribute::None },
+                        { "myWStringFromDefine", offsetof(::StaticStringTest::StaticStringTestProgram, myWStringFromDefine), DataType::StaticWString, String::Empty, sizeof(StaticWString<MY_VALUE>), alignof(StaticWString<MY_VALUE>), {  }, StandardAttribute::None },
                     }
                 },
             }

@@ -793,7 +793,9 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                             new TypeMember("someString23", "StaticString23"),
                                                                                                             new TypeMember("someWString109", "StaticWString109"),
                                                                                                             new TypeMember("myData", "uint16"),
-                                                                                                            new TypeMember("myOtherData", "uint16")
+                                                                                                            new TypeMember("myOtherData", "uint16"),
+                                                                                                            new TypeMember("someStringFromDefine", "StaticString42"),
+                                                                                                            new TypeMember("someWStringFromDefine", "StaticWString42")
                                                                                                         }))
                 ).RunAsyncWithTimeout();
         }

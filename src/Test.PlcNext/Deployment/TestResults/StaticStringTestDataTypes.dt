@@ -7,6 +7,8 @@
         someWString109 : WSTRING[109];
         myData : WORD;
         myOtherData : UINT;
+        someStringFromDefine : STRING[42];
+        someWStringFromDefine : WSTRING[42];
     END_STRUCT
 
     myWStringArrayPortArray : ARRAY [0..1] OF WSTRING[14];
@@ -16,5 +18,9 @@
     myStringPort2String10 : STRING[10];
     
     myWStringPortWString100 : WSTRING[100];
+    
+    myStringFromDefineString42 : STRING[42];
+    
+    myWStringFromDefineWString42 : WSTRING[42];
     
 END_TYPE

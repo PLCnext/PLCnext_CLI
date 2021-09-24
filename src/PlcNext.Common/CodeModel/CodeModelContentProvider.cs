@@ -38,7 +38,7 @@ namespace PlcNext.Common.CodeModel
         private static readonly Regex UnkownDataTypeRegex = new Regex(@"^unkown\((?<dataType>.*)\)$", RegexOptions.Compiled);
         private static readonly Regex UnknownDataTypeRegex = new Regex(@"^unknown\((?<dataType>.*)\)$", RegexOptions.Compiled);
 
-        private static readonly Regex StaticStringRegex = new Regex(@"^(?:(?:::)?Arp\S*::)?Static(W)?String<(?<length>\d*)>$", RegexOptions.Compiled);
+        private static readonly Regex StaticStringRegex = new Regex(@"^(?:(?:::)?Arp\S*::)?Static(W)?String<(?<length>\w*)>$", RegexOptions.Compiled);
 
         public CodeModelContentProvider(ITemplateRepository templateRepository, ITemplateResolver resolver, IDatatypeConversion datatypeConversion,
                                         ExecutionContext executionContext)

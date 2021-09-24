@@ -11,6 +11,8 @@ using namespace Arp;
 using namespace Arp::System::Commons::Diagnostics::Logging;
 using namespace Arp::Plc::Commons::Esm;
 
+#define MY_VALUE 42
+
 struct MyStruct {
     public: bool something = true;
 	StaticString<> someString;
@@ -23,6 +25,9 @@ struct MyStruct {
     uint16 myData;
 
     uint16 myOtherData;
+
+    StaticString<MY_VALUE> someStringFromDefine;
+    StaticWString<MY_VALUE> someWStringFromDefine;
 };
 
 //#program
@@ -88,6 +93,12 @@ public: /* Ports
         //#port
         //#attributes(Input)
         StaticWString<14> myWStringArrayPort[2];
+
+        //#port
+        StaticString<MY_VALUE> myStringFromDefine;
+        
+        //#port
+        StaticWString<MY_VALUE> myWStringFromDefine;
 
 private: // fields
     StaticStringTest::StaticStringTestComponent& staticStringTestComponent;
