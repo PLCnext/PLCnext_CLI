@@ -254,31 +254,31 @@ namespace PlcNext.Common.Build
                 {
                     List<string> commandParts = new List<string>();
                     string sdkRoot = buildInformation.SdkInformation.Root.FullName.Replace("\\", "/");
-                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_TOOLCHAIN_FILE "))
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_TOOLCHAIN_FILE="))
                     {
                         commandParts.Add(ToolchainFileOption.Replace("%SDK_ROOT%", sdkRoot));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DARP_TOOLCHAIN_ROOT "))
+                    if (!buildInformation.BuildProperties.Contains("-DARP_TOOLCHAIN_ROOT="))
                     {
                         commandParts.Add(ToolchainRootOption.Replace("%SDK_ROOT%", sdkRoot));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_BUILD_TYPE "))
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_BUILD_TYPE="))
                     {
                         commandParts.Add(BuildTypeOption.Replace("%BUILD_TYPE%", GetRealBuildType()));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE "))
+                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE="))
                     {
                         commandParts.Add(DeviceOption.Replace("%TARGET%", $"\"{target}\""));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE_VERSION "))
+                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE_VERSION="))
                     {
                         commandParts.Add(DeviceVersionOption.Replace("%VERSION%", $"\"{version}\""));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_STAGING_PREFIX "))
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_STAGING_PREFIX="))
                     {
                         commandParts.Add(StagingPrefixOption.Replace("%STAGING_PREFIX%", GenerateStagingPrefixForTarget()));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_PREFIX_PATH ") &&
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_PREFIX_PATH=") &&
                         IsIncludePathAvailable(out string includePath))
                     {
                         commandParts.Add(PrefixPathOption.Replace("%PREFIX_PATH%", includePath));
