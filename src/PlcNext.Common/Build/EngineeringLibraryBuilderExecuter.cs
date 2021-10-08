@@ -41,15 +41,13 @@ namespace PlcNext.Common.Build
         private readonly IBinariesLocator binariesLocator;
         private readonly ICMakeConversation cmakeConversation;
         private readonly ExecutionContext executionContext;
-        private readonly IEnvironmentService environmentService;
 
         private static readonly Regex LibrariesDecoder = new Regex("(?<path>\\\"[^\\\"]+\\\"|[^ |\\\"]+)", RegexOptions.Compiled);
         private static readonly Regex LibrariesRPathDecoder = new Regex("-rpath(?:-link)?,(?<rpath>(?:\\\"[^\\\"]+\\\"|[^ |\\\"]+;?)*)", RegexOptions.Compiled);
 
         public EngineeringLibraryBuilderExecuter(IProcessManager processManager, IFileSystem fileSystem,
                                                  IGuidFactory guidFactory, IBinariesLocator binariesLocator,
-                                                 ICMakeConversation cmakeConversation, ExecutionContext executionContext,
-                                                 IEnvironmentService environmentService)
+                                                 ICMakeConversation cmakeConversation, ExecutionContext executionContext)
         {
             this.processManager = processManager;
             this.fileSystem = fileSystem;
@@ -57,7 +55,6 @@ namespace PlcNext.Common.Build
             this.binariesLocator = binariesLocator;
             this.cmakeConversation = cmakeConversation;
             this.executionContext = executionContext;
-            this.environmentService = environmentService;
         }
 
         //TODO Patch libmeta here
@@ -256,7 +253,6 @@ namespace PlcNext.Common.Build
                 WriteMetadata(writer);
                 AddAdditionalFiles(writer);
                 AddProperties(writer, project);
-                AddSolutionVersion(writer, project);
             }
 
             return commandOptions.FullName;
@@ -389,50 +385,43 @@ namespace PlcNext.Common.Build
 
         private static void AddProperties(StreamWriter writer, ProjectEntity project)
         {
-            string properties = string.Empty;
             if (!string.IsNullOrEmpty(project.LibraryVersion))
             {
-                properties = string.Format(CultureInfo.InvariantCulture, "{0}={1}", Constants.LibraryVersionKey, Escape(project.LibraryVersion));
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                                               Constants.KeyOptionPattern,
+                                               Constants.LibraryVersionKey, 
+                                               Escape(project.LibraryVersion)));
 
             }
             if (!string.IsNullOrEmpty(project.LibraryDescription))
             {
-                string pattern = string.IsNullOrEmpty(properties) ? "{0}={1}" : ",{0}={1}";
-                properties += string.Format(CultureInfo.InvariantCulture,
-                              pattern, Constants.LibraryDescriptionKey, Escape(project.LibraryDescription));
-            }
-
-            if (!string.IsNullOrEmpty(properties))
-            {
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                                                  Constants.KeyOptionPattern,
-                                                  properties));
+                                               Constants.KeyOptionPattern,
+                                               Constants.LibraryDescriptionKey, 
+                                               Escape(project.LibraryDescription)));
             }
 
-            string Escape(string value)
-            {
-                value = value.Replace(",", "&#44;");
-                value = value.Replace("\"", "\\\"");
-                return value;
-            }
-        }
-
-        private void AddSolutionVersion(StreamWriter writer, ProjectEntity project)
-        {
-            string solutionVersion;
             if (!string.IsNullOrEmpty(project.EngineerVersion))
             {
-                SolutionMappingManager solutionMappingManager = new SolutionMappingManager(environmentService, fileSystem);
-                solutionVersion = solutionMappingManager.GetSolutionVersionFromEngineerVersion(project.EngineerVersion);
-                
-            }else
-            {
-                solutionVersion = project.SolutionVersion;
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                                               Constants.EngineerVersionOptionPattern,
+                                               project.EngineerVersion));
             }
-            if (!string.IsNullOrEmpty(solutionVersion))
+
+            if (!string.IsNullOrEmpty(project.SolutionVersion))
             {
-                string result = string.Format(CultureInfo.InvariantCulture, "/ver {0}", solutionVersion);
-                writer.WriteLine(result);
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                                               Constants.SolutionVersionPattern,
+                                               project.SolutionVersion));
+            }
+
+
+            static string Escape(string value)
+            {
+                value = Regex.Replace(value, ",", "&#44;");
+                value = Regex.Replace(value, "\"", "\\\"");
+                value = Regex.Replace(value, "\n", "\\n");
+                return value;
             }
         }
 
@@ -527,7 +516,6 @@ namespace PlcNext.Common.Build
                     WriteMetadata(writer);
 
                     AddProperties(writer, project);
-                    AddSolutionVersion(writer, project);
                 }
 
                 return commandOptions.FullName;

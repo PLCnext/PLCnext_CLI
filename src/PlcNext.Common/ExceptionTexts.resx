@@ -386,6 +386,6 @@
     <value>Could not find the SolutionMappingsFile in the installation directory.</value>
   </data>
   <data name="DeployArgumentsWrongCombined" xml:space="preserve">
-    <value>Use only one of the options --solutionversion and --engineerversion.</value>
+    <value>Solutionversion and Engineerversion cannot be used together.</value>
   </data>
 </root>

@@ -69,7 +69,7 @@ namespace PlcNext.Common.Tools
         public const string CMakeFileName = "CMakeLists.txt";
         public const string CMakeCommandArgsFileName = "CMakeFlags.txt";
         public const string CMakeTimestampFileName = "FlagsTimestamp.txt";
-        public const string SolutionMappingsFileName = "SolutionMappings.xml";
+        public const string ConfigFileName = "PLCnextSettings.xml";
 
         //progress visualizer
         public const double ProgressBarDelay = 300;
@@ -113,9 +113,11 @@ namespace PlcNext.Common.Tools
         public const string DataTypeWorksheetType = "DataTypeWorksheet";
         public const string AcfConfigurationType = "AcfConfiguration";
         //0: Property key=value
-        public const string KeyOptionPattern = "/key \"{0}\"";
+        public const string KeyOptionPattern = "/key \"{0}={1}\"";
         public const string LibraryVersionKey = "LibraryVersion";
         public const string LibraryDescriptionKey = "LibraryDescription";
+        public const string EngineerVersionOptionPattern = "/pnever {0}";
+        public const string SolutionVersionPattern = "/ver {0}";
 
         //Output formatter
         public const string CommandKey = "command";

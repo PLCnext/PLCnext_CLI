@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.phoenixcontact.com/schema/projectconfiguration"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           id="projectConfiguration" targetNamespace="http://www.phoenixcontact.com/schema/projectconfiguration"
+           version="1.0"
+>
+	<xs:element name="ProjectConfiguration">
+		<xs:complexType>
+			<xs:annotation>
+				<xs:documentation>
+					Root element for the project description file.
+					It contains all the project configuration elements.
+				</xs:documentation>
+			</xs:annotation>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="1" name="EngineerVersion" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							The version of the PLCnext Engineer for which the library shall be built.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" maxOccurs="1" name="SolutionVersion" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							The solutionversion for which the library shall be build.
+							Use either engineerversion or solutionversion but not both.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" maxOccurs="1" name="LibraryVersion" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							A version of the library.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" maxOccurs="1" name="LibraryDescription" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							A description of the library.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

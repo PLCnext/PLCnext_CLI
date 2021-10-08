@@ -196,7 +196,7 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use only one of the options --solutionversion and --engineerversion..
+        ///   Looks up a localized string similar to Solutionversion and Engineerversion cannot be used together..
         /// </summary>
         internal static string DeployArgumentsWrongCombined {
             get {

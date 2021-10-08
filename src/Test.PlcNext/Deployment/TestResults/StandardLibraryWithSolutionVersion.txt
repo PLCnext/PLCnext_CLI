@@ -8,5 +8,6 @@
 /file "MetaComponent:bin\AXCF2152_20.6.0.12345\Release\StandardComponent\StandardComponent.compmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:StandardComponent"
 /file "MetaProgram:bin\AXCF2152_20.6.0.12345\Release\StandardComponent\StandardNewProgram\StandardNewProgram.progmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:StandardComponent/StandardNewProgram"
 /file "DataTypeWorksheet:bin\AXCF2152_20.6.0.12345\Release\StandardDataTypes.dt,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
-/key "LibraryVersion=2021.6.0 alpha,LibraryDescription=Saved description"
+/key "LibraryVersion=2021.6.0 alpha"
+/key "LibraryDescription=Saved description"
 /ver 1.5.0.0

@@ -15,7 +15,6 @@ using PlcNext.Common.Commands;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Project;
 using PlcNext.Common.Tools;
-using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Priority;
 
@@ -36,9 +35,7 @@ namespace PlcNext.Common.Deploy
             return (key == Constants.OutputArgumentName &&
                     CommandEntity.Decorate(owner).CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase)) ||
                    (key == EntityKeys.InternalDeployPathKey &&
-                   TargetEntity.Decorate(owner).HasFullName) ||
-                   key == EntityKeys.EngineerVersionKey ||
-                   key == EntityKeys.SolutionVersionKey;
+                   TargetEntity.Decorate(owner).HasFullName);
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -53,35 +50,6 @@ namespace PlcNext.Common.Deploy
                 VirtualDirectory deployRoot = outputRoot.Directory(targetEntity.FullName.Replace(',', '_'),
                                                                    buildEntity.BuildType);
                 return owner.Create(key, deployRoot.FullName, deployRoot);
-            }
-
-            if (key == EntityKeys.EngineerVersionKey)
-            {
-                CommandEntity commandOrigin = CommandEntity.Decorate(owner.Origin);
-                string engineerVersion =string.Empty;
-                if (commandOrigin.IsCommandArgumentSpecified(Constants.EngineerVersionArgumentKey))
-                {
-                    if (commandOrigin.IsCommandArgumentSpecified(Constants.SolutionVersionArgumentKey))
-                    {
-                        throw new DeployArgumentsException();
-                    }
-                    engineerVersion = commandOrigin.GetSingleValueArgument(Constants.EngineerVersionArgumentKey);
-                }
-                return owner.Create(key, engineerVersion);
-            }
-            if (key == EntityKeys.SolutionVersionKey)
-            {
-                CommandEntity commandOrigin = CommandEntity.Decorate(owner.Origin);
-                string solutionVersion = string.Empty;
-                if (commandOrigin.IsCommandArgumentSpecified(Constants.SolutionVersionArgumentKey))
-                {
-                    if (commandOrigin.IsCommandArgumentSpecified(Constants.EngineerVersionArgumentKey))
-                    {
-                        throw new DeployArgumentsException();
-                    }
-                    solutionVersion = commandOrigin.GetSingleValueArgument(Constants.SolutionVersionArgumentKey);
-                }
-                return owner.Create(key, solutionVersion);
             }
 
             CommandEntity command = CommandEntity.Decorate(owner);

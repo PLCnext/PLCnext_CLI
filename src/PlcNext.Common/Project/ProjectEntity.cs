@@ -66,5 +66,12 @@ namespace PlcNext.Common.Project
         public string EngineerVersion => this[EntityKeys.EngineerVersionKey].Value<string>();
 
         public string SolutionVersion => this[EntityKeys.SolutionVersionKey].Value<string>();
+
+        public ProjectConfigurations Configuration => HasValue<ProjectConfigurations>()
+                                                        ? Value<ProjectConfigurations>()
+                                                        : HasContent(EntityKeys.ProjectConfigurationsKey)
+                                                            ? this[EntityKeys.ProjectConfigurationsKey]
+                                                             .Value<ProjectConfigurations>()
+                                                          : new ProjectConfigurations();
     }
 }

@@ -561,13 +561,19 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("StandardNew"),
                 _ => Given_is_the_working_directory_PATH("StandardNew"),
-                _ => When_I_deploy(new DeployCommandArgs {LibraryDescription = "This is an example description, where something needs to be escaped.", LibraryVersion = "1.2.3.xy" }),
+                _ => When_I_deploy(
+                    new DeployCommandArgs 
+                    {
+                        LibraryDescription = "This is an example description, where something needs to be escaped.",
+                        LibraryVersion = "1.2.3.xy",
+                        EngineerVersion = "2021.3.1"
+                    }),
                 _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithVersionAndDescription.txt")
                 ).RunAsyncWithTimeout();
         }
 
         [Scenario]
-        public async Task Deploy_with_library_and_description_saved_in_project_file()
+        public async Task Deploy_with_library_version_and_description_saved_in_project_file()
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("StandardNew"),
@@ -578,23 +584,12 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Deploy_saves_library_version_and_description()
-        {
-            await Runner.AddSteps(
-                _ => Given_is_the_project("StandardNew"),
-                _ => Given_is_the_working_directory_PATH("StandardNew"),
-                _ => When_I_deploy(new DeployCommandArgs { LibraryDescription = "This is an example description", LibraryVersion = "1.2.3.xy" }),
-                _ => Then_the_library_version_and_description_is_saved("1.2.3.xy", "This is an example description")
-                ).RunAsyncWithTimeout();
-        }
-
-        [Scenario]
         public async Task Deploy_with_EngineerVersion()
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("StandardNew"),
                 _ => Given_is_the_working_directory_PATH("StandardNew"),
-                _ => When_I_deploy(new DeployCommandArgs { EngineerVersion = "2021.3.1" }),
+                _ => When_I_deploy(new DeployCommandArgs {  }),
                 _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithEngineerVersion.txt")
                 ).RunAsyncWithTimeout();
         }
@@ -611,7 +606,7 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Deploy_with_EngineerVersion_and_Solutionversion()
+        public async Task Deploy_with_EngineerVersion_and_SolutionVersion()
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("StandardNew"),

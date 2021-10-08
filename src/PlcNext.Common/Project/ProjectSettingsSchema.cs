@@ -45,10 +45,6 @@ namespace PlcNext.Common.Project {
         
         private string typeField;
         
-        private string libraryDescriptionField;
-        
-        private string libraryVersionField;
-        
         public ProjectSettings() {
             this.versionField = "1.0";
             this.typeField = "project";
@@ -115,26 +111,6 @@ namespace PlcNext.Common.Project {
             }
             set {
                 this.typeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public string LibraryDescription {
-            get {
-                return this.libraryDescriptionField;
-            }
-            set {
-                this.libraryDescriptionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public string LibraryVersion {
-            get {
-                return this.libraryVersionField;
-            }
-            set {
-                this.libraryVersionField = value;
             }
         }
     }

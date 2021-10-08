@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Deploy\SolutionMappingManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Installation\copy_version.bat" />
     <None Remove="Tools\SDK\SampleProject\a.cxx" />
     <None Remove="Tools\SDK\SampleProject\CMakeLists.txt" />
@@ -70,10 +74,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Commands\CommandResults\Schemata\" />
     <Folder Include="Project\templates\ProjectTemplates\" />
     <Folder Include="Project\templates\ProjectTemplates\" />
   </ItemGroup>
 
   <Import Project="..\_Build_\CodeAnalysis.targets" Condition="Exists('..\_Build_\CodeAnalysis.targets')" />
+
+  <ProjectExtensions><VisualStudio><UserProperties commands_4commandresults_4schemata_4sdkscommandresultschema_1json__JsonSchema="" commands_4commandresults_4schemata_4test_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

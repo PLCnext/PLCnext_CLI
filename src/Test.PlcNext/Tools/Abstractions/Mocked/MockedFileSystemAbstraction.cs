@@ -225,8 +225,6 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
 
             SetupLibraryBuilder();
 
-            SetupSolutionMappingFile();
-
             Load("Templates", FileSystem.GetDirectory(AssemblyDirectory), ".meta", "._acf");
 
             create = true;
@@ -299,18 +297,6 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                 {
                     resourcStream.CopyTo(fileStream);
                 }
-            }
-
-            void SetupSolutionMappingFile()
-            {
-                VirtualFile mappingsFile =FileSystem.GetFile(Path.Combine(AssemblyDirectory, "SolutionMappings.xml"));
-                using (Stream fileStream = mappingsFile.OpenWrite())
-                using (Stream resourcStream = Assembly.GetExecutingAssembly()
-                                                      .GetManifestResourceStream("Test.PlcNext.Deployment.SolutionMappings.xml"))
-                {
-                    resourcStream.CopyTo(fileStream);
-                }
-
             }
         }
 

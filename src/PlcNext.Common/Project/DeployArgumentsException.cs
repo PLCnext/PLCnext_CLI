@@ -9,7 +9,7 @@
 
 using PlcNext.Common.Tools;
 
-namespace PlcNext.Common.Deploy
+namespace PlcNext.Common.Project
 {
     internal class DeployArgumentsException : FormattableException
     {

@@ -309,17 +309,6 @@ namespace Test.PlcNext.SystemTests.Tools
             }
         }
 
-        internal void CheckLibraryVersionAndDescriptionIsSaved(string version, string description)
-        {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
-            using (Stream fileContent = fileSystemAbstraction.Open(projectFileName))
-            {
-                fileContent.Should().NotBeNull($"{projectFileName} file was expected to exist in folder {knownProjectName}");
-                ProjectMetaFileChecker.Check(fileContent)
-                                      .HasVersionAndDescription(version, description);
-            }
-        }
-
         internal void CheckCppAndHppFilesExist()
         {
             CheckComponentHasName("RootComponent");

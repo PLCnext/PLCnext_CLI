@@ -122,6 +122,7 @@ namespace PlcNext.Common
                    .As<ITemplateIdentifier>()
                    .InstancePerLifetimeScope();
             builder.RegisterType<CollectiveEntityContentProvider>().As<IEntityContentProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ProjectConfigurationProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<DeployService>().As<IDeployService>().InstancePerLifetimeScope();
             builder.RegisterType<EngineeringLibraryBuilderDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
             builder.RegisterType<AcfEngineeringLibraryBuilderDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();

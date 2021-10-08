@@ -117,6 +117,7 @@
     <None Remove="Deployment\StandardNew\intermediate\config\StandardComponent\StandardComponent.compmeta" />
     <None Remove="Deployment\StandardNew\intermediate\config\StandardComponent\StandardNewProgram\StandardNewProgram.progmeta" />
     <None Remove="Deployment\StandardNew\intermediate\config\StandardDataTypes.dt" />
+    <None Remove="Deployment\StandardNew\PLCnextSettings.xml" />
     <None Remove="Deployment\StaticStringTest\CMakeLists.txt" />
     <None Remove="Deployment\StaticStringTest\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
     <None Remove="Deployment\StaticStringTest\src\StaticStringTestComponent.cpp" />
@@ -254,6 +255,7 @@
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.cpp" />
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
     <EmbeddedResource Include="Deployment\ExternalLibrary\My\Company\Name\ExternalStruct.hpp" />
+    <EmbeddedResource Include="Deployment\StandardNew\PLCnextSettings.xml" />
     <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithSolutionVersion.txt" />
     <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithEngineerVersion.txt" />
     <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithSavedVersionAndDescription.txt" />
@@ -397,7 +399,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="..\PlcNext\Templates\BaseComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\BaseComponentTemplate\TemplateDescription.xml" />
-    <EmbeddedResource Include="..\PlcNext\SolutionMappings.xml" Link="Deployment\SolutionMappings.xml" />
   </ItemGroup>
 
   <ItemGroup>

@@ -101,9 +101,7 @@ namespace PlcNext.Common.Project
             return owner.IsRoot() &&
                    ((AvailableProjectValues.Contains(key) &&
                      owner.HasValue<ProjectDescription>()) ||
-                    key == EntityKeys.ProjectIdKey ||
-                    key == EntityKeys.LibraryDescriptionKey ||
-                    key == EntityKeys.LibraryVersionKey);
+                    key == EntityKeys.ProjectIdKey);
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -120,40 +118,8 @@ namespace PlcNext.Common.Project
                     return GetProjectVersion();
                 case EntityKeys.ProjectIdKey:
                     return GetProjectId();
-                case EntityKeys.LibraryDescriptionKey:
-                    return GetLibraryDescription();
-                case EntityKeys.LibraryVersionKey:
-                    return GetLibraryVersion();
                 default:
                     throw new ContentProviderException(key, owner);
-            }
-
-            Entity GetLibraryDescription()
-            {
-                CommandEntity command = CommandEntity.Decorate(owner.Origin);
-                ProjectEntity project = ProjectEntity.Decorate(owner);
-                if (command.IsCommandArgumentSpecified(Constants.DescriptionArgumentKey))
-                {
-                    string value = command.GetSingleValueArgument(Constants.DescriptionArgumentKey);
-                    project.Settings.SetLibraryDescription(value);
-                    return owner.Create(key, value);
-                }
-
-                return owner.Create(key, project.Settings.Value.LibraryDescription);
-            }
-
-            Entity GetLibraryVersion()
-            {
-                CommandEntity command = CommandEntity.Decorate(owner.Origin);
-                ProjectEntity project = ProjectEntity.Decorate(owner);
-                if (command.IsCommandArgumentSpecified(Constants.VersionArgumentKey))
-                {
-                    string value = command.GetSingleValueArgument(Constants.VersionArgumentKey);
-                    project.Settings.SetLibraryVersion(value);
-                    return owner.Create(key, value);
-                }
-                
-                return owner.Create(key, project.Settings.Value.LibraryVersion);
             }
 
             Entity GetProjectId()

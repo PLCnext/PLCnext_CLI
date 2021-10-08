@@ -574,11 +574,6 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfError(typeof(OldAcfConfigException));
         }
 
-        protected void Then_the_library_version_and_description_is_saved(string version, string description)
-        {
-            ScenarioContext.CheckLibraryVersionAndDescriptionIsSaved(version, description);
-        }
-
         protected void Then_the_user_was_informed_that_the_deploy_options_are_wrong_combined()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(DeployArgumentsException));
