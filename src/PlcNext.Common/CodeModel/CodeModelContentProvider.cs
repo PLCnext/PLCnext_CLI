@@ -681,7 +681,7 @@ namespace PlcNext.Common.CodeModel
                                            ? resolver.Resolve(metaDataTemplate.defaultvalue, owner)
                                            : attribute.Values.First();
                         return (metaDataTemplate.multiplicity == multiplicity.OneOrMore
-                                    ? value.Split(new[] {metaDataTemplate.split}, StringSplitOptions.RemoveEmptyEntries)
+                                    ? value.Split(new[] {metaDataTemplate.split}, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Trim()).ToArray()
                                     : new[] {value},
                                 attribute?.Position ?? new CodePosition(0, 0));
                     }
