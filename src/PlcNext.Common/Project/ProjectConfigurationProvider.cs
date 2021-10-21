@@ -19,7 +19,7 @@ using System.Xml.Serialization;
 
 namespace PlcNext.Common.Project
 {
-    public class ProjectConfigurationProvider : PriorityContentProvider
+    internal class ProjectConfigurationProvider : PriorityContentProvider
     {
         private readonly IFileSystem fileSystem;
         private readonly ExecutionContext executionContext;
