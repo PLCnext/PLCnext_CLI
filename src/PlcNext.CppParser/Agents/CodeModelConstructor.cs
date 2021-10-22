@@ -31,7 +31,7 @@ namespace PlcNext.CppParser.Agents
         {
             SourceDirectoriesParsed directoriesParsed = messageData.Get<SourceDirectoriesParsed>();
             Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes = new Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)>();
-            Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)> enums = new Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)>();
+            Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)> enums = new Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)>();
             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures = new Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)>();
             List<CodeSpecificException> exceptions = new List<CodeSpecificException>();
             List<IncludeDefinition> includes = new List<IncludeDefinition>();

@@ -597,7 +597,7 @@ namespace PlcNext.Common.CodeModel
                     }
                     case EntityKeys.DataTypeKey:
                     {
-                        IDataType fieldDataType = GetRealFieldDataType();
+                        IDataType fieldDataType = field.DataType;
                         return owner.Create(key, fieldDataType.Name, fieldDataType);
                     }
                     case EntityKeys.ResolvedTypeKey:
@@ -628,19 +628,6 @@ namespace PlcNext.Common.CodeModel
                         }
                         throw new ContentProviderException(key, owner);
                     }
-                }
-
-                IDataType GetRealFieldDataType()
-                {
-                    ICodeModel rootCodeModel = owner.Root.Value<ICodeModel>();
-                    IEnum @enum = field.DataType.PotentialFullNames.Select(n => rootCodeModel.GetEnum(n)).FirstOrDefault(e => e != null);
-                    if (@enum != null)
-                    {
-                        (IDataType enumBaseType, _) = GetEnumBaseType(@enum);
-                        return enumBaseType;
-                    }
-
-                    return field.DataType;
                 }
 
                 Entity GetFieldTemplateEntity(metaDataTemplate metaDataTemplate)

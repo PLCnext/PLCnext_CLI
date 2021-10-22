@@ -89,7 +89,7 @@ namespace PlcNext.Common.Templates
         {
             Entity original = CheckTarget();
             IEnumerable<(string, Entity)> values = GetValues();
-            IEnumerable<string> formattedValues = values.Select(Format);
+            IEnumerable<string> formattedValues = values.Select(Format).ToArray();
             string formattedValue = string.Join(template.seperator, formattedValues);
             return ApplyPrefixSuffix(formattedValue, true);
 

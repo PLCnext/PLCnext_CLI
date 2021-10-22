@@ -41,7 +41,7 @@ namespace PlcNext.CppParser.CppRipper
             log.LogVerbose($"Creating code model for {string.Join(", ", sourceDirectories.Select(d => d.FullName))} " +
                            $"with include paths {string.Join(", ",includeDirectories.Select(x => x.Directory).Where(d => d != null).Select(d => d.FullName))}");
             Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes = new Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)>();
-            Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)> enums = new Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)>();
+            Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)> enums = new Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)>();
             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures = new Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)>();
             HashSet<string> parsedIncludes = new HashSet<string>();
             List<IncludeDefinition> unresolvedIncludes = new List<IncludeDefinition>();

@@ -23,13 +23,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
     {
         private readonly Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes;
         private readonly Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures;
-        private readonly Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)> enums;
+        private readonly Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)> enums;
 
         private Func<string, IType> findTypeInIncludes;
 
         public CppCodeModel(Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes,
                             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures,
-                            Dictionary<string, (CppEnum, VirtualFile, VirtualDirectory)> enums,
+                            Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)> enums,
                             Dictionary<string, string> defineStatements)
         {
             this.classes = classes;
@@ -49,6 +49,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         public IDictionary<IType, VirtualFile> Types =>
             classes.Values.Select(t => ((IType) t.Item1, t.Item2))
                    .Concat(structures.Values.Select(t => ((IType) t.Item1, t.Item2)))
+                   .Concat(enums.Values.Select(t => ((IType) t.Item1, t.Item2)))
                    .ToDictionary(t => t.Item1, t => t.Item2);
 
         public IEnumerable<IncludePath> IncludeDirectories { get; internal set; }
@@ -94,15 +95,15 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         
         IEnum ICodeModel.GetEnum(string enumName)
         {
-            return enums.TryGetValue(enumName, out (CppEnum cppEnum, VirtualFile _, VirtualDirectory d) tuple)
-                       ? tuple.cppEnum
+            return enums.TryGetValue(enumName, out (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory) tuple)
+                       ? tuple.e
                        : findTypeInIncludes?.Invoke(enumName) as IEnum;
         }
 
         private IEnum GetEnum(string enumName)
         {
-            return enums.TryGetValue(enumName, out (CppEnum cppEnum, VirtualFile _, VirtualDirectory d) tuple)
-                       ? tuple.cppEnum
+            return enums.TryGetValue(enumName, out (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory) tuple)
+                       ? tuple.e
                        : null;
         }
 
@@ -117,7 +118,9 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                        ? tuple1.baseDirectory
                        : structures.TryGetValue(type.FullName, out (CppStructure s, VirtualFile _, VirtualDirectory baseDirectory) tuple2)
                            ? tuple2.baseDirectory
-                           : null;
+                           : enums.TryGetValue(type.FullName, out (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory) tuple3)
+                               ? tuple3.baseDirectory
+                               : null;
         }
 
         internal void RegisterIncludeTypeFinder(Func<string, IType> includeTypeFinder)
