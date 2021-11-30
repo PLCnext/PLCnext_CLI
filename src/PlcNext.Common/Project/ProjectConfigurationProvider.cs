@@ -70,7 +70,7 @@ namespace PlcNext.Common.Project
                     return owner.Create(key, new ProjectConfigurations());
                 }
 
-                string rootFilePath = fileSystem.GetDirectory(owner.GetPathCommandArgument(), createNew: false)
+                string rootFilePath = fileSystem.GetDirectory(owner.Path, createNew: false)
                                                 .FullName;
 
                 string projectDirectory = fileSystem.FileExists(rootFilePath)
