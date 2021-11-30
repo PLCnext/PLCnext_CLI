@@ -1,0 +1,91 @@
+{
+  "definitions": {
+    "SdkPath": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "targets": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/TargetResult"
+          }
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "targets",
+        "path"
+      ]
+    },
+    "TargetResult": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "longVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shortVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "available": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "longVersion",
+        "shortVersion",
+        "available"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "sdks": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/SdkPath"
+      }
+    }
+  },
+  "required": [
+    "sdks"
+  ]
+}

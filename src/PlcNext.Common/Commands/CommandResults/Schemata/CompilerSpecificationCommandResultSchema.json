@@ -1,0 +1,173 @@
+{
+  "definitions": {
+    "CompilerMacroResult": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    },
+    "CompilerSpecificationResult": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "compilerPath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "compilerSysroot": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "compilerFlags": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "includePaths": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/Path"
+          }
+        },
+        "compilerMacros": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/CompilerMacroResult"
+          }
+        },
+        "targets": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/TargetResult"
+          }
+        }
+      },
+      "required": [
+        "compilerPath",
+        "language",
+        "compilerSysroot",
+        "compilerFlags",
+        "includePaths",
+        "compilerMacros",
+        "targets"
+      ]
+    },
+    "Path": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "path"
+      ]
+    },
+    "TargetResult": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "longVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shortVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "available": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "longVersion",
+        "shortVersion",
+        "available"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "compilerSpecifications": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/CompilerSpecificationResult"
+      }
+    }
+  },
+  "required": [
+    "compilerSpecifications"
+  ]
+}

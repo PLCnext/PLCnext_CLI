@@ -1,0 +1,99 @@
+{
+  "definitions": {
+    "Settings": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "SdkPaths": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "TemplateLocations": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "AttributePrefix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "CliRepositoryRoot": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "CliRepositoryFileName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "CliRepositorySignatureFileName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "HttpProxy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "LogFilePath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "UseSystemCommands": {
+          "type": "boolean"
+        },
+        "AlwaysWriteExtendedLog": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "SdkPaths",
+        "TemplateLocations",
+        "AttributePrefix",
+        "CliRepositoryRoot",
+        "CliRepositoryFileName",
+        "CliRepositorySignatureFileName",
+        "HttpProxy",
+        "LogFilePath",
+        "UseSystemCommands",
+        "AlwaysWriteExtendedLog"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "setting": {
+      "$ref": "#/definitions/Settings"
+    }
+  },
+  "required": [
+    "setting"
+  ]
+}

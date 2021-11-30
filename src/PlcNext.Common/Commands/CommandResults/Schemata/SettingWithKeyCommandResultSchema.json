@@ -1,0 +1,286 @@
+{
+  "definitions": {
+    "SdkPathsSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "SdkPaths": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "SdkPaths"
+      ]
+    },
+    "TemplateLocationsSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "TemplateLocations": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "TemplateLocations"
+      ]
+    },
+    "AttributePrefixSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "AttributePrefix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "AttributePrefix"
+      ]
+    },
+    "CliRepositoryRootSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "CliRepositoryRoot": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "CliRepositoryRoot"
+      ]
+    },
+    "CliRepositoryFileNameSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "CliRepositoryFileName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "CliRepositoryFileName"
+      ]
+    },
+    "CliRepositorySignatureFileNameSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "CliRepositorySignatureFileName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "CliRepositorySignatureFileName"
+      ]
+    },
+    "HttpProxySetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "HttpProxy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "HttpProxy"
+      ]
+    },
+    "LogFilePathSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "LogFilePath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "LogFilePath"
+      ]
+    },
+    "UseSystemCommandsSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "UseSystemCommands": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "UseSystemCommands"
+      ]
+    },
+    "AlwaysWriteExtendedLogSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "AlwaysWriteExtendedLog": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "AlwaysWriteExtendedLog"
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/SdkPathsSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/TemplateLocationsSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/AttributePrefixSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/CliRepositoryRootSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/CliRepositoryFileNameSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/CliRepositorySignatureFileNameSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/HttpProxySetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/LogFilePathSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/UseSystemCommandsSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/AlwaysWriteExtendedLogSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    }
+  ]
+}
