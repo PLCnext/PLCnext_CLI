@@ -32,8 +32,8 @@ namespace PlcNext.CppParser.CppRipper.Agents
             set.MarkAsConsumed(set.Message1);
             set.MarkAsConsumed(set.Message2);
             
-            IEnumerable<string> baseTypeNames = set.Message1.Declaration.GetBaseTypes();
-            CppDataType[] baseTypes = baseTypeNames.Select(n => new CppDataType(n, set.Message3.Usings.ToArray(), set.Message2.Namespace)).ToArray();
+            IEnumerable<(string, string)> baseTypeNames = set.Message1.Declaration.GetBaseTypes();
+            CppDataType[] baseTypes = baseTypeNames.Select(n => new CppDataType(n.Item1, set.Message3.Usings.ToArray(), set.Message2.Namespace, n.Item2)).ToArray();
             OnMessage(new BaseTypesParsed(set, baseTypes));
         }
 

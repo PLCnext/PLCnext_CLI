@@ -466,6 +466,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The fields {0} of the type {1} are ambiguous. In types used for ports only non-ambiguous fields should exist..
+        /// </summary>
+        internal static string PortStructureFieldAmbiguous {
+            get {
+                return ResourceManager.GetString("PortStructureFieldAmbiguous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No project was found inside the directory {0}..
         /// </summary>
         internal static string ProjectMissing {
@@ -799,20 +808,20 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The base data type &apos;{0}&apos; of the type &apos;{1}&apos; is not known. For ports and port structures only known data types can be used as base types..
+        /// </summary>
+        internal static string UnkownBaseDataType {
+            get {
+                return ResourceManager.GetString("UnkownBaseDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The data type &apos;{0}&apos; is not known. For ports and port structures only known data types can be used..
         /// </summary>
         internal static string UnkownDataType {
             get {
                 return ResourceManager.GetString("UnkownDataType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The base data type &apos;{0}&apos; of the enum &apos;{1}&apos; is not known. For ports and port structures only known data types can be used as base types..
-        /// </summary>
-        internal static string UnkownEnumDataType {
-            get {
-                return ResourceManager.GetString("UnkownEnumDataType", resourceCulture);
             }
         }
         

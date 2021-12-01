@@ -29,6 +29,9 @@ namespace PlcNext.Common.CodeModel
 
         public string Namespace => this[EntityKeys.NamespaceKey].Value<string>();
 
+        public IEnumerable<CodeEntity> PortStructs => this[EntityKeys.PortStructsKey].Select(Decorate);
+        public IEnumerable<CodeEntity> PortEnums => this[EntityKeys.PortEnumsKey].Select(Decorate);
+
         public IEnumerable<string> Attributes => HasContent(EntityKeys.AttributesKey)
                                                      ? this[EntityKeys.AttributesKey].Select(e => e.Value<string>())
                                                      : Enumerable.Empty<string>();

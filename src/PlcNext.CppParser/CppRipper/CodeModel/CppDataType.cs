@@ -23,11 +23,14 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         private readonly IEnumerable<string> potentialPrefixes;
         public IEnumerable<string> PotentialFullNames => potentialPrefixes.Select(p => $"{p}::{Name}")
                                                                           .Concat(new []{Name});
+        
+        public string Visibility { get; }
 
-        public CppDataType(string name, string[] usings, string ns) : base(name, null)
+        public CppDataType(string name, string[] usings, string ns, string visibility = "public") : base(name, null)
         {
             IEnumerable<string> potentialNamespaces = GetNamespaces();
             potentialPrefixes = usings.Concat(potentialNamespaces);
+            Visibility = visibility;
 
             IEnumerable<string> GetNamespaces()
             {

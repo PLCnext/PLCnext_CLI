@@ -17,13 +17,21 @@ namespace PlcNext.CppParser.CppRipper
 {
     internal static class CppRipperExtensions
     {
-        internal static IEnumerable<string> GetBaseTypes(this ParseNode declaration)
+        internal static IEnumerable<(string, string)> GetBaseTypes(this ParseNode declaration)
         {
             foreach (ParseNode baseTypeNode in declaration.GetHierarchy().Where(IsBaseType))
             {
                 ParseNode identifier = baseTypeNode.First(n => n.RuleName == "identifier" || n.RuleName == "generic");
 
-                yield return identifier.ToString();
+                ParseNode visibility = baseTypeNode.GetHierarchy().Where(IsVisibility)
+                                                   .LastOrDefault();
+
+                yield return (identifier.ToString(), visibility?.ToString().Trim() ?? "public");
+            }
+
+            bool IsVisibility(ParseNode typeNode)
+            {
+                return typeNode.RuleType == "choice" && typeNode.RuleName == "visibility";
             }
 
             bool IsBaseType(ParseNode typeNode)

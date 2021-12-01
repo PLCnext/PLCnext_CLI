@@ -16,5 +16,7 @@ namespace PlcNext.Common.CodeModel
     public interface IDataType : ICodeEntity
     {
         IEnumerable<string> PotentialFullNames { get; }
+        
+        string Visibility { get; }
     }
 }

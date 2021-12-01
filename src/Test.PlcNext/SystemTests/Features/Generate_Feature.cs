@@ -565,6 +565,58 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Generate_correct_meta_data_for_simple_inheritance()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("InheritanceStructs"),
+                _ => When_I_generate_all_metafiles_with_no_datatypes_worksheet(),
+                _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("SimpleInherited",
+                                                                                                   new[]
+                                                                                                   {
+                                                                                                       new TypeMember("Fooba","boolean"),
+                                                                                                       new TypeMember("Base","int32"),
+                                                                                                   }))).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_correct_meta_data_for_multi_level_inheritance()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("InheritanceStructs"),
+                _ => When_I_generate_all_metafiles_with_no_datatypes_worksheet(),
+                _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("MultiLevel",
+                                                                                 new[]
+                                                                                 {
+                                                                                     new TypeMember("Fooba","boolean"),
+                                                                                     new TypeMember("Base","int32"),
+                                                                                     new TypeMember("MidLevel","int16"),
+                                                                                 }))).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_correct_meta_data_for_private_inheritance()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("InheritanceStructs"),
+                _ => When_I_generate_all_metafiles_with_no_datatypes_worksheet(),
+                _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("PrivateInheritance",
+                                                                                 new[]
+                                                                                 {
+                                                                                     new TypeMember("Fooba","boolean"),
+                                                                                     new TypeMember("Base","int32"),
+                                                                                 }))).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Throw_an_error_for_ambiguous_inherited_fields()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AmbigousInheritanceStruct"),
+                _ => When_I_generate_all_metafiles_with_no_datatypes_worksheet(),
+                _ => Then_the_user_was_informed_that_the_port_struct_fields_are_ambiguous()).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_optimized_typemeta_information_for_project_with_1000_fields()
         {
             await Runner.AddSteps(

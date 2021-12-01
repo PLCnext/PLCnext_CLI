@@ -485,6 +485,16 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfError(typeof(TargetNameAmbiguousException));
         }
 
+        protected void Then_the_user_was_informed_that_the_port_struct_fields_are_ambiguous()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(PortStructFieldAmbiguousException));
+        }
+
+        protected void Then_the_user_was_informed_that_the_base_type_could_not_be_found()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(UnkownBaseDataTypeException));
+        }
+
         protected void Then_the_user_was_informed_that_the_library_option_is_wrong_combined()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(WrongCombinedExternalLibrariesException));

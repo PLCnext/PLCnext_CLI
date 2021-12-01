@@ -15,9 +15,9 @@ using PlcNext.Common.Tools;
 
 namespace PlcNext.Common.CodeModel
 {
-    internal class UnkownEnumDataTypeException : FormattableException
+    internal class UnkownBaseDataTypeException : FormattableException
     {
-        public UnkownEnumDataTypeException(string dataType, IEnum @enum) : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.UnkownEnumDataType, dataType, @enum.FullName))
+        public UnkownBaseDataTypeException(string dataType, IType type) : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.UnkownBaseDataType, dataType, type.FullName))
         {
             
         }

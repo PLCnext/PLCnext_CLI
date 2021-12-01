@@ -367,6 +367,31 @@
     <EmbeddedResource Include="Deployment\InitializedStructPortField\src\InitializedStructPortFieldProgram.hpp" />
     <None Remove="Deployment\InitializedStructPortField\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\InitializedStructPortField\CMakeLists.txt" />
+    <None Remove="Deployment\InheritanceStructs\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\InheritanceStructs\CMakeLists.txt" />
+    <None Remove="Deployment\InheritanceStructs\src\InheritanceStructsProgram.hpp" />
+    <EmbeddedResource Include="Deployment\InheritanceStructs\src\InheritanceStructsProgram.hpp" />
+    <None Remove="Deployment\InheritanceStructs\src\InheritanceStructsProgram.cpp" />
+    <EmbeddedResource Include="Deployment\InheritanceStructs\src\InheritanceStructsProgram.cpp" />
+    <None Remove="Deployment\InheritanceStructs\src\InheritanceStructsComponent.hpp" />
+    <EmbeddedResource Include="Deployment\InheritanceStructs\src\InheritanceStructsComponent.hpp" />
+    <None Remove="Deployment\InheritanceStructs\src\InheritanceStructsComponent.cpp" />
+    <EmbeddedResource Include="Deployment\InheritanceStructs\src\InheritanceStructsComponent.cpp" />
+    <None Remove="Deployment\AmbigousInheritanceStruct\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\AmbigousInheritanceStruct\CMakeLists.txt" />
+    <None Remove="Deployment\AmbigousInheritanceStruct\src\AmbigousInheritanceStructProgram.hpp" />
+    <EmbeddedResource Include="Deployment\AmbigousInheritanceStruct\src\AmbigousInheritanceStructProgram.hpp" />
+    <None Remove="Deployment\AmbigousInheritanceStruct\src\AmbigousInheritanceStructProgram.cpp" />
+    <EmbeddedResource Include="Deployment\AmbigousInheritanceStruct\src\AmbigousInheritanceStructProgram.cpp" />
+    <None Remove="Deployment\AmbigousInheritanceStruct\src\AmbigousInheritanceStructComponent.hpp" />
+    <EmbeddedResource Include="Deployment\AmbigousInheritanceStruct\src\AmbigousInheritanceStructComponent.hpp" />
+    <None Remove="Deployment\AmbigousInheritanceStruct\src\AmbigousInheritanceStructComponent.cpp" />
+    <EmbeddedResource Include="Deployment\AmbigousInheritanceStruct\src\AmbigousInheritanceStructComponent.cpp" />
+    <None Remove="Deployment\NonExistingInheritance\CMakeLists.txt" />
+    <None Remove="Deployment\NonExistingInheritance\src\NonExistingInheritanceProgram.hpp" />
+    <None Remove="Deployment\NonExistingInheritance\src\NonExistingInheritanceProgram.cpp" />
+    <None Remove="Deployment\NonExistingInheritance\src\NonExistingInheritanceComponent.hpp" />
+    <None Remove="Deployment\NonExistingInheritance\src\NonExistingInheritanceComponent.cpp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -380,6 +405,8 @@
     <EmbeddedResource Include="Deployment\CommentedPort\plcnext.proj" />
     <EmbeddedResource Include="Deployment\FullyQualifiedEnum\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PpDirectives\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\InheritanceStructs\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\AmbigousInheritanceStruct\plcnext.proj" />
     <Content Include="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

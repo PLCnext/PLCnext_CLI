@@ -98,8 +98,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
             //content first is type dec // children is comment
 
-            IEnumerable<string> baseTypeNames = typeDeclaration.GetBaseTypes();
-            baseTypes.AddRange(baseTypeNames.Select(n => new CppDataType(n, usings, ns)));
+            IEnumerable<(string, string)> baseTypeNames = typeDeclaration.GetBaseTypes();
+            baseTypes.AddRange(baseTypeNames.Select(n => new CppDataType(n.Item1, usings, ns, n.Item2)));
         }
     }
 }
