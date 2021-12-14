@@ -45,19 +45,19 @@ namespace PlcNext.Common.Tools.SDK
                 this.log = log;
             }
 
-            public void WriteInformation(string message)
+            public void WriteInformation(string message, bool withNewLine = true)
             {
-                wrappedUserInterface.WriteInformation(message);
+                wrappedUserInterface.WriteInformation(message, withNewLine);
             }
 
-            public void WriteVerbose(string message)
+            public void WriteVerbose(string message, bool withNewLine = true)
             {
-                HandleMessage(message);
+                HandleMessage(message, withNewLine);
             }
 
-            public void WriteError(string message)
+            public void WriteError(string message, bool withNewLine = true)
             {
-                wrappedUserInterface.WriteError(message);
+                wrappedUserInterface.WriteError(message, withNewLine);
             }
 
             public void SetVerbosity(bool verbose)
@@ -65,9 +65,9 @@ namespace PlcNext.Common.Tools.SDK
                 wrappedUserInterface.SetVerbosity(verbose);
             }
 
-            public void WriteWarning(string message)
+            public void WriteWarning(string message, bool withNewLine = true)
             {
-                wrappedUserInterface.WriteWarning(message);
+                wrappedUserInterface.WriteWarning(message, withNewLine);
             }
 
             public void PauseOutput()
@@ -85,7 +85,12 @@ namespace PlcNext.Common.Tools.SDK
                 wrappedUserInterface.SetQuiet(quiet);
             }
 
-            private void HandleMessage(string message)
+            public void SetPrefix(string prefix)
+            {
+                wrappedUserInterface.SetPrefix(prefix);
+            }
+
+            private void HandleMessage(string message,bool withNewLine)
             {
                 if (!((message.StartsWith("{", StringComparison.Ordinal) &&
                        message.EndsWith("}", StringComparison.Ordinal)) || //For object
@@ -100,12 +105,12 @@ namespace PlcNext.Common.Tools.SDK
                 {
                     if (messageMessage.Title.Contains("warning", StringComparison.OrdinalIgnoreCase))
                     {
-                        wrappedUserInterface.WriteWarning(messageMessage.Message);
+                        wrappedUserInterface.WriteWarning(messageMessage.Message, withNewLine);
                     }
                     else if(messageMessage.Title.Contains("error", StringComparison.OrdinalIgnoreCase) ||
                             messageMessage.Title.Contains("exception", StringComparison.OrdinalIgnoreCase))
                     {
-                        wrappedUserInterface.WriteError(messageMessage.Message);
+                        wrappedUserInterface.WriteError(messageMessage.Message, withNewLine);
                     }
                 }
 

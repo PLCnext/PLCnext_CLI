@@ -32,6 +32,8 @@ namespace PlcNext.Common.Tools.UI
         public string Warning => warningBuilder.ToString();
         public string Error => errorBuilder.ToString();
 
+        private string prefix = string.Empty;
+
         public StringBuilderUserInterface(ILog log, bool writeVerbose = false, bool writeInformation = false,
                                           bool writeWarning = false, bool writeError = false)
         {
@@ -42,12 +44,13 @@ namespace PlcNext.Common.Tools.UI
             this.writeError = writeError;
         }
 
-        public void WriteInformation(string message)
+        public void WriteInformation(string message, bool withNewLine = true)
         {
             if (writeInformation)
             {
-                informationBuilder.AppendLine(Clean(message));
-                log.LogInformation(message);
+                string suffix = withNewLine ? Environment.NewLine : string.Empty;
+                informationBuilder.Append(prefix + Clean(message) + suffix);
+                log.LogInformation(prefix + message);
             }
         }
 
@@ -61,21 +64,23 @@ namespace PlcNext.Common.Tools.UI
             return message;
         }
 
-        public void WriteVerbose(string message)
+        public void WriteVerbose(string message, bool withNewLine = true)
         {
             if (writeVerbose)
             {
-                verboseBuilder.AppendLine(Clean(message));
-                log.LogVerbose(message);
+                string suffix = withNewLine ? Environment.NewLine : string.Empty;
+                verboseBuilder.Append(prefix + Clean(message) + suffix);
+                log.LogVerbose(prefix + message);
             }
         }
 
-        public void WriteError(string message)
+        public void WriteError(string message, bool withNewLine = true)
         {
             if (writeError)
             {
-                errorBuilder.AppendLine(Clean(message));
-                log.LogError(message);
+                string suffix = withNewLine ? Environment.NewLine : string.Empty;
+                errorBuilder.Append(prefix + Clean(message) + suffix);
+                log.LogError(prefix + message);
             }
         }
 
@@ -84,12 +89,13 @@ namespace PlcNext.Common.Tools.UI
             //do nothing
         }
 
-        public void WriteWarning(string message)
+        public void WriteWarning(string message, bool withNewLine = true)
         {
             if (writeWarning)
             {
-                warningBuilder.AppendLine(Clean(message));
-                log.LogWarning(message);
+                string suffix = withNewLine ? Environment.NewLine : string.Empty;
+                warningBuilder.Append(prefix + Clean(message) + suffix);
+                log.LogWarning(prefix + message);
             }
         }
 
@@ -106,6 +112,11 @@ namespace PlcNext.Common.Tools.UI
         public void SetQuiet(bool quiet)
         {
             //do nothing
+        }
+
+        public void SetPrefix(string prefix)
+        {
+            this.prefix = prefix;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace PlcNext.Common
             builder.RegisterType<FileBaseFileSystem>().As<IFileSystem>().InstancePerLifetimeScope();
             builder.RegisterType<ProcessManager>().As<IProcessManager>().As<IProcessInformationService>()
                    .InstancePerLifetimeScope().PropertiesAutowired();
-            builder.RegisterType<ShellProgressBarProgressVisualizer>().As<IProgressVisualizer>().InstancePerLifetimeScope();
+            builder.RegisterType<ConsoleProgressVisualizer>().As<IProgressVisualizer>().InstancePerLifetimeScope();
             builder.RegisterType<HttpClientDownloadService>().As<IDownloadService>().InstancePerLifetimeScope();
             builder.RegisterType<RealEnvironmentService>().As<IEnvironmentService>().InstancePerLifetimeScope();
             builder.RegisterType<FormattableExceptionHandler>().As<IExceptionHandler>().InstancePerLifetimeScope();

@@ -39,7 +39,6 @@
     <PackageReference Include="Nito.AsyncEx" Version="5.0.0" />
     <PackageReference Include="SharpCompress" Version="0.29.0" />
     <PackageReference Include="SharpZipLib" Version="1.1.0" />
-    <PackageReference Include="ShellProgressBar" Version="4.2.0" />
     <PackageReference Include="System.Management" Version="4.5.0" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />

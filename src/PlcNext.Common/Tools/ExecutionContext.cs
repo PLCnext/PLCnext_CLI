@@ -75,11 +75,11 @@ namespace PlcNext.Common.Tools
             });
         }
 
-        public void WriteInformation(string message, bool showUser = true)
+        public void WriteInformation(string message, bool showUser = true, bool withNewLine = true)
         {
             if (showUser)
             {
-                userInterface.WriteInformation(message);
+                userInterface.WriteInformation(message, withNewLine);
             }
             else
             {
@@ -87,11 +87,11 @@ namespace PlcNext.Common.Tools
             }
         }
 
-        public void WriteVerbose(string message, bool showUser = true)
+        public void WriteVerbose(string message, bool showUser = true, bool withNewLine = true)
         {
             if (showUser)
             {
-                userInterface.WriteVerbose(message);
+                userInterface.WriteVerbose(message, withNewLine);
             }
             else
             {
@@ -99,11 +99,11 @@ namespace PlcNext.Common.Tools
             }
         }
 
-        public void WriteError(string message, bool showUser = true)
+        public void WriteError(string message, bool showUser = true, bool withNewLine = true)
         {
             if (showUser)
             {
-                userInterface.WriteError(message);
+                userInterface.WriteError(message, withNewLine);
             }
             else
             {
@@ -111,11 +111,11 @@ namespace PlcNext.Common.Tools
             }
         }
 
-        public void WriteWarning(string message, bool showUser = true)
+        public void WriteWarning(string message, bool showUser = true, bool withNewLine = true)
         {
             if (showUser)
             {
-                userInterface.WriteWarning(message);
+                userInterface.WriteWarning(message, withNewLine);
             }
             else
             {
@@ -123,19 +123,19 @@ namespace PlcNext.Common.Tools
             }
         }
 
-        void IUserInterface.WriteInformation(string message)
+        void IUserInterface.WriteInformation(string message, bool withNewLine)
         {
-            WriteInformation(message);
+            WriteInformation(message, withNewLine: withNewLine);
         }
 
-        void IUserInterface.WriteVerbose(string message)
+        void IUserInterface.WriteVerbose(string message, bool withNewLine)
         {
-            WriteVerbose(message);
+            WriteVerbose(message, withNewLine: withNewLine);
         }
 
-        void IUserInterface.WriteError(string message)
+        void IUserInterface.WriteError(string message, bool withNewLine)
         {
-            WriteError(message);
+            WriteError(message, withNewLine: withNewLine);
         }
 
         public void SetVerbosity(bool verbose)
@@ -143,9 +143,9 @@ namespace PlcNext.Common.Tools
             userInterface.SetVerbosity(verbose);
         }
 
-        void IUserInterface.WriteWarning(string message)
+        void IUserInterface.WriteWarning(string message, bool withNewLine)
         {
-            WriteWarning(message);
+            WriteWarning(message, withNewLine: withNewLine);
         }
 
         public void PauseOutput()
@@ -161,6 +161,11 @@ namespace PlcNext.Common.Tools
         public void SetQuiet(bool quiet)
         {
             userInterface.SetQuiet(quiet);
+        }
+
+        public void SetPrefix(string prefix)
+        {
+            userInterface.SetPrefix(prefix);
         }
 
         void ILog.LogVerbose(string message)

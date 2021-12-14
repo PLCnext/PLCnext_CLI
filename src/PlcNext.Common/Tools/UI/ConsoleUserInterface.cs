@@ -8,9 +8,7 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using PlcNext.Common.Tools.FileSystem;
@@ -31,8 +29,15 @@ namespace PlcNext.Common.Tools.UI
         private bool showVerbose;
         private bool beQuiet;
         private bool paused;
-        private readonly List<(string, TraceSeverity)> storedMessages = new List<(string, TraceSeverity)>();
+        private readonly List<(string, TraceSeverity, bool)> storedMessages = new List<(string, TraceSeverity, bool)>();
         private readonly ILog log;
+        private string prefix = string.Empty;
+
+        private const int MaxCharsPerLine = 80;
+        private int currentLineCharCount = 0;
+        private int currentErrorLineCharCount = 0;
+        private bool wasLastWriteWithNewLine = false;
+        private bool wasLastErrorWriteWithNewLine = false;
 
         private static readonly Dictionary<ConsoleColor, ConsoleColor> ErrorColors = new Dictionary<ConsoleColor, ConsoleColor>
         {
@@ -111,24 +116,24 @@ namespace PlcNext.Common.Tools.UI
             }
         }
 
-        public void WriteInformation(string message)
+        public void WriteInformation(string message, bool withNewLine = true)
         {
-            PostMessage((message, TraceSeverity.Information));
+            PostMessage((message, TraceSeverity.Information, withNewLine));
             log.LogInformation(message);
         }
 
-        public void WriteVerbose(string message)
+        public void WriteVerbose(string message, bool withNewLine = true)
         {
             if (showVerbose)
             {
-                PostMessage((message, TraceSeverity.Verbose));
+                PostMessage((message, TraceSeverity.Verbose, withNewLine));
             }
             log.LogVerbose(message);
         }
 
-        public void WriteError(string message)
+        public void WriteError(string message, bool withNewLine = true)
         {
-            PostMessage((message, TraceSeverity.Error));
+            PostMessage((message, TraceSeverity.Error, withNewLine));
             log.LogError(message);
         }
 
@@ -137,9 +142,9 @@ namespace PlcNext.Common.Tools.UI
             showVerbose = verbose;
         }
 
-        public void WriteWarning(string message)
+        public void WriteWarning(string message, bool withNewLine = true)
         {
-            PostMessage((message, TraceSeverity.Warning));
+            PostMessage((message, TraceSeverity.Warning, withNewLine));
             log.LogWarning(message);
         }
 
@@ -152,7 +157,7 @@ namespace PlcNext.Common.Tools.UI
         public void ResumeOutput()
         {
             paused = false;
-            foreach ((string message, TraceSeverity severity) stored in storedMessages)
+            foreach ((string message, TraceSeverity severity, bool withNewLine) stored in storedMessages)
             {
                 PostMessage(stored);
             }
@@ -163,7 +168,12 @@ namespace PlcNext.Common.Tools.UI
             beQuiet = quiet;
         }
 
-        private void PostMessage((string message, TraceSeverity severity) message)
+        public void SetPrefix(string prefix)
+        {
+            this.prefix = prefix;
+        }
+
+        private void PostMessage((string message, TraceSeverity severity, bool withNewLine) message)
         {
             if (beQuiet)
             {
@@ -175,26 +185,89 @@ namespace PlcNext.Common.Tools.UI
                 return;
             }
 
+            string resultPrefix = ResultPrefix(message.withNewLine, message.severity is TraceSeverity.Error or TraceSeverity.Warning);
+
+            string suffix = message.withNewLine ? Environment.NewLine : string.Empty;
+            string resultMessage = resultPrefix + message.message + suffix;
+
             switch (message.severity)
             {
                 case TraceSeverity.Verbose:
-                    Console.WriteLine(message.message);
-                    break;
                 case TraceSeverity.Information:
-                    Console.WriteLine(message.message);
+                    WrappedConsoleWrite(message.withNewLine, resultMessage);
                     break;
                 case TraceSeverity.Error:
                     SwitchColorsToError();
-                    Console.Error.WriteLine(message.message);
+                    WrappedConsoleErrorWrite(message.withNewLine, resultMessage);
                     Console.ResetColor();
                     break;
                 case TraceSeverity.Warning:
                     SwitchColorsToWarning();
-                    Console.Error.WriteLine(message.message);
+                    WrappedConsoleErrorWrite(message.withNewLine, resultMessage);
                     Console.ResetColor();
                     break;
                 default:
                     throw new InvalidOperationException();
+            }
+            
+            void WrappedConsoleWrite(bool withNewLine, string s)
+            {
+                if (!withNewLine)
+                {
+                    if (currentLineCharCount + s.Length >= MaxCharsPerLine)
+                    {
+                        int charsFittingOnLine = MaxCharsPerLine - currentLineCharCount;
+                        Console.Write(s.Substring(0, charsFittingOnLine) + Environment.NewLine);
+
+                        s = prefix + s.Substring(charsFittingOnLine,
+                            s.Length - charsFittingOnLine);
+
+                        currentLineCharCount = s.Length;
+                    }
+                    else
+                    {
+                        currentLineCharCount += s.Length;
+                    }
+                }
+
+                Console.Write(s);
+
+                if (withNewLine)
+                {
+                    currentLineCharCount = 0;
+                }
+
+                wasLastWriteWithNewLine = withNewLine;
+            }
+            
+            void WrappedConsoleErrorWrite(bool withNewLine, string s)
+            {
+                if (!withNewLine)
+                {
+                    if (currentErrorLineCharCount + s.Length >= MaxCharsPerLine)
+                    {
+                        int charsFittingOnLine = MaxCharsPerLine - currentErrorLineCharCount;
+                        Console.Error.Write(s.Substring(0, charsFittingOnLine) + Environment.NewLine);
+
+                        s = prefix + s.Substring(charsFittingOnLine,
+                            s.Length - charsFittingOnLine);
+                    }
+                    currentErrorLineCharCount = s.Length;
+                }
+                else
+                {
+                    currentErrorLineCharCount += s.Length;
+                }
+                
+                Console.Error.Write(s);
+                
+
+                if (withNewLine)
+                {
+                    currentErrorLineCharCount = 0;
+                }
+                
+                wasLastErrorWriteWithNewLine = withNewLine;
             }
 
             void SwitchColorsToError()
@@ -228,6 +301,39 @@ namespace PlcNext.Common.Tools.UI
                     Console.ForegroundColor = foreground;
                 }
             }
+        }
+
+        /// <summary>
+        /// Computes the real prefix necessary to have progress dots <see cref="ConsoleInfiniteProgressNotifier"/>
+        /// and process output on separated lines with correct prefixes.
+        /// </summary>
+        /// <param name="hasMessageNewLine">Whether the current message will end with a newline char.</param>
+        /// <param name="isErrorConsole">Whether the output will be on the Console.Error Textwriter.</param>
+        /// <returns>The correct prefix.</returns>
+        private string ResultPrefix(bool hasMessageNewLine, bool isErrorConsole = false)
+        {
+            string result;
+            // new lines should always start with the prefix
+            if (isErrorConsole?wasLastErrorWriteWithNewLine:wasLastWriteWithNewLine)
+            {
+                result = prefix;
+            }
+            // when the last line was without newLine at the end it was a progress dot
+            else
+            {
+                // this message is no progress dot and should start on a new line with prefix
+                if (hasMessageNewLine)
+                {
+                    result = Environment.NewLine + prefix;
+                }
+                // progress dots shall follow each other directly
+                else
+                {
+                    result = string.Empty;
+                }
+            }
+
+            return result;
         }
     }
 }
