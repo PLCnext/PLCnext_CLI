@@ -27,5 +27,6 @@ namespace PlcNext.Common.CodeModel
         IEnumerable<IncludePath> IncludeDirectories { get; }
         Dictionary<string, string> DefineStatements { get; }
         IEnumerable<VirtualDirectory> SourceDirectories { get; }
+        Dictionary<IConstant, CodePosition> Constants { get; }
     }
 }

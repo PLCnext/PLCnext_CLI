@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Agents.Net;
 using PlcNext.CppParser.CppRipper.CodeModel;
+using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 using PlcNext.CppParser.CppRipper.Messages;
 
 namespace PlcNext.CppParser.CppRipper.Agents
@@ -96,7 +97,7 @@ namespace PlcNext.CppParser.CppRipper.Agents
                     parent = n.GetParent();
                 }
                 
-                return parent.TakeWhile(c => c != n).All(c => !CppField.EqualsMatch.IsMatch(c.ToString()));
+                return parent.TakeWhile(c => c != n).All(c => !FieldParser.EqualsMatch.IsMatch(c.ToString()));
             }
         }
     }

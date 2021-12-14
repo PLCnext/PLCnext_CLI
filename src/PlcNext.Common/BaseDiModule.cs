@@ -113,7 +113,7 @@ namespace PlcNext.Common
             builder.RegisterType<DataTypeContentResolver>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<SymbolContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<PortContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
-            builder.RegisterType<DefineStatementsContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
+            builder.RegisterType<CodeConstantsContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<CommandDefinitionContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<ConstantContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<FormatTemplateContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();

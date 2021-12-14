@@ -17,7 +17,7 @@ namespace PlcNext.Common.CodeModel
     {
         IDataType DataType { get; }
 
-        IReadOnlyCollection<int> Multiplicity { get; }
+        IReadOnlyCollection<string> Multiplicity { get; }
 
         IType ContainingType { get; }
     }

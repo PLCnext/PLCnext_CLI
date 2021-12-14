@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using Agents.Net;
 using PlcNext.Common.Tools;
+using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 using PlcNext.CppParser.CppRipper.Messages;
 
 namespace PlcNext.CppParser.CppRipper.Agents

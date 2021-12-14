@@ -30,12 +30,14 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         public CppCodeModel(Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes,
                             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures,
                             Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)> enums,
-                            Dictionary<string, string> defineStatements)
+                            Dictionary<string, string> defineStatements,
+                            Dictionary<IConstant, CodePosition> constants)
         {
             this.classes = classes;
             this.structures = structures;
             this.enums = enums;
             DefineStatements = defineStatements;
+            Constants = constants;
         }
 
         public IDictionary<IStructure, VirtualFile> Structures =>
@@ -54,6 +56,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         public IEnumerable<IncludePath> IncludeDirectories { get; internal set; }
         public Dictionary<string, string> DefineStatements { get; }
+        public Dictionary<IConstant, CodePosition> Constants { get; }
 
         public  IEnumerable<VirtualDirectory> SourceDirectories { get; internal set; }
 
@@ -62,6 +65,14 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             foreach (KeyValuePair<string,string> statement in statements.Where(kv => !DefineStatements.ContainsKey(kv.Key)))
             {
                 DefineStatements.Add(statement.Key, statement.Value);
+            }
+        }
+
+        public void AddConstants(IEnumerable<KeyValuePair<IConstant,CodePosition>> constants)
+        {
+            foreach (KeyValuePair<IConstant,CodePosition> constant in constants.Where(kv => !Constants.ContainsKey(kv.Key)))
+            {
+                Constants.Add(constant.Key, constant.Value);
             }
         }
 

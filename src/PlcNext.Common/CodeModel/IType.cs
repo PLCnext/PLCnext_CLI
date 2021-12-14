@@ -19,5 +19,6 @@ namespace PlcNext.Common.CodeModel
         string Namespace { get; }
         string FullName { get; }
         IEnumerable<IField> Fields { get; }
+        IEnumerable<string> AccessibleNamespaces { get; }
     }
 }

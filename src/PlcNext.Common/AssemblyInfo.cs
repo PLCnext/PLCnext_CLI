@@ -15,3 +15,8 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Test.PlcNext")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 #endif
+
+namespace System.Runtime.CompilerServices
+{
+    internal static class IsExternalInit {}
+}

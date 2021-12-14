@@ -68,7 +68,8 @@ namespace PlcNext.Common.Tools
         public const string BigDataProjectKey = "big-data-project";
         public const string NormalProjectKey = "normal-project";
         public const string IecDataTypeFormatKey = "iecdatatypeformat";
-        public const string StringMacroReplaceKey = "stringmacroreplace";
+        public const string StringConstantReplaceKey = "stringconstantreplace";
+        public const string MultiplicityConstantReplaceKey = "multiplicityconstantreplace";
         public const string IsArray = "isarray";
         public const string ThrowIfMultidimensionalKey = "throwifmultidimensional";
         public const string IECDataTypeAttributeNameKey = "iecdatatype";

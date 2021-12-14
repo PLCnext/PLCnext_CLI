@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.Globalization;
 using System.Linq;
 using Agents.Net;
 using PlcNext.CppParser.CppRipper.CodeModel;
@@ -44,7 +45,7 @@ namespace PlcNext.CppParser.CppRipper.Agents
             CppField[] fields = set.Message1.FieldNames
                                    .Select((name, i) => new CppField(name, set.Message3.DataType,
                                                                      set.Message4.Comments.ToArray(),
-                                                                     set.Message2.Multiplicities[i],
+                                                                     set.Message2.Multiplicities[i].Select(m => m.ToString(CultureInfo.InvariantCulture)).ToArray(),
                                                                      set.Message5.AttributePrefix))
                                    .ToArray();
             OnMessage(new FieldSetConstructed(set, fields, set.Message6.FileIndex));

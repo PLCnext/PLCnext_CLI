@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Text;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools;
+using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
@@ -24,6 +25,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         public IEnumerable<IDataType> BaseTypes => baseTypes;
 
         public string Namespace { get; }
+        private string[] Usings { get; }
         public string FullName => $"{Namespace}::{Name}";
         protected static ParseNode GetDeclarationList(ParseNode content, ParseNode typeDeclaration)
         {
@@ -42,7 +44,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         private readonly List<CppField> fields = new List<CppField>();
 
         public virtual IEnumerable<IField> Fields => fields;
-        
+        public IEnumerable<string> AccessibleNamespaces => Namespace.IterateNamespacePermutations().Concat(Usings);
+
         private void ParseFields(string ns, string[] usings, ParseNode content, List<ParserMessage> messages,
                                  ParseNode typeDeclaration, string attributePrefix)
         {
@@ -74,6 +77,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                           ParseNode typeDeclaration, string attributePrefix, bool parseFields = true) : base(name, attributePrefix)
         {
             Namespace = ns;
+            Usings = usings;
             if (parseFields)
             {
                 ParseFields(ns, usings, content, messages, typeDeclaration, attributePrefix);

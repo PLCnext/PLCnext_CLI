@@ -150,7 +150,8 @@ namespace PlcNext.Common.DataModel
                                 return owner.Create(key, result.ToString(CultureInfo.InvariantCulture), result);
                             }
                         }
-                        throw new FormattableException("Owner value could not be cast to int.");
+                        
+                        return owner.Create(key, number);
                     }
 
                     Entity DecrementValue()
@@ -164,7 +165,8 @@ namespace PlcNext.Common.DataModel
                                 return owner.Create(key, result.ToString(CultureInfo.InvariantCulture), result);
                             }
                         }
-                        throw new FormattableException("Owner value could not be cast to int.");
+
+                        return owner.Create(key, number);
                     }
             }
         }

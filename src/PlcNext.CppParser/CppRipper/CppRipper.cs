@@ -47,13 +47,14 @@ namespace PlcNext.CppParser.CppRipper
             List<IncludeDefinition> unresolvedIncludes = new List<IncludeDefinition>();
             List<CodeSpecificException> exceptions = new List<CodeSpecificException>();
             Dictionary<string, string> defineStatements = new Dictionary<string, string>();
+            Dictionary<IConstant, CodePosition> parsedConstants = new Dictionary<IConstant, CodePosition>();
 
             Stopwatch parsingStopwatch = new Stopwatch();
             parsingStopwatch.Start();
 
             foreach ((VirtualFile file, VirtualDirectory directory) in sourceDirectories.SelectMany(d => d.Files("*.hpp", true).Select(f => (f, d))))
             {
-                if (!TryParseFile(file, directory, exceptions, out string[] includes, out Dictionary<string, string> defines))
+                if (!TryParseFile(file, directory, exceptions, out string[] includes, out Dictionary<string, string> defines, out IDictionary<IConstant, CodePosition> constants))
                 {
                     continue;
                 }
@@ -64,9 +65,14 @@ namespace PlcNext.CppParser.CppRipper
                 {
                     defineStatements.Add(define.Key, define.Value);
                 }
+
+                foreach (KeyValuePair<IConstant,CodePosition> constant in constants.Where(con => !parsedConstants.ContainsKey(con.Key)))
+                {
+                    parsedConstants.Add(constant.Key, constant.Value);
+                }
             }
 
-            CppCodeModel model = new CppCodeModel(classes, structures, enums, defineStatements);
+            CppCodeModel model = new CppCodeModel(classes, structures, enums, defineStatements, parsedConstants);
             
             model.SourceDirectories = sourceDirectories;
 
@@ -92,7 +98,8 @@ namespace PlcNext.CppParser.CppRipper
 
             bool TryParseFile(VirtualFile file, VirtualDirectory directory,
                               List<CodeSpecificException> codeSpecificExceptions, out string[] includes,
-                              out Dictionary<string, string> defines)
+                              out Dictionary<string, string> defines,
+                              out IDictionary<IConstant, CodePosition> constants)
             {
                 ParserResult result = fileParser.Parse(file);
                 if (!result.Success)
@@ -100,6 +107,7 @@ namespace PlcNext.CppParser.CppRipper
                     codeSpecificExceptions.AddRange(result.Exceptions);
                     includes = null;
                     defines = null;
+                    constants = null;
                     return false;
                 }
 
@@ -149,6 +157,7 @@ namespace PlcNext.CppParser.CppRipper
                 codeSpecificExceptions.AddRange(messages.Select(m => m.ToException(file)));
                 includes = result.Includes;
                 defines = result.DefineStatements;
+                constants = result.Constants;
                 return true;
             }
         }

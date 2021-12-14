@@ -39,19 +39,7 @@ namespace PlcNext.CppParser.CppRipper
                 return typeNode.RuleType == "sequence" && typeNode.RuleName == "base_type";
             }
         }
-        
-        internal static ParseNode GetDeclarationContentParent(this ParseNode current)
-        {
-            while (current != null &&
-                   current.RuleType != "plus" &&
-                   current.RuleName != "declaration_content")
-            {
-                current = current.GetParent();
-            }
 
-            return current;
-        }
-        
         internal static ParseNode Identifier(this ParseNode parent)
         {
             if (parent.RuleType == "choice" && parent.RuleName == "node")

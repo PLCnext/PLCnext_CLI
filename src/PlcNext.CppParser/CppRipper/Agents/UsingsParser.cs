@@ -10,6 +10,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Agents.Net;
+using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 using PlcNext.CppParser.CppRipper.Messages;
 
 namespace PlcNext.CppParser.CppRipper.Agents

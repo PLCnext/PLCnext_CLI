@@ -339,7 +339,7 @@ namespace PlcNext.Common.CodeModel
                 if(stringMatch.Success)
                 {
                     return owner.Create("temporaryStaticStringFormatContainer", unformattedValue)
-                                .Format()["stringMacroReplace"]
+                                .Format()["stringConstantReplace"]
                                 .Format()["iecStringDataType"].Value<string>();
                 }
                 return null;

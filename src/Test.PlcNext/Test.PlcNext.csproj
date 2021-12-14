@@ -392,6 +392,40 @@
     <None Remove="Deployment\NonExistingInheritance\src\NonExistingInheritanceProgram.cpp" />
     <None Remove="Deployment\NonExistingInheritance\src\NonExistingInheritanceComponent.hpp" />
     <None Remove="Deployment\NonExistingInheritance\src\NonExistingInheritanceComponent.cpp" />
+    <None Remove="Deployment\ConstantStaticStringLength\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\ConstantStaticStringLength\CMakeLists.txt" />
+    <None Remove="Deployment\ConstantStaticStringLength\src\ConstHolder.hpp" />
+    <EmbeddedResource Include="Deployment\ConstantStaticStringLength\src\ConstHolder.hpp" />
+    <None Remove="Deployment\ConstantStaticStringLength\src\ConstantStaticStringLengthProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ConstantStaticStringLength\src\ConstantStaticStringLengthProgram.hpp" />
+    <None Remove="Deployment\ConstantStaticStringLength\src\ConstantStaticStringLengthProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ConstantStaticStringLength\src\ConstantStaticStringLengthProgram.cpp" />
+    <None Remove="Deployment\ConstantStaticStringLength\src\ConstantStaticStringLengthComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ConstantStaticStringLength\src\ConstantStaticStringLengthComponent.hpp" />
+    <None Remove="Deployment\ConstantStaticStringLength\src\ConstantStaticStringLengthComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ConstantStaticStringLength\src\ConstantStaticStringLengthComponent.cpp" />
+    <None Remove="Deployment\OtherNamespaceConstant\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\OtherNamespaceConstant\CMakeLists.txt" />
+    <None Remove="Deployment\OtherNamespaceConstant\src\OtherNamespaceConstantProgram.hpp" />
+    <EmbeddedResource Include="Deployment\OtherNamespaceConstant\src\OtherNamespaceConstantProgram.hpp" />
+    <None Remove="Deployment\OtherNamespaceConstant\src\OtherNamespaceConstantProgram.cpp" />
+    <EmbeddedResource Include="Deployment\OtherNamespaceConstant\src\OtherNamespaceConstantProgram.cpp" />
+    <None Remove="Deployment\OtherNamespaceConstant\src\OtherNamespaceConstantComponent.hpp" />
+    <EmbeddedResource Include="Deployment\OtherNamespaceConstant\src\OtherNamespaceConstantComponent.hpp" />
+    <None Remove="Deployment\OtherNamespaceConstant\src\OtherNamespaceConstantComponent.cpp" />
+    <EmbeddedResource Include="Deployment\OtherNamespaceConstant\src\OtherNamespaceConstantComponent.cpp" />
+    <None Remove="Deployment\ConstArraySize\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\ConstArraySize\CMakeLists.txt" />
+    <None Remove="Deployment\ConstArraySize\src\ConstArraySizeProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ConstArraySize\src\ConstArraySizeProgram.hpp" />
+    <None Remove="Deployment\ConstArraySize\src\ConstArraySizeProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ConstArraySize\src\ConstArraySizeProgram.cpp" />
+    <None Remove="Deployment\ConstArraySize\src\ConstArraySizeComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ConstArraySize\src\ConstArraySizeComponent.hpp" />
+    <None Remove="Deployment\ConstArraySize\src\ConstArraySizeComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ConstArraySize\src\ConstArraySizeComponent.cpp" />
+    <None Remove="Deployment\TestResults\ConstantStaticStringLengthDataTypes.dt" />
+    <EmbeddedResource Include="Deployment\TestResults\ConstantStaticStringLengthDataTypes.dt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -407,6 +441,9 @@
     <EmbeddedResource Include="Deployment\PpDirectives\plcnext.proj" />
     <EmbeddedResource Include="Deployment\InheritanceStructs\plcnext.proj" />
     <EmbeddedResource Include="Deployment\AmbigousInheritanceStruct\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ConstantStaticStringLength\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\OtherNamespaceConstant\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ConstArraySize\plcnext.proj" />
     <Content Include="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

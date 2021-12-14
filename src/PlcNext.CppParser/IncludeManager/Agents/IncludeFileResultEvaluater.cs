@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Agents.Net;
@@ -61,7 +62,8 @@ namespace PlcNext.CppParser.IncludeManager.Agents
                                                                      set.Message2.FileResult.Types.Keys.Select(
                                                                          t => t.FullName),
                                                                      set.Message2.FileResult.Includes,
-                                                                     set.Message2.FileResult.DefineStatements);
+                                                                     set.Message2.FileResult.DefineStatements,
+                                                                     new Dictionary<IConstant, CodePosition>());
                 string relativePath = set.Message2.FileResult.File.GetRelativePath(set.Message2.FileResult.RootDirectory);
                 IncludeDefinition[] childIncludes = set.Message2.FileResult.Includes.Select(
                                                                    i => new IncludeDefinition(i, set.Message2.FileResult.File, set.Message2.FileResult.RootDirectory))

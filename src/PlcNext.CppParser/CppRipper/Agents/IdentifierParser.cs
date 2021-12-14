@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using Agents.Net;
 using PlcNext.CppParser.CppRipper.CodeModel;
+using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 using PlcNext.CppParser.CppRipper.Messages;
 
 namespace PlcNext.CppParser.CppRipper.Agents
@@ -37,7 +38,7 @@ namespace PlcNext.CppParser.CppRipper.Agents
                 }
 
                 return content.ChildrenSkipUnnamed()
-                              .TakeWhile(n => !CppField.EqualsMatch.IsMatch(n.ToString()))
+                              .TakeWhile(n => !FieldParser.EqualsMatch.IsMatch(n.ToString()))
                               .Select(Identifier).Where(n => n != null)
                               .ToArray();
 

@@ -18,6 +18,7 @@ using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Settings;
 using PlcNext.Common.Tools.UI;
 using PlcNext.CppParser.CppRipper.Agents;
+using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
@@ -35,10 +36,9 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         public ParserResult Parse(VirtualFile file)
         {
             log.LogVerbose($"Parse file {file.FullName}.");
-            List<CodeSpecificException> codeSpecificExceptions = new List<CodeSpecificException>();
-            List<ParserMessage> messages = new List<ParserMessage>();
-            IDictionary<IType, CodePosition> types = new Dictionary<IType, CodePosition>();
-            CppStreamParser parser = new CppStreamParser();
+            List<CodeSpecificException> codeSpecificExceptions = new();
+            List<ParserMessage> messages = new();
+            CppStreamParser parser = new();
             ParseNode root = parser.Parse(file.OpenRead());
             if (!parser.Succeeded)
             {
@@ -50,215 +50,280 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 return new ParserResult(codeSpecificExceptions);
             }
 
-            string[] usings = GetUsings();
-            foreach (ParseNode typeDeclaration in GetTypeDeclarations(root))
+            string[] usings = GetUsing(root);
+            IDictionary<IType, CodePosition> types = GetTypes(root, usings, messages);
+            string[] includes = GetIncludes(root);
+            Dictionary<string, string> defineStatements = GetDefineStatements(root);
+            IDictionary<IConstant, CodePosition> constants = GetConstants(root, usings);
+
+            codeSpecificExceptions.AddRange(messages.Select(m => m.ToException(file)));
+            
+            return new ParserResult(codeSpecificExceptions, types, includes, defineStatements, constants);
+        }
+
+        private IDictionary<IConstant, CodePosition> GetConstants(ParseNode root, string[] usings)
+        {
+            IDictionary<IConstant, CodePosition> constants = new Dictionary<IConstant, CodePosition>();
+            IEnumerable<ParseNode> declarations = root.GetHierarchy()
+                                                      .Where(n => n.RuleName == "declaration" &&
+                                                                  n.RuleType == "choice" &&
+                                                                  n.ToString().Contains("const "));
+            foreach (ParseNode declaration in declarations)
             {
-                ParseNode content = GetDeclarationContentParent(typeDeclaration);
-                if (content != null && IsValidDecalration(content, typeDeclaration))
+                ParseConstant(declaration);
+            }
+
+            return constants;
+
+            void ParseConstant(ParseNode declaration)
+            {
+                if (!declaration.IsValidFieldDeclaration() ||
+                    declaration.GetFieldIdentifier().FirstOrDefault()?
+                       .ToString().Trim() != "const" ||
+                    declaration.GetDeclarationListParent()?.GetParent()?
+                       .RuleName == "paran_group")
                 {
-                    string name = GetName(typeDeclaration);
-                    string ns = GetNamespace(typeDeclaration);
-                    switch (typeDeclaration[1].RuleName)
-                    {
-                        case "struct_decl":
-                            CppStructure structure = new CppStructure(ns, name, usings, content, messages, typeDeclaration,
-                                                                      settingsProvider.Settings.AttributePrefix);
-                            types.Add(structure, new CodePosition(typeDeclaration.Position.line, typeDeclaration.Position.column));
+                    return;
+                }
 
-                            break;
-                        case "class_decl":
-                            CppClass cppClass = new CppClass(ns, name, usings, content, typeDeclaration[1], messages,
-                                                             settingsProvider.Settings.AttributePrefix);
-                            types.Add(cppClass, new CodePosition(typeDeclaration.Position.line, typeDeclaration.Position.column));
+//paran_group
+//declaration_list
+                ParseNode[] identifiers = declaration.GetFieldIdentifier()
+                                                     .SkipWhile(i => i.ToString().Trim() != "const")
+                                                     .Skip(1)
+                                                     .ToArray();
+                if (!identifiers.Any())
+                {
+                    return;
+                }
 
-                            break;
-                        case "enum_decl":
-                            CppEnum cppEnum = new CppEnum(ns, name, usings, content, messages, typeDeclaration[1],
-                                                          settingsProvider.Settings.AttributePrefix);
-                            types.Add(cppEnum, new CodePosition(typeDeclaration.Position.line, typeDeclaration.Position.column));
+                ParseNode[] typeNodes = declaration.GetFieldTypeNodes(identifiers);
+                ParseNode[] valueNodes = declaration.GetFieldValue();
+                if (identifiers.SequenceEqual(typeNodes))
+                {
+                    return;
+                }
 
-                            break;
-                        default:
-                            //do nothing
-                            break;
-                    }
+                string ns = GetNamespace(declaration, skipFirst:false);
+                CppDataType dataType = typeNodes.GetFieldDataType(usings, ns);
+                IEnumerable<string> fields = identifiers.Except(typeNodes)
+                                                        .Where(i => !i.GetParent().GetFieldMultiplicity().Any())
+                                                        .Select(i => i.ToString());
+                CodePosition position = declaration.GetCodePosition();
+                IEnumerable<string> values = valueNodes.Where(i => !string.IsNullOrEmpty(i.ToString().Trim()))
+                                                       .Select(i => i.ToString().Trim());
+                string value = string.Join(" ", values);
+
+                foreach (string field in fields)
+                {
+                    constants.Add(new CppConstant(field, settingsProvider.Settings.AttributePrefix,
+                                                  ns, value, dataType, usings),
+                                  position);
+                }
+            }
+        }
+
+        private static string[] GetUsing(ParseNode root)
+        {
+            List<string> result = new();
+            foreach (ParseNode usingNode in root.GetHierarchy().Where(n => n.RuleType == "leaf" && n.RuleName == "identifier" && n.ToString() == "using"))
+            {
+                ParseNode declarationParent = GetDeclarationContentParent(usingNode);
+                string[] identifier = declarationParent.ChildrenSkipUnnamed()
+                                                       .Select(Identifier)
+                                                       .Where(i => i != null)
+                                                       .Select(i => i.ToString())
+                                                       .ToArray();
+                if (identifier.Length > 2 && identifier[0] == "using" && identifier[1] == "namespace")
+                {
+                    result.Add(identifier.Skip(2).Aggregate(string.Empty, (s, s1) => s + s1));
                 }
             }
 
-            codeSpecificExceptions.AddRange(messages.Select(m => m.ToException(file)));
-            string[] includes = GetIncludes();
-            Dictionary<string, string> defineStatements = GetDefineStatements();
-            return new ParserResult(codeSpecificExceptions, types, includes, defineStatements);
+            return result.ToArray();
+        }
 
-            bool IsValidDecalration(ParseNode content, ParseNode typeDeclaration)
+        private IDictionary<IType, CodePosition> GetTypes(ParseNode root, string[] usings, List<ParserMessage> messages)
+        {
+            IDictionary<IType, CodePosition> types = new Dictionary<IType, CodePosition>();
+            foreach (ParseNode typeDeclaration in GetTypeDeclarations(root))
             {
-                return content.Count >= 2 &&
+                ParseNode content = GetDeclarationContentParent(typeDeclaration);
+                if (!IsValidDeclaration(content, typeDeclaration))
+                {
+                    continue;
+                }
+
+                string name = GetName(typeDeclaration);
+                string ns = GetNamespace(typeDeclaration);
+                switch (typeDeclaration[1].RuleName)
+                {
+                    case "struct_decl":
+                        CppStructure structure = new(ns, name, usings, content, messages,
+                                                     typeDeclaration,
+                                                     settingsProvider.Settings.AttributePrefix);
+                        types.Add(structure,
+                                  new CodePosition(typeDeclaration.Position.line, typeDeclaration.Position.column));
+
+                        break;
+                    case "class_decl":
+                        CppClass cppClass = new(ns, name, usings, content, typeDeclaration[1], messages,
+                                                settingsProvider.Settings.AttributePrefix);
+                        types.Add(cppClass,
+                                  new CodePosition(typeDeclaration.Position.line, typeDeclaration.Position.column));
+
+                        break;
+                    case "enum_decl":
+                        CppEnum cppEnum = new(ns, name, usings, content, messages, typeDeclaration[1],
+                                              settingsProvider.Settings.AttributePrefix);
+                        types.Add(cppEnum,
+                                  new CodePosition(typeDeclaration.Position.line, typeDeclaration.Position.column));
+
+                        break;
+                }
+            }
+
+            return types;
+
+            bool IsValidDeclaration(ParseNode content, ParseNode typeDeclaration)
+            {
+                return content?.Count >= 2 &&
                        content.Any(c => c.GetHierarchy().Contains(typeDeclaration)) &&
                        content.SkipWhile(c => !c.GetHierarchy().Contains(typeDeclaration))
                               .Skip(1).Any(c => c.GetHierarchy().Any(n => n.RuleName == "brace_group"));
             }
+        }
 
-            string GetName(ParseNode typeDeclaration)
+        private static string GetNamespace(ParseNode typeDeclaration, bool skipFirst=true)
+        {
+            ParseNode declarationParent;
+            string result = string.Empty;
+            
+            if (skipFirst)
             {
-                ParseNode leaf = typeDeclaration.GetHierarchy()
-                                                .FirstOrDefault(n => n.RuleName == "identifier" ||
-                                                                     n.RuleName == "generic");
-                if (leaf == null)
-                {
-                    return Guid.NewGuid().ToByteString();
-                }
-
-                return leaf.ToString();
-            }
-
-            ParseNode GetDeclarationContentParent(ParseNode current)
-            {
-                while (current != null &&
-                       current.RuleType != "plus" &&
-                       current.RuleName != "declaration_content")
-                {
-                    current = current.GetParent();
-                }
-
-                return current;
-            }
-
-            IEnumerable<ParseNode> GetTypeDeclarations(ParseNode current)
-            {
-                foreach (ParseNode node in current)
-                {
-                    if (node.RuleType == "sequence" && node.RuleName == "type_decl")
-                    {
-                        yield return node;
-                    }
-                    else
-                    {
-                        foreach (ParseNode child in GetTypeDeclarations(node))
-                        {
-                            yield return child;
-                        }
-                    }
-                }
-            }
-
-            Dictionary<string, string> GetDefineStatements()
-            {
-                Dictionary<string, string> directives = new Dictionary<string, string>();
-                foreach (ParseNode defineNode in root.GetHierarchy().Where(n => n.RuleType == "sequence" &&
-                    n.RuleName == "pp_directive" &&
-                    n.Any(c => c.ToString().Equals("define", StringComparison.OrdinalIgnoreCase))))
-                {
-                    string statement = defineNode.FirstOrDefault(n => n.RuleName == "until_eol")?.ToString() ??
-                                       string.Empty;
-                    Match match = DefineStatementParser.StatementParser.Match(statement);
-                    string key = match.Groups["Key"].Value.Trim();
-                    if (match.Success && !directives.ContainsKey(key))
-                    {
-                        directives.Add(match.Groups["Key"].Value, match.Groups["Value"].Value.Trim());
-                    }
-                }
-
-                return directives;
-            }
-
-            string[] GetIncludes()
-            {
-                List<string> result = new List<string>();
-                foreach (ParseNode includeNode in root.GetHierarchy().Where(n => n.RuleType == "sequence" &&
-                                                                                 n.RuleName == "pp_directive" &&
-                                                                                 n.Any(c => c.ToString().Equals("include", StringComparison.OrdinalIgnoreCase))))
-                {
-                    ParseNode include = includeNode.FirstOrDefault(n => n.RuleName == "until_eol");
-                    if (include != null)
-                    {
-                        result.Add(include.ToString().Trim('\"'));
-                    }
-                }
-
-                return result.ToArray();
-            }
-
-            string[] GetUsings()
-            {
-                List<string> result = new List<string>();
-                foreach (ParseNode usingNode in root.GetHierarchy().Where(n => n.RuleType == "leaf" &&
-                                                                               n.RuleName == "identifier" &&
-                                                                               n.ToString() == "using"))
-                {
-                    ParseNode declarationParent = GetDeclarationContentParent(usingNode);
-                    string[] identifier = declarationParent.ChildrenSkipUnnamed()
-                                                           .Select(Identifier)
-                                                           .Where(i => i != null)
-                                                           .Select(i => i.ToString())
-                                                           .ToArray();
-                    if (identifier.Length > 2 && identifier[0] == "using" && identifier[1] == "namespace")
-                    {
-                        result.Add(identifier.Skip(2).Aggregate(string.Empty, (s, s1) => s + s1));
-                    }
-                }
-
-                return result.ToArray();
-            }
-
-            ParseNode Identifier(ParseNode parent)
-            {
-                if (parent.RuleType == "choice" && parent.RuleName == "node")
-                {
-                    ParseNode result = parent.FirstOrDefault();
-                    if (result?.RuleType == "leaf" && result.RuleName == "identifier")
-                    {
-                        return result;
-                    }
-                }
-
-                return null;
-            }
-
-            string GetNamespace(ParseNode typeDeclaration)
-            {
-                ParseNode declarationParent;
                 typeDeclaration = GetDeclarationContentParent(typeDeclaration).GetParent();
-                string result = string.Empty;
-                while ((declarationParent = GetDeclarationContentParent(typeDeclaration)) != null)
-                {
-                    string[] identifier = declarationParent.ChildrenSkipUnnamed()
-                                                           .Where(r => r.RuleName != "comment_set")
-                                                           .Select(Identifier)
-                                                           .TakeWhile(i => i != null)
-                                                           .Select(i => i.ToString())
-                                                           .ToArray();
-                    if (identifier.Length > 1 && identifier[0] == "namespace")
-                    {
-                        result = $"{identifier.Skip(1).Aggregate(string.Empty, (s, s1) => s + s1)}::{result}";
-                    }
-                    else if (identifier.Length == 0)
-                    {
-                        ParseNode parentTypeDeclaration = declarationParent.ChildrenSkipUnnamed()
-                                                                           .Where(c => c.RuleType == "choice" &&
-                                                                                       c.RuleName == "node")
-                                                                           .SelectMany(c => c.ChildrenSkipUnnamed())
-                                                                           .FirstOrDefault(
-                                                                                c => c.RuleType == "sequence" &&
-                                                                                     c.RuleName == "type_decl");
-                        ParseNode name = parentTypeDeclaration?.GetHierarchy()
-                                                               .FirstOrDefault(n => n.RuleType == "leaf" &&
-                                                                                    n.RuleName == "identifier");
-                        if (name != null)
-                        {
-                            result = $"{name}::{result}";
-                        }
-                    }
-
-                    typeDeclaration = declarationParent.GetParent();
-                }
-
-                if (!string.IsNullOrEmpty(result))
-                {
-                    result = result.Substring(0, result.Length - 2);
-                }
-
-                return result;
             }
+            while ((declarationParent = GetDeclarationContentParent(typeDeclaration)) != null)
+            {
+                string[] identifier = declarationParent.ChildrenSkipUnnamed()
+                                                       .Where(r => r.RuleName != "comment_set")
+                                                       .Select(Identifier)
+                                                       .TakeWhile(i => i != null)
+                                                       .Select(i => i.ToString())
+                                                       .ToArray();
+                if (identifier.Length > 1 && identifier[0] == "namespace")
+                {
+                    result = $"{identifier.Skip(1).Aggregate(string.Empty, (s, s1) => s + s1)}::{result}";
+                }
+                else if (identifier.Length == 0)
+                {
+                    ParseNode parentTypeDeclaration = declarationParent.ChildrenSkipUnnamed()
+                                                                       .Where(c => c.RuleType == "choice" && c.RuleName == "node")
+                                                                       .SelectMany(c => c.ChildrenSkipUnnamed())
+                                                                       .FirstOrDefault(c => c.RuleType == "sequence" && c.RuleName == "type_decl");
+                    ParseNode name = parentTypeDeclaration?.GetHierarchy()
+                                                           .FirstOrDefault(n => n.RuleType == "leaf" && n.RuleName == "identifier");
+                    if (name != null)
+                    {
+                        result = $"{name}::{result}";
+                    }
+                }
+
+                typeDeclaration = declarationParent.GetParent();
+            }
+
+            if (!string.IsNullOrEmpty(result))
+            {
+                result = result.Substring(0, result.Length - 2);
+            }
+
+            return result;
+        }
+
+        private static string GetName(ParseNode typeDeclaration)
+        {
+            ParseNode leaf = typeDeclaration.GetHierarchy()
+                                            .FirstOrDefault(n => n.RuleName == "identifier" || n.RuleName == "generic");
+            if (leaf == null)
+            {
+                return Guid.NewGuid().ToByteString();
+            }
+
+            return leaf.ToString();
+        }
+
+        private static ParseNode GetDeclarationContentParent(ParseNode current)
+        {
+            while (current != null && current.RuleType != "plus" && current.RuleName != "declaration_content")
+            {
+                current = current.GetParent();
+            }
+
+            return current;
+        }
+
+        private static IEnumerable<ParseNode> GetTypeDeclarations(ParseNode current)
+        {
+            foreach (ParseNode node in current)
+            {
+                if (node.RuleType == "sequence" && node.RuleName == "type_decl")
+                {
+                    yield return node;
+                }
+                else
+                {
+                    foreach (ParseNode child in GetTypeDeclarations(node))
+                    {
+                        yield return child;
+                    }
+                }
+            }
+        }
+
+        private static ParseNode Identifier(ParseNode parent)
+        {
+            if (parent.RuleType == "choice" && parent.RuleName == "node")
+            {
+                ParseNode result = parent.FirstOrDefault();
+                if (result?.RuleType == "leaf" && result.RuleName == "identifier")
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        private static string[] GetIncludes(ParseNode root)
+        {
+            List<string> result = new();
+            foreach (ParseNode includeNode in root.GetHierarchy().Where(n => n.RuleType == "sequence" && n.RuleName == "pp_directive" && n.Any(c => c.ToString().Equals("include", StringComparison.OrdinalIgnoreCase))))
+            {
+                ParseNode include = includeNode.FirstOrDefault(n => n.RuleName == "until_eol");
+                if (include != null)
+                {
+                    result.Add(include.ToString().Trim('\"'));
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        private static Dictionary<string, string> GetDefineStatements(ParseNode root)
+        {
+            Dictionary<string, string> directives = new();
+            foreach (ParseNode defineNode in root.GetHierarchy().Where(n => n.RuleType == "sequence" && n.RuleName == "pp_directive" && n.Any(c => c.ToString().Equals("define", StringComparison.OrdinalIgnoreCase))))
+            {
+                string statement = defineNode.FirstOrDefault(n => n.RuleName == "until_eol")?.ToString() ?? string.Empty;
+                Match match = DefineStatementParser.StatementParser.Match(statement);
+                string key = match.Groups["Key"].Value.Trim();
+                if (match.Success && !directives.ContainsKey(key))
+                {
+                    directives.Add(match.Groups["Key"].Value, match.Groups["Value"].Value.Trim());
+                }
+            }
+
+            return directives;
         }
     }
 }

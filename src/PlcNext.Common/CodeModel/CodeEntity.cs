@@ -49,5 +49,9 @@ namespace PlcNext.Common.CodeModel
         public IField AsField => Value<IField>();
         public IType AsType => Value<IType>();
         public IEnum AsEnum => Value<IEnum>();
+
+        public IType FindContainingTypeInHierarchy() => AsType ?? (Owner != null 
+                                                                       ? Decorate(Owner).FindContainingTypeInHierarchy() 
+                                                                       : null);
     }
 }

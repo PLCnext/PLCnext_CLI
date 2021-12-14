@@ -18,7 +18,7 @@ using PlcNext.Common.CodeModel;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal abstract class CppCodeEntity : ICodeEntity
+    public abstract class CppCodeEntity : ICodeEntity
     {
         private bool reparseAttributes;
         private IComment[] comments = Array.Empty<IComment>();

@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PlcNext.Common.CodeModel;
 
 namespace PlcNext.CppParser.IncludeManager
 {
@@ -21,7 +22,10 @@ namespace PlcNext.CppParser.IncludeManager
             
         }
         
-        public IncludeCacheEntry(string file, bool parsedSuccessfully, DateTime lastWriteTime, string baseDirectory, IEnumerable<string> types, IEnumerable<string> includes, Dictionary<string, string> defineStatements)
+        public IncludeCacheEntry(string file, bool parsedSuccessfully, DateTime lastWriteTime, string baseDirectory,
+                                 IEnumerable<string> types, IEnumerable<string> includes,
+                                 Dictionary<string, string> defineStatements,
+                                 IDictionary<IConstant, CodePosition> constants)
         {
             File = file;
             ParsedSuccessfully = parsedSuccessfully;
@@ -30,6 +34,7 @@ namespace PlcNext.CppParser.IncludeManager
             Types = types;
             Includes = includes;
             DefineStatements = defineStatements;
+            Constants = (Dictionary<IConstant, CodePosition>)constants;
         }
 
         public bool Equals(IncludeCacheEntry other)
@@ -98,6 +103,9 @@ namespace PlcNext.CppParser.IncludeManager
         public IEnumerable<string> Types { get; set; }
         public IEnumerable<string> Includes { get; set; }
         public Dictionary<string, string> DefineStatements { get; set; } = new Dictionary<string, string>();
+
+        public Dictionary<IConstant, CodePosition> Constants { get; set; } =
+            new Dictionary<IConstant, CodePosition>();
 
         public override string ToString()
         {

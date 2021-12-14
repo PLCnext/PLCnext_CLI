@@ -1,0 +1,10 @@
+TYPE
+    OuterConstPortString70 : STRING[70];
+    
+    MathConstPortString105 : STRING[105];
+    
+    InnerConstPortString53 : STRING[53];
+    
+    OtherFileConstPortString35 : STRING[35];
+    
+END_TYPE

@@ -804,6 +804,66 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Generate_datatypes_worksheet_for_StaticString_using_constants()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ConstantStaticStringLength"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("ConstantStaticStringLengthDataTypes.dt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_typeinformation_for_StaticString_using_constants()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ConstantStaticStringLength"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("ConstantStaticStringLengthProgram",
+                                                                                  new[] { "ConstantStaticStringLengthComponent", "ConstantStaticStringLengthProgram" },
+                                                                                  new[]
+                                                                                  {
+                                                                                      new Portmeta("OuterConstPort","StaticString70",""),
+                                                                                      new Portmeta("MathConstPort","StaticString105",""),
+                                                                                      new Portmeta("InnerConstPort","StaticString53",""),
+                                                                                      new Portmeta("OtherFileConstPort","StaticString35",""),
+                                                                                  }))
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Do_not_resolve_undefined_and_unresolvable_constants()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("OtherNamespaceConstant"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("OtherNamespaceConstantProgram",
+                                                                                  new[] { "OtherNamespaceConstantComponent", "OtherNamespaceConstantProgram" },
+                                                                                  new[]
+                                                                                  {
+                                                                                      new Portmeta("OtherNamespaceConstPort","StaticStringOtherNamespaceConst",""),
+                                                                                      new Portmeta("ExpressionConstPort","StaticStringExpressionConst",""),
+                                                                                  }))
+            ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Resolve_array_size_in_const_and_directives()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ConstArraySize"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("ConstArraySizeProgram",
+                                                                                  new[] { "ConstArraySizeComponent", "ConstArraySizeProgram" },
+                                                                                  new[]
+                                                                                  {
+                                                                                      new Portmeta("ConstArray","int32","", "13"),
+                                                                                      new Portmeta("DirectiveArray","int32","", "22"),
+                                                                                  }))
+            ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_no_datatypes_worksheet()
         {
             await Runner.AddSteps(

@@ -130,7 +130,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
                                                                             findResultIncludeBaseDirectory.FullName,
                                                                             Enumerable.Empty<string>(),
                                                                             Enumerable.Empty<string>(),
-                                                                            new Dictionary<string, string>()));
+                                                                            new Dictionary<string, string>(),
+                                                                            new Dictionary<IConstant, CodePosition>()));
                             return Enumerable.Empty<IncludeDefinition>();
                         }
 
@@ -140,6 +141,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
                         }
 
                         codeModel.AddDefineStatements(parserResult.DefineStatements);
+                        codeModel.AddConstants(parserResult.Constants);
 
                         codeSpecificExceptions.AddRange(parserResult.Exceptions);
                         cacheTransaction.AddEntry(new IncludeCacheEntry(findResultIncludeFile.FullName,
@@ -148,7 +150,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
                                                                         findResultIncludeBaseDirectory.FullName,
                                                                         parserResult.Types.Keys.Select(t => t.FullName),
                                                                         parserResult.Includes,
-                                                                        parserResult.DefineStatements));
+                                                                        parserResult.DefineStatements,
+                                                      parserResult.Constants));
                         return parserResult.Includes.Select(
                             i => new IncludeDefinition(
                                 i, findResultIncludeFile, findResultIncludeBaseDirectory));

@@ -53,7 +53,7 @@ namespace PlcNext.CppParser.Agents
                 }
             }
 
-            CppCodeModel codeModel = new CppCodeModel(classes, structures, enums, defineStatements)
+            CppCodeModel codeModel = new CppCodeModel(classes, structures, enums, defineStatements, new Dictionary<IConstant, CodePosition>())
             {
                 SourceDirectories = directoriesParsed.Results.Select(r => r.RootDirectory)
                                                      .Distinct()

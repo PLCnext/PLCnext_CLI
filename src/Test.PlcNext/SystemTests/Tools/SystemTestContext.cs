@@ -843,6 +843,8 @@ namespace Test.PlcNext.SystemTests.Tools
                 string path = GetPathOfGeneratedFile($"{progmetaData.ProgramName}.{Constants.ProgmetaExtension}", new[] { Constants.MetadataFolderName }.Concat(progmetaData.Path).ToArray());
                 using (Stream fileStream = fileSystemAbstraction.Open(path))
                 {
+                    //StreamReader reader = new StreamReader(fileStream);
+                    //string content = reader.ReadToEnd();
                     XmlSerializer serializer = new XmlSerializer(typeof(MetaConfigurationDocument));
                     MetaConfigurationDocument document = (MetaConfigurationDocument)serializer.Deserialize(fileStream);
                     ProgramDefinition programDefinition = document.Item as ProgramDefinition;
