@@ -15,7 +15,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Agents.Net;
 using Autofac;
 using PlcNext.CommandLine;
 using PlcNext.Common;
@@ -27,8 +26,6 @@ using PlcNext.Common.Tools.Settings;
 using PlcNext.Common.Tools.UI;
 using PlcNext.CppParser;
 using PlcNext.Migration;
-using Serilog;
-using Serilog.Formatting.Compact;
 
 namespace PlcNext
 {
@@ -68,13 +65,6 @@ namespace PlcNext
                     {
                         ICommandLineParser commandLineParser = container.Resolve<ICommandLineParser>();
                         
-                        ConfigureSerilog(log, container.Resolve<ISettingsProvider>());
-                        
-                        IMessageBoard messageBoard = container.Resolve<IMessageBoard>();
-                        Agent[] agents = container.Resolve<IEnumerable<Agent>>().ToArray();
-                        messageBoard.Register(agents);
-                        messageBoard.Start();
-                        
 #if DEBUG
                         Console.WriteLine($@"Startup timer {stopwatch.Elapsed}");
                         Console.WriteLine($@"Arguments: {args.Aggregate(string.Empty, (s, s1) => s + "_" + s1)}");
@@ -107,22 +97,6 @@ namespace PlcNext
                 ILog result = LogCatalog.CreateNewLog(path, string.Join(" ", args));
                 result.AddInitialLog(args);
                 return result;
-            }
-
-            void ConfigureSerilog(ILog log, ISettingsProvider settingsProvider)
-            {
-                if (!agentFrameworkFeature.FeatureEnabled ||
-                    args.All(a => a.Trim() != "--verbose") &&
-                    !settingsProvider.Settings.AlwaysWriteExtendedLog)
-                {
-                    return;
-                }
-                string logFile = Path.GetTempFileName();
-                log.LogVerbose($"Logging agent framework in {logFile}");
-                Log.Logger = new LoggerConfiguration()
-                            .MinimumLevel.Verbose()
-                            .WriteTo.Async(l => l.File(new CompactJsonFormatter(), logFile))
-                            .CreateLogger();
             }
 
             bool Migrate()

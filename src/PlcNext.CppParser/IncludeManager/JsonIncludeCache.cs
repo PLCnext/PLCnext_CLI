@@ -16,7 +16,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
-using Serilog;
 
 namespace PlcNext.CppParser.IncludeManager
 {
@@ -48,26 +47,12 @@ namespace PlcNext.CppParser.IncludeManager
 
         private void LogInformation(string message)
         {
-            if (log != null)
-            {
-                log.LogInformation(message);
-            }
-            else
-            {
-                Log.Information(message);
-            }
+            log.LogInformation(message);
         }
 
-        private void LogError(string message, Exception exception)
+        private void LogError(string message)
         {
-            if (log != null)
-            {
-                log.LogError(message);
-            }
-            else
-            {
-                Log.Error(exception, message);
-            }
+            log.LogError(message);
         }
 
         public void LoadCache(VirtualFile cacheFile)
@@ -108,7 +93,7 @@ namespace PlcNext.CppParser.IncludeManager
             }
             catch (Exception e)
             {
-                LogError($"Error while parsing include cache file, using empty cache.{Environment.NewLine}{e}", e);
+                LogError($"Error while parsing include cache file, using empty cache.{Environment.NewLine}{e}");
                 cache = new Dictionary<string, IncludeCacheEntry>();
             }
         }
@@ -158,11 +143,11 @@ namespace PlcNext.CppParser.IncludeManager
                         Version = CurrentVersion
                     });
                 }
-                LogInformation($"Successfully saved the include cache.");
+                LogInformation("Successfully saved the include cache.");
             }
             catch (Exception e)
             {
-                LogError($"Error while saving include cache file, cache will not be saved.{Environment.NewLine}{e}", e);
+                LogError($"Error while saving include cache file, cache will not be saved.{Environment.NewLine}{e}");
             }
         }
 
@@ -200,7 +185,7 @@ namespace PlcNext.CppParser.IncludeManager
             }
             catch (IOException e)
             {
-                LogError($"Error while saving include cache file, cache will not be saved.{Environment.NewLine}{e}", e);
+                LogError($"Error while saving include cache file, cache will not be saved.{Environment.NewLine}{e}");
             }
         }
 

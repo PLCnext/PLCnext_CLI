@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -66,7 +67,7 @@ namespace PlcNext.CppParser.CppRipper
         public ParserState(string text)
         {
             CreateNodes = true;
-            this.Text = text ?? throw new ArgumentNullException(nameof(text));
+            Text = text ?? throw new ArgumentNullException(nameof(text));
             ParseNode root = new ParseNode(null, null, text, 0);
             root.Complete(text.Length);
             nodes.Push(root);

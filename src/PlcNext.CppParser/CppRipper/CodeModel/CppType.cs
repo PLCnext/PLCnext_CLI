@@ -7,13 +7,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using PlcNext.Common.CodeModel;
-using PlcNext.Common.Tools;
 using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
@@ -56,20 +53,6 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 {
                     fields.AddRange(CppField.Parse(declaration, usings, $"{ns}::{Name}", messages, attributePrefix, this));
                 }
-            }
-        }
-
-        protected CppType(string ns, string name, IReadOnlyCollection<CppComment> comments, IEnumerable<CppField> fields,
-                          IEnumerable<CppDataType> baseTypes, string attributePrefix)
-            : base(name, attributePrefix)
-        {
-            Namespace = ns;
-            Comments = comments;
-            this.fields = new List<CppField>(fields);
-            this.baseTypes = new List<CppDataType>(baseTypes);
-            foreach (CppField field in this.fields)
-            {
-                field.RegisterContainingType(this);
             }
         }
 

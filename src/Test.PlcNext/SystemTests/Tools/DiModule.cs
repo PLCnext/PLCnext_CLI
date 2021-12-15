@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Agents.Net;
 using Autofac;
 using PlcNext;
 using PlcNext.Common;
@@ -32,9 +31,8 @@ namespace Test.PlcNext.SystemTests.Tools
         {
             builder.RegisterSource(registrationSource);
             builder.RegisterModule(new BaseDiModule(false, autoActivatedComponents));
-            builder.RegisterModule(new global::PlcNext.CppParser.DiModule(new AgentFrameworkFeature().FeatureEnabled));
+            builder.RegisterModule(new global::PlcNext.CppParser.DiModule());
             builder.RegisterModule<CommandLineDiModule>();
-            builder.RegisterType<MessageBoard>().As<IMessageBoard>().InstancePerLifetimeScope();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -70,8 +71,7 @@ namespace PlcNext.CppParser.CppRipper
         {
             if (IsUnnamed())
                 return RuleDefinition;
-            else
-                return Name;
+            return Name;
         }
         #endregion
 
@@ -85,8 +85,7 @@ namespace PlcNext.CppParser.CppRipper
             {
                 if (IsUnnamed())
                     return "_unnamed_";
-                else
-                    return Name;
+                return Name;
             }
         }
 
@@ -193,26 +192,20 @@ namespace PlcNext.CppParser.CppRipper
                     p.Pop();
                     return true;
                 }
-                else
-                {
-                    p.Index = old_index;
-                    node = null;
-                    p.Pop();
-                    return false;
-                }
+
+                p.Index = old_index;
+                node = null;
+                p.Pop();
+                return false;
             }
-            else
+
+            if (InternalMatch(p))
             {
-                if (InternalMatch(p))
-                {
-                    return true;
-                }
-                else
-                {
-                    p.Index = old_index;
-                    return false;
-                }
+                return true;
             }
+
+            p.Index = old_index;
+            return false;
         }
 
         /// <summary>
@@ -385,10 +378,6 @@ namespace PlcNext.CppParser.CppRipper
     public class AnythingRule : Rule
     {
         public static AnythingRule Instance { get; } = new AnythingRule();
-
-        public AnythingRule()
-        {
-        }
 
         public override string RuleType
         {
@@ -861,10 +850,6 @@ namespace PlcNext.CppParser.CppRipper
     /// </summary>
     public class EndOfInputRule : Rule
     {
-        public EndOfInputRule()
-        {
-        }
-
         public override string RuleDefinition
         {
             get { return "_EOF_"; }

@@ -10,11 +10,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 using PlcNext.Common.CodeModel;
-using PlcNext.Common.Templates.Templates;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
@@ -145,9 +142,6 @@ namespace PlcNext.CppParser.CppRipper
                             {
                                 enums.Add(cppEnum.FullName, (cppEnum, file, directory));
                             }
-                            break;
-                        default:
-                            //do nothing
                             break;
                     }
                 }

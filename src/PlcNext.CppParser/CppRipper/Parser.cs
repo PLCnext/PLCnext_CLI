@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿
+using System.IO;
 
 namespace PlcNext.CppParser.CppRipper
 {

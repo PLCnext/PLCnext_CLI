@@ -17,7 +17,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using Agents.Net;
 using Autofac;
 using CSharpx;
 using FluentAssertions;
@@ -33,8 +32,6 @@ using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
-using Serilog;
-using Serilog.Formatting.Compact;
 using Test.PlcNext.SystemTests.Features;
 using Test.PlcNext.Tools;
 using Test.PlcNext.Tools.Abstractions;
@@ -151,23 +148,7 @@ namespace Test.PlcNext.SystemTests.Tools
             
             Initialized = true;
             
-            ConfigureLogging();
-            
-            IMessageBoard messageBoard = Host.Resolve<IMessageBoard>();
-            Agent[] agents = Host.Resolve<IEnumerable<Agent>>().ToArray();
-            messageBoard.Register(agents);
-            messageBoard.Start();
             exceptionHandlerAbstraction.UserInterface = Host.ResolveOptional<IUserInterface>();
-            
-            void ConfigureLogging()
-            {
-                string logFile = Path.Combine(Path.GetDirectoryName(typeof(SystemTestContext).Assembly.Location), $"{Guid.NewGuid():N}.json");
-                printMessage($"Logging agents in {logFile}");
-                Log.Logger = new LoggerConfiguration()
-                            .MinimumLevel.Verbose()
-                            .WriteTo.Async(l => l.File(new CompactJsonFormatter(), logFile))
-                            .CreateLogger();
-            }
         }
 
         public void Dispose()

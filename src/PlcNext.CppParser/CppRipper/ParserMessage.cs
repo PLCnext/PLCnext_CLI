@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 using PlcNext.Common.CodeModel;
-using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 
 namespace PlcNext.CppParser.CppRipper

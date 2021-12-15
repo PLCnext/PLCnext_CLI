@@ -119,7 +119,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
                     parent = n.GetParent();
                 }
 
-                return parent.TakeWhile(c => c != n).All(c => !FieldParser.EqualsMatch.IsMatch(c.ToString()));
+                return parent.TakeWhile(c => c != n).All(c => !EqualsMatch.IsMatch(c.ToString()));
             }
         }
         public static ParseNode[] GetFieldIdentifier(this ParseNode declaration)

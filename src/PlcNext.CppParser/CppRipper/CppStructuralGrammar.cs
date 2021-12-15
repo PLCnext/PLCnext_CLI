@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿
+using System.Reflection;
 
 namespace PlcNext.CppParser.CppRipper
 {

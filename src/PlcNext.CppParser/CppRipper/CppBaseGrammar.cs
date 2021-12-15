@@ -1,4 +1,5 @@
-﻿using System.CodeDom.Compiler;
+﻿
+using System.CodeDom.Compiler;
 using System.Reflection;
 
 namespace PlcNext.CppParser.CppRipper

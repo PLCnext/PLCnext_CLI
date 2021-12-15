@@ -9,8 +9,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools.FileSystem;
 

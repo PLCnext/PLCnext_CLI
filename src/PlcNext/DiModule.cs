@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Agents.Net;
 using Autofac;
 
 namespace PlcNext
@@ -29,9 +28,8 @@ namespace PlcNext
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterModule(new Common.DiModule(noSdkExploration));
-            builder.RegisterModule(new CppParser.DiModule(useAgents));
+            builder.RegisterModule(new CppParser.DiModule());
             builder.RegisterModule<CommandLineDiModule>();
-            builder.RegisterType<MessageBoard>().As<IMessageBoard>().InstancePerLifetimeScope();
         }
     }
 }

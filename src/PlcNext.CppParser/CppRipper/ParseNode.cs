@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -25,23 +27,23 @@ namespace PlcNext.CppParser.CppRipper
         /// <summary>
         /// A parent node, is equal to null if this is the root node in the tree. 
         /// </summary>
-        ParseNode parent = null;
+        ParseNode parent;
         /// <summary>
         /// The text being parsed 
         /// </summary>
-        string text = null;
+        string text;
         /// <summary>
         /// The beginning index of the text represented by this node 
         /// </summary>
-        int begin = 0;
+        int begin;
         /// <summary>
         /// The end index of the text represented by this node 
         /// </summary>
-        int end = 0;
+        int end;
         /// <summary>
         /// The associated rule. Could be null in the special case of the root node of a parse tree.
         /// </summary>
-        Rule rule = null;
+        Rule rule;
         #endregion 
 
         /// <summary>
@@ -67,7 +69,11 @@ namespace PlcNext.CppParser.CppRipper
         /// </summary>
         public string RuleType
         {
-            get { if (rule == null) return "_root_"; else return rule.RuleType; }
+            get
+            {
+                if (rule == null) return "_root_";
+                return rule.RuleType;
+            }
         }
 
         /// <summary>
@@ -76,7 +82,11 @@ namespace PlcNext.CppParser.CppRipper
         /// </summary>
         public string RuleName
         {
-            get { if (rule == null) return "_root_"; else return rule.RuleName; }
+            get
+            {
+                if (rule == null) return "_root_";
+                return rule.RuleName;
+            }
         }
 
         /// <summary>
@@ -138,8 +148,7 @@ namespace PlcNext.CppParser.CppRipper
         {
             if (end > begin)
                 return text.Substring(begin, end - begin);
-            else
-                return "";
+            return "";
         }
 
         /// <summary>
@@ -212,8 +221,7 @@ namespace PlcNext.CppParser.CppRipper
         {
             if (rule != null)
                 return rule.IsUnnamed();
-            else
-                return true;
+            return true;
         }
 
         #region IEnumerable<ParseNode> Members
@@ -235,7 +243,7 @@ namespace PlcNext.CppParser.CppRipper
         /// Exposes an enumerator over the child nodes 
         /// </summary>
         /// <returns></returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return children.GetEnumerator();
         }
@@ -251,10 +259,9 @@ namespace PlcNext.CppParser.CppRipper
         {
             if (parent == null)
                 return null;
-            else if (!parent.IsUnnamed())
+            if (!parent.IsUnnamed())
                 return parent;
-            else
-                return parent.GetNamedParent();
+            return parent.GetNamedParent();
         }
 
         /// <summary>

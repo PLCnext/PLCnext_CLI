@@ -7,9 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;

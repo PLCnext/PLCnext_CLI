@@ -10,20 +10,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Settings;
 using PlcNext.Common.Tools.UI;
-using PlcNext.CppParser.CppRipper.Agents;
 using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     internal class CppFileParser : IFileParser
     {
+        public static readonly Regex StatementParser = new Regex(@"^(?<Key>[^\s\(\)]+)\s+(?<Value>.+?)(?:\s*\/\/.*)?$",
+                                                                 RegexOptions.Compiled);
+        
         private readonly ISettingsProvider settingsProvider;
         private readonly ILog log;
 
@@ -315,7 +316,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             foreach (ParseNode defineNode in root.GetHierarchy().Where(n => n.RuleType == "sequence" && n.RuleName == "pp_directive" && n.Any(c => c.ToString().Equals("define", StringComparison.OrdinalIgnoreCase))))
             {
                 string statement = defineNode.FirstOrDefault(n => n.RuleName == "until_eol")?.ToString() ?? string.Empty;
-                Match match = DefineStatementParser.StatementParser.Match(statement);
+                Match match = StatementParser.Match(statement);
                 string key = match.Groups["Key"].Value.Trim();
                 if (match.Success && !directives.ContainsKey(key))
                 {

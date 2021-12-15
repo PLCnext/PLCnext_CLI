@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
@@ -162,9 +161,6 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                         enums.Add(cppEnum.FullName, (cppEnum, file, directory));
                     }
 
-                    break;
-                default:
-                    //do nothing
                     break;
             }
         }

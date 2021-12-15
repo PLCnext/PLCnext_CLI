@@ -7,13 +7,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using PlcNext.Common.CodeModel;
-using PlcNext.Common.Tools;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
@@ -22,10 +18,6 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
     {
         public CppClass(string ns, string name, string[] usings, ParseNode content, ParseNode classDeclaration,
                         List<ParserMessage> messages, string attributePrefix) : base(ns, name, usings, content, messages, classDeclaration, attributePrefix)
-        {
-        }
-
-        public CppClass(string ns, string name, IReadOnlyCollection<CppComment> comments, IEnumerable<CppField> fields, IEnumerable<CppDataType> baseTypes, string attributePrefix) : base(ns, name, comments, fields, baseTypes, attributePrefix)
         {
         }
     }
