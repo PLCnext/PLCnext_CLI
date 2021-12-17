@@ -432,9 +432,6 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\CMakeLists.txt" Link="Deployment\Templates\ConsumableLibraryTemplate\CMakeLists.txt" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\How_to_use.txt" Link="Deployment\Templates\ConsumableLibraryTemplate\How_to_use.txt" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\TemplateDescription.xml" Link="Deployment\Templates\ConsumableLibraryTemplate\TemplateDescription.xml" />
-    <Content Include="appSettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Deployment\ConsumableLibrary\plcnext.proj" />
     <EmbeddedResource Include="Deployment\CommentedPort\plcnext.proj" />
     <EmbeddedResource Include="Deployment\FullyQualifiedEnum\plcnext.proj" />

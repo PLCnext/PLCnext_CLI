@@ -151,15 +151,13 @@ namespace PlcNext.Common.CodeModel
                                                                                                                                                            codeModel)));
 
             IEnumerable<ConstantReplacement> GetAccessibleConstants()
-                => codeModel.Constants.Keys.Select(c => new {constant=c, ns=accessibleNamespaces.OrderByDescending(n => n.Length)
-                                                                      .FirstOrDefault(n => c.Namespace.StartsWith(n, StringComparison.Ordinal))})
-                            .Where(a => a.ns != null)
+                => codeModel.FindAccessibleConstants(accessibleNamespaces)
                             .Select(a => new ConstantReplacement(
-                                        a.ns.Length > 0 
-                                                    ? a.constant.FullName.Substring(a.ns.Length + 2)
-                                                    : a.constant.FullName,
-                                        a.constant.Value,
-                                        a.constant))
+                                        a.Value.Length > 0 
+                                                    ? a.Key.FullName.Substring(a.Value.Length + 2)
+                                                    : a.Key.FullName,
+                                        a.Key.Value,
+                                        a.Key))
                             .Distinct();
 
             IEnumerable<TargetedReplacement> GetReplacementTargets()

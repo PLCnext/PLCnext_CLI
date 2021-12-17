@@ -25,7 +25,7 @@ namespace PlcNext.CppParser.IncludeManager
         public IncludeCacheEntry(string file, bool parsedSuccessfully, DateTime lastWriteTime, string baseDirectory,
                                  IEnumerable<string> types, IEnumerable<string> includes,
                                  Dictionary<string, string> defineStatements,
-                                 IDictionary<IConstant, CodePosition> constants)
+                                 IEnumerable<IConstant> constants)
         {
             File = file;
             ParsedSuccessfully = parsedSuccessfully;
@@ -34,7 +34,7 @@ namespace PlcNext.CppParser.IncludeManager
             Types = types;
             Includes = includes;
             DefineStatements = defineStatements;
-            Constants = (Dictionary<IConstant, CodePosition>)constants;
+            Constants = constants.Select(IncludeConstant.Parse);
         }
 
         public bool Equals(IncludeCacheEntry other)
@@ -104,8 +104,7 @@ namespace PlcNext.CppParser.IncludeManager
         public IEnumerable<string> Includes { get; set; }
         public Dictionary<string, string> DefineStatements { get; set; } = new Dictionary<string, string>();
 
-        public Dictionary<IConstant, CodePosition> Constants { get; set; } =
-            new Dictionary<IConstant, CodePosition>();
+        public IEnumerable<IncludeConstant> Constants { get; set; } = Array.Empty<IncludeConstant>();
 
         public override string ToString()
         {

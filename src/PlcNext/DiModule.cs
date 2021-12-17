@@ -17,12 +17,10 @@ namespace PlcNext
     public class DiModule : Module
     {
         private readonly bool noSdkExploration;
-        private readonly bool useAgents;
 
-        public DiModule(bool noSdkExploration, bool useAgents)
+        public DiModule(bool noSdkExploration)
         {
             this.noSdkExploration = noSdkExploration;
-            this.useAgents = useAgents;
         }
 
         protected override void Load(ContainerBuilder builder)

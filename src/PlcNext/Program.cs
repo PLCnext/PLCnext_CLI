@@ -50,14 +50,13 @@ namespace PlcNext
 #if DEBUG
             Stopwatch stopwatch = Stopwatch.StartNew();
 #endif
-            AgentFrameworkFeature agentFrameworkFeature = new();
             try
             {
                 bool noSdkExploration = args.Any(a => a.Contains("--no-sdk-exploration", StringComparison.Ordinal));
                 ILog log = CreateLog();
                 ContainerBuilder builder = new ContainerBuilder();
                 builder.RegisterInstance(log);
-                builder.RegisterModule(new DiModule(noSdkExploration, agentFrameworkFeature.FeatureEnabled));
+                builder.RegisterModule(new DiModule(noSdkExploration));
 
                 using (IContainer container = builder.Build())
                 {

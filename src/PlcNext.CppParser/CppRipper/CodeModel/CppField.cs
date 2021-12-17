@@ -61,7 +61,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
             CppDataType dataType = typeNodes.GetFieldDataType(usings, ns);
 
-            IEnumerable<(string name, string[] multiplicity)> fields = identifiers.Except(typeNodes).Select(i => (i.ToString(), i.GetParent().GetFieldMultiplicity()));
+            IEnumerable<ParseNode> fieldIdentifiers = identifiers.Intersect(typeNodes).Any()
+                                                          ? identifiers.SkipWhile(i => !typeNodes.Contains(i))
+                                                                       .SkipWhile(typeNodes.Contains)
+                                                          : identifiers;
+
+            IEnumerable<(string name, string[] multiplicity)> fields = fieldIdentifiers 
+               .Select(i => (i.ToString(), i.GetParent().GetFieldMultiplicity()));
             CppComment[] comments = declaration.GetFieldComments();
 
             return fields.Select(fd => new CppField(fd.name, dataType, comments, fd.multiplicity, attributePrefix, containingType));

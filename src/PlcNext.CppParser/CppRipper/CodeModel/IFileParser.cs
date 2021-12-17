@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools.FileSystem;
 
@@ -22,7 +23,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
     internal class ParserResult
     {
         public ParserResult(IEnumerable<CodeSpecificException> exceptions, IDictionary<IType, CodePosition> types, string[] includes, Dictionary<string, string> defineStatements,
-                            IDictionary<IConstant, CodePosition> constants, bool success)
+                            IEnumerable<IConstant> constants, bool success)
         {
             Exceptions = exceptions;
             Types = types;
@@ -34,13 +35,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         public ParserResult(IEnumerable<CodeSpecificException> exceptions, IDictionary<IType, CodePosition> types,
                             string[] includes, Dictionary<string, string> defineStatements,
-                            IDictionary<IConstant, CodePosition> constants)
+                            IEnumerable<IConstant> constants)
             : this(exceptions, types, includes, defineStatements, constants, true)
         {
         }
 
         public ParserResult(IEnumerable<CodeSpecificException> exceptions)
-            : this(exceptions, new Dictionary<IType, CodePosition>(), Array.Empty<string>(), new Dictionary<string, string>(), new Dictionary<IConstant, CodePosition>(), false)
+            : this(exceptions, new Dictionary<IType, CodePosition>(), Array.Empty<string>(), new Dictionary<string, string>(), Enumerable.Empty<IConstant>(), false)
         {
         }
 
@@ -49,6 +50,6 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         public string[] Includes { get; }
         public bool Success { get; }
         public Dictionary<string, string> DefineStatements { get; }
-        public IDictionary<IConstant, CodePosition> Constants { get; }
+        public IEnumerable<IConstant> Constants { get; }
     }
 }

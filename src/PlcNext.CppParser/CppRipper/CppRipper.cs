@@ -44,14 +44,14 @@ namespace PlcNext.CppParser.CppRipper
             List<IncludeDefinition> unresolvedIncludes = new List<IncludeDefinition>();
             List<CodeSpecificException> exceptions = new List<CodeSpecificException>();
             Dictionary<string, string> defineStatements = new Dictionary<string, string>();
-            Dictionary<IConstant, CodePosition> parsedConstants = new Dictionary<IConstant, CodePosition>();
+            HashSet<IConstant> parsedConstants = new HashSet<IConstant>();
 
             Stopwatch parsingStopwatch = new Stopwatch();
             parsingStopwatch.Start();
 
             foreach ((VirtualFile file, VirtualDirectory directory) in sourceDirectories.SelectMany(d => d.Files("*.hpp", true).Select(f => (f, d))))
             {
-                if (!TryParseFile(file, directory, exceptions, out string[] includes, out Dictionary<string, string> defines, out IDictionary<IConstant, CodePosition> constants))
+                if (!TryParseFile(file, directory, exceptions, out string[] includes, out Dictionary<string, string> defines, out IEnumerable<IConstant> constants))
                 {
                     continue;
                 }
@@ -63,9 +63,9 @@ namespace PlcNext.CppParser.CppRipper
                     defineStatements.Add(define.Key, define.Value);
                 }
 
-                foreach (KeyValuePair<IConstant,CodePosition> constant in constants.Where(con => !parsedConstants.ContainsKey(con.Key)))
+                foreach (IConstant constant in constants)
                 {
-                    parsedConstants.Add(constant.Key, constant.Value);
+                    parsedConstants.Add(constant);
                 }
             }
 
@@ -96,7 +96,7 @@ namespace PlcNext.CppParser.CppRipper
             bool TryParseFile(VirtualFile file, VirtualDirectory directory,
                               List<CodeSpecificException> codeSpecificExceptions, out string[] includes,
                               out Dictionary<string, string> defines,
-                              out IDictionary<IConstant, CodePosition> constants)
+                              out IEnumerable<IConstant> constants)
             {
                 ParserResult result = fileParser.Parse(file);
                 if (!result.Success)

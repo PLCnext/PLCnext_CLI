@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using PlcNext.Common.CodeModel;
+using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
 
@@ -30,13 +31,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures,
                             Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)> enums,
                             Dictionary<string, string> defineStatements,
-                            Dictionary<IConstant, CodePosition> constants)
+                            IEnumerable<IConstant> constants)
         {
             this.classes = classes;
             this.structures = structures;
             this.enums = enums;
             DefineStatements = defineStatements;
-            Constants = constants;
+            Constants = new HashSet<IConstant>(constants);
         }
 
         public IDictionary<IStructure, VirtualFile> Structures =>
@@ -55,7 +56,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         public IEnumerable<IncludePath> IncludeDirectories { get; internal set; }
         public Dictionary<string, string> DefineStatements { get; }
-        public Dictionary<IConstant, CodePosition> Constants { get; }
+        private HashSet<IConstant> Constants { get; }
 
         public  IEnumerable<VirtualDirectory> SourceDirectories { get; internal set; }
 
@@ -67,11 +68,11 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             }
         }
 
-        public void AddConstants(IEnumerable<KeyValuePair<IConstant,CodePosition>> constants)
+        public void AddConstants(IEnumerable<IConstant> constants)
         {
-            foreach (KeyValuePair<IConstant,CodePosition> constant in constants.Where(kv => !Constants.ContainsKey(kv.Key)))
+            foreach (IConstant constant in constants)
             {
-                Constants.Add(constant.Key, constant.Value);
+                Constants.Add(constant);
             }
         }
 
@@ -163,6 +164,19 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
                     break;
             }
+        }
+        
+        public IDictionary<IConstant, string> FindAccessibleConstants(IEnumerable<string> accessibleNamespaces)
+        {
+            return Constants.Select(c => new
+                             {
+                                 constant = c,
+                                 ns = accessibleNamespaces
+                                     .OrderByDescending(n => n.Length)
+                                     .FirstOrDefault(n => c.Namespace.StartsWith(n, StringComparison.Ordinal))
+                             })
+                            .Where(a => a.ns != null)
+                            .ToDictionary(a => a.constant, a => a.ns);
         }
     }
 }

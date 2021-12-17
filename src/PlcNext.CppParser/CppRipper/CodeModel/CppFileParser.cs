@@ -55,16 +55,16 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             IDictionary<IType, CodePosition> types = GetTypes(root, usings, messages);
             string[] includes = GetIncludes(root);
             Dictionary<string, string> defineStatements = GetDefineStatements(root);
-            IDictionary<IConstant, CodePosition> constants = GetConstants(root, usings);
+            IEnumerable<IConstant> constants = GetConstants(root, usings);
 
             codeSpecificExceptions.AddRange(messages.Select(m => m.ToException(file)));
             
             return new ParserResult(codeSpecificExceptions, types, includes, defineStatements, constants);
         }
 
-        private IDictionary<IConstant, CodePosition> GetConstants(ParseNode root, string[] usings)
+        private IEnumerable<IConstant> GetConstants(ParseNode root, string[] usings)
         {
-            IDictionary<IConstant, CodePosition> constants = new Dictionary<IConstant, CodePosition>();
+            List<IConstant> constants = new List<IConstant>();
             IEnumerable<ParseNode> declarations = root.GetHierarchy()
                                                       .Where(n => n.RuleName == "declaration" &&
                                                                   n.RuleType == "choice" &&
@@ -78,11 +78,14 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
             void ParseConstant(ParseNode declaration)
             {
+                if (declaration.IsValidFieldDeclaration() && ContainsConstIdentifier())
+                {
+                    
+                }
                 if (!declaration.IsValidFieldDeclaration() ||
-                    declaration.GetFieldIdentifier().FirstOrDefault()?
-                       .ToString().Trim() != "const" ||
-                    declaration.GetDeclarationListParent()?.GetParent()?
-                       .RuleName == "paran_group")
+                    !ContainsConstIdentifier() ||
+                    IsPartOfMethodDefinition() ||
+                    HasTypeDeclarationParent(declaration))
                 {
                     return;
                 }
@@ -107,19 +110,35 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
                 string ns = GetNamespace(declaration, skipFirst:false);
                 CppDataType dataType = typeNodes.GetFieldDataType(usings, ns);
-                IEnumerable<string> fields = identifiers.Except(typeNodes)
+                IEnumerable<string> fields = identifiers.SkipWhile(i => !typeNodes.Contains(i))
+                                                        .SkipWhile(typeNodes.Contains)
                                                         .Where(i => !i.GetParent().GetFieldMultiplicity().Any())
                                                         .Select(i => i.ToString());
-                CodePosition position = declaration.GetCodePosition();
                 IEnumerable<string> values = valueNodes.Where(i => !string.IsNullOrEmpty(i.ToString().Trim()))
                                                        .Select(i => i.ToString().Trim());
                 string value = string.Join(" ", values);
 
+                if (string.IsNullOrEmpty(value))
+                {
+                    return;
+                }
+
                 foreach (string field in fields)
                 {
                     constants.Add(new CppConstant(field, settingsProvider.Settings.AttributePrefix,
-                                                  ns, value, dataType, usings),
-                                  position);
+                                                  ns, value, dataType, usings));
+                }
+
+                bool ContainsConstIdentifier()
+                {
+                    return declaration.GetFieldIdentifier().FirstOrDefault()?
+                              .ToString().Trim() == "const";
+                }
+
+                bool IsPartOfMethodDefinition()
+                {
+                    return declaration.GetDeclarationListParent()?.GetParent()?
+                              .RuleName == "paran_group";
                 }
             }
         }
@@ -255,12 +274,29 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         private static ParseNode GetDeclarationContentParent(ParseNode current)
         {
-            while (current != null && current.RuleType != "plus" && current.RuleName != "declaration_content")
+            while (current != null && current.RuleName != "declaration_content")
             {
                 current = current.GetParent();
             }
 
             return current;
+        }
+
+        private static bool HasTypeDeclarationParent(ParseNode current)
+        {
+            while (current != null && !IsTypeDeclaration())
+            {
+                current = GetDeclarationContentParent(current.GetParent());
+            }
+
+            return current != null;
+
+            bool IsTypeDeclaration()
+            {
+                return current.ChildrenSkipUnnamed()
+                              .Any(node => node.ChildrenSkipUnnamed()
+                                               .Any(c => c.RuleName == "type_decl"));
+            }
         }
 
         private static IEnumerable<ParseNode> GetTypeDeclarations(ParseNode current)

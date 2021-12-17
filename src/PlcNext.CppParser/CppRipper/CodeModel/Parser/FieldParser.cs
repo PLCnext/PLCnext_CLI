@@ -93,6 +93,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
 
             ParseNode[] GetNodes(ParseNode[] parseNodes)
             {
+                parseNodes = parseNodes.SkipWhile(n => n.ToString() == "static")
+                                       .ToArray();
                 return parseNodes.TakeWhile(n => n.ToString().EndsWith("::", StringComparison.Ordinal))
                                  .Concat(parseNodes.SkipWhile(n => n.ToString().EndsWith("::", StringComparison.Ordinal)).Take(1))
                                  .ToArray();

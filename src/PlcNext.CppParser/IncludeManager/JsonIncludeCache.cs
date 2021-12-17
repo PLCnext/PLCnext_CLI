@@ -21,7 +21,7 @@ namespace PlcNext.CppParser.IncludeManager
 {
     internal class JsonIncludeCache : IIncludeCache
     {
-        public static readonly Version CurrentVersion = new Version(1,1);
+        public static readonly Version CurrentVersion = new Version(1,2);
         private IDictionary<string, IncludeCacheEntry> cache;
         private IDictionary<string, IncludeCacheEntry> Cache => cache ?? throw new InvalidOperationException("Include cache not initialized.");
         private readonly object cacheLock = new object();
