@@ -18,7 +18,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
     {
         public static CppDataType GetFieldDataType(this ParseNode[] typeNodes, string[] usings, string ns)
         {
-            string dataTypeName = typeNodes.Aggregate(string.Empty, (s, node) => $"{s}{node}");
+            string dataTypeName = typeNodes.Aggregate(string.Empty, (s, node) => $"{s}{node.ToString().Trim()}");
             CppDataType dataType = new CppDataType(dataTypeName, usings, ns);
             return dataType;
         }

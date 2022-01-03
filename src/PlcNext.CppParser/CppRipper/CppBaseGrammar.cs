@@ -108,7 +108,6 @@ namespace PlcNext.CppParser.CppRipper
         public Rule ident_next_char;
         public Rule identifier_extension;
         public Rule identifier;
-        public Rule generic;
         public Rule operator_char;
         public Rule operator_prefix;
         public Rule operator_seq;
@@ -255,8 +254,6 @@ namespace PlcNext.CppParser.CppRipper
             identifier_extension = CharSeq("::") + Recursive(() => Opt(identifier));
             identifier = Leaf(ident_first_char + Star(ident_next_char) + Star(identifier_extension));
             
-            generic
-                = identifier + Nested("<", ">");
             #endregion
 
             #region whitespace

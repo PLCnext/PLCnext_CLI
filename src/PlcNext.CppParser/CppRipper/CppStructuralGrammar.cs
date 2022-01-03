@@ -37,6 +37,7 @@ namespace PlcNext.CppParser.CppRipper
         public Rule base_type;
         public Rule angle_operators;
         public Rule identifier_seq;
+        public Rule generic;
 
         public Rule Delimiter(string s)
         {
@@ -45,6 +46,11 @@ namespace PlcNext.CppParser.CppRipper
 
         public CppStructuralGrammar()
         {
+            generic = (identifier + Delimiter("<") + 
+                      Recursive(() => CommaList(Eat(simple_ws)+node+Eat(simple_ws))) + 
+                      Delimiter(">")) |
+                      (identifier + Delimiter("<") + Delimiter(">"));
+            
             comment_set
                 = Star(comment + Eat(multiline_ws)) + Eat(multiline_ws);
 
