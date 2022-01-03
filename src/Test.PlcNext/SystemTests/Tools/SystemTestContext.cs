@@ -1007,8 +1007,6 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 string content = reader.ReadToEnd();
                 content.Should().Contain($"project({knownProjectName})");
-                
-                content.Should().Contain($"target_link_libraries({knownProjectName} PRIVATE ArpDevice ArpProgramming)");
                 content.Should().NotMatch(@"\$\(.*\)");
             }
         }
