@@ -588,5 +588,10 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         {
             ScenarioContext.CheckUserInformedOfError(typeof(DeployArgumentsException));
         }
+
+        protected void Then_the_user_was_informed_that_the_attribute_is_not_supported()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(FieldAttributeRestrictionException));
+        }
     }
 }

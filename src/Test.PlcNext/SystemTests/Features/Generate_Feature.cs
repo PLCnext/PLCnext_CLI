@@ -912,6 +912,26 @@ namespace Test.PlcNext.SystemTests.Features
                 ).RunAsyncWithTimeout();
         }
 
+        [Scenario]
+        public async Task Generate_with_redundancy_attribute()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ProjectWithRedundancyAttribute"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_typemeta_method_looks_like_NAME("ProjectWithRedundancyAttributeLibrary.meta.cpp")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_with_redundancy_attribute_for_nonsupported_target()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ProjectWithRedundancyAndWrongTarget"),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_user_was_informed_that_the_attribute_is_not_supported()
+                ).RunAsyncWithTimeout();
+        }
+
         public Generate_Feature(ITestOutputHelper helper) : base(helper)
         {
         }

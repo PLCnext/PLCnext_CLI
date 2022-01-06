@@ -11,7 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using NuGet.Versioning;
 using PlcNext.Common.DataModel;
+using PlcNext.Common.Project;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Templates.Field;
 using PlcNext.Common.Tools;
@@ -81,9 +83,7 @@ namespace PlcNext.Common.CodeModel
                     return owner.Create(key, false.ToString(CultureInfo.InvariantCulture), false);
                 default:
                 {
-                    metaDataTemplate metaDataTemplate = templateRepository.FieldTemplates
-                                                                          .FirstOrDefault(t => t.name.Equals(key,
-                                                                               StringComparison.OrdinalIgnoreCase));
+                    metaDataTemplate metaDataTemplate = FindFieldTemplate(key, owner);
                     if (metaDataTemplate != null)
                     {
                         return GetFieldTemplateEntity(metaDataTemplate, field, owner, key);
@@ -91,6 +91,50 @@ namespace PlcNext.Common.CodeModel
 
                     throw new ContentProviderException(key, owner);
                 }
+            }
+        }
+
+        private metaDataTemplate FindFieldTemplate(string name, Entity owner)
+        {
+            IEnumerable<metaDataTemplate> possibleTemplates =
+                templateRepository.FieldTemplates.Where(t => t.name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                                                                    && FirmwareVersionIsSupported(t.supportedFirmwareVersions));
+            metaDataTemplate fieldTemplate = NewestTemplate(possibleTemplates);
+            return fieldTemplate;
+
+            bool FirmwareVersionIsSupported(string supportedFirmwareVersion)
+            {
+                if (supportedFirmwareVersion == null)
+                {
+                    return true;
+                }
+                ProjectEntity project = ProjectEntity.Decorate(owner.IsRoot() ? owner : owner.Root);
+                Version minTarget = project.Targets.Min(t => TargetEntity.Decorate(t).Version);
+                if (minTarget == null)
+                {
+                    return true;
+                }
+
+                NuGetVersion targetVersion = new NuGetVersion(minTarget);
+                if (VersionRange.TryParse(supportedFirmwareVersion, out VersionRange supportedVersion))
+                {
+                    return supportedVersion.Satisfies(targetVersion);
+                }
+
+                return true;
+            }
+
+            metaDataTemplate NewestTemplate(IEnumerable<metaDataTemplate> templates)
+            {
+                IEnumerable<metaDataTemplate> templatesWithVersion = templates.Where(t => t.supportedFirmwareVersions != null);
+                if (!templatesWithVersion.Any())
+                {
+                    return templates.FirstOrDefault();
+                }
+
+                return templatesWithVersion.Where(template => template.supportedFirmwareVersions.Equals(
+                                                templatesWithVersion.Max(t => t.supportedFirmwareVersions), StringComparison.OrdinalIgnoreCase))
+                                            .FirstOrDefault();
             }
         }
 

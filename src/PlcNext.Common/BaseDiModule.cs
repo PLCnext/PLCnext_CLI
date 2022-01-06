@@ -93,7 +93,6 @@ namespace PlcNext.Common
             builder.RegisterType<RsaSecurityValidator>().As<ISecurityValidator>().InstancePerLifetimeScope();
             builder.RegisterType<SharpZipFileUnpackService>().As<IFileUnpackService>().InstancePerLifetimeScope();
             builder.RegisterType<ProcessBasedSettingsMigrationInstallationStep>().As<IInstallationStep>().InstancePerLifetimeScope();
-            builder.RegisterType<AttributeView>().As<IAttributeView>().InstancePerLifetimeScope();
             builder.RegisterType<FileBasedBinariesLocator>().As<IBinariesLocator>().InstancePerLifetimeScope();
             builder.RegisterType<TemplateCommandProvider>().As<IDynamicCommandProvider>().InstancePerLifetimeScope();
             builder.RegisterType<SettingsBasedTemplateLoader>().As<ITemplateLoader>().InstancePerLifetimeScope();

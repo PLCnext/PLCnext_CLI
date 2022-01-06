@@ -10,7 +10,7 @@ description itself. -->
     <xs:annotation>
       <xs:documentation>
         Defines a meta data template. Meta data templates can be attached to any field or type.
-        Meta data templates can than be accessed with two different methods.
+        Meta data templates can then be accessed with two different methods.
         1. On a parent element like a type which contains the fields - e.g. by accessing a code template.
         Usage example: $(typeElement.[name]s) accesses all field which are marked with the [name] field template.
         2. On an element which is a field /type.
@@ -78,6 +78,13 @@ description itself. -->
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
+	  <xs:attribute name="supportedFirmwareVersions" type="versionRange" use="optional">
+		  <xs:annotation>
+			  <xs:documentation>
+				  Firmware version range which is supported by the template.
+			  </xs:documentation>
+		  </xs:annotation>
+	  </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="valueRestriction">

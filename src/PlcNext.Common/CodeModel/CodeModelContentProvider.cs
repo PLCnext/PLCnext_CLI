@@ -9,22 +9,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.MetaData;
 using PlcNext.Common.Project;
 using PlcNext.Common.Templates;
-using PlcNext.Common.Templates.Description;
-using PlcNext.Common.Templates.Field;
 using PlcNext.Common.Templates.Format;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Priority;
-using multiplicity = PlcNext.Common.Templates.Field.multiplicity;
 
 namespace PlcNext.Common.CodeModel
 {
@@ -128,7 +122,7 @@ namespace PlcNext.Common.CodeModel
                 ICodeModel codeModel = owner.Value<ICodeModel>();
                 bool prior206Target = CheckProjectTargets();
                 IEnumerable<string> relevantTypes = TemplateEntity.Decorate(owner).EntityHierarchy
-                                                                  .Select(CodeEntity.Decorate)
+                              .Select(CodeEntity.Decorate)
                                                                   .Where(c => !c.IsRoot())
                                                                   .Select(c => c.FullName);
                 string ns = prior206Target
@@ -198,7 +192,7 @@ namespace PlcNext.Common.CodeModel
                 IDataType dataSourceDataType = dataSource.HasValue<IDataType>()
                                                    ? dataSource.Value<IDataType>()
                                                    : dataSource.Value<IField>().DataType;
-                
+
                 ICodeModel rootCodeModel = dataSource.Root.Value<ICodeModel>();
                 string dataTypeName = string.Empty;
                 if (dataSourceDataType != null)
@@ -212,7 +206,7 @@ namespace PlcNext.Common.CodeModel
 
                 return owner.Create(key, dataTypeName);
             }
-            
+
             Entity ResolveArpDataType()
             {
                 IEntityBase dataSource = ownerTemplateEntity.FormatOrigin;
@@ -277,7 +271,7 @@ namespace PlcNext.Common.CodeModel
 
             (bool success, string value) FormatIecDataType(string unformattedValue, IAttribute attribute)
             {
-                
+
                 string formattedString = FormatStringDataType(unformattedValue);
                 if (formattedString != null)
                 {
@@ -285,7 +279,7 @@ namespace PlcNext.Common.CodeModel
                     {
                         executionContext.WriteWarning($"The //#{EntityKeys.IECDataTypeAttributeNameKey}(...) can not be set for string datatypes and will be ignored.");
                     }
-                        return (true, formattedString);
+                    return (true, formattedString);
                 }
 
                 (bool success, string value) = FormatDataType(unformattedValue);
@@ -336,7 +330,7 @@ namespace PlcNext.Common.CodeModel
             string FormatStringDataType(string unformattedValue)
             {
                 Match stringMatch = StaticStringRegex.Match(unformattedValue);
-                if(stringMatch.Success)
+                if (stringMatch.Success)
                 {
                     return owner.Create("temporaryStaticStringFormatContainer", unformattedValue)
                                 .Format()["stringConstantReplace"]
@@ -364,10 +358,10 @@ namespace PlcNext.Common.CodeModel
                                                        ? dataSource.Value<IDataType>()
                                                        : dataSource.Value<IField>().DataType;
 
-                    attribute = dataSource.HasValue<IField>() 
+                    attribute = dataSource.HasValue<IField>()
                                 ? dataSource.Value<IField>()
                                             .Attributes?
-                                            .FirstOrDefault(a => a.Name.Equals(EntityKeys.IECDataTypeAttributeNameKey, StringComparison.OrdinalIgnoreCase)) 
+                                            .FirstOrDefault(a => a.Name.Equals(EntityKeys.IECDataTypeAttributeNameKey, StringComparison.OrdinalIgnoreCase))
                                 : null;
                 }
 

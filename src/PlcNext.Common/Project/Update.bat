@@ -6,7 +6,7 @@ for %%a in (*.xsd) do (
 	echo ------------------------------------------------------------
 	echo Update !file!
 	echo ------------------------------------------------------------
-    "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.7.1 Tools\xsd.exe" /c /n:PlcNext.Common.Project !file!
+    "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.7.2 Tools\xsd.exe" /c /n:PlcNext.Common.Project !file!
 	echo.
 )
 
