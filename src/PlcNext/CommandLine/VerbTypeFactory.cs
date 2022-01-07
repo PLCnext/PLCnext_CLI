@@ -129,9 +129,9 @@ namespace PlcNext.CommandLine
                 void AddVerbAttribute()
                 {
                     Type verbAttribute = typeof(VerbAttribute);
-                    ConstructorInfo constructor = verbAttribute.GetConstructor(new[] {typeof(string)});
+                    ConstructorInfo constructor = verbAttribute.GetConstructor(new[] {typeof(string), typeof(bool)});
                     PropertyInfo helpTextProperty = verbAttribute.GetProperty("HelpText");
-                    typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(constructor, new object[] {name},
+                    typeBuilder.SetCustomAttribute(new CustomAttributeBuilder(constructor, new object[] {name, false},
                                                                               new[] {helpTextProperty},
                                                                               new object[] {helpText}));
                 }

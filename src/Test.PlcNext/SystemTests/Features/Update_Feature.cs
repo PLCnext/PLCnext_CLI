@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
-using Microsoft.DotNet.PlatformAbstractions;
 using Test.PlcNext.SystemTests.StepDefinitions;
 using Xunit.Abstractions;
 

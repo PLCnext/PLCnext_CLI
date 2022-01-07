@@ -27,7 +27,7 @@ namespace Test.PlcNext.SystemTests.Tools
             instances.Add(instance);
         }
 
-        public IEnumerable<IComponentRegistration> RegistrationsFor(Service service, Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor)
+        public IEnumerable<IComponentRegistration> RegistrationsFor(Service service, Func<Service, IEnumerable<ServiceRegistration>> registrationAccessor)
         {
             return instances.Where(i => (service as IServiceWithType)?.ServiceType.IsInstanceOfType(i) == true)
                             .Select(i => new ComponentRegistration(Guid.NewGuid(),

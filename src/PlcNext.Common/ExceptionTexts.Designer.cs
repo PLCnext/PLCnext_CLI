@@ -394,7 +394,7 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following possible namespaces were found for the project. Only one namespace is allowed.{0}.
+        ///   Looks up a localized string similar to The following possible namespaces were found for the project. Only one root namespace is allowed.{0}.
         /// </summary>
         internal static string MultipleRootNamespaces {
             get {
@@ -403,7 +403,7 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following possible namespaces were found for the project. Only one namespace is allowed for targets prior to 2020.6.0.{0}.
+        ///   Looks up a localized string similar to The following possible namespaces were found for the project. Only one root namespace is allowed for targets prior to 2020.6.0.{0}.
         /// </summary>
         internal static string MultipleRootNamespacesForTarget {
             get {

@@ -338,7 +338,7 @@
     <value>Could not find the SDK '{0}'. This SDK cannot be used, please remove the SDK from the settings.</value>
   </data>
   <data name="MultipleRootNamespaces" xml:space="preserve">
-    <value>The following possible namespaces were found for the project. Only one namespace is allowed.{0}</value>
+    <value>The following possible namespaces were found for the project. Only one root namespace is allowed.{0}</value>
   </data>
   <data name="TargetInstalledTwice" xml:space="preserve">
     <value>The target {0} is installed more than once. Please check your installed targets.</value>
@@ -362,7 +362,7 @@
     <value>The target {0} does not have the correct format. Expected is the format &lt;target&gt;,&lt;version&gt;(,&lt;file&gt;).</value>
   </data>
   <data name="MultipleRootNamespacesForTarget" xml:space="preserve">
-    <value>The following possible namespaces were found for the project. Only one namespace is allowed for targets prior to 2020.6.0.{0}</value>
+    <value>The following possible namespaces were found for the project. Only one root namespace is allowed for targets prior to 2020.6.0.{0}</value>
   </data>
   <data name="TemplateIncompatible" xml:space="preserve">
     <value>The template '{0}' is incompatible with the project type '{1}'.</value>
