@@ -54,7 +54,12 @@ namespace PlcNext.Common.Tools.SDK
                     {
                         if (!sdkContainer.Contains(path))
                         {
-                            AddNewSdk(path, true, false).Wait();
+                            Task<bool> added = AddNewSdk(path, true, false);
+                            added.Wait();
+                            if (!added.Result)
+                            {
+                                continue;
+                            }
                         }
                         SdkInformation sdkInformation = sdkContainer.Get(path);
                         foreach (Target target in sdkInformation.Targets)
@@ -110,25 +115,42 @@ namespace PlcNext.Common.Tools.SDK
             OnUpdated();
         }
 
-        private async Task AddNewSdk(string sdkPath, bool forced, bool checkForDuplicate = true)
+        private string exploringSdk = string.Empty;
+
+        private async Task<bool> AddNewSdk(string sdkPath, bool forced, bool checkForDuplicate = true)
         {
-            SdkSchema sdkSchema = await sdkExplorer.ExploreSdk(sdkPath, forced).ConfigureAwait(false);
-            if (sdkSchema != null)
+            if (exploringSdk == sdkPath)
             {
-                if (checkForDuplicate)
+                return false;
+            }
+
+            try
+            {
+                exploringSdk = sdkPath;
+                SdkSchema sdkSchema = await sdkExplorer.ExploreSdk(sdkPath, forced).ConfigureAwait(false);
+                if (sdkSchema != null)
                 {
-                    IEnumerable<Target> targets = GetAllTargets();
-                    foreach (TargetSchema targetSchema in sdkSchema.Target)
+                    if (checkForDuplicate)
                     {
-                        Target target = new Target(targetSchema.name, targetSchema.version);
-                        if (targets.Contains(target))
+                        IEnumerable<Target> targets = GetAllTargets();
+                        foreach (TargetSchema targetSchema in sdkSchema.Target)
                         {
-                            throw new TargetAlreadyInstalledException(target.GetLongFullName());
+                            Target target = new Target(targetSchema.name, targetSchema.version);
+                            if (targets.Contains(target))
+                            {
+                                throw new TargetAlreadyInstalledException(target.GetLongFullName());
+                            }
                         }
                     }
+                    sdkContainer.Add(sdkPath, sdkSchema);
                 }
-                sdkContainer.Add(sdkPath, sdkSchema);
             }
+            finally
+            {
+                exploringSdk = string.Empty;
+            }
+
+            return true;
         }
 
         public void Remove(string sdkPath)
