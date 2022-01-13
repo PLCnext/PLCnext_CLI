@@ -72,10 +72,8 @@ namespace PlcNext.Common.Tools
         public const string ConfigFileName = "PLCnextSettings.xml";
 
         //progress visualizer
-        public const double ProgressBarDelay = 300;
-        public const double InfinitProgressUpdateTime = 50;
-        public const double InfinitProgressResolution = 13;
-        public const int ProgressMaxResolution = 10000;
+        public const int ProgressMaxResolution = 100;
+        public const int ProgressUpdateInterval = 10;
         public const int ConsoleInfiniteProgressDotIntervalInMs = 1000;
 
         //settings

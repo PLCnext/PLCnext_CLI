@@ -201,7 +201,7 @@ namespace PlcNext.Common.Tools.IO
             {
                 using (Stream fileStream = packedFile.OpenRead())
                 using (XZStream xzStream = new XZStream(fileStream))
-                using (parentProgress?.SpawnInfiniteProgress($"Extracting {packedFile.Name}..."))
+                using (parentProgress?.SpawnInfiniteProgress($"Extracting .xz file {packedFile.Name}..."))
                 {
                     string[] path = fileSystem.GetPath(packedFile.FullName);
                     string relativeFilePath = path.Last().Substring(0, path.Last().LastIndexOf(".xz", StringComparison.OrdinalIgnoreCase));
@@ -228,12 +228,18 @@ namespace PlcNext.Common.Tools.IO
                 using (Stream fileStream = packedFile.OpenRead())
                 using (TarArchive tarArchive = TarArchive.Open(fileStream))
                 {
-                    double increment = (double)Constants.ProgressMaxResolution / tarArchive.Entries.Count;
+                    double entriesUntilTickIncrement = tarArchive.Entries.Count / (double)Constants.ProgressUpdateInterval;
                     using (IProgressNotifier extractProgress = parentProgress?.Spawn(Constants.ProgressMaxResolution, "Extracting .tar archive"))
                     {
+                        int entriesSinceLastTickIncrement = 0;
                         foreach (TarArchiveEntry tarEntry in tarArchive.Entries)
                         {
-                            extractProgress?.TickIncrement(increment);
+                            if (entriesSinceLastTickIncrement > entriesUntilTickIncrement)
+                            {
+                                extractProgress?.TickIncrement(Constants.ProgressUpdateInterval);
+                                entriesSinceLastTickIncrement = 0;
+                            }
+
                             if (tarEntry.IsDirectory)
                             {
                                 continue;           // Ignore directories
@@ -261,14 +267,17 @@ namespace PlcNext.Common.Tools.IO
                                     StreamUtils.Copy(tarStream, streamWriter, buffer);
                                 }
                             }
+
+                            entriesSinceLastTickIncrement++;
                         }
+                        extractProgress?.Tick(Constants.ProgressMaxResolution);
                     }
                 }
             }
 
             void UnpackTarXzFile(VirtualFile packedFile)
             {
-                using (IProgressNotifier subProgress = parentProgress?.Spawn(2))
+                using (IProgressNotifier subProgress = parentProgress?.Spawn(2, "Extracting tar.xz file"))
                 {
                     parentProgress = subProgress;
                     VirtualFile tarFile = UnpackXzFile(packedFile);
