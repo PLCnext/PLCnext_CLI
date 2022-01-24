@@ -73,7 +73,6 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
-    <PackageReference Include="FeatureToggle" Version="4.0.2" />
   </ItemGroup>
 
   <ItemGroup>
