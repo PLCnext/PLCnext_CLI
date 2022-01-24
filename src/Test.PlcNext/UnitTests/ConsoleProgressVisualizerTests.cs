@@ -135,6 +135,8 @@ namespace Test.PlcNext.UnitTests
                 (SetPrefixMethodName, new object[] {string.Empty}),
                 (WriteInformationMethodName, new object[] {"[Infinite] StartMessage: Done", true}),
                 (SetPrefixMethodName, new object[]{firstDepthPrefix}),
+                
+                (SetPrefixMethodName, new object[] {string.Empty}),
             });
         }
 
@@ -208,6 +210,8 @@ namespace Test.PlcNext.UnitTests
                 (SetPrefixMethodName, new object[] {firstDepthPrefix}),
                 (WriteInformationMethodName, new object[] {"[100%] ChildStartMessage", true}),
                 (SetPrefixMethodName, new object[] {secondDepthPrefix}),
+                
+                (SetPrefixMethodName, new object[] {firstDepthPrefix}),
 
                 (SetPrefixMethodName, new object[] {string.Empty}),
                 (WriteInformationMethodName, new object[] {"[10%] StartMessage", true}),
@@ -216,6 +220,8 @@ namespace Test.PlcNext.UnitTests
                 (SetPrefixMethodName, new object[] {string.Empty}),
                 (WriteInformationMethodName, new object[] {"[100%] StartMessage", true}),
                 (SetPrefixMethodName, new object[] {firstDepthPrefix}),
+                
+                (SetPrefixMethodName, new object[] {string.Empty}),
 
                 (SetPrefixMethodName, new object[] {string.Empty}),
                 (WriteInformationMethodName, new object[] {"CompleteMessage", true})
@@ -286,6 +292,8 @@ namespace Test.PlcNext.UnitTests
                 (WriteInformationMethodName,new object[]{"[Infinite] ChildStartMessage: Done", true}),
                 (SetPrefixMethodName, new object[]{secondDepthPrefix}),
                 
+                (SetPrefixMethodName, new object[]{firstDepthPrefix}),
+                
                 (SetPrefixMethodName, new object[]{string.Empty}),
                 (WriteInformationMethodName,new object[]{"[10%] StartMessage", true}),
                 (SetPrefixMethodName, new object[]{firstDepthPrefix}),
@@ -295,7 +303,8 @@ namespace Test.PlcNext.UnitTests
                 (SetPrefixMethodName, new object[]{firstDepthPrefix}),
                 
                 (SetPrefixMethodName, new object[]{string.Empty}),
-                (WriteInformationMethodName,new object[]{"CompleteMessage", true})
+                (WriteInformationMethodName,new object[]{"CompleteMessage", true}),
+                (SetPrefixMethodName, new object[]{string.Empty}),
             });
         }
     }

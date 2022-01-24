@@ -53,9 +53,12 @@ namespace PlcNext.Common.Tools.UI
 
         public override void Dispose()
         {
-            base.Dispose();
-            Parent?.TickIncrement();
-            disposeAction();
+            if (!wasDisposed)
+            {
+                base.Dispose();
+                Parent?.TickIncrement();
+                disposeAction();
+            }
         }
         
         private void WriteProgress(string message = null)

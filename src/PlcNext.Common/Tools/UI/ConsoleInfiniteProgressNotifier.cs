@@ -43,12 +43,15 @@ namespace PlcNext.Common.Tools.UI
 
         public override void Dispose()
         {
-            base.Dispose();
-            updateTimer.Elapsed -= UpdateTimerOnElapsed;
-            updateTimer.Dispose();
-            WriteInfinite("Done");
-            Parent?.TickIncrement();
-            disposeAction();
+            if (!wasDisposed)
+            {
+                updateTimer.Elapsed -= UpdateTimerOnElapsed;
+                updateTimer.Dispose();
+                WriteInfinite("Done");
+                base.Dispose();
+                Parent?.TickIncrement();
+                disposeAction();
+            }
         }
         
         private void WriteInfinite(string message = "")

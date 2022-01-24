@@ -20,6 +20,7 @@ namespace PlcNext.Common.Tools.UI
         private readonly HashSet<ConsoleProgressNotifierBase> children = new();
         protected readonly IProgressNotifier Parent;
         private const string PrefixArrow = "-> ";
+        protected bool wasDisposed = false;
 
         protected ConsoleProgressNotifierBase(IUserInterface userInterface, string startMessage, IProgressNotifier parent)
         {
@@ -100,11 +101,16 @@ namespace PlcNext.Common.Tools.UI
 
         public virtual void Dispose()
         {
-            foreach (ConsoleProgressNotifierBase child in children.ToArray())
+            if (!wasDisposed)
             {
-                child.Dispose();
+                foreach (ConsoleProgressNotifierBase child in children.ToArray())
+                {
+                    child.Dispose();
+                }
+                OnDisposed();
+                SetProgressPrefix();
+                wasDisposed = true;
             }
-            OnDisposed();
         }
 
         public event EventHandler<EventArgs> Disposed;
