@@ -17,6 +17,22 @@ class AcfProjectv216Component : public ComponentBase, public MetaComponentBase, 
 {
 public: // typedefs
 
+#define MY_VALUE 42
+
+    //#attributes(Hidden)
+    struct Ports
+    {
+        //#name(NameOfPort)
+        //#attributes(Input|Retain|Opc)
+        Arp::boolean portField = false;
+
+        StaticString<23> someString23;
+        StaticWString<109> someWString109;
+        StaticWString<MY_VALUE> someWStringFromDefine;
+
+        Arp::int32 value2[10];
+    };
+
 public: // construction/destruction
     AcfProjectv216Component(IApplication& application, const String& name);
     virtual ~AcfProjectv216Component() = default;
@@ -70,6 +86,9 @@ public: /* Ports
            The #name comment defines the GDS name of an individual port element. If omitted, the member variable name is used as the GDS name.
            The members of the struct can be declared with any of the attributes allowed for a Program port.
         */
+
+    //#port
+    Ports ports;
 
 };
 

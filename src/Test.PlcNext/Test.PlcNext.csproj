@@ -142,6 +142,7 @@
     <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsComponent.hpp" />
     <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.cpp" />
     <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.hpp" />
+    <None Remove="Deployment\TestResults\AcfDataTypes.dt" />
     <None Remove="Deployment\TestResults\DemoLibraryCommandArgs.txt" />
     <None Remove="Deployment\TestResults\DemoLibraryCommandArgsWithSpecificId.txt" />
     <None Remove="Deployment\TestResults\DemoLibraryDifferentPathsCommandArgs.txt" />
@@ -281,6 +282,7 @@
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
     <EmbeddedResource Include="Deployment\ExternalLibrary\My\Company\Name\ExternalStruct.hpp" />
     <EmbeddedResource Include="Deployment\StandardNew\PLCnextSettings.xml" />
+    <EmbeddedResource Include="Deployment\TestResults\AcfDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\ProjectWithRedundancyAttributeLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithSolutionVersion.txt" />
     <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithEngineerVersion.txt" />
@@ -848,7 +850,8 @@
 	<EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Library.meta.cpp" />
 	<EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Optimized_Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
-	<EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\DataTypes.dt" Link="Deployment\Templates\ProjectTemplate\DataTypes.dt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\DataTypes.dt" Link="Deployment\Templates\ProjectTemplate\DataTypes.dt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\DataTypes.dt" Link="Deployment\Templates\AcfProjectTemplate\DataTypes.dt" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
 	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
 	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Optimized_Library.meta.cpp" />

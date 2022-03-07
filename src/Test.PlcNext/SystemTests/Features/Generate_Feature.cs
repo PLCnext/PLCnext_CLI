@@ -765,6 +765,25 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Generate_datatypes_worksheet_for_acf()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AcfProjectv216"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("AcfDataTypes.dt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_no_datatypes_worksheet_for_acf()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AcfProjectv216"),
+                _ => When_I_generate_all_metafiles_with_no_datatypes_worksheet(),
+                _ => Then_the_datatypes_worksheet_was_not_generated()).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_datatype_worksheet_for_nested_structs()
         {
             await Runner.AddSteps(

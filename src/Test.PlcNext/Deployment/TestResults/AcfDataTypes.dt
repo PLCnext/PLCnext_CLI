@@ -1,0 +1,12 @@
+TYPE
+    Ports : STRUCT
+        NameOfPort : BOOL;
+        someString23 : STRING[23];
+        someWString109 : WSTRING[109];
+        someWStringFromDefine : WSTRING[42];
+        value2 : value2Array;
+    END_STRUCT
+
+    value2Array : ARRAY [0..9] OF DINT;
+
+END_TYPE

@@ -549,6 +549,10 @@ namespace PlcNext.Common.Build
                                 destinationPath = string.Empty;
                                 fileType = Constants.AcfConfigurationType;
                                 break;
+                            case ".DT":
+                                destinationPath = string.Empty;
+                                fileType = Constants.DataTypeWorksheetType;
+                                break;
                             default:
                                 //do nothing all other files are not interesting
                                 continue;
