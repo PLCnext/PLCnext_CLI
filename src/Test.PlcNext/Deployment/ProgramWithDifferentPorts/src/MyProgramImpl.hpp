@@ -40,7 +40,7 @@ private: // fields
 	Example examplePort1;
 	//#port
 	//#attributes(Output)
-	Example examplePort2[1], examplePort3[5];
+	Example examplePort2[1], examplePort3[5], examplePort7[5];
 	//#port
 	int32 examplePort4 = 3;
 	//#port

@@ -126,7 +126,8 @@ namespace PlcNext.Common.Templates
 
                     string[] lines = (Resolve(content, dataSource)).Split(new[] {'\r', '\n'},
                                                                           StringSplitOptions.RemoveEmptyEntries);
-                    return string.Join(Environment.NewLine, lines.Distinct()) + Environment.NewLine;
+                    string result = string.Join(Environment.NewLine, lines.Distinct());
+                    return string.IsNullOrEmpty(result) ? string.Empty : result + Environment.NewLine;
                 }
 
                 string IfSequence(Func<bool> conditionCheck)

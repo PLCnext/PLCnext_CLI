@@ -975,10 +975,14 @@ namespace Test.PlcNext.SystemTests.Tools
             }
         }
 
-        public void CheckDatatypeWorksheet(string compareFile)
+        public void CheckDatatypeWorksheet(string compareFile, string projectName = "")
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
-            string libraryName = knownProjectName.Split('.', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+            if (string.IsNullOrEmpty(projectName))
+            {
+                projectName = knownProjectName;
+            }
+            projectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            string libraryName = projectName.Split('.', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
             libraryName.Should().NotBeNullOrEmpty("Library name cannot be determined.");
             string path = GetPathOfGeneratedFile($"{libraryName}DataTypes.dt", Constants.MetadataFolderName);
             Assembly assembly = Assembly.GetExecutingAssembly();

@@ -37,6 +37,14 @@
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.cpp" />
     <None Remove="Deployment\AcfProject\src\AcfProjectComponent.hpp" />
     <None Remove="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
+    <None Remove="Deployment\ArrayDatatypesWithoutDTArrayFlag\src\ArrayDatatypesComponent.cpp" />
+    <None Remove="Deployment\ArrayDatatypesWithoutDTArrayFlag\src\ArrayDatatypesComponent.hpp" />
+    <None Remove="Deployment\ArrayDatatypesWithoutDTArrayFlag\src\ArrayDatatypesProgram.cpp" />
+    <None Remove="Deployment\ArrayDatatypesWithoutDTArrayFlag\src\ArrayDatatypesProgram.hpp" />
+    <None Remove="Deployment\ArrayDatatypes\src\ArrayDatatypesComponent.cpp" />
+    <None Remove="Deployment\ArrayDatatypes\src\ArrayDatatypesComponent.hpp" />
+    <None Remove="Deployment\ArrayDatatypes\src\ArrayDatatypesProgram.cpp" />
+    <None Remove="Deployment\ArrayDatatypes\src\ArrayDatatypesProgram.hpp" />
     <None Remove="Deployment\CMakeArgsFile\CMakeLists.txt" />
     <None Remove="Deployment\CMakeArgsFile\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
     <None Remove="Deployment\CMakeArgsFile\src\CMakeArgsFileComponent.cpp" />
@@ -96,6 +104,10 @@
     <None Remove="Deployment\PortNameTooShort\src\PortNameTooShortComponent.hpp" />
     <None Remove="Deployment\PortNameTooShort\src\PortNameTooShortProgram.cpp" />
     <None Remove="Deployment\PortNameTooShort\src\PortNameTooShortProgram.hpp" />
+    <None Remove="Deployment\ProgramWithDifferentPortsWithDTArrayFlag\src\MyComponentImpl.cpp" />
+    <None Remove="Deployment\ProgramWithDifferentPortsWithDTArrayFlag\src\MyComponentImpl.hpp" />
+    <None Remove="Deployment\ProgramWithDifferentPortsWithDTArrayFlag\src\MyProgramImpl.cpp" />
+    <None Remove="Deployment\ProgramWithDifferentPortsWithDTArrayFlag\src\MyProgramImpl.hpp" />
     <None Remove="Deployment\ProgramWithHiddenStructPortProgram\CMakeLists.txt" />
     <None Remove="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramComponent.cpp" />
     <None Remove="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramComponent.hpp" />
@@ -143,6 +155,8 @@
     <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.cpp" />
     <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.hpp" />
     <None Remove="Deployment\TestResults\AcfDataTypes.dt" />
+    <None Remove="Deployment\TestResults\ArrayDatatypesDataTypes.dt" />
+    <None Remove="Deployment\TestResults\ArrayDatatypesDataTypesOld.dt" />
     <None Remove="Deployment\TestResults\DemoLibraryCommandArgs.txt" />
     <None Remove="Deployment\TestResults\DemoLibraryCommandArgsWithSpecificId.txt" />
     <None Remove="Deployment\TestResults\DemoLibraryDifferentPathsCommandArgs.txt" />
@@ -165,6 +179,7 @@
     <None Remove="Deployment\ExternalLibrary\My\Company\Name\Helper.hpp" />
     <None Remove="Deployment\TestResults\ArrayInitializer.meta.cpp" />
     <None Remove="Deployment\TestResults\ProgramWithDifferentPortsDataTypes.dt" />
+    <None Remove="Deployment\TestResults\ProgramWithDifferentPortsDataTypesNew.dt" />
     <None Remove="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
     <None Remove="Deployment\TestResults\ProjectWithRedundancyAttributeLibrary.meta.cpp" />
     <None Remove="Deployment\TestResults\StandardLibraryWithEngineerVersion.txt" />
@@ -193,6 +208,14 @@
     <EmbeddedResource Include="Deployment\AcfProjectv216\src\AcfProjectv216Library.acf.config" />
     <EmbeddedResource Include="Deployment\AcfProject\MySettings.txt" />
     <EmbeddedResource Include="Deployment\AcfProject\src\AcfProjectLibrary._acf.config" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypesWithoutDTArrayFlag\src\ArrayDatatypesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypesWithoutDTArrayFlag\src\ArrayDatatypesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypesWithoutDTArrayFlag\src\ArrayDatatypesProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypesWithoutDTArrayFlag\src\ArrayDatatypesProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypes\src\ArrayDatatypesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypes\src\ArrayDatatypesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypes\src\ArrayDatatypesProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypes\src\ArrayDatatypesProgram.hpp" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\CMakeFlags.txt" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
@@ -255,6 +278,10 @@
     <EmbeddedResource Include="Deployment\PortNameTooShort\src\PortNameTooShortComponent.hpp" />
     <EmbeddedResource Include="Deployment\PortNameTooShort\src\PortNameTooShortProgram.cpp" />
     <EmbeddedResource Include="Deployment\PortNameTooShort\src\PortNameTooShortProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPortsWithDTArrayFlag\src\MyComponentImpl.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPortsWithDTArrayFlag\src\MyComponentImpl.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPortsWithDTArrayFlag\src\MyProgramImpl.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPortsWithDTArrayFlag\src\MyProgramImpl.hpp" />
     <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramComponent.cpp" />
     <EmbeddedResource Include="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramComponent.hpp" />
@@ -282,7 +309,10 @@
     <EmbeddedResource Include="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
     <EmbeddedResource Include="Deployment\ExternalLibrary\My\Company\Name\ExternalStruct.hpp" />
     <EmbeddedResource Include="Deployment\StandardNew\PLCnextSettings.xml" />
+    <EmbeddedResource Include="Deployment\TestResults\ArrayDatatypesDataTypesOld.dt" />
+    <EmbeddedResource Include="Deployment\TestResults\ArrayDatatypesDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\AcfDataTypes.dt" />
+    <EmbeddedResource Include="Deployment\TestResults\ProgramWithDifferentPortsDataTypesNew.dt" />
     <EmbeddedResource Include="Deployment\TestResults\ProjectWithRedundancyAttributeLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithSolutionVersion.txt" />
     <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithEngineerVersion.txt" />
@@ -851,6 +881,7 @@
 	<EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Optimized_Library.meta.cpp" Link="Deployment\Templates\ProjectTemplate\Optimized_Library.meta.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\Library.typemeta" Link="Deployment\Templates\ProjectTemplate\Library.typemeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\DataTypes.dt" Link="Deployment\Templates\ProjectTemplate\DataTypes.dt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\DataTypes_v2.dt" Link="Deployment\Templates\ProjectTemplate\DataTypes_v2.dt" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\DataTypes.dt" Link="Deployment\Templates\AcfProjectTemplate\DataTypes.dt" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\.proj" Link="Deployment\Templates\AcfProjectTemplate\.proj" />
 	<EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\Library.meta.cpp" Link="Deployment\Templates\AcfProjectTemplate\Library.meta.cpp" />
@@ -874,7 +905,10 @@
     <EmbeddedResource Include="Deployment\CMakeArgsFile\plcnext.proj" />
     <EmbeddedResource Include="Deployment\AcfProjectv216\plcnext.proj" />
     <EmbeddedResource Include="Deployment\AcfProjectv210\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypes\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ArrayDatatypesWithoutDTArrayFlag\plcnext.proj" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProgramWithDifferentPortsWithDTArrayFlag\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ProjectWithRedundancyAttribute\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ProjectWithRedundancyAndWrongTarget\plcnext.proj" />
     <EmbeddedResource Include="Deployment\DynamicPorts\plcnext.proj" />

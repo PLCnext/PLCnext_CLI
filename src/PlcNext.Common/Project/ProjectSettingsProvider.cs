@@ -40,7 +40,8 @@ namespace PlcNext.Common.Project
             EntityKeys.PathKey,
             EntityKeys.NameKey,
             EntityKeys.ProjectSettingsKey,
-            EntityKeys.ProjectVersionKey
+            EntityKeys.ProjectVersionKey,
+            EntityKeys.GenerateDTArrayNameByTypeKey
         };
 
         public override SubjectIdentifier HigherPrioritySubject { get; } = new SubjectIdentifier(nameof(CommandDefinitionContentProvider));
@@ -101,7 +102,8 @@ namespace PlcNext.Common.Project
             return owner.IsRoot() &&
                    ((AvailableProjectValues.Contains(key) &&
                      owner.HasValue<ProjectDescription>()) ||
-                    key == EntityKeys.ProjectIdKey);
+                    key == EntityKeys.ProjectIdKey ||
+                    key == EntityKeys.GenerateDTArrayNameByTypeKey);
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -118,6 +120,8 @@ namespace PlcNext.Common.Project
                     return GetProjectVersion();
                 case EntityKeys.ProjectIdKey:
                     return GetProjectId();
+                case EntityKeys.GenerateDTArrayNameByTypeKey:
+                    return GetGenerateDTArrayNameByTypeFlag();
                 default:
                     throw new ContentProviderException(key, owner);
             }
@@ -183,6 +187,18 @@ namespace PlcNext.Common.Project
             {
                 ProjectDescription description = owner.Value<ProjectDescription>();
                 return owner.Create(key, Version.Parse(description.Settings.Version));
+            }
+
+            Entity GetGenerateDTArrayNameByTypeFlag()
+            {
+                ProjectEntity project = ProjectEntity.Decorate(owner);
+                if (!project.Settings.IsPersistent)
+                {
+                    return owner.Create(key, "true", true); //always generate new array name schema if no .proj available
+                }
+                ProjectDescription description = owner.Value<ProjectDescription>();
+                return owner.Create(key, description.Settings.GenerateDTArrayNameByType.ToString(CultureInfo.InvariantCulture),
+                                         description.Settings.GenerateDTArrayNameByType);
             }
         }
 

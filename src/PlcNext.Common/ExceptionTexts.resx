@@ -391,4 +391,7 @@
   <data name="PortStructureFieldAmbiguous" xml:space="preserve">
     <value>The fields {0} of the type {1} are ambiguous. In types used for ports only non-ambiguous fields should exist.</value>
   </data>
+  <data name="TemplateFileConditionParsing" xml:space="preserve">
+    <value>The condition '{0}' could not be parsed into a valid boolean condition.</value>
+  </data>
 </root>

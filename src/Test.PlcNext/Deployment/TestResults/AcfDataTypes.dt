@@ -4,9 +4,8 @@ TYPE
         someString23 : STRING[23];
         someWString109 : WSTRING[109];
         someWStringFromDefine : WSTRING[42];
-        value2 : value2Array;
+        value2 : ARRAY_DINT_0_9;
     END_STRUCT
 
-    value2Array : ARRAY [0..9] OF DINT;
-
+    ARRAY_DINT_0_9 : ARRAY [0..9] OF DINT;
 END_TYPE

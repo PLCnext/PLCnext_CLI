@@ -1,0 +1,25 @@
+TYPE
+    Ports : STRUCT
+        myA : TypeA;
+        myB : TypeB;
+        myC : TypeC;
+    END_STRUCT
+
+    TypeA : STRUCT
+        value1 : INT;
+        value2 : value2Array;
+    END_STRUCT
+
+    TypeB : STRUCT
+        value1 : DINT;
+        value2 : value2Array;
+    END_STRUCT
+
+    TypeC : STRUCT
+        value1 : DINT;
+        value2 : value2Array;
+    END_STRUCT
+
+    value2Array : ARRAY [0..9] OF INT;
+    value2Array : ARRAY [0..9] OF DINT;
+END_TYPE

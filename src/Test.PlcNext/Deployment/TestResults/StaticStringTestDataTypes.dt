@@ -12,7 +12,6 @@
     END_STRUCT
 
     myWStringArrayPortArray : ARRAY [0..1] OF WSTRING[14];
-
     myStringPortString10 : STRING[10];
     
     myStringPort2String10 : STRING[10];

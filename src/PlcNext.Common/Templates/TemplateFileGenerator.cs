@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -403,8 +404,9 @@ namespace PlcNext.Common.Templates
 
                     if (!string.IsNullOrEmpty(file.condition)) 
                     {
-                        string condition = await resolver.ResolveAsync(file.condition, generatableEntity).ConfigureAwait(false);
-                        if (condition.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        string conditionString = await resolver.ResolveAsync(file.condition, generatableEntity).ConfigureAwait(false);
+                        bool condition = ResolveCondition(conditionString);
+                        if (!condition)
                         {
                             continue;
                         }
@@ -433,6 +435,26 @@ namespace PlcNext.Common.Templates
                     using (StreamWriter writer = new StreamWriter(fileStream, encoding))
                     {
                         await writer.WriteAsync(content).ConfigureAwait(false);
+                    }
+                }
+
+                bool ResolveCondition(string condition)
+                {
+                    using (DataTable calculator = new DataTable())
+                    {
+                        try
+                        {
+                            bool? result = calculator.Compute(condition, string.Empty) as bool?;
+                            if (result is bool)
+                            {
+                                return (bool)result;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new TemplateFileConditionParsingException(condition, ex);
+                        }
+                        throw new TemplateFileConditionParsingException(condition);
                     }
                 }
 

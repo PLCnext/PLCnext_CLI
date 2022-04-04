@@ -45,9 +45,12 @@ namespace PlcNext.Common.Project {
         
         private string typeField;
         
+        private bool generateDTArrayNameByTypeField;
+        
         public ProjectSettings() {
             this.versionField = "1.0";
             this.typeField = "project";
+            this.generateDTArrayNameByTypeField = false;
         }
         
         /// <remarks/>
@@ -111,6 +114,17 @@ namespace PlcNext.Common.Project {
             }
             set {
                 this.typeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool GenerateDTArrayNameByType {
+            get {
+                return this.generateDTArrayNameByTypeField;
+            }
+            set {
+                this.generateDTArrayNameByTypeField = value;
             }
         }
     }

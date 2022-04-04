@@ -564,6 +564,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckDatatypeWorksheet(name);
         }
 
+        protected void Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME(string project, string name)
+        {
+            ScenarioContext.CheckDatatypeWorksheet(name, project);
+        }
+
         protected void Then_the_datatypes_worksheet_was_not_generated()
         {
             ScenarioContext.CheckNoDatatypeWorksheetGenerated();

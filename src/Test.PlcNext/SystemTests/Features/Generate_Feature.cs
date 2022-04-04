@@ -230,6 +230,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                       new Portmeta("examplePort4","int32","", string.Empty),
                                                                                       new Portmeta("examplePort5","uint64","", "3"),
                                                                                       new Portmeta("examplePort6","uint64","", "3"),
+                                                                                      new Portmeta("examplePort7","Example","Output", "5"),
                                                                                   }))).RunAsyncWithTimeout();
         }
 
@@ -794,13 +795,43 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Generate_datatype_worksheet_for_arrays()
+        public async Task Generate_datatype_worksheet_for_old_project_with_old_naming_schema()
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithDifferentPorts"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithDifferentPorts"),
                 _ => When_I_generate_all_files_from_inside_the_project_folder(),
                 _ => Then_the_datatype_worksheet_looks_like_NAME("ProgramWithDifferentPortsDataTypes.dt")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_for_old_project_with_new_naming_schema()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ProgramWithDifferentPortsWithDTArrayFlag"),
+                _ => Given_is_the_working_directory_PATH("ProgramWithDifferentPortsWithDTArrayFlag"),
+                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("ProgramWithDifferentPorts", "ProgramWithDifferentPortsDataTypesNew.dt")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_for_new_project_with_new_naming_schema()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ArrayDatatypes"),
+                _ => Given_is_the_working_directory_PATH("ArrayDatatypes"),
+                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("ArrayDatatypesDataTypes.dt")).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_for_new_project_with_old_naming_schema()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ArrayDatatypesWithoutDTArrayFlag"),
+                _ => Given_is_the_working_directory_PATH("ArrayDatatypesWithoutDTArrayFlag"),
+                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("ArrayDatatypes", "ArrayDatatypesDataTypesOld.dt")).RunAsyncWithTimeout();
         }
 
         [Scenario]

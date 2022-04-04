@@ -1,0 +1,15 @@
+TYPE
+    Example : STRUCT
+        value1 : DINT;
+        value2 : BOOL;
+        value3 : ARRAY_LINT_0_5;
+        value4 : ARRAY_LINT_0_0;
+    END_STRUCT
+
+    ARRAY_Example_0_0 : ARRAY [0..0] OF Example;
+    ARRAY_Example_0_4 : ARRAY [0..4] OF Example;
+    ARRAY_LWORD_0_2 : ARRAY [0..2] OF LWORD;
+    ARRAY_ULINT_0_2 : ARRAY [0..2] OF ULINT;
+    ARRAY_LINT_0_5 : ARRAY [0..5] OF LINT;
+    ARRAY_LINT_0_0 : ARRAY [0..0] OF LINT;
+END_TYPE
