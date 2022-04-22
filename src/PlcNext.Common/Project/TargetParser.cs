@@ -33,6 +33,8 @@ namespace PlcNext.Common.Project
                     key == EntityKeys.TargetsKey) ||
                    (owner.IsRoot() &&
                     key == EntityKeys.ValidatedTargetsKey) ||
+                    (owner.IsRoot() &&
+                    key == EntityKeys.MinTargetVersionKey) ||
                    (key == EntityKeys.TargetFullNameKey &&
                     owner.HasValue<Target>()) ||
                    (key == EntityKeys.TargetShortFullNameKey &&
@@ -67,23 +69,28 @@ namespace PlcNext.Common.Project
                     return owner.Create(key, version);
                 case EntityKeys.NameKey:
                     return owner.Create(key, owner.Value<Target>().Name);
+                case EntityKeys.MinTargetVersionKey:
+                    return owner.Create(key, MinTargetVersion());
                 default:
                     return GetTargets(key == EntityKeys.ValidatedTargetsKey);
             }
 
             Entity GetTargets(bool validate)
             {
+                IEnumerable<Target> targetsSet = GetTargetsSet(validate);
+                return owner.Create(key, targetsSet.Select(t => owner.Create(key.Singular(), t.Name, t)));
+            }
+            IEnumerable<Target> GetTargetsSet(bool validate)
+            {
                 CommandEntity commandEntity = CommandEntity.Decorate(owner.Origin);
                 if (commandEntity.IsCommandArgumentSpecified(Constants.TargetArgumentName))
                 {
                     IEnumerable<string> targets = commandEntity.GetMultiValueArgument(Constants.TargetArgumentName);
                     //TODO parseLocation true here is legacy as soon as old generate library command is gone, reset to false
-                    IEnumerable<Target> targetsSet = GetSpecificTargets(targets, validate, true).Select(t => t.Item1);
-                    return owner.Create(key, targetsSet.Select(t => owner.Create(key.Singular(), t.Name, t)));
+                    return GetSpecificTargets(targets, validate, true).Select(t => t.Item1);
                 }
                 ProjectEntity project = ProjectEntity.Decorate(owner);
-                TargetsResult result = Targets(project, validate);
-                return owner.Create(key, result.ValidTargets.Select(t => owner.Create(key.Singular(), t.Name, t)));
+                return Targets(project, validate).ValidTargets;
             }
 
             string EngineerVersion(Target target)
@@ -104,6 +111,18 @@ namespace PlcNext.Common.Project
                 }
 
                 return target.ShortVersion;
+            }
+
+            Entity MinTargetVersion()
+            {
+                IEnumerable<Target> targetsSet = GetTargetsSet(false);
+                string minVersion = targetsSet.Min(t => t.Version);
+                Target minTarget = targetsSet.Where(t => t.Version == minVersion).FirstOrDefault();
+                if (minTarget == null || string.IsNullOrEmpty(minTarget.Version))
+                {
+                    return owner.Create(key, "99.99.99"); // if no target found, assume newest target
+                }
+                return owner.Create(key, minTarget.Version);
             }
         }
 

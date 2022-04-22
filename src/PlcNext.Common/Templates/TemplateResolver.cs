@@ -9,7 +9,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,10 +16,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using PlcNext.Common.DataModel;
-using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
-using PlcNext.Common.Tools.Settings;
 
 namespace PlcNext.Common.Templates
 {
@@ -28,7 +25,8 @@ namespace PlcNext.Common.Templates
     {
         private readonly Regex templateAccessRegex = new Regex(@"\$\((?<text_control>[lu]:)?(?<content>(?:[^\.]+?)(?:\.[^\.]+?)*)\)", RegexOptions.Compiled);
         private readonly Regex controlSequenceFinder = new Regex(@"\$\(\[(?<expression>[^\]]+?)\][^\)]*?\)[\s\S]*?\$\(\[end-\1\]\)", RegexOptions.Compiled);
-        private readonly Regex greedyContentFinder = new Regex(@"\$\(\[(?<expression>[^\]]+?)\](?<parameter>[^\)]*?)\)(?<content>[\s\S]*)\$\(\[end-\1\]\)", RegexOptions.Compiled);
+        private readonly Regex greedyContentFinder = 
+            new Regex(@"\$\(\[(?<expression>[^\]]+?)\](?<parameter>(?:\$\([^\)]*?\)|[^\)])*?)\)(?<content>[\s\S]*)\$\(\[end-\1\]\)", RegexOptions.Compiled);
         private readonly Regex newlineSearcher = new Regex(@"\s*?(?:\r\n|\r|\n)", RegexOptions.Compiled);
 
         private readonly ITemplateRepository repository;
@@ -109,6 +107,8 @@ namespace PlcNext.Common.Templates
                         return IfSequence(IfExistCondition);
                     case "IF-SPECIFIED":
                         return IfSequence(IfSpecifiedCondition);
+                    case "IF":
+                        return IfSequence(IfCondition);
                     case "FOREACH":
                         return ForeachSequence();
                     case "NO-DUPLICATE-LINES":
@@ -135,6 +135,14 @@ namespace PlcNext.Common.Templates
                     if (string.IsNullOrEmpty(parameter))
                     {
                         throw new IfSequenceParameterMismatchException();
+                    }
+                    if ((content.StartsWith("\n", StringComparison.Ordinal) ||
+                         content.StartsWith("\r\n", StringComparison.Ordinal)) &&
+                        (content.EndsWith("\n", StringComparison.Ordinal) ||
+                         content.EndsWith("\r\n", StringComparison.Ordinal)))
+                    {
+                        //This would lead to unwanted empty lines
+                        content = content.TrimStart('\r').TrimStart('\n');
                     }
 
                     bool condition = conditionCheck();
@@ -169,6 +177,12 @@ namespace PlcNext.Common.Templates
                     return specified;
                 }
 
+                bool IfCondition()
+                {
+                    string condition = Resolve(parameter, dataSource);
+                    return condition.ResolveCondition();
+                }
+
                 string IfResult(bool condition)
                 {
                     string result = string.Empty;
@@ -193,7 +207,7 @@ namespace PlcNext.Common.Templates
                         (content.EndsWith("\n", StringComparison.Ordinal) || 
                          content.EndsWith("\r\n", StringComparison.Ordinal)))
                     {
-                        //This would leads to unwanted empty lines
+                        //This would lead to unwanted empty lines
                         content = content.TrimStart('\r').TrimStart('\n');
                     }
 

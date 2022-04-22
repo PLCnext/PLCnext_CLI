@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using PlcNext.Common.Templates.Description;
 
@@ -270,6 +269,50 @@ namespace PlcNext.Common.Templates
                                                                                ? StringComparison.OrdinalIgnoreCase
                                                                                : StringComparison.Ordinal))
                                            .Any();
+        }
+
+        private static readonly Regex VersionComparisonRegex = 
+            new (@"(?<version1>(\d+.\d+(.\d+)?(.\d+)?)?)\s*(?<operator>(\<|\>|=)+)\s*(?<version2>\d+.\d+(.\d+)?(.\d+)?)", RegexOptions.Compiled);
+
+
+        public static bool ResolveCondition(this string condition)
+        {
+            try
+            {
+                CalcEngine.CalcEngine calcEngine = new CalcEngine.CalcEngine();
+                return (bool)calcEngine.Evaluate(condition);
+            }
+            catch (Exception ex)
+            {
+                Match match = VersionComparisonRegex.Match(condition);
+                if (match.Success)
+                {
+                    if (Version.TryParse(match.Groups["version1"].Value, out Version version1)
+                        && Version.TryParse(match.Groups["version2"].Value, out Version version2))
+                    {
+                        switch (match.Groups["operator"].Value)
+                        {
+                            case "<":
+                                return version1 < version2;
+                            case ">":
+                                return version1 > version2;
+                            case "=":
+                            case "==":
+                                return version1 == version2;
+                            case "<=":
+                                return version1 <= version2;
+                            case ">=":
+                                return version1 >= version2;
+                            case "!=":
+                                return version1 != version2;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                throw new TemplateFileConditionParsingException(condition, ex);
+            }
+            throw new TemplateFileConditionParsingException(condition);
         }
     }
 }

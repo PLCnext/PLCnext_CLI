@@ -89,6 +89,7 @@ namespace PlcNext.Common.Tools
         public const string SolutionVersionKey = "__internalsolutionversion__";
         public const string ProjectConfigurationsKey = "__internalprojectconfigurations__";
         public const string GenerateDTArrayNameByTypeKey = "generatedtarraynamebytype";
+        public const string MinTargetVersionKey = "mintargetversion";
 
         //DeployCommandContentProvider
         public const string InternalDeployPathKey = "__internaldeploypath__";
