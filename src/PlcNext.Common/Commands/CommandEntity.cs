@@ -41,7 +41,9 @@ namespace PlcNext.Common.Commands
 
         public string Output => this[EntityKeys.OutputKey].Value<string>();
 
-        public string CommandName => Value<CommandDefinition>()?.Name ?? string.Empty;
+        public string CommandName => Value<CommandDefinition>()?.Name ??
+                                        Value<CommandArgs>()?.PropertyValue<string>("CommandName") ??
+                                            string.Empty;
 
         public string GetSingleValueArgument(string argument)
         {

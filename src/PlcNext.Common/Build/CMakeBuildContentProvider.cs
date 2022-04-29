@@ -72,10 +72,28 @@ namespace PlcNext.Common.Build
                            ? (VirtualDirectory) null
                            : throw new InvalidOperationException("Need to use a target entity as base.");
             }
+            string buildType = GetBuildType(owner);
             string binaryDirectory = Path.Combine(owner.Root.Path, Constants.IntermediateFolderName,
                                                   Constants.CmakeFolderName,
                                                   targetEntity.FullName,
-                                                  GetBuildType(owner));
+                                                  buildType);
+
+            if (!fileSystem.DirectoryExists(binaryDirectory))
+            {
+                string autoCmakeFolderPath = Path.Combine(owner.Root.Path, Constants.IntermediateFolderName,
+                                                          Constants.CmakeAutoBuildFolderName,
+                                                          targetEntity.FullName,
+                                                          buildType);
+                if (CommandEntity.Decorate(owner.Origin).CommandName != "build")
+                {
+                    binaryDirectory = autoCmakeFolderPath;
+                }
+                else if(fileSystem.DirectoryExists(autoCmakeFolderPath))
+                {
+                    fileSystem.GetDirectory(autoCmakeFolderPath, createNew:false).Clear();
+                }
+            }
+
             if (!fileSystem.DirectoryExists(binaryDirectory) && validateExist)
             {
                 return null;

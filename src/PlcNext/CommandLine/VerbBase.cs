@@ -67,6 +67,24 @@ namespace PlcNext.CommandLine
             commandArgs.DeprecatedAlternative = attribute.AlternativeVerb;
             return commandArgs;
         }
+        protected T AddVerbName<T>(T commandArgs)
+            where T : CommandArgs
+        {
+            if (commandArgs == null)
+            {
+                throw new ArgumentNullException(nameof(commandArgs));
+            }
+
+            VerbAttribute verb = this.GetType().GetCustomAttribute<VerbAttribute>();
+            if (verb == null)
+            {
+                return commandArgs;
+            }
+
+            commandArgs.CommandName = verb.Name;
+
+            return commandArgs;
+        }
 
         protected abstract Task<int> Execute(ICommandManager commandManager);
     }

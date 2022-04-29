@@ -21,7 +21,7 @@ namespace PlcNext.CommandLine
     {
         protected override Task<int> Execute(ICommandManager commandManager)
         {
-            return commandManager.Execute(AddDeprecatedInformation(new ScanSdksCommandArgs()));
+            return commandManager.Execute(AddVerbName(AddDeprecatedInformation(new ScanSdksCommandArgs())));
         }
     }
 }

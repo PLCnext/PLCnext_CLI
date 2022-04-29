@@ -13,12 +13,9 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using PlcNext.Common.DataModel;
-using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.FileSystem;
-using PlcNext.Common.Tools.Process;
 using PlcNext.Common.Tools.SDK;
-using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.Common.Build
 {
@@ -26,16 +23,11 @@ namespace PlcNext.Common.Build
     {
         private readonly CmakeExecuter cmakeExecuter;
         private readonly ISdkRepository sdkRepository;
-        private readonly ICMakeConversation cMakeConversation;
-        private readonly IFileSystem fileSystem;
 
-        public CmakeBuildInformationService(CmakeExecuter cmakeExecuter, ISdkRepository sdkRepository,
-                                            ICMakeConversation cMakeConversation, IFileSystem fileSystem)
+        public CmakeBuildInformationService(CmakeExecuter cmakeExecuter, ISdkRepository sdkRepository)
         {
             this.cmakeExecuter = cmakeExecuter;
             this.sdkRepository = sdkRepository;
-            this.cMakeConversation = cMakeConversation;
-            this.fileSystem = fileSystem;
         }
 
         public BuildSystemProperties RetrieveBuildSystemProperties(Entity rootEntity, Target projectTarget,

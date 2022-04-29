@@ -32,7 +32,7 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(AddDeprecatedInformation(new GetSdksCommandArgs(Path, false)))
+            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new GetSdksCommandArgs(Path, false))))
                                        .ConfigureAwait(false);
         }
     }

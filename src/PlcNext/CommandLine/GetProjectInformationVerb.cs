@@ -39,7 +39,7 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(AddDeprecatedInformation(new GetProjectInformationCommandArgs(Path, SourceDirectories, NoIncludePathDetection)))
+            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new GetProjectInformationCommandArgs(Path, SourceDirectories, NoIncludePathDetection))))
                                        .ConfigureAwait(false);
         }
     }

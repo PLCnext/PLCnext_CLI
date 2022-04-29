@@ -29,7 +29,7 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(AddDeprecatedInformation(new UpdateCliCommandArgs(Version, Proxy, File)))
+            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new UpdateCliCommandArgs(Version, Proxy, File))))
                                        .ConfigureAwait(false);
         }
     }

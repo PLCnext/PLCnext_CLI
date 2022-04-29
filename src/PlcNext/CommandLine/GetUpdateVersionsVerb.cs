@@ -20,7 +20,7 @@ namespace PlcNext.CommandLine
     {
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(AddDeprecatedInformation(new GetUpdateVersionsCommandArgs()))
+            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new GetUpdateVersionsCommandArgs())))
                                        .ConfigureAwait(false);
         }
     }

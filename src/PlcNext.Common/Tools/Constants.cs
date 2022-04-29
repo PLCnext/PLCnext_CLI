@@ -23,6 +23,7 @@ namespace PlcNext.Common.Tools
         public const string MetadataFolderName = "config";
         public const string GeneratedCodeFolderName = "code";
         public const string CmakeFolderName = "cmake";
+        public const string CmakeAutoBuildFolderName = "cmakeAutoBuild";
         public const string ReleaseFolderName = "Release";
         public const string DebugFolderName = "Debug";
         public const string LibraryFolderName = "bin";

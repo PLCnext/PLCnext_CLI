@@ -82,8 +82,8 @@ namespace PlcNext.CommandLine
         
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(AddDeprecatedInformation(new BuildCommandArgs(Path, Targets, BuildType, Configure, NoConfigure,
-                                                                     BuildProperties, OutputSpecified ? Output : null)))
+            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new BuildCommandArgs(Path, Targets, BuildType, Configure, NoConfigure,
+                                                                     BuildProperties, OutputSpecified ? Output : null))))
                                        .ConfigureAwait(false);
         }
     }
