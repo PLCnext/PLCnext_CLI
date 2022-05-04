@@ -140,6 +140,9 @@ namespace PlcNext.Common.Templates.Description
         [XmlIgnore]
         public bool deployPathSpecified { get; set; }
 
+        [XmlIgnore]
+        public bool excludedSpecified { get; set; }
+
         public bool Equals(templateFile other)
         {
             if (ReferenceEquals(null, other)) return false;

@@ -12,7 +12,9 @@ using PlcNext.Common.Tools.FileSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autofac.Features.Indexed;
 using PlcNext.Common.DataModel;
+using PlcNext.Common.Templates;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
@@ -21,12 +23,12 @@ namespace PlcNext.Common.Commands
 {
     internal class BuildCommand : SyncCommand<BuildCommandArgs>
     {
-        private readonly IBuilder builder;
+        private readonly IIndex<string, IBuilder> builders;
         private readonly IEntityFactory entityFactory;
 
-        public BuildCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, IBuilder builder, IEntityFactory entityFactory) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer)
+        public BuildCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, IIndex<string, IBuilder> builders, IEntityFactory entityFactory) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer)
         {
-            this.builder = builder;
+            this.builders = builders;
             this.entityFactory = entityFactory;
         }
 
@@ -35,9 +37,10 @@ namespace PlcNext.Common.Commands
             string buildProperties = string.Join(" ", args.BuildProperties.Select(Unescape));
 
             Entity rootEntity = entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root;
+            TemplateEntity templateEntity = TemplateEntity.Decorate(rootEntity);
 
             BuildInformation buildInfo = new BuildInformation(rootEntity, args.BuildType, args.Configure, args.NoConfigure, buildProperties, args.Output);
-            builder.Build(buildInfo, observable, args.Target);
+            builders[templateEntity.Template.buildEngine].Build(buildInfo, observable, args.Target);
 
             return 0;
 

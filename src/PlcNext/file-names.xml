@@ -1,6 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <names>
   <application path="plcncli"/>
-  <EngineeringLibraryBuilder path="bin/LibraryBuilder.Core"/>
-  <cmake path="cmake/cmake"/>
+  <EngineeringLibraryBuilder path="library-builder/EngineeringLibraryBuilder"/>
+  <cmake path="cmake/bin/cmake"/>
+  <mksquashfs path="squashfs/bin/gensquashfs"/>
 </names>

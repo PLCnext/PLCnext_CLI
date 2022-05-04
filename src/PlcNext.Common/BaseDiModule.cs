@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using Autofac;
 using Autofac.Core;
+using Autofac.Features.AttributeFilters;
 using PlcNext.Common.Build;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.CodeModel.Cpp;
@@ -82,7 +83,7 @@ namespace PlcNext.Common
             builder.RegisterType<SettingsBasedSdkRepository>().As<ISdkRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CmakeExecuter>().As<IBuildExecuter>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<CmakeBuildInformationService>().As<IBuildInformationService>().InstancePerLifetimeScope();
-            builder.RegisterType<Builder>().As<IBuilder>().InstancePerLifetimeScope();
+            builder.RegisterType<Builder>().Keyed<IBuilder>("DefaultBuildEngine").InstancePerLifetimeScope();
             builder.RegisterType<EngineeringLibraryBuilderExecuter>().As<ILibraryBuilderExecuter>().InstancePerLifetimeScope();
             builder.RegisterType<FileBasedSettingsProvider>()
                    .As<ISettingsProvider>()
@@ -99,7 +100,7 @@ namespace PlcNext.Common
             builder.RegisterType<TemplateCommandBuilder>().As<ITemplateCommandBuilder>().InstancePerLifetimeScope();
             builder.RegisterType<TemplateRepository>().As<ITemplateRepository>().InstancePerLifetimeScope();
             builder.RegisterType<TemplateResolver>().As<ITemplateResolver>().InstancePerLifetimeScope();
-            builder.RegisterType<TemplateFileGenerator>().As<ITemplateFileGenerator>().InstancePerLifetimeScope();
+            builder.RegisterType<TemplateFileGenerator>().Keyed<ITemplateFileGenerator>("DefaultGenerateEngine").InstancePerLifetimeScope();
             builder.RegisterType<CollectiveTemplateIdentifierRepository>().As<ITemplateIdentifierRepository>().InstancePerLifetimeScope();
             builder.RegisterType<SdkInstaller>().As<ISdkInstaller>().InstancePerLifetimeScope();
             builder.RegisterType<PropertiesFileSdkContainer>().As<ISdkContainer>().InstancePerLifetimeScope();
@@ -127,11 +128,16 @@ namespace PlcNext.Common
                    .InstancePerLifetimeScope();
             builder.RegisterType<CollectiveEntityContentProvider>().As<IEntityContentProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ProjectConfigurationProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
-            builder.RegisterType<DeployService>().As<IDeployService>().InstancePerLifetimeScope();
+            builder.RegisterType<DeployService>().Keyed<IDeployService>("DefaultDeployEngine").InstancePerLifetimeScope();
             builder.RegisterType<EngineeringLibraryBuilderDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
             builder.RegisterType<AcfEngineeringLibraryBuilderDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
             builder.RegisterType<ProjectPropertiesProvider>().As<IProjectPropertiesProvider>().InstancePerLifetimeScope();
             builder.RegisterType<CopyDependenciesDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
+            builder.RegisterType<AppDeployEngine>().Keyed<IDeployService>("AppDeployEngine").InstancePerLifetimeScope();
+            builder.RegisterType<NoBuildEngine>().Keyed<IBuilder>("NoBuildEngine")
+                   .WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<NoGenerateEngine>().Keyed<ITemplateFileGenerator>("NoGenerateEngine")
+                   .WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<AcfGenerateStep>().As<IGenerateStep>().InstancePerLifetimeScope();
             if (activateAutoComponents)
             {

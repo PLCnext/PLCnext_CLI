@@ -65,7 +65,7 @@ namespace PlcNext.Common.Templates
                 string basePath = dataModel.Root.Path;
                 HashSet<VirtualFile> files = new HashSet<VirtualFile>();
 
-                foreach (templateFile file in template.File)
+                foreach (templateFile file in template.File.Where(f => !f.excluded))
                 {
                     (string content, Encoding encoding) = await GetResolvedTemplateContent(dataModel, file, template).ConfigureAwait(false);
 
@@ -394,7 +394,8 @@ namespace PlcNext.Common.Templates
                     return;
                 }
 
-                foreach (templateGeneratedFile file in template.GeneratedFile??Enumerable.Empty<templateGeneratedFile>())
+                foreach (templateGeneratedFile file in template.GeneratedFile?.Where(f => !f.excluded)
+                                                       ??Enumerable.Empty<templateGeneratedFile>())
                 {
                     if (generator != "all" && !file.generator.Equals(generator, StringComparison.OrdinalIgnoreCase))
                     {

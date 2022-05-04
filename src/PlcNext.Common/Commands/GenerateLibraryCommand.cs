@@ -10,8 +10,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Autofac.Features.Indexed;
 using PlcNext.Common.Build;
 using PlcNext.Common.DataModel;
+using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.UI;
@@ -21,12 +23,12 @@ namespace PlcNext.Common.Commands
     internal class GenerateLibraryCommand : SyncCommand<GenerateLibraryCommandArgs>
     {
         private readonly IEntityFactory entityFactory;
-        private readonly IBuilder builder;
+        private readonly IIndex<string, IBuilder> builders;
 
-        public GenerateLibraryCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, IEntityFactory entityFactory, IBuilder builder) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer)
+        public GenerateLibraryCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, IEntityFactory entityFactory, IIndex<string, IBuilder> builders) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer)
         {
             this.entityFactory = entityFactory;
-            this.builder = builder;
+            this.builders = builders;
         }
 
         protected override int Execute(GenerateLibraryCommandArgs args, ChangeObservable observable)
@@ -37,7 +39,8 @@ namespace PlcNext.Common.Commands
             }
 
             Entity project = entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root;
-            return builder.BuildLibraryForProject(project, observable, args.MetaFilesDirectory, args.LibraryLocation,
+            TemplateEntity templateEntity = TemplateEntity.Decorate(project);
+            return builders[templateEntity.Template.buildEngine].BuildLibraryForProject(project, observable, args.MetaFilesDirectory, args.LibraryLocation,
                                            args.OutputDirectory, realGuid, args.Target, args.ExternalLibraries, null);
         }
     }

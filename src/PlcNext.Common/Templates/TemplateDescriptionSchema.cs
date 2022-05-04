@@ -69,11 +69,20 @@ namespace PlcNext.Common.Templates.Description {
         
         private bool isRelevantForProjectNamespaceField;
         
+        private string buildEngineField;
+        
+        private string generateEngineField;
+        
+        private string deployEngineField;
+        
         public TemplateDescription() {
             this.isRootField = false;
             this.isHiddenField = false;
             this.identifierField = "CodeAttributeIdentifier";
             this.isRelevantForProjectNamespaceField = false;
+            this.buildEngineField = "DefaultBuildEngine";
+            this.generateEngineField = "DefaultGenerateEngine";
+            this.deployEngineField = "DefaultDeployEngine";
         }
         
         /// <remarks/>
@@ -274,6 +283,42 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.isRelevantForProjectNamespaceField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute("DefaultBuildEngine")]
+        public string buildEngine {
+            get {
+                return this.buildEngineField;
+            }
+            set {
+                this.buildEngineField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute("DefaultGenerateEngine")]
+        public string generateEngine {
+            get {
+                return this.generateEngineField;
+            }
+            set {
+                this.generateEngineField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute("DefaultDeployEngine")]
+        public string deployEngine {
+            get {
+                return this.deployEngineField;
+            }
+            set {
+                this.deployEngineField = value;
             }
         }
     }
@@ -861,6 +906,8 @@ namespace PlcNext.Common.Templates.Description {
         
         private string nameField;
         
+        private bool excludedField;
+        
         private string templateField;
         
         private string pathField;
@@ -877,6 +924,10 @@ namespace PlcNext.Common.Templates.Description {
         
         private string equalsversionField;
         
+        public templateFile() {
+            this.excludedField = false;
+        }
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string name {
@@ -885,6 +936,18 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool excluded {
+            get {
+                return this.excludedField;
+            }
+            set {
+                this.excludedField = value;
             }
         }
         

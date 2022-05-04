@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac.Features.Indexed;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Deploy;
 using PlcNext.Common.Generate;
@@ -28,9 +29,9 @@ namespace PlcNext.Common.Templates
         private readonly ITemplateCommandBuilder templateCommandBuilder;
         private readonly ITemplateRepository repository;
         private readonly IEntityFactory entityFactory;
-        private readonly ITemplateFileGenerator templateFileGenerator;
+        private readonly IIndex<string, ITemplateFileGenerator> templateFileGenerators;
         private readonly IUserInterface userInterface;
-        private readonly IDeployService deployService;
+        private readonly IIndex<string, IDeployService> deployServices;
         private readonly IEnumerable<IDeployStep> deploySteps;
         private readonly ExecutionContext executionContext;
         private readonly IEnumerable<IGenerateStep> generateSteps;
@@ -40,16 +41,16 @@ namespace PlcNext.Common.Templates
         private readonly List<CommandDefinition> generateCommands = new List<CommandDefinition>();
 
         public TemplateCommandProvider(ITemplateCommandBuilder templateCommandBuilder, ITemplateRepository repository,
-            IEntityFactory entityFactory, ITemplateFileGenerator templateFileGenerator, IUserInterface userInterface,
-            IDeployService deployService, IEnumerable<IDeployStep> deploySteps, ExecutionContext executionContext,
+            IEntityFactory entityFactory, IIndex<string, ITemplateFileGenerator> templateFileGenerators, IUserInterface userInterface,
+            IIndex<string, IDeployService> deployServices, IEnumerable<IDeployStep> deploySteps, ExecutionContext executionContext,
             IEnumerable<IGenerateStep> generateSteps)
         {
             this.templateCommandBuilder = templateCommandBuilder;
             this.repository = repository;
             this.entityFactory = entityFactory;
-            this.templateFileGenerator = templateFileGenerator;
+            this.templateFileGenerators = templateFileGenerators;
             this.userInterface = userInterface;
-            this.deployService = deployService;
+            this.deployServices = deployServices;
             this.deploySteps = deploySteps;
             this.executionContext = executionContext;
             this.generateSteps = generateSteps;
@@ -126,7 +127,8 @@ namespace PlcNext.Common.Templates
             if (definition.BaseDefinition == newCommand)
             {
                 Entity dataModel = entityFactory.Create(definition.Name, definition);
-                IEnumerable<VirtualFile> files = await templateFileGenerator.InitalizeTemplate(dataModel, observable).ConfigureAwait(false);
+                TemplateEntity templateEntity = TemplateEntity.Decorate(dataModel);
+                IEnumerable<VirtualFile> files = await templateFileGenerators[templateEntity.Template.generateEngine].InitalizeTemplate(dataModel, observable).ConfigureAwait(false);
 
                 userInterface.WriteInformation($"Successfully created template '{dataModel.Template().name}' in {GetCommonPath(files,dataModel.Path)}.");
             }
@@ -140,7 +142,8 @@ namespace PlcNext.Common.Templates
                                                      $"generator for {dataModel.Root.Path}.");
 
                 SingleValueArgument singleValueArgument = definition.Argument<SingleValueArgument>(Constants.OutputArgumentName);
-                await templateFileGenerator.GenerateFiles(dataModel.Root, definition.Name, singleValueArgument.Value, singleValueArgument.IsDefined, observable)
+                TemplateEntity templateEntity = TemplateEntity.Decorate(dataModel.Root);
+                await templateFileGenerators[templateEntity.Template.generateEngine].GenerateFiles(dataModel.Root, definition.Name, singleValueArgument.Value, singleValueArgument.IsDefined, observable)
                                            .ConfigureAwait(false);
 
                 Entity root = dataModel.Root;
@@ -173,8 +176,9 @@ namespace PlcNext.Common.Templates
             if (definition == deployCommand)
             {
                 Entity dataModel = entityFactory.Create(definition.Name, definition);
+                TemplateEntity templateEntity = TemplateEntity.Decorate(dataModel.Root);
                 
-                deployService.DeployFiles(dataModel);
+                deployServices[templateEntity.Template.deployEngine].DeployFiles(dataModel);
 
                 Entity root = dataModel.Root;
                 TemplateDescription template = TemplateEntity.Decorate(root).Template;

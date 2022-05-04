@@ -174,7 +174,7 @@ description itself. -->
       </xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
-      <xs:pattern value="^(\d+)(.\d+)?(.\d+)?(.\d+)?$" />
+      <xs:pattern value="(\d+)(\.\d+)?(\.\d+)?(\.\d+)?" />
     </xs:restriction>
   </xs:simpleType>
 

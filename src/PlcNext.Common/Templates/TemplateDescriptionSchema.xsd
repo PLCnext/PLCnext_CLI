@@ -103,6 +103,27 @@
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="buildEngine" type="xs:string" use="optional" default="DefaultBuildEngine">
+        <xs:annotation>
+          <xs:documentation>
+            The engine that executes the build command.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="generateEngine" type="xs:string" use="optional" default="DefaultGenerateEngine">
+        <xs:annotation>
+          <xs:documentation>
+            The engine that executes the generate and new command. In contrast the GenerateSteps are executed after the engine ran.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="deployEngine" type="xs:string" use="optional" default="DefaultDeployEngine">
+        <xs:annotation>
+          <xs:documentation>
+            The engine that executes the deploy command. In contrast the DeployPostStep are executed after the engine ran.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
@@ -399,6 +420,14 @@
         <xs:documentation>
           <!--TODO: restriction for filenames with generator expressions-->
           The name when the file is created. Generator expressions can be used here.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="excluded" type="xs:boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>
+          If set to true, the file will not be generated. This is meant for higher level template to exclude specific 
+          file from the base template.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
