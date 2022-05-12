@@ -70,6 +70,26 @@ using namespace Arp::Plc::Commons::Meta;
                 field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<EnumTest::EnumTestProgram::OtherEnum>::type>(EnumTest::EnumTestProgram::OtherEnum::Not));
                 typeDefinition.AddField(std::move(field));
             }
+            {
+                FieldDefinition field{"Other", 0, DataType::Enum | DataType::Int32, String::Empty, sizeof(EnumTest::EnumTestProgram::OtherEnum), alignof(EnumTest::EnumTestProgram::OtherEnum), {}, StandardAttribute::None};
+                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<EnumTest::EnumTestProgram::OtherEnum>::type>(EnumTest::EnumTestProgram::OtherEnum::Other));
+                typeDefinition.AddField(std::move(field));
+            }
+            {
+                FieldDefinition field{"More", 0, DataType::Enum | DataType::Int32, String::Empty, sizeof(EnumTest::EnumTestProgram::OtherEnum), alignof(EnumTest::EnumTestProgram::OtherEnum), {}, StandardAttribute::None};
+                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<EnumTest::EnumTestProgram::OtherEnum>::type>(EnumTest::EnumTestProgram::OtherEnum::More));
+                typeDefinition.AddField(std::move(field));
+            }
+            {
+                FieldDefinition field{"Random", 0, DataType::Enum | DataType::Int32, String::Empty, sizeof(EnumTest::EnumTestProgram::OtherEnum), alignof(EnumTest::EnumTestProgram::OtherEnum), {}, StandardAttribute::None};
+                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<EnumTest::EnumTestProgram::OtherEnum>::type>(EnumTest::EnumTestProgram::OtherEnum::Random));
+                typeDefinition.AddField(std::move(field));
+            }
+            {
+                FieldDefinition field{"Next", 0, DataType::Enum | DataType::Int32, String::Empty, sizeof(EnumTest::EnumTestProgram::OtherEnum), alignof(EnumTest::EnumTestProgram::OtherEnum), {}, StandardAttribute::None};
+                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<EnumTest::EnumTestProgram::OtherEnum>::type>(EnumTest::EnumTestProgram::OtherEnum::Next));
+                typeDefinition.AddField(std::move(field));
+            }
             typeDomain.AddTypeDefinition(std::move(typeDefinition));
         }
     }

@@ -311,6 +311,10 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                            new EnumSymbol("What",0),
                                                                                                            new EnumSymbol("That",1),
                                                                                                            new EnumSymbol("Not",12),
+                                                                                                           new EnumSymbol("Other",12),
+                                                                                                           new EnumSymbol("More",12),
+                                                                                                           new EnumSymbol("Random",13),
+                                                                                                           new EnumSymbol("Next",24),
                                                                                                        }))).RunAsyncWithTimeout();
         }
 

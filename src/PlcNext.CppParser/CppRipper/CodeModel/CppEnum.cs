@@ -26,12 +26,15 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
             void ParseSymbols()
             {
-                ParseNode declarationContent = content.GetHierarchy().FirstOrDefault(n => n.RuleName == "declaration_content");
+                ParseNode declarationContent = content.GetHierarchy()
+                                                      .FirstOrDefault(n => n.RuleName == "declaration_content" && 
+                                                                           !HasParanthesisGroupParent(n));
+
                 ParseNode[] allSymbols = declarationContent.ChildrenSkipUnnamed().Where(n => n.RuleName != "comment_set").ToArray();
                 CppSymbol lastSymbol = null;
                 foreach (ParseNode[] symbol in SplitSymbols())
                 {
-                    lastSymbol = CppSymbol.ParseSymbol(symbol, lastSymbol);
+                    lastSymbol = CppSymbol.ParseSymbol(symbol, lastSymbol, symbols, ns, name);
                     symbols.Add(lastSymbol);
                 }
 
@@ -66,6 +69,20 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                                                           .FirstOrDefault(t => t.RuleName == "symbol")
                                                          ?.ToString().Contains(",") == true);
                     }
+                }
+                bool HasParanthesisGroupParent(ParseNode n)
+                {
+                    if (n.RuleName == "paran_group")
+                    {
+                        return true;
+                    }
+
+                    ParseNode parent = n.GetParent();
+                    if (parent == null || parent == content)
+                    {
+                        return false;
+                    }
+                    return HasParanthesisGroupParent(parent);
                 }
             }
         }

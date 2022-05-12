@@ -8,10 +8,12 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using PlcNext.Common.CodeModel;
+using PlcNext.Common.Tools;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
@@ -24,7 +26,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             Value = value;
         }
 
-        public static CppSymbol ParseSymbol(ParseNode[] content, CppSymbol lastSymbol)
+        public static CppSymbol ParseSymbol(ParseNode[] content, CppSymbol lastSymbol, List<CppSymbol> symbols,
+                                            string ns, string parentName)
         {
             string name = string.Join(string.Empty, content.Select(c => c.ToString()));
             string value = string.Empty;
@@ -60,10 +63,63 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 }
                 catch (FormatException)
                 {
-                    //do nothing
+                    IEnumerable<ParseNode> valueParts = content.Skip(2);
+                    if (valueParts.Count() > 1)
+                    {
+                        value = ResolveValue(valueParts);
+                    }
                 }
             }
             return new CppSymbol(name, value);
+
+            bool ContainsDeclarationContent(ParseNode node)
+            {
+                return node.GetHierarchy().FirstOrDefault(n => n.RuleName == "declaration_content") != null;
+            }
+
+            string ResolveValue(IEnumerable<ParseNode> valueParts)
+            {
+                string resolvedString = string.Empty;
+                foreach (ParseNode node in valueParts)
+                {
+                    if (ContainsDeclarationContent(node))
+                    {
+                        resolvedString += ResolveValue(node.GetHierarchy()
+                                                          .LastOrDefault(n => n.RuleName == "declaration_content"));
+                        continue;
+                    }
+
+                    string current = node.GetHierarchy().FirstOrDefault(n => n.RuleName == "identifier")?.ToString().Trim().Trim('\'', '"');
+                    if (string.IsNullOrEmpty(current))
+                    {
+                        resolvedString += node.ToString() + " ";
+                        continue;
+                    }
+
+                    string[] parts = current.Split(new string[] { "::" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    string prefix = current.Substring(0, current.Length - parts.Last().Length).Trim(':');
+                    string elementName = parts.Last();
+                    if ((ns + "::" + parentName).EndsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string tempValue = symbols.Where(s => s.Name == elementName).FirstOrDefault()?.Value;
+                        resolvedString += tempValue + " ";
+                    }
+                    else
+                    {
+                        //cannot resolve, therefore ignore complete string
+                        resolvedString = String.Empty;
+                        break;
+                    }
+
+                }
+                if (!string.IsNullOrEmpty(resolvedString))
+                {
+                    object result = Calculator.Evaluate(resolvedString.Trim());
+                    return ((int)result).ToString(CultureInfo.InvariantCulture);
+                }
+                return resolvedString;
+            }
         }
 
         public string Name { get; }

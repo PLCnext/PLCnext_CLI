@@ -12,6 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Tools\CalcEngine\**" />
+    <EmbeddedResource Remove="Tools\CalcEngine\**" />
+    <None Remove="Tools\CalcEngine\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Deploy\SolutionMappingManager.cs" />
   </ItemGroup>
 
@@ -34,6 +40,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="CoreCLR-NCalc" Version="2.2.101" />
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />

@@ -9,9 +9,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using PlcNext.Common.Templates.Description;
+using PlcNext.Common.Tools;
 
 namespace PlcNext.Common.Templates
 {
@@ -279,8 +281,7 @@ namespace PlcNext.Common.Templates
         {
             try
             {
-                CalcEngine.CalcEngine calcEngine = new CalcEngine.CalcEngine();
-                return (bool)calcEngine.Evaluate(condition);
+                return (bool)Calculator.Evaluate(condition.ToLower(CultureInfo.InvariantCulture));
             }
             catch (Exception ex)
             {

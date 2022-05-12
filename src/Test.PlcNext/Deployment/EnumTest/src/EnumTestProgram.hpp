@@ -20,7 +20,11 @@ public: // typedefs
     enum OtherEnum : int32{
         What = 0,
         That = 1,
-        Not = 12
+        Not = 12,
+        Other = (OtherEnum::That + 5) * 2,
+        More = Not | Other,
+        Random,
+        Next = 3 * (20 - (What | Not))
     };
 
     struct EnumStruct

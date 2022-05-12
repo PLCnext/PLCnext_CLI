@@ -94,8 +94,12 @@ namespace PlcNext.Common.CodeModel
             int? parsed = null;
             try
             {
-                CalcEngine.CalcEngine calcEngine = new CalcEngine.CalcEngine();
-                parsed = (int)Math.Round((double)calcEngine.Evaluate(macro));
+                object result = Calculator.Evaluate(macro);
+                if (result is double)
+                {
+                    parsed = (int)Math.Round((double)result);
+                }
+                parsed = (int)result;
             }
             catch (Exception e)
             {
