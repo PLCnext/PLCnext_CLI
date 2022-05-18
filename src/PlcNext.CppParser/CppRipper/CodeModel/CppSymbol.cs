@@ -64,7 +64,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 catch (FormatException)
                 {
                     IEnumerable<ParseNode> valueParts = content.Skip(2);
-                    if (valueParts.Count() > 1)
+                    if (valueParts.Any())
                     {
                         value = ResolveValue(valueParts);
                     }
@@ -107,16 +107,15 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                     }
                     else
                     {
-                        //cannot resolve, therefore ignore complete string
-                        resolvedString = String.Empty;
-                        break;
+                        throw new SymbolResolveException(current, ns + "::" + parentName);
                     }
 
                 }
+                resolvedString = resolvedString.Trim();
                 if (!string.IsNullOrEmpty(resolvedString))
                 {
-                    object result = Calculator.Evaluate(resolvedString.Trim());
-                    return ((int)result).ToString(CultureInfo.InvariantCulture);
+                    object result = Calculator.Evaluate(resolvedString);
+                    return result.ToString();
                 }
                 return resolvedString;
             }

@@ -232,6 +232,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The expression &apos;{0}&apos; could not be evaluated..
+        /// </summary>
+        internal static string EvaluationFailure {
+            get {
+                return ResourceManager.GetString("EvaluationFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The restriction for the values of the attribute &apos;{0}&apos; does not allow the value &apos;{1}&apos;. {2}.
         /// </summary>
         internal static string FieldAttributeRestriction {

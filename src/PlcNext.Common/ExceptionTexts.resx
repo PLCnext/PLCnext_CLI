@@ -394,4 +394,7 @@
   <data name="TemplateFileConditionParsing" xml:space="preserve">
     <value>The condition '{0}' could not be parsed into a valid boolean condition.</value>
   </data>
+  <data name="EvaluationFailure" xml:space="preserve">
+    <value>The expression '{0}' could not be evaluated.</value>
+  </data>
 </root>

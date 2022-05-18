@@ -7,20 +7,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.Globalization;
+
 namespace PlcNext.Common.Tools
 {
-    public static class Calculator
+    public class EvaluationException : FormattableException
     {
-        public static object Evaluate(string expression)
+        public EvaluationException(string expression) 
+            : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.EvaluationFailure, expression))
         {
-            try
-            {
-                return new NCalc.Expression(expression).Evaluate();
-            }
-            catch (NCalc.EvaluationException)
-            {
-                throw new EvaluationException(expression);
-            }
+
         }
     }
 }

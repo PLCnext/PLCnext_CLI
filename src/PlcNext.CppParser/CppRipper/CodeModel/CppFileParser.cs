@@ -194,6 +194,10 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
                         break;
                     case "enum_decl":
+                        if(IsAnonymousType(typeDeclaration))
+                        { 
+                            break; 
+                        }
                         CppEnum cppEnum = new(ns, name, usings, content, messages, typeDeclaration[1],
                                               settingsProvider.Settings.AttributePrefix);
                         types.Add(cppEnum,
@@ -211,6 +215,17 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                        content.Any(c => c.GetHierarchy().Contains(typeDeclaration)) &&
                        content.SkipWhile(c => !c.GetHierarchy().Contains(typeDeclaration))
                               .Skip(1).Any(c => c.GetHierarchy().Any(n => n.RuleName == "brace_group"));
+            }
+
+            bool IsAnonymousType(ParseNode typeDeclaration)
+            {
+                ParseNode leaf = typeDeclaration.GetHierarchy()
+                                            .FirstOrDefault(n => n.RuleName == "identifier" || n.RuleName == "generic");
+                if (leaf == null)
+                {
+                    return true;
+                }
+                return false;
             }
         }
 
