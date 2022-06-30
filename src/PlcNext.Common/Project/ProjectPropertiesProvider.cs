@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using PlcNext.Common.Build;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Templates;
@@ -34,6 +35,8 @@ namespace PlcNext.Common.Project
         Dictionary<CodeEntity, IEnumerable<Entity>> ProjectCodeEntities { get; }
 
         List<IncludePath> IncludePaths { get; }
+
+        IEnumerable<string> ExternalLibraries { get; }
 
         void Initialize(Entity root);
 
@@ -66,6 +69,7 @@ namespace PlcNext.Common.Project
             SetProjectTargets();
             SetProjectEntities();
             SetProjectIncludes();
+            SetExternalLibraries();
 
             void SetProjectName()
             {
@@ -160,6 +164,21 @@ namespace PlcNext.Common.Project
                     }  
                 }
             }
+
+            void SetExternalLibraries()
+            {
+                if (project.Targets.Any())
+                {
+                    BuildEntity buildEntity = BuildEntity.Decorate(project.Targets.First());
+                    if (buildEntity.HasBuildSystem)
+                    {
+                        ExternalLibraries = buildEntity.BuildSystem.ExternalLibraries;
+                        return;
+                    }
+
+                }
+                ExternalLibraries = Enumerable.Empty<string>();
+            }
         }
 
         public string ProjectName { get; private set; }
@@ -173,6 +192,8 @@ namespace PlcNext.Common.Project
         public Dictionary<CodeEntity, IEnumerable<Entity>> ProjectCodeEntities { get; private set; }
 
         public List<IncludePath> IncludePaths { get; private set; }
+
+        public IEnumerable<string> ExternalLibraries { get; private set; }
 
         public IEnumerable<Exception> Exceptions { get; private set; }
     }

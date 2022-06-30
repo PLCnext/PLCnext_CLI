@@ -10,11 +10,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
-using PlcNext.Common.Tools.SDK;
 
 namespace PlcNext.Common.Build
 {
@@ -35,5 +33,7 @@ namespace PlcNext.Common.Build
         public VirtualDirectory BuildSystemDirectory => this[EntityKeys.InternalBuildSystemDirectoryKey].Value<VirtualDirectory>();
         public IEnumerable<string> ExternalLibraries => this[EntityKeys.InternalExternalLibrariesKey].Select(e => e.Value<string>());
         public IEnumerable<string> InstallationPaths => this[EntityKeys.InternalInstallationPathsKey].Select(e => e.Value<string>());
+        public IEnumerable<string> ExcludedFiles => this[EntityKeys.ExcludeFilesKey].Select(e => e.Value<string>());
+
     }
 }

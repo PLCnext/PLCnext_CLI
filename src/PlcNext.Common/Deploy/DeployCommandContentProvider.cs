@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using PlcNext.Common.Build;
 using PlcNext.Common.Commands;
@@ -35,12 +36,45 @@ namespace PlcNext.Common.Deploy
             return (key == Constants.OutputArgumentName &&
                     CommandEntity.Decorate(owner).CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase)) ||
                    (key == EntityKeys.InternalDeployPathKey &&
-                   TargetEntity.Decorate(owner).HasFullName);
+                   TargetEntity.Decorate(owner).HasFullName)||
+                   (key == EntityKeys.ExcludeFilesKey &&
+                    CommandEntity.Decorate(owner.Origin).CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase));
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
         {
-            if (key == EntityKeys.InternalDeployPathKey)
+            switch (key)
+            {
+                case EntityKeys.InternalDeployPathKey:
+                    VirtualDirectory deployRoot = GetDeployRoot();
+                    return owner.Create(key, deployRoot.FullName, deployRoot);
+
+                case EntityKeys.ExcludeFilesKey:
+                    IEnumerable<string> files = GetExcludedFiles();
+                    return owner.Create(key, files.Select(f => owner.Create(key, f)));
+
+                case Constants.OutputArgumentName:
+                default:
+                    string outputDirectory = GetOutput();
+                    return owner.Create(key, outputDirectory);
+            }
+
+            string GetOutput()
+            {
+                CommandEntity command = CommandEntity.Decorate(owner);
+                FileEntity projectFileEntity = FileEntity.Decorate(owner.Root);
+                string outputDirectory = command.GetSingleValueArgument(Constants.OutputArgumentName);
+
+                if (string.IsNullOrEmpty(outputDirectory))
+                {
+                    outputDirectory = projectFileEntity.Directory
+                                                       .Directory(Constants.LibraryFolderName)
+                                                       .FullName;
+                }
+                return outputDirectory;
+            }
+
+            VirtualDirectory GetDeployRoot()
             {
                 TargetEntity targetEntity = TargetEntity.Decorate(owner);
                 BuildEntity buildEntity = BuildEntity.Decorate(owner);
@@ -49,21 +83,16 @@ namespace PlcNext.Common.Deploy
                 VirtualDirectory outputRoot = fileSystem.GetDirectory(commandOrigin.Output, project.Path);
                 VirtualDirectory deployRoot = outputRoot.Directory(targetEntity.FullName.Replace(',', '_'),
                                                                    buildEntity.BuildType);
-                return owner.Create(key, deployRoot.FullName, deployRoot);
+                return deployRoot;
             }
 
-            CommandEntity command = CommandEntity.Decorate(owner);
-            FileEntity projectFileEntity = FileEntity.Decorate(owner.Root);
-            string outputDirectory = command.GetSingleValueArgument(Constants.OutputArgumentName);
-
-            if (string.IsNullOrEmpty(outputDirectory))
+            IEnumerable<string> GetExcludedFiles()
             {
-                outputDirectory = projectFileEntity.Directory
-                                                   .Directory(Constants.LibraryFolderName)
-                                                   .FullName;
+                CommandEntity command = CommandEntity.Decorate(owner.Origin);
+                return command.GetMultiValueArgument(EntityKeys.ExcludeFilesKey);
+                
             }
-
-            return owner.Create(key, outputDirectory);
+            
         }
     }
 }

@@ -134,6 +134,7 @@
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.cpp" />
     <None Remove="Deployment\ExternalLibraryTest\src\ExternalLibraryTestProgram.hpp" />
     <None Remove="Deployment\ExternalLibrary\ExternalStruct.hpp" />
+    <None Remove="Deployment\StandardLibraryWithExternalLib.txt" />
     <None Remove="Deployment\StandardLibraryWithVersionAndDescription.txt" />
     <None Remove="Deployment\StandardNew\bin\AXCF2152_20.6.0.12345\Release\libStandardNew.so" />
     <None Remove="Deployment\StandardNew\intermediate\config\Standard.libmeta" />
@@ -223,6 +224,7 @@
     <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileComponent.hpp" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.cpp" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithExternalLib.txt" />
     <EmbeddedResource Include="Deployment\Demo\bin\AXCF2152_20.6.0.12345\Debug\libDemo.so" />
     <EmbeddedResource Include="Deployment\DynamicPorts\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\DynamicPorts\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />

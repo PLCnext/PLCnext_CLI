@@ -132,8 +132,6 @@ namespace PlcNext.CommandLine
 
         //DeployVerb
         public const string DeployVerb = "deploy";
-        public const string FilesOption = "files";
-        public const char FilesChar = 'f';
     }
 
 }

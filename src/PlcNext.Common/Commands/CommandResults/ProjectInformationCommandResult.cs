@@ -19,7 +19,8 @@ namespace PlcNext.Common.Commands.CommandResults
         public ProjectInformationCommandResult(string name, string ns, string type,
                                                IEnumerable<TargetResult> targets,
                                                IEnumerable<EntityResult> entities,
-                                               IEnumerable<UncheckedPath> includePaths)
+                                               IEnumerable<UncheckedPath> includePaths,
+                                               IEnumerable<Path> externalLibraries)
         {
             Name = name;
             Namespace = ns;
@@ -27,6 +28,7 @@ namespace PlcNext.Common.Commands.CommandResults
             Targets = targets;
             Entities = entities;
             IncludePaths = includePaths;
+            ExternalLibraries = externalLibraries;
         }
 
         [JsonProperty(PropertyName = "name")]
@@ -46,6 +48,9 @@ namespace PlcNext.Common.Commands.CommandResults
 
         [JsonProperty(PropertyName = "includePaths")]
         public IEnumerable<Path> IncludePaths { get; }
+
+        [JsonProperty(PropertyName ="externalLibraries")]
+        public IEnumerable<Path> ExternalLibraries { get; }
 
     }
 

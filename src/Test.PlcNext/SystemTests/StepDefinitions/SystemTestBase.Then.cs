@@ -259,6 +259,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckGeneratedLibmeta(components);
         }
 
+        protected void Then_the_libmeta_file_of_project_NAME_is_generated_with_the_dependencies(string projectName, params string[] dependencies)
+        {
+            ScenarioContext.CheckDependenciesOfDeployedLibmeta(projectName, dependencies);
+        }
+
         protected void Then_the_acfconfig_file_is_created_with_the_component(string ns, string componentname)
         {
             ScenarioContext.CheckCreatedAcfConfig(ns, componentname);

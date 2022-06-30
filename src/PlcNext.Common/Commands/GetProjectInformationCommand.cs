@@ -69,7 +69,8 @@ namespace PlcNext.Common.Commands
                                                                                                                                                               t.ShortVersion)
                                                                                                                                         )
                                                                                                                                 )
-                                                                                           )
+                                                                                           ),
+                                                    propertiesProvider.ExternalLibraries.Select(p => new CommandResults.Path(p))
                                                     ),
                 propertiesProvider.Exceptions);
         }

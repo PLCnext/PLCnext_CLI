@@ -78,6 +78,8 @@ namespace PlcNext.Common.Build
                                                        out IEnumerable<VirtualFile> toBeDeleted);
                 externalLibraries.AddRange(libraries);
                 deletableFiles.AddRange(toBeDeleted);
+
+                ExcludeFiles(target, projectLibraries);
             }
             CheckMetaFiles(targets.First());
 
@@ -184,6 +186,21 @@ namespace PlcNext.Common.Build
             }
         }
 
+        private void ExcludeFiles(Entity target, Dictionary<Entity, VirtualFile> projectLibraries)
+        {
+            BuildEntity buildEntity = BuildEntity.Decorate(target); 
+            VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
+            List<VirtualFile> filesToDelete = new List<VirtualFile>();
+            foreach (string excludePattern in buildEntity.ExcludedFiles)
+            {
+                filesToDelete.AddRange(deployDirectory.Files(excludePattern, true).Except(projectLibraries.Values));
+            }
+            foreach (VirtualFile file in filesToDelete)
+            {
+                file.Delete();
+            }
+        }
+
         private void CopyExternalLibrariesToOutputDirectory(Entity target, Dictionary<Entity, VirtualFile> projectLibraries, 
                                                             out IEnumerable<string> externalLibraries,
                                                             out IEnumerable<VirtualFile> copiedLibraries)
@@ -200,7 +217,7 @@ namespace PlcNext.Common.Build
             {
                 externalLibraries = deployDirectory.Files("*.so", true).Except(projectLibraries.Values)
                                                    .Select(f => f.FullName).ToArray();
-                //external libraries where copied by user; no further action is required
+                //external libraries were copied by user; no further action is required
                 return;
             }
 

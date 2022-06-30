@@ -262,6 +262,24 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Deploy_for_project_with_external_libraries_via_cmake_with_excluded_library_generates_library()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StandardNew"),
+                _ => Given_is_the_working_directory_PATH("StandardNew"),
+                _ => Given_is_that_the_cmake_build_system_exists_for_targets("ACXF2152,20.6.0.12345"),
+                _ => Given_is_that_the_directory_exists("sysroots"),
+                _ => Given_is_that_the_file_exists("intermediate/cmake/AXCF2152,20.6.0.12345/Release/My/Cust,om/Lib/rary.so"),
+                _ => Given_is_that_the_file_exists("intermediate/cmake/AXCF2152,20.6.0.12345/Release/My/Other/Library.so"),
+                _ => Given_is_that_the_file_exists("intermediate/cmake/AXCF2152,20.6.0.12345/Release/Some/Path/T,o/Some.so"),
+                _ => Given_cmake_returns_a_code_model_with_the_following_libraries("StandardNew", "My/Cust,om/Lib/rary.so", "My/Other/Library.so", "Some/Path/T,o/Some.so"),
+                _ => When_I_deploy(new DeployCommandArgs { BuildType= "Release", ExcludedFiles = new[] { "Library.so", "rary.so" } }),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithExternalLib.txt"),
+                _ => Then_the_libmeta_file_of_project_NAME_is_generated_with_the_dependencies("Standard","rary.so", "Library.so", "Some.so")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Deploy_for_project_with_external_libraries_via_option_generates_library()
         {
             await Runner.AddSteps(
@@ -642,5 +660,7 @@ namespace Test.PlcNext.SystemTests.Features
         public string EngineerVersion { get; internal set; }
 
         public string SolutionVersion { get; internal set; }
+
+        public IEnumerable<string> ExcludedFiles { get; internal set; }
     }
 }

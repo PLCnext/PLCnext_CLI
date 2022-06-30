@@ -932,6 +932,23 @@ namespace Test.PlcNext.SystemTests.Tools
             }
         }
 
+        public void CheckDependenciesOfDeployedLibmeta(string projectName, string[] dependencies)
+        {
+            string path = GetPathOfFile($"{projectName}.{Constants.LibmetaExtension}", Constants.LibraryFolderName );
+            using (Stream fileStream = fileSystemAbstraction.Open(path)) 
+            { 
+                XmlSerializer serializer = new XmlSerializer(typeof(MetaConfigurationDocument));
+                MetaConfigurationDocument document = (MetaConfigurationDocument)serializer.Deserialize(fileStream);
+                LibraryDefinition libraryDefinition = document.Item as LibraryDefinition;
+                libraryDefinition.Should().NotBeNull("metadata content should be a LibraryDefinition");
+                libraryDefinition.applicationDomain.Should().Be(ApplicationDomainEnumeration.CPLUSPLUS);
+                libraryDefinition.TypeIncludes.Should().ContainSingle();
+                libraryDefinition.Dependencies.Should().HaveCount(dependencies.Length);
+                libraryDefinition.Dependencies.Select(i => i.path)
+                                 .Should().BeEquivalentTo(dependencies);
+            }
+        }
+
         public void CheckCreatedAcfConfig(string ns, string componentname)
         {
             string path = GetPathOfFile($"{ns}Library.acf.config", Constants.SourceFolderName);
@@ -1501,6 +1518,15 @@ namespace Test.PlcNext.SystemTests.Tools
                 foreach (string lib in deployArgs.ExternalLibraries)
                 {
                     files.Add(FormatExternalLibraryFilesConvert(lib));
+                }
+            }
+
+            if (deployArgs.ExcludedFiles != null && deployArgs.ExcludedFiles.Any())
+            {
+                args.Add("--excludefiles");
+                foreach (string file in deployArgs.ExcludedFiles)
+                {
+                    args.Add(file);
                 }
             }
 
