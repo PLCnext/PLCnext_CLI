@@ -8,15 +8,18 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using PlcNext.Common.Commands;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Process;
+using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.Common.Deploy;
 
@@ -39,6 +42,11 @@ internal class AppDeployEngine : IDeployService
 
     private void DeployLinux(string command, string output, VirtualDirectory content)
     {
+        if (string.IsNullOrEmpty(command))
+        {
+            throw new FormattableException("mksquashfs cannot be found. Please install mksquashfs. Try 'apt install squashfs-tools'.");
+        }
+        
         using IProcess process = processManager.StartProcess(command,
                                                        $"\"{content.FullName}\" \"{output}\" -force-uid 1001 -force-gid 1002",
                                                        executionContext);
@@ -51,23 +59,43 @@ internal class AppDeployEngine : IDeployService
 
     private void DeployWindows(string command, string output, VirtualDirectory content)
     {
-        using IProcess process = processManager.StartProcess(command,
-                                                             $"-D \"{content.FullName}\" \"{output}\" -u 1001 -g 1002",
+        if (string.IsNullOrEmpty(command) && !HasWslSupport())
+        {
+            throw new FormattableException("mksquashfs cannot be found. Please install the Windows Linux Subsystem. Try 'wsl --install -d Ubuntu'.");
+        }
+        
+        using IProcess process = string.IsNullOrEmpty(command) 
+                                     ?processManager.StartProcess("wsl",
+                                                                  $"mksquashfs \"{WslPath(content.FullName)}\" \"{WslPath(output)}\" -force-uid 1001 -force-gid 1002",
+                                                                  executionContext)
+                                     :processManager.StartProcess(command,
+                                                             $"\"{content.FullName}\" \"{output}\" -force-uid 1001 -force-gid 1002",
                                                              executionContext);
         process.WaitForExit();
         if (process.ExitCode != 0)
         {
             throw new FormattableException("Deploying the app failed!");
         }
+        
+        bool HasWslSupport()
+        {
+            using IProcess searchProcess = processManager.StartProcess("wsl", "mksquashfs -version", 
+                                                                       new StringBuilderUserInterface(executionContext));
+            searchProcess.WaitForExit();
+            return searchProcess.ExitCode == 0;
+        }
+
+        string WslPath(string path)
+        {
+            return Regex.Replace(path, @"^(?<drive>\w+):\\",
+                                 m => $"/mnt/{m.Groups["drive"].Value.ToLowerInvariant()}/")
+                        .Replace('\\', '/');
+        }
     }
 
     public void DeployFiles(Entity dataModel)
     {
         string command = binariesLocator.GetExecutableCommand("mksquashfs");
-        if (string.IsNullOrEmpty(command))
-        {
-            throw new FormattableException("mksquashfs cannot be found. Please install mksquashfs. Try 'apt install squashfs-tools'.");
-        }
         
         Entity project = dataModel.Root;
         CommandEntity commandOrigin = CommandEntity.Decorate(dataModel.Origin);
@@ -75,7 +103,13 @@ internal class AppDeployEngine : IDeployService
         VirtualDirectory content = fileSystem.GetDirectory("content", project.Path);
         string appName = $"{project.Name}.app";
         string outputFile = Path.Combine(output.FullName, appName);
-
+            
+        VirtualFile oldFile = fileSystem.GetFile(outputFile);
+        if (oldFile.Exists)
+        {
+            oldFile.Delete();
+            executionContext.Observable.OnNext(new Change(() => oldFile.UnDelete(), $"Deleted {oldFile.FullName}"));
+        }
         if (environmentService.Platform == OSPlatform.Windows)
         {
             DeployWindows(command, outputFile, content);

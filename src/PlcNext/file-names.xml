@@ -3,5 +3,4 @@
   <application path="plcncli"/>
   <EngineeringLibraryBuilder path="library-builder/EngineeringLibraryBuilder"/>
   <cmake path="cmake/bin/cmake"/>
-  <mksquashfs path="squashfs/bin/gensquashfs"/>
 </names>

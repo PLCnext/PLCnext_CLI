@@ -329,6 +329,11 @@ namespace PlcNext.Common.Templates
                 encoding = reader.CurrentEncoding;
                 content = await reader.ReadToEndAsync().ConfigureAwait(false);
             }
+            
+            if (encoding.BodyName == Encoding.UTF8.BodyName)
+            {
+                encoding = new UTF8Encoding(false);
+            }
 
             content = await resolver.ResolveAsync(content, dataModel).ConfigureAwait(false);
             return (content, encoding);
