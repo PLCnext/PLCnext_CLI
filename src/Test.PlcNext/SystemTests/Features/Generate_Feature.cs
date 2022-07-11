@@ -985,6 +985,25 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_user_was_informed_that_the_attribute_is_not_supported()
                 ).RunAsyncWithTimeout();
         }
+        [Scenario]
+        public async Task Generate_with_duplicate_port_name()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("DuplicatePortName"),
+                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => Then_the_user_was_informed_that_there_is_a_duplicate_port_name()
+                ).RunAsyncWithTimeout();
+        }
+        [Scenario]
+        public async Task Generate_with_duplicate_port_name_1()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("DuplicatePortName"),
+                _ => Given_is_the_working_directory_PATH("DuplicatePortName"),
+                _ => When_I_generate_all_codefiles_with_the_source_directories("src", "src1"),
+                _ => Then_the_user_was_informed_that_there_is_a_duplicate_port_name()
+                ).RunAsyncWithTimeout();
+        }
 
         public Generate_Feature(ITestOutputHelper helper) : base(helper)
         {

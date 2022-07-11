@@ -136,12 +136,29 @@ namespace PlcNext.Common.CodeModel
                                                               .Any(a => a.Name
                                                                          .Equals(metaDataTemplate.name,
                                                                               StringComparison.OrdinalIgnoreCase)));
-                result = owner.Create(key, fields.Select(f => owner.Create(metaDataTemplate.name, f.Name, f)));
+                IEnumerable<Entity> fieldEntities = fields.Select(f => owner.Create(metaDataTemplate.name, f.Name, f));
+                if (key == "ports")
+                {
+                    CheckNoDuplicatePortNames(fieldEntities);
+                }
+                result = owner.Create(key, fieldEntities);
                 return true;
             }
 
             result = null;
             return false;
+
+            void CheckNoDuplicatePortNames(IEnumerable<Entity> fields)
+            {
+                IEnumerable<string> result = fields.Select(field => resolver.Resolve("$(name)", field))
+                                                   .GroupBy(field => field)
+                                                   .Where(group => group.Count() > 1)
+                                                   .Select(group => group.Key);
+                if (result.Any())
+                {
+                    throw new DuplicatePortNameException(result.First());
+                }
+            }
         }
 
         private bool TryResolveRelationship(Entity owner, string key, IType type, out Entity result)

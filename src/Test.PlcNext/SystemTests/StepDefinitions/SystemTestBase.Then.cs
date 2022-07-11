@@ -603,5 +603,10 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         {
             ScenarioContext.CheckUserInformedOfError(typeof(FieldAttributeRestrictionException));
         }
+
+        protected void Then_the_user_was_informed_that_there_is_a_duplicate_port_name()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(DuplicatePortNameException));
+        }
     }
 }

@@ -397,4 +397,7 @@
   <data name="EvaluationFailure" xml:space="preserve">
     <value>The expression '{0}' could not be evaluated.</value>
   </data>
+  <data name="DuplicatePortName" xml:space="preserve">
+    <value>The port name '{0}'occurs more than once in the project.</value>
+  </data>
 </root>

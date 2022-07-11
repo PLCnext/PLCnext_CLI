@@ -223,6 +223,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The port name &apos;{0}&apos;occurs more than once in the project..
+        /// </summary>
+        internal static string DuplicatePortName {
+            get {
+                return ResourceManager.GetString("DuplicatePortName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} not found inside project {1}.{2}Existing items are:{2}{3}.
         /// </summary>
         internal static string EntityNotFound {
