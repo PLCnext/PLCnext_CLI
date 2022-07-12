@@ -11,6 +11,7 @@ using namespace Arp;
 using namespace Arp::System::Commons::Diagnostics::Logging;
 using namespace Arp::Plc::Commons::Esm;
 
+const int Size= 2;
 const int SizeConst = 13;
 #define SIZE_DIRECTIVE 22
 

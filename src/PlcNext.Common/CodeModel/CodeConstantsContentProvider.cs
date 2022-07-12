@@ -141,18 +141,25 @@ namespace PlcNext.Common.CodeModel
         }
 
         private record TargetedReplacement(string Replacement, IConstant Constant, int StartIndex,
-                                                           int Length);
+                                           int Length)
+        {
+            public bool Overlaps(TargetedReplacement other)
+            {
+                return StartIndex <= other.StartIndex && StartIndex+Length >= other.StartIndex;
+            }
+        };
 
         private static string ReplaceConstants(string replaceable, IEnumerable<string> accessibleNamespaces, ICodeModel codeModel)
         {
             IEnumerable<ConstantReplacement> accessibleConstants = GetAccessibleConstants();
-            IEnumerable<TargetedReplacement> targetedReplacements = GetReplacementTargets();
+            TargetedReplacement[] targetedReplacements = GetReplacementTargets();
+            IEnumerable<TargetedReplacement> filteredReplacements = FilterReplacements();
 
-            return targetedReplacements.OrderByDescending(r => r.StartIndex)
+            return filteredReplacements.Reverse()
                                        .Aggregate(replaceable, (current, replacement) => current.Remove(replacement.StartIndex, replacement.Length)
-                                                                                                     .Insert(replacement.StartIndex, ReplaceConstants(replacement.Replacement, 
-                                                                                                                                                           replacement.Constant.AccessibleNamespaces, 
-                                                                                                                                                           codeModel)));
+                                                     .Insert(replacement.StartIndex, ReplaceConstants(replacement.Replacement, 
+                                                                 replacement.Constant.AccessibleNamespaces, 
+                                                                 codeModel)));
 
             IEnumerable<ConstantReplacement> GetAccessibleConstants()
                 => codeModel.FindAccessibleConstants(accessibleNamespaces)
@@ -164,13 +171,32 @@ namespace PlcNext.Common.CodeModel
                                         a.Key))
                             .Distinct();
 
-            IEnumerable<TargetedReplacement> GetReplacementTargets()
+            TargetedReplacement[] GetReplacementTargets()
             {
                 return accessibleConstants.Where(c => replaceable.Contains(c.PartialName))
                                           .Select(c => new TargetedReplacement(c.Replacement,
                                                       c.Constant,
                                                       replaceable.IndexOf(c.PartialName, StringComparison.Ordinal),
-                                                      c.PartialName.Length));
+                                                      c.PartialName.Length))
+                                          .ToArray();
+            }
+
+            IEnumerable<TargetedReplacement> FilterReplacements()
+            {
+                TargetedReplacement lastReplacement = null;
+                IOrderedEnumerable<TargetedReplacement> orderedReplacements = targetedReplacements.OrderBy(r => r.StartIndex)
+                                                                                                  .ThenByDescending(r => r.Length);
+                foreach (TargetedReplacement targetedReplacement in orderedReplacements)
+                {
+                    if (lastReplacement != null && 
+                        lastReplacement.Overlaps(targetedReplacement))
+                    {
+                        continue;
+                    }
+
+                    yield return targetedReplacement;
+                    lastReplacement = targetedReplacement;
+                }
             }
         }
 
