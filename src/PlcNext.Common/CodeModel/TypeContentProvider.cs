@@ -254,7 +254,6 @@ namespace PlcNext.Common.CodeModel
 
             IEnumerable<IType> GetAllTypes(IType child)
             {
-                yield return child;
                 foreach (IDataType baseDataType in child.BaseTypes.Where(
                     t => t.Visibility.Equals("public", StringComparison.OrdinalIgnoreCase)))
                 {
@@ -271,6 +270,7 @@ namespace PlcNext.Common.CodeModel
                         yield return baseType;
                     }
                 }
+                yield return child;
             }
         }
 

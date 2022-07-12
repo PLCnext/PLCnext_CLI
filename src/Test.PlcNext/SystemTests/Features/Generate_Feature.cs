@@ -578,8 +578,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("SimpleInherited",
                                                                                                    new[]
                                                                                                    {
-                                                                                                       new TypeMember("Fooba","boolean"),
                                                                                                        new TypeMember("Base","int32"),
+                                                                                                       new TypeMember("Fooba","boolean"),
                                                                                                    }))).RunAsyncWithTimeout();
         }
 
@@ -592,9 +592,9 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("MultiLevel",
                                                                                  new[]
                                                                                  {
-                                                                                     new TypeMember("Fooba","boolean"),
                                                                                      new TypeMember("Base","int32"),
                                                                                      new TypeMember("MidLevel","int16"),
+                                                                                     new TypeMember("Fooba","boolean"),
                                                                                  }))).RunAsyncWithTimeout();
         }
 
@@ -607,8 +607,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("PrivateInheritance",
                                                                                  new[]
                                                                                  {
-                                                                                     new TypeMember("Fooba","boolean"),
                                                                                      new TypeMember("Base","int32"),
+                                                                                     new TypeMember("Fooba","boolean"),
                                                                                  }))).RunAsyncWithTimeout();
         }
 
