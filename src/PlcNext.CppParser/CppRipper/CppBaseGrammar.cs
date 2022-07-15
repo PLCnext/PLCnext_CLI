@@ -97,6 +97,7 @@ namespace PlcNext.CppParser.CppRipper
         public Rule VIRTUAL;
         public Rule OPERATOR;
         public Rule USING;
+        public Rule BUILTIN_LITERAL_SUFFIXES;
         #endregion
 
         #region identifiers
@@ -145,6 +146,7 @@ namespace PlcNext.CppParser.CppRipper
         public Rule dot;
         public Rule literal;
         public Rule int_literal;
+        public Rule custom_literal;
         public Rule unsigned_literal;
         public Rule decimal_literal;
         public Rule octal_literal;
@@ -171,6 +173,7 @@ namespace PlcNext.CppParser.CppRipper
         public Rule octal_escape;
         public Rule hex_escape;
         public Rule boolean_literal;
+        public Rule user_literal_suffix;
         #endregion
 
         #region pre-processor directives
@@ -354,6 +357,19 @@ namespace PlcNext.CppParser.CppRipper
             VIRTUAL = Word("virtual");
             OPERATOR = Word("operator");
             USING = Word("using");
+            BUILTIN_LITERAL_SUFFIXES = Word("if")
+                                       | Word("i")
+                                       | Word("il")
+                                       | Word("h")
+                                       | Word("min")
+                                       | Word("s")
+                                       | Word("ms")
+                                       | Word("us")
+                                       | Word("ns")
+                                       | Word("y")
+                                       | Word("d")
+                                       | Word("s")
+                                       | Word("sv");
             #endregion
 
             #region literals
@@ -425,12 +441,17 @@ namespace PlcNext.CppParser.CppRipper
                 = Opt(CharSeq("L")) + dbl_quote + Star(s_char) + dbl_quote;
             boolean_literal
                 = Word("true") | Word("false");
+            user_literal_suffix
+                = CharSeq("_") + identifier;
+            custom_literal
+                = (int_literal | float_literal) + (BUILTIN_LITERAL_SUFFIXES | user_literal_suffix);
             literal
-                = (int_literal
-                | char_literal
-                | float_literal
-                | string_literal
-                | boolean_literal)
+                = (custom_literal 
+                   | int_literal
+                   | char_literal
+                   | float_literal
+                   | string_literal
+                   | boolean_literal)
                 + NoFail(Not(ident_next_char)) + ws;
             #endregion
 

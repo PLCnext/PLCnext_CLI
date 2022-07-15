@@ -313,7 +313,6 @@ namespace PlcNext.Common.Templates
                 }
                 throw new TemplateFileConditionParsingException(condition, ex);
             }
-            throw new TemplateFileConditionParsingException(condition);
         }
     }
 }
