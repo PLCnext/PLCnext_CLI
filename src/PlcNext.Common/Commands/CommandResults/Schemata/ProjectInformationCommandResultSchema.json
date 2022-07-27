@@ -153,6 +153,15 @@
       "items": {
         "$ref": "#/definitions/Path"
       }
+    },
+    "externalLibraries": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/Path"
+      }
     }
   },
   "required": [
@@ -161,6 +170,7 @@
     "type",
     "targets",
     "entities",
-    "includePaths"
+    "includePaths",
+    "externalLibraries"
   ]
 }
