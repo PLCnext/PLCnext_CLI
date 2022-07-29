@@ -118,7 +118,8 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ARP0001" xml:space="preserve">
-    <value>The restriction for the values of the attribute '{0}' does not allow the value '{1}'. {2}</value>
+    <value>The restriction for the values of the attribute '{0}' does not allow the value '{1}'.
+{2}</value>
   </data>
   <data name="CPP0001" xml:space="preserve">
     <value>No fields definied for the specified type.</value>
