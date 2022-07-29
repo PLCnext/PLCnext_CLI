@@ -51,7 +51,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithOneStructPort"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithOneStructPort"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("Example",
                                                                                                    new[]
                                                                                                    {
@@ -68,7 +68,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithOneAttributedStructPort"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithOneAttributedStructPort"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("Example",
                                                                                                    new[]
                                                                                                    {
@@ -219,7 +219,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithDifferentPorts"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithDifferentPorts"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("MyProgram",
                                                                                   new[] { "MyComponent", "MyProgram" },
                                                                                   new[]
@@ -240,7 +240,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("EnumTest"),
                 _ => Given_is_the_working_directory_PATH("EnumTest"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("EnumTestProgram",
                                                                                                new[] { "EnumTestComponent", "EnumTestProgram" },
                                                                                                new[]
@@ -257,7 +257,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("PpDirectives"),
                 _ => Given_is_the_working_directory_PATH("PpDirectives"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("PpDirectivesProgram",
                                                                                                new[] { "PpDirectivesComponent", "PpDirectivesProgram" },
                                                                                                new[]
@@ -276,7 +276,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("DoublePortDeclaration"),
                 _ => Given_is_the_working_directory_PATH("DoublePortDeclaration"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("DoublePortDeclarationProgram",
                                                                                                new[] { "DoublePortDeclarationComponent", "DoublePortDeclarationProgram" },
                                                                                                new[]
@@ -293,7 +293,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("EnumTest"),
                 _ => Given_is_the_working_directory_PATH("EnumTest"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_typemeta_file_contains_only_the_following_structure(new StructTypemetaStructure("EnumStruct", new[]
                                                                                                    {
                                                                                                        new TypeMember("EnumValue", "OtherEnum"),
@@ -324,7 +324,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("FullyQualifiedEnum"),
                 _ => Given_is_the_working_directory_PATH("FullyQualifiedEnum"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_typemeta_file_contains_only_the_following_structure(
                                                                              new EnumTypemetaStructure("QualityState", "uint8",
                                                                                                        new[]
@@ -341,7 +341,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithArrayInitializedPort"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithArrayInitializedPort"),
-                _ => When_I_generate_all_files_except_datatypes_worksheet_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_files_except_datatypes_worksheet_from_inside_the_project_folder(),
                 _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("MyProgram",
                                                                                                new[] { "MyComponent", "MyProgram" },
                                                                                                new[]
@@ -357,7 +357,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("InitializedStructPortField"),
                 _ => Given_is_the_working_directory_PATH("InitializedStructPortField"),
-                _ => When_I_generate_all_files_except_datatypes_worksheet_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_files_except_datatypes_worksheet_from_inside_the_project_folder(),
                 _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("InitializedStructPortFieldProgram",
                                                                                                new[] { "InitializedStructPortFieldComponent", "InitializedStructPortFieldProgram" },
                                                                                                new[]
@@ -372,7 +372,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("TwoComponentsAndPrograms"),
                 _ => Given_is_the_working_directory_PATH("TwoComponentsAndPrograms"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_there_are_compmeta_files_with_the_following_content(new CompmetaData("MyComponent",
                                                                                 new string[] { "MyComponent" },
                                                                                 new[]
@@ -396,7 +396,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("AlmostAmbiguous"),
                 _ => Given_is_the_working_directory_PATH("AlmostAmbiguous"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_there_are_compmeta_files_with_the_following_content(new CompmetaData("AlmostAmbiguousComponent",
                                                                                 new string[] { "AlmostAmbiguousComponent" },
                                                                                 new Portmeta[0],
@@ -424,7 +424,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("HiddenPlm"),
                 _ => Given_is_the_working_directory_PATH("HiddenPlm"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_there_are_compmeta_files_with_the_following_content(new CompmetaData("HiddenPlmComponent",
                                                                                                new[] { "HiddenPlmComponent" },
                                                                                                new[]
@@ -441,7 +441,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("HiddenPlm"),
                 _ => Given_is_the_working_directory_PATH("HiddenPlm"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_typemeta_file_is_empty()).RunAsyncWithTimeout();
         }
 
@@ -649,7 +649,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("TwoComponentsAndPrograms"),
                 _ => Given_is_the_working_directory_PATH("TwoComponentsAndPrograms"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_there_are_compmeta_files_with_the_following_content(new CompmetaData("MyComponent",
                                                                                 new string[] { "MyComponent" },
                                                                                 new[]
@@ -673,7 +673,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("Standard"),
                 _ => Given_is_the_working_directory_PATH("Standard"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_libmeta_file_is_generated_with_the_components("MyComponent")).RunAsyncWithTimeout();
         }
 
@@ -804,7 +804,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithDifferentPorts"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithDifferentPorts"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_datatype_worksheet_looks_like_NAME("ProgramWithDifferentPortsDataTypes.dt")).RunAsyncWithTimeout();
         }
 
@@ -814,7 +814,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithDifferentPortsWithDTArrayFlag"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithDifferentPortsWithDTArrayFlag"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("ProgramWithDifferentPorts", "ProgramWithDifferentPortsDataTypesNew.dt")).RunAsyncWithTimeout();
         }
 
@@ -824,7 +824,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ArrayDatatypes"),
                 _ => Given_is_the_working_directory_PATH("ArrayDatatypes"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_datatype_worksheet_looks_like_NAME("ArrayDatatypesDataTypes.dt")).RunAsyncWithTimeout();
         }
 
@@ -834,7 +834,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ArrayDatatypesWithoutDTArrayFlag"),
                 _ => Given_is_the_working_directory_PATH("ArrayDatatypesWithoutDTArrayFlag"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("ArrayDatatypes", "ArrayDatatypesDataTypesOld.dt")).RunAsyncWithTimeout();
         }
 
@@ -990,7 +990,7 @@ namespace Test.PlcNext.SystemTests.Features
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("DuplicatePortName"),
-                _ => When_I_generate_all_files_from_inside_the_project_folder(),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
                 _ => Then_the_user_was_informed_that_there_is_a_duplicate_port_name()
                 ).RunAsyncWithTimeout();
         }
@@ -1004,6 +1004,30 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_user_was_informed_that_there_is_a_duplicate_port_name()
                 ).RunAsyncWithTimeout();
         }
+
+        [Scenario]
+        public async Task Generate_with_templated_struct()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("TemplatedStruct"),
+                _ => When_I_generate_all(),
+                _ => Then_the_typemeta_method_looks_like_NAME("TemplatedStructLibrary.meta.cpp"),
+                _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("Test<bool, int32>",
+                                                                                 new[]
+                                                                                 {
+                                                                                     new TypeMember("flag","boolean"),
+                                                                                     new TypeMember("counter","int32")
+                                                                                 })),
+                 _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("Test<int64, int16>",
+                                                                                 new[]
+                                                                                 {
+                                                                                     new TypeMember("flag","int64"),
+                                                                                     new TypeMember("counter","int16")
+                                                                                 })),
+                 _ => Then_the_datatype_worksheet_looks_like_NAME("TemplatedStructDataTypes.dt")
+                ).RunAsyncWithTimeout();
+        }
+
 
         public Generate_Feature(ITestOutputHelper helper) : base(helper)
         {

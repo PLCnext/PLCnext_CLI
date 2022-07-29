@@ -489,6 +489,19 @@ namespace Test.PlcNext.SystemTests.Tools
                                  .Be(countDeleted, "there should be the specified number of initially deleted files");
         }
 
+        public async Task GenerateAll(bool addPath)
+        {
+            List<string> arguments = new List<string>(new[] { "generate", "all" });
+            if (addPath)
+            {
+                arguments.Add("-p");
+                arguments.Add(fileSystemAbstraction.FileExists($"{knownProjectName}/plcnext.proj", string.Empty)
+                                  ? $"{knownProjectName}/plcnext.proj"
+                                  : $"{knownProjectName}");
+            }
+            await CommandLineParser.Parse(arguments.ToArray());
+        }
+
         public async Task GenerateMeta(bool addPath, string[] sourceDirectories = null, string[] includes = null, 
                                        bool autoDetection = true, bool noDatatypesWorksheet = false)
         {

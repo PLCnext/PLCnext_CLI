@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
@@ -23,9 +24,15 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
     {
         private readonly Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes;
         private readonly Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures;
+        private readonly Dictionary<string, (CppTemplatedStructure, VirtualFile, VirtualDirectory)> templatedStructures =
+            new Dictionary<string, (CppTemplatedStructure, VirtualFile, VirtualDirectory)>();
         private readonly Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)> enums;
 
         private Func<string, IType> findTypeInIncludes;
+
+        private static readonly Regex TemplateNameRegex = new Regex(@"^(?<Name>[^<]*)<(?<Value>(,?.*)+)>$",
+                                                                 RegexOptions.Compiled);
+        private static readonly Regex TemplateValuesRegex = new Regex(@"[^,<>]+(?(?=<)[^>]*>)", RegexOptions.Compiled);
 
         public CppCodeModel(Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes,
                             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures,
@@ -51,8 +58,12 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         public IDictionary<IType, VirtualFile> Types =>
             classes.Values.Select(t => ((IType) t.Item1, t.Item2))
                    .Concat(structures.Values.Select(t => ((IType) t.Item1, t.Item2)))
+                   .Concat(templatedStructures.Values.Select(t => ((IType) t.Item1, t.Item2)))
                    .Concat(enums.Values.Select(t => ((IType) t.Item1, t.Item2)))
                    .ToDictionary(t => t.Item1, t => t.Item2);
+
+        public IDictionary<IStructure, VirtualFile> TemplatedStructures =>
+            templatedStructures.Values.ToDictionary(t => (IStructure) t.Item1, t => t.Item2);
 
         public IEnumerable<IncludePath> IncludeDirectories { get; internal set; }
         public Dictionary<string, string> DefineStatements { get; }
@@ -78,6 +89,11 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         IStructure ICodeModel.GetStructure(string structureName)
         {
+            CppStructure result = FindTemplatedStruct(structureName);
+            if (result != null)
+            {
+                return result;
+            }
             return structures.TryGetValue(structureName, out (CppStructure structure, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.structure
                        : findTypeInIncludes?.Invoke(structureName) as IStructure;
@@ -85,9 +101,53 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         private IStructure GetStructure(string structureName)
         {
+            CppStructure result = FindTemplatedStruct(structureName);
+            if (result != null)
+            {
+                return result;
+            }
             return structures.TryGetValue(structureName, out (CppStructure structure, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.structure
                        : null;
+        }
+
+        private CppTemplatedStructure FindTemplatedStruct(string structureName)
+        {
+            Match match = TemplateNameRegex.Match(structureName);
+            if (match.Success)
+            {
+                templatedStructures.TryGetValue(structureName, out (CppTemplatedStructure templStruct, VirtualFile _, VirtualDirectory d) templatedResult);
+                if (templatedResult.templStruct != null)
+                {
+                    return templatedResult.templStruct;
+                }
+                string name = match.Groups["Name"].Value.Trim();
+                structures.TryGetValue(name, out (CppStructure structure, VirtualFile f, VirtualDirectory d) result);
+
+                if (result.structure?.IsTemplated == true)
+                {
+                    CppTemplatedStructure cppTemplatedStructure = ReplaceTemplateArgumentsWithRealDataTypes(result.structure, 
+                                                                                match.Groups["Value"].Value, structureName);
+                    templatedStructures.Add(structureName, (cppTemplatedStructure, result.f, result.d));
+                    return cppTemplatedStructure;
+                }
+            }
+            return null;
+
+            CppTemplatedStructure ReplaceTemplateArgumentsWithRealDataTypes(CppStructure structure, string templateValues, string templatedStructName)
+            {
+                MatchCollection matches = TemplateValuesRegex.Matches(templateValues);
+                List<string> dataTypes = new List<string>();
+                foreach (Match match in matches)
+                {
+                    if (string.IsNullOrEmpty(match.Value.Trim()))
+                        continue;
+                    dataTypes.Add(match.Value.Trim());
+                }
+                string name = templatedStructName.Replace(string.IsNullOrEmpty(structure.Namespace) ? string.Empty : structure.Namespace + "::", string.Empty);
+
+                return structure.CreateTemplatedStructure(name, dataTypes.ToArray());
+            }
         }
 
         IClass ICodeModel.GetClass(string className)
@@ -127,11 +187,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         {
             return classes.TryGetValue(type.FullName, out (CppClass c, VirtualFile _, VirtualDirectory baseDirectory) tuple1)
                        ? tuple1.baseDirectory
-                       : structures.TryGetValue(type.FullName, out (CppStructure s, VirtualFile _, VirtualDirectory baseDirectory) tuple2)
-                           ? tuple2.baseDirectory
-                           : enums.TryGetValue(type.FullName, out (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory) tuple3)
+                       : templatedStructures.TryGetValue(type.FullName, out (CppTemplatedStructure s, VirtualFile _, VirtualDirectory baseDirectory)tuple2)
+                           ?tuple2.baseDirectory
+                           : structures.TryGetValue(type.FullName, out (CppStructure s, VirtualFile _, VirtualDirectory baseDirectory) tuple3)
                                ? tuple3.baseDirectory
-                               : null;
+                               : enums.TryGetValue(type.FullName, out (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory) tuple4)
+                                   ? tuple4.baseDirectory
+                                   : null;
         }
 
         internal void RegisterIncludeTypeFinder(Func<string, IType> includeTypeFinder)

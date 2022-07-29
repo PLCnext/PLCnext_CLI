@@ -27,6 +27,15 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             ContainingType = containingType;
         }
 
+        public CppField(string name, IDataType dataType, IReadOnlyCollection<IComment> comments, IReadOnlyCollection<string> multiplicity,
+                        string attributePrefix, IType containingType = null) : base(name, attributePrefix)
+        {
+            DataType = dataType;
+            Comments = comments;
+            Multiplicity = multiplicity;
+            ContainingType = containingType;
+        }
+
         public IDataType DataType { get; }
         public IReadOnlyCollection<string> Multiplicity { get; }
         public IType ContainingType { get; private set; }

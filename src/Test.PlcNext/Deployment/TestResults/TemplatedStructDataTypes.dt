@@ -1,0 +1,12 @@
+TYPE
+    Test_BOOL_DINT : STRUCT
+        flag : BOOL;
+        counter : DINT;
+    END_STRUCT
+
+    Test_LINT_INT : STRUCT
+        flag : LINT;
+        counter : INT;
+    END_STRUCT
+
+END_TYPE

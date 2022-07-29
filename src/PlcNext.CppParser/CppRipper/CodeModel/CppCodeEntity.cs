@@ -26,11 +26,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         protected CppCodeEntity(string name, string attributePrefix)
         {
+            AttributePrefix = attributePrefix;
             attributeRegex = new Regex(Regex.Escape(attributePrefix??string.Empty) + @"(?<name>\w+)(?:\((?<value>.*)\))?",
                                             RegexOptions.Compiled);
             Name = name;
         }
 
+        protected string AttributePrefix { get; } 
         public string Name { get; protected set; }
 
         public IReadOnlyCollection<IComment> Comments

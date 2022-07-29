@@ -37,7 +37,8 @@ namespace PlcNext.Common.DataModel
             EntityKeys.DecrementKey,
             EntityKeys.NegateKey,
             EntityKeys.OriginKey,
-            EntityKeys.ThrowIfMultidimensionalKey
+            EntityKeys.ThrowIfMultidimensionalKey,
+            EntityKeys.ContainsLtGt
         };
 
         public ConstantContentProvider(IFileSystem fileSystem)
@@ -136,6 +137,8 @@ namespace PlcNext.Common.DataModel
                     if (owner.Value<string>()?.Contains(",") == true)
                         throw new MultidimensionalArrayNotSupportedException();
                     return owner;
+                case EntityKeys.ContainsLtGt:
+                    return ContainsLtGt();
                 default:
                     throw new ContentProviderException(key, owner);
 
@@ -167,6 +170,14 @@ namespace PlcNext.Common.DataModel
                         }
 
                         return owner.Create(key, number);
+                    }
+                    
+                    Entity ContainsLtGt()
+                    {
+                        string value = owner.Value<string>();
+                        bool result = value.Contains("<") || value.Contains(">");
+                        return owner.Create(key, result.ToString(CultureInfo.InvariantCulture), result);
+                        
                     }
             }
         }

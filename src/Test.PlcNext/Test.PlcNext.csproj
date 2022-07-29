@@ -161,6 +161,10 @@
     <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsComponent.hpp" />
     <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.cpp" />
     <None Remove="Deployment\StructWith1000Fields\src\StructWith1000FieldsProgram.hpp" />
+    <None Remove="Deployment\TemplatedStruct\src\TemplatedStructComponent.cpp" />
+    <None Remove="Deployment\TemplatedStruct\src\TemplatedStructComponent.hpp" />
+    <None Remove="Deployment\TemplatedStruct\src\TemplatedStructProgram.cpp" />
+    <None Remove="Deployment\TemplatedStruct\src\TemplatedStructProgram.hpp" />
     <None Remove="Deployment\TestResults\AcfDataTypes.dt" />
     <None Remove="Deployment\TestResults\ArrayDatatypesDataTypes.dt" />
     <None Remove="Deployment\TestResults\ArrayDatatypesDataTypesOld.dt" />
@@ -195,6 +199,8 @@
     <None Remove="Deployment\TestResults\StaticStringTestDataTypes.dt" />
     <None Remove="Deployment\TestResults\StaticStringTestLibrary.meta.cpp" />
     <None Remove="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
+    <None Remove="Deployment\TestResults\TemplatedStructDataTypes.dt" />
+    <None Remove="Deployment\TestResults\TemplatedStructLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\AcfProjectv210\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\AcfProjectv210\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
     <EmbeddedResource Include="Deployment\AcfProjectv210\How_to_deploy.txt" />
@@ -236,6 +242,10 @@
     <EmbeddedResource Include="Deployment\DuplicatePortName\src\DuplicatePortNameComponent.hpp" />
     <EmbeddedResource Include="Deployment\DuplicatePortName\src\DuplicatePortNameProgram.cpp" />
     <EmbeddedResource Include="Deployment\DuplicatePortName\src\DuplicatePortNameProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructComponent.cpp" />
+    <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructComponent.hpp" />
+    <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructProgram.cpp" />
+    <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructProgram.hpp" />
     <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithExternalLib.txt" />
     <EmbeddedResource Include="Deployment\Demo\bin\AXCF2152_20.6.0.12345\Debug\libDemo.so" />
     <EmbeddedResource Include="Deployment\DynamicPorts\CMakeLists.txt" />
@@ -821,6 +831,8 @@
     <EmbeddedResource Include="Deployment\TestResults\StaticStringTestDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\StaticStringTestLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
+    <EmbeddedResource Include="Deployment\TestResults\TemplatedStructDataTypes.dt" />
+    <EmbeddedResource Include="Deployment\TestResults\TemplatedStructLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponent._meta.cpp" />
     <EmbeddedResource Include="Deployment\TooManyGeneratedFiles\intermediate\code\AccessComponentProgramProvider.cpp" />

@@ -49,6 +49,7 @@ namespace PlcNext.Common.CodeModel
                    key == EntityKeys.FieldArpDataTypeKey && owner.Type == EntityKeys.FormatKey ||
                    key == EntityKeys.TypeMetaDataFormatKey && owner.Type == EntityKeys.FormatKey ||
                    key == EntityKeys.IecDataTypeFormatKey && owner.Type == EntityKeys.FormatKey ||
+                   key == EntityKeys.ConvertToIECDatatypeKey && owner.Type == EntityKeys.FormatKey ||
                    key == EntityKeys.ExpandHiddenTypesFormatKey && owner.All(e => e.HasValue<IField>()) ||
                    key == EntityKeys.FilterHiddenTypesFormatKey && owner.All(e => e.HasValue<IType>()) ||
                    key == EntityKeys.IsFieldKey ||
@@ -89,6 +90,10 @@ namespace PlcNext.Common.CodeModel
             if (key == EntityKeys.IecDataTypeFormatKey && owner.Type == EntityKeys.FormatKey)
             {
                 return ResolveIECDataType();
+            }
+            if (key == EntityKeys.ConvertToIECDatatypeKey && owner.Type == EntityKeys.FormatKey)
+            {
+                return ConvertToIECDatatype();
             }
             if (key == EntityKeys.ExpandHiddenTypesFormatKey)
             {
@@ -377,6 +382,9 @@ namespace PlcNext.Common.CodeModel
                     {
                         throw new UnknownIecDataTypeException(dataTypeName);
                     }
+                    dataTypeName = dataSource.Create("temporaryTypeFormatContainer", knownType.Name)
+                                        .Format()["escapeTemplatedStructName"]
+                                        .Format()["convertToIECDataType"].Value<string>();
                 }
                 dataTypeName = dataTypeName.Contains("::")
                     ? dataTypeName.Substring(dataTypeName.LastIndexOf("::", StringComparison.InvariantCulture) + "::".Length)
@@ -401,6 +409,24 @@ namespace PlcNext.Common.CodeModel
                 }
 
                 return (enumDataType, formattedBaseType);
+            }
+
+            Entity ConvertToIECDatatype()
+            {
+                IEntityBase dataSource = ownerTemplateEntity.Owner;
+                string result = dataSource.Value<string>();
+                string[] parts = result.Split('_');
+                var x = parts.Select(p => UnknownDataTypeRegex.IsMatch(owner.Create("temporaryFormatContainer", p)
+                                                .Format()["knownDataTypes"]
+                                                .Format()["iecDataType"]
+                                                .Value<string>())
+                                            ?p
+                                            : owner.Create("temporaryFormatContainer", p)
+                                                .Format()["knownDataTypes"]
+                                                .Format()["iecDataType"]
+                                                .Value<string>());
+                result = string.Join("_", x);
+                return owner.Create(key, result);
             }
         }
     }

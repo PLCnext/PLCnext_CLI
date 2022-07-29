@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSettings xmlns="http://www.phoenixcontact.com/schema/cliproject">
+  <Type>project</Type>
+  <Version>2.0</Version>
+  <Name>TemplatedStruct</Name>
+  <GenerateDTArrayNameByType>true</GenerateDTArrayNameByType>
+</ProjectSettings>

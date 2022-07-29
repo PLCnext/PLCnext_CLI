@@ -278,7 +278,8 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         private static string GetName(ParseNode typeDeclaration)
         {
             ParseNode leaf = typeDeclaration.GetHierarchy()
-                                            .FirstOrDefault(n => n.RuleName == "identifier" || n.RuleName == "generic");
+                                            .FirstOrDefault(n => (n.RuleName == "identifier" && n.GetNamedParent().RuleName != "template_decl") 
+                                                                 || n.RuleName == "generic");
             if (leaf == null)
             {
                 return Guid.NewGuid().ToByteString();

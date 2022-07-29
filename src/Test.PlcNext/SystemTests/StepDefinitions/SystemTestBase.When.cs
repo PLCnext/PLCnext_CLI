@@ -215,12 +215,12 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.StartProcessThrowsError();
         }
 
-	    protected async Task When_I_generate_all_files_except_datatypes_worksheet_from_inside_the_project_folder()
+	    protected async Task When_I_generate_meta_files_except_datatypes_worksheet_from_inside_the_project_folder()
 	    {
 	        await ScenarioContext.GenerateMeta(false, noDatatypesWorksheet: true);
         }
 
-        protected async Task When_I_generate_all_files_from_inside_the_project_folder()
+        protected async Task When_I_generate_meta_from_inside_the_project_folder()
         {
             await ScenarioContext.GenerateMeta(false);
         }
@@ -333,6 +333,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void When_the_librarybuilder_exits_with_error()
         {
             ScenarioContext.ExitProcessWithErrorForCommand("LibraryBuilder.Core");
+        }
+
+        protected async Task When_I_generate_all()
+        {
+            await ScenarioContext.GenerateAll(true);
         }
     }
 }
