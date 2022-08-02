@@ -92,6 +92,12 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                     string current = node.GetHierarchy().FirstOrDefault(n => n.RuleName == "identifier")?.ToString().Trim().Trim('\'', '"');
                     if (string.IsNullOrEmpty(current))
                     {
+                        ParseNode literal = node.GetHierarchy().FirstOrDefault(n => n.RuleName == "literal");
+                        if (literal != null)
+                        {
+                            resolvedString += literal.ChildrenSkipUnnamed().FirstOrDefault().ToString() + " ";
+                            continue;
+                        }
                         resolvedString += node.ToString() + " ";
                         continue;
                     }

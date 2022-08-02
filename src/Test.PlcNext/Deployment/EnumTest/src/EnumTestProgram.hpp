@@ -21,10 +21,11 @@ public: // typedefs
         What = 0,
         That = 1,
         Not = 12,
-        Other = (OtherEnum::That + 5) * 2,
+        Other = (OtherEnum::That + 5) * 2,  ///< some comment.
         More = Not | Other,
-        Random,
-        Next = 3 * (20 - (What | Not))
+        Random,                             ///< my comment
+        Next = 3 * (20 - (What | Not)),
+        Last = 512                          ///< other comment.
     };
 
     struct EnumStruct

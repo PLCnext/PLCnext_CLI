@@ -315,6 +315,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                            new EnumSymbol("More",12),
                                                                                                            new EnumSymbol("Random",13),
                                                                                                            new EnumSymbol("Next",24),
+                                                                                                           new EnumSymbol("Last",512),
                                                                                                        }))).RunAsyncWithTimeout();
         }
 
