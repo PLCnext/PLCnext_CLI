@@ -66,6 +66,7 @@ namespace PlcNext.Common.Templates
                 !CheckRestriction(value, restriction.Items,
                                   restriction.ItemsElementName[0] == Field.ItemsChoiceType.Pattern,
                                   restriction.ignorecase,
+                                  restriction.description,
                                   out result))
             {
                 return result;
@@ -114,6 +115,7 @@ namespace PlcNext.Common.Templates
                 !CheckRestriction(value, restriction.Items,
                                   restriction.ItemsElementName[0] == Type.ItemsChoiceType.Pattern,
                                   restriction.ignorecase,
+                                  restriction.description,
                                   out result))
             {
                 return result;
@@ -162,6 +164,7 @@ namespace PlcNext.Common.Templates
                 !CheckRestriction(value, restriction.Items,
                                   restriction.ItemsElementName[0] == Description.ItemsChoiceType.Pattern,
                                   restriction.ignorecase,
+                                  restriction.description,
                                   out result))
             {
                 return result;
@@ -184,7 +187,7 @@ namespace PlcNext.Common.Templates
             return (true, null, newValue);
         }
 
-        private static bool CheckRestriction(string value, string[] restriction, bool isPattern, bool ignorecase,
+        private static bool CheckRestriction(string value, string[] restriction, bool isPattern, bool ignorecase, string description,
                                              out (bool success, string message, string newValue) result)
         {
             if (isPattern)
@@ -193,7 +196,7 @@ namespace PlcNext.Common.Templates
                 result = matches
                              ? (true, null, value)
                              : (false, $"The value {value} does not match with the " +
-                                       $"restriction pattern {restriction[0]}",
+                                       $"restriction pattern {restriction[0]}. {description}",
                                 value);
                 return matches;
             }

@@ -192,12 +192,15 @@ namespace PlcNext.Common.Templates.Type {
         
         private whitespace whitespaceField;
         
+        private string descriptionField;
+        
         public valueRestriction() {
             this.ignorecaseField = false;
             this.minlengthField = "0";
             this.maxlengthField = "-1";
             this.lengthField = "-1";
             this.whitespaceField = whitespace.Preserve;
+            this.descriptionField = "";
         }
         
         /// <remarks/>
@@ -282,6 +285,18 @@ namespace PlcNext.Common.Templates.Type {
             }
             set {
                 this.whitespaceField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute("")]
+        public string description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
             }
         }
     }
