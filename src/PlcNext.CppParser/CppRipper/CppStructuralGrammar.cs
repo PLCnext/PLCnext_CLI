@@ -73,7 +73,7 @@ namespace PlcNext.CppParser.CppRipper
                 = Not(CharSeq("/*") | CharSeq("//")) + CharSet("~!@%^&*-+=|:.?/,") + Eat(multiline_ws);
 
             template_decl
-                = TEMPLATE + ((NoFail(Delimiter("<")) + Plus(TYPENAME + identifier + Opt(COMMA)) + NoFail(Delimiter(">")))
+                = TEMPLATE + ((NoFail(Delimiter("<")) + Plus(TYPENAME + identifier + Opt(COMMA) + Eat(multiline_ws)) + NoFail(Delimiter(">")))
                               | NoFail(Nested("<",">")))
                 + ws;
 

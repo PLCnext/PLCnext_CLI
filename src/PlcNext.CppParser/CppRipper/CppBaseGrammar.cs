@@ -290,7 +290,7 @@ namespace PlcNext.CppParser.CppRipper
             CARET = Word("^");
             PIPE = Word("|");
             EQ = Word("=");
-            COMMA = Word(",");
+            COMMA = CharSeq(",");
             SIZEOF = Word("sizeof");
             PTR_OP = Word("->");
             INC_OP = Word("++");
