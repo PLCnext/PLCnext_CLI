@@ -36,7 +36,7 @@ namespace PlcNext.Common.Tools
             if (e is AggregateException aggregateException &&
                 aggregateException.InnerExceptions.All(IsHandlable))
             {
-                foreach (Exception exception in aggregateException.InnerExceptions)
+                foreach (Exception exception in aggregateException.InnerExceptions.Distinct())
                 {
                     HandleException(exception);
                 }
