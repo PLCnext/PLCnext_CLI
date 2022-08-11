@@ -840,6 +840,17 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Generate_datatypes_worksheet_with_hidden_struct()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("HiddenComponentPort"),
+                _ => Given_is_the_working_directory_PATH("HiddenComponentPort"),
+                _ => When_I_generate_meta_from_inside_the_project_folder(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("HiddenComponentPortDataTypes.dt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_datatype_worksheet_for_enum()
         {
             await Runner.AddSteps(

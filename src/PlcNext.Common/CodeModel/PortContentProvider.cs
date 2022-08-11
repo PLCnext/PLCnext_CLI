@@ -116,7 +116,10 @@ namespace PlcNext.Common.CodeModel
 
             IEnumerable<CodeEntity> GetVariablePortStrings()
             {
-                return GetAllPorts(owner).Where(t => t.AsField != null &&
+                return GetAllPorts(owner).Concat(GetPortStructures(owner)
+                                                .Where(s => s.IsHidden())
+                                                .SelectMany(p => p.Fields))
+                                         .Where(t => t.AsField != null &&
                                                      StaticStringRegex.IsMatch(t.AsField.DataType.Name) &&
                                                      StaticStringRegex.Match(t.AsField.DataType.Name).Groups["length"]
                                                                       .Value != "80" &&
