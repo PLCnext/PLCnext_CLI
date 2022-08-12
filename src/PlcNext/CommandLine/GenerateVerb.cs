@@ -13,7 +13,6 @@ using CommandLine;
 namespace PlcNext.CommandLine
 {
     [Verb(CommandLineConstants.GenerateVerb, HelpText = "Generates config and code files.")]
-    [ChildVerbs (typeof(GenerateLibraryVerb))]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     internal abstract class GenerateVerb : VerbBase
     {

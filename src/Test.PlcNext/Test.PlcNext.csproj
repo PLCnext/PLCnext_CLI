@@ -613,11 +613,6 @@
     <EmbeddedResource Include="Deployment\ComponentsWithSameName\c2\MyComponent.cpp" />
     <EmbeddedResource Include="Deployment\ComponentsWithSameName\c2\MyComponent.hpp" />
     <EmbeddedResource Include="Deployment\DemoCodeModel.json" />
-    <EmbeddedResource Include="Deployment\DemoLibraryCommandArgsWithSpecificId.txt" />
-    <EmbeddedResource Include="Deployment\DemoLibraryCommandArgs.txt" />
-    <EmbeddedResource Include="Deployment\DemoLibraryDifferentPathsCommandArgs.txt" />
-    <EmbeddedResource Include="Deployment\DemoLibraryWithExternalLibs.txt" />
-    <EmbeddedResource Include="Deployment\DemoLibraryWithExternalLibsMultibinary.txt" />
     <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\plcnext.proj" />
     <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\ba\Meta\Demo.libmeta" />
@@ -629,7 +624,6 @@
     <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent.hpp" />
     <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent\MyProgram.cpp" />
     <EmbeddedResource Include="Deployment\DemoWithDifferentPaths\src\Demo\MyComponent\MyProgram.hpp" />
-    <EmbeddedResource Include="Deployment\DemoWithMultibinaryLibraryCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\DemoWithMultibinary\bin\AXCF2152_100.0.0.12345\Release\lib\libDemo.so" />
     <EmbeddedResource Include="Deployment\DemoWithMultibinary\bin\AXCF2152_200.0.0.12345\Release\lib\libDemo.so" />
     <EmbeddedResource Include="Deployment\DemoWithMultibinary\CMakeLists.txt" />

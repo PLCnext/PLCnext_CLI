@@ -115,15 +115,6 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not find cmake build system in {0}. No external libraries will be added to library. Libraries can be added manually via option --externallibraries.
-        /// </summary>
-        internal static string CMakeBuildSystemNotFound {
-            get {
-                return ResourceManager.GetString("CMakeBuildSystemNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Could not find cmake build system for the target {0} and build type {1}. No external libraries will be added to library. Libraries can be added manually via option --files..
         /// </summary>
         internal static string CMakeBuildSystemNotFoundWithoutPath {
@@ -363,15 +354,6 @@ namespace PlcNext.Common {
         internal static string LibraryNotFound {
             get {
                 return ResourceManager.GetString("LibraryNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} is neither an existing file nor a valid {1}: {2}.
-        /// </summary>
-        internal static string MalformedExternalLibrariesOption {
-            get {
-                return ResourceManager.GetString("MalformedExternalLibrariesOption", resourceCulture);
             }
         }
         
@@ -903,15 +885,6 @@ namespace PlcNext.Common {
         internal static string WildEntity {
             get {
                 return ResourceManager.GetString("WildEntity", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You cannot combine external libraries for a specific target and external libraries without target..
-        /// </summary>
-        internal static string WrongCombinedExternalLibraries {
-            get {
-                return ResourceManager.GetString("WrongCombinedExternalLibraries", resourceCulture);
             }
         }
     }

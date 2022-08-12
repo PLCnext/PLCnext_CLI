@@ -325,15 +325,6 @@
   <data name="NoDuplicateLinesParameterMismatch" xml:space="preserve">
     <value>The no-duplicate-lines control sequence must be in the form $([no-duplicate-lines]). Additional parameter inside the braces are not allowed.</value>
   </data>
-  <data name="MalformedExternalLibrariesOption" xml:space="preserve">
-    <value>{0} is neither an existing file nor a valid {1}: {2}</value>
-  </data>
-  <data name="WrongCombinedExternalLibraries" xml:space="preserve">
-    <value>You cannot combine external libraries for a specific target and external libraries without target.</value>
-  </data>
-  <data name="CMakeBuildSystemNotFound" xml:space="preserve">
-    <value>Could not find cmake build system in {0}. No external libraries will be added to library. Libraries can be added manually via option --externallibraries</value>
-  </data>
   <data name="SdkPathNotExisting" xml:space="preserve">
     <value>Could not find the SDK '{0}'. This SDK cannot be used, please remove the SDK from the settings.</value>
   </data>

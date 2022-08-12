@@ -37,33 +37,12 @@ namespace PlcNext.Common.Commands
 
         protected override CommandResult ExecuteDetailed(GetTargetsCommandArgs args, ChangeObservable observable)
         {
-            IEnumerable<Exception> exceptions = Enumerable.Empty<Exception>();
-            TargetsCommandResult commandResult;
-            if (args.All)
-            {
-                commandResult = new TargetsCommandResult(sdkRepository.GetAllTargets()
+            TargetsCommandResult commandResult = new TargetsCommandResult(sdkRepository.GetAllTargets()
                                                                     .Select(t => new TargetResult(t.Name, t.Version,
                                                                                                   t.LongVersion,
                                                                                                   t.ShortVersion))
                                                                     .OrderBy(t => t.Name).ThenByDescending(t => t.Version));
-            }
-            else
-            {
-                ExecutionContext.WriteWarning("This command is deprecated. Use 'get project-information' instead.", false);
-
-                ProjectEntity project = ProjectEntity.Decorate(entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root);
-                TargetsResult targetsResult = targetParser.Targets(project, false);
-                Target[] availableTargets = sdkRepository.GetAllTargets().ToArray();
-                commandResult = new TargetsCommandResult(targetsResult.ValidTargets
-                                                                    .Select(t => new TargetResult(t.Name, t.Version,
-                                                                                                  t.LongVersion,
-                                                                                                  t.ShortVersion,
-                                                                                                  availableTargets.Any(at => t.Name == at.Name && at.LongVersion == t.LongVersion)))
-                                                                    .OrderBy(t => t.Name).ThenByDescending(t => t.Version));
-                exceptions = targetsResult.Errors;
-            }
-
-            return new CommandResult(0, commandResult, exceptions);
+            return new CommandResult(0, commandResult);
         }
     }
 }

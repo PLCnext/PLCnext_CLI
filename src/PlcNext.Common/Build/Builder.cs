@@ -11,14 +11,10 @@ using PlcNext.Common.Tools.FileSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
 using PlcNext.Common.Project;
-using PlcNext.Common.Project.Persistence;
-using Entity = PlcNext.Common.DataModel.Entity;
-using System.Text.RegularExpressions;
 
 namespace PlcNext.Common.Build
 {
@@ -96,51 +92,6 @@ namespace PlcNext.Common.Build
                 }
             }
             userInterface.WriteInformation($"Finished build for all targets");
-        }
-
-        public int BuildLibraryForProject(Entity project, ChangeObservable observable,
-                                          string metaFilesDirectory, string libraryLocation, string outputDirectory,
-                                          Guid libraryGuid, IEnumerable<string> targets,
-                                          IEnumerable<string> externalLibraries, string buildType)
-        {
-            userInterface.WriteInformation("Starting library generation...");
-
-            ProjectEntity projectEntity = ProjectEntity.Decorate(project);
-            IEnumerable<(Target, string)> targetsSet;
-            if (!targets.Any())
-            {
-                TargetsResult ts = targetParser.Targets(projectEntity, false);
-                if (!ts.ValidTargets.Any())
-                {
-                    throw new FormattableException
-                        ("Please use --target to specify for which targets the library shall be generated.");
-                }
-                else
-                {
-                    HashSet<(Target, string)> targetsHashSet = new HashSet<(Target, string)>();
-                    foreach (Target target in ts.ValidTargets)
-                    {
-                        targetsHashSet.Add((target, null));
-                    }
-                    targetsSet = targetsHashSet;
-                }
-            }
-            else
-            {
-                targetsSet = targetParser.GetSpecificTargets(targets, false);
-            }
-
-            Dictionary<Target, IEnumerable<VirtualFile>> externalLibs =
-                ExternalLibrariesParser.ParseExternalLibraries(externalLibraries, targetParser,
-                                                                fileSystem, targetsSet.Select(t => t.Item1));
-             
-            int result = libraryBuilderExecuter.Execute(projectEntity, metaFilesDirectory, libraryLocation,
-                outputDirectory, observable, userInterface, libraryGuid, targetsSet, externalLibs, buildType);
-            if (result == 0)
-            {
-                userInterface.WriteInformation("Successfully generated library!");
-            }
-            return result;
         }
     }
 }

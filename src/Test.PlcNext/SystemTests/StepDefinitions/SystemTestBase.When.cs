@@ -280,17 +280,7 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 	        await ScenarioContext.UpdateCli(file);
         }
 
-	    protected async Task When_I_generate_the_library()
-	    {
-	        await ScenarioContext.GenerateLibrary(null);
-	    }
-
-        protected async Task When_I_generate_the_library(LibraryCommandArgs libraryCommandArgs)
-	    {
-	        await ScenarioContext.GenerateLibrary(libraryCommandArgs);
-        }
-
-        protected async Task When_I_add_the_target(string target, string version)
+	    protected async Task When_I_add_the_target(string target, string version)
         {
             await ScenarioContext.ChangeTarget(target, version, SystemTestContext.TargetChange.Add);
         }

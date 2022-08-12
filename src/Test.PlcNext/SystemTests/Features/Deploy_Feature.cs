@@ -297,7 +297,6 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        [IgnoreScenario("TODO as soon as old generate library command is gone, reactivate")]
         public async Task Inform_user_of_target_format_mismatch()
         {
             await Runner.AddSteps(

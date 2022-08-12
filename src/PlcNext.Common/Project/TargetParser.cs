@@ -86,8 +86,7 @@ namespace PlcNext.Common.Project
                 if (commandEntity.IsCommandArgumentSpecified(Constants.TargetArgumentName))
                 {
                     IEnumerable<string> targets = commandEntity.GetMultiValueArgument(Constants.TargetArgumentName);
-                    //TODO parseLocation true here is legacy as soon as old generate library command is gone, reset to false
-                    return GetSpecificTargets(targets, validate, true).Select(t => t.Item1);
+                    return GetSpecificTargets(targets, validate, false).Select(t => t.Item1);
                 }
                 ProjectEntity project = ProjectEntity.Decorate(owner);
                 return Targets(project, validate).ValidTargets;

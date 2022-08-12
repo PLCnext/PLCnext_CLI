@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using Autofac.Features.AttributeFilters;
-using PlcNext.Common.DataModel;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Events;
@@ -30,12 +29,5 @@ internal class NoBuildEngine : IBuilder
     {
         TemplateEntity template = TemplateEntity.Decorate(buildInfo.RootProjectEntity);
         throw new FormattableException($"Build is not available for the project type '{template.Template.name}'.");
-    }
-
-    public int BuildLibraryForProject(Entity project, ChangeObservable observable, string metaFilesDirectory,
-                                      string libraryLocation, string outputDirectory, Guid libraryGuid, IEnumerable<string> targets,
-                                      IEnumerable<string> externalLibraries, string buildType)
-    {
-        return baseBuilder.BuildLibraryForProject(project, observable, metaFilesDirectory, libraryLocation, outputDirectory, libraryGuid, targets, externalLibraries, buildType);
     }
 }

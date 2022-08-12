@@ -8,11 +8,7 @@
 #endregion
 
 using System;
-using LightBDD.Framework;
-using LightBDD.XUnit2;
 using Test.PlcNext.Tools;
-using PlcNext.Common.Tools;
-using System.IO;
 using PlcNext.Common.Build;
 using PlcNext.Common.Commands;
 using PlcNext.Common.Installation;
@@ -21,11 +17,9 @@ using PlcNext.Common.Tools.IO;
 using PlcNext.Common.Tools.Security;
 using PlcNext.Common.Tools.Settings;
 using PlcNext.Common.Tools.Web;
-using Xunit.Sdk;
 using System.Threading.Tasks;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Templates;
-using PlcNext.Common.Tools.SDK;
 using System.Collections.Generic;
 using System.Linq;
 using PlcNext.Common.Tools.DynamicCommands;
@@ -416,11 +410,6 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfError(typeof(LibraryIdMalformattedException));
         }
 
-        protected void Then_the_library_was_generated_with_the_following_content(string content)
-        {
-            ScenarioContext.CheckLibraryCreation(content);
-        }
-
         protected void Then_the_library_was_generated_with_the_following_command_arguments(string argumentsFile)
         {
             ScenarioContext.CheckLibraryCreation($"TestResults.{argumentsFile}");
@@ -480,11 +469,6 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckFileExists(file, false);
         }
 
-        protected void Then_the_user_was_informed_that_the_library_option_is_malformatted()
-        {
-            ScenarioContext.CheckUserInformedOfError(typeof(MalformedExternalLibrariesOptionException));
-        }
-
         protected void Then_the_user_was_informed_that_the_target_is_ambiguous()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(TargetNameAmbiguousException));
@@ -498,11 +482,6 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_user_was_informed_that_the_base_type_could_not_be_found()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(UnkownBaseDataTypeException));
-        }
-
-        protected void Then_the_user_was_informed_that_the_library_option_is_wrong_combined()
-        {
-            ScenarioContext.CheckUserInformedOfError(typeof(WrongCombinedExternalLibrariesException));
         }
 
         protected void Then_the_user_was_informed_that_the_cmake_build_system_was_not_found()

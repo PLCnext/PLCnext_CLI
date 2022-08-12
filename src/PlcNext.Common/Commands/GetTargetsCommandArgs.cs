@@ -6,23 +6,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PlcNext.Common.Commands
 {
     public class GetTargetsCommandArgs : CommandArgs
     {
-        public GetTargetsCommandArgs(string path, bool all, bool shortVersion)
+        public GetTargetsCommandArgs(string path, bool shortVersion)
         {
             Path = path;
-            All = all;
             ShortVersion = shortVersion;
         }
 
         public string Path { get; }
-        public bool All { get; }
         public bool ShortVersion { get; }
     }
 }

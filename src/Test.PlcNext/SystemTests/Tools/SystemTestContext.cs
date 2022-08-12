@@ -12,10 +12,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 using Autofac;
 using CSharpx;
@@ -24,18 +22,14 @@ using Mono.Cecil;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
-using PlcNext;
-using PlcNext.Common;
 using PlcNext.Common.CommandLine;
 using PlcNext.Common.MetaData;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
-using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
 using Test.PlcNext.SystemTests.Features;
 using Test.PlcNext.Tools;
 using Test.PlcNext.Tools.Abstractions;
-using Xunit;
 using FieldDefinition = PlcNext.Common.MetaData.FieldDefinition;
 
 namespace Test.PlcNext.SystemTests.Tools
@@ -1208,54 +1202,6 @@ namespace Test.PlcNext.SystemTests.Tools
             }
 
             await CommandLineParser.Parse("update", "cli", "-f", path);
-        }
-
-        public async Task GenerateLibrary(LibraryCommandArgs libraryCommandArgs)
-        {
-            libraryCommandArgs = libraryCommandArgs ?? new LibraryCommandArgs();
-            List<string> args = new List<string>(new[] { "generate", "library" });
-            if (!string.IsNullOrEmpty(libraryCommandArgs.LibraryBuilderLocation))
-            {
-                args.Add("--builder");
-                args.Add(libraryCommandArgs.LibraryBuilderLocation);
-            }
-            if (!string.IsNullOrEmpty(libraryCommandArgs.LibraryLocation))
-            {
-                args.Add("-c");
-                args.Add(libraryCommandArgs.LibraryLocation);
-            }
-            if (!string.IsNullOrEmpty(libraryCommandArgs.MetaFileDirectory))
-            {
-                args.Add("-m");
-                args.Add(libraryCommandArgs.MetaFileDirectory);
-            }
-            if (!string.IsNullOrEmpty(libraryCommandArgs.OutputDirectory))
-            {
-                args.Add("-o");
-                args.Add(libraryCommandArgs.OutputDirectory);
-            }
-            if (!string.IsNullOrEmpty(libraryCommandArgs.LibraryId))
-            {
-                args.Add("--id");
-                args.Add(libraryCommandArgs.LibraryId);
-            }
-            if(libraryCommandArgs.Targets != null && libraryCommandArgs.Targets.Any())
-            {
-                args.Add("-t");
-                foreach(string target in libraryCommandArgs.Targets)
-                {
-                    args.Add(target);
-                }
-            }
-            if(libraryCommandArgs.ExternalLibraries != null && libraryCommandArgs.ExternalLibraries.Any())
-            {
-                args.Add("-e");
-                foreach(string lib in libraryCommandArgs.ExternalLibraries)
-                {
-                    args.Add(lib);
-                }
-            }
-            await CommandLineParser.Parse(args.ToArray());
         }
 
         public void CheckLibraryCreation(string commandArgsResourceKey = null)
