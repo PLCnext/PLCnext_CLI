@@ -70,7 +70,7 @@ namespace PlcNext.Common.Build
                 externalLibraries.AddRange(libraries);
                 deletableFiles.AddRange(toBeDeleted);
 
-                ExcludeFiles(target, projectLibraries);
+                ExcludeFiles(target, project, projectLibraries);
             }
             CheckMetaFiles(targets.First());
 
@@ -177,12 +177,11 @@ namespace PlcNext.Common.Build
             }
         }
 
-        private void ExcludeFiles(Entity target, Dictionary<Entity, VirtualFile> projectLibraries)
+        private void ExcludeFiles(Entity target, ProjectEntity project, Dictionary<Entity, VirtualFile> projectLibraries)
         {
-            BuildEntity buildEntity = BuildEntity.Decorate(target); 
             VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
             List<VirtualFile> filesToDelete = new List<VirtualFile>();
-            foreach (string excludePattern in buildEntity.ExcludedFiles)
+            foreach (string excludePattern in project.ExcludedFiles)
             {
                 filesToDelete.AddRange(deployDirectory.Files(excludePattern, true).Except(projectLibraries.Values));
             }

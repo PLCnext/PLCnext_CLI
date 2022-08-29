@@ -41,6 +41,8 @@ namespace PlcNext.Common.Project {
         
         private string libraryDescriptionField;
         
+        private string[] excludedFilesField;
+        
         /// <remarks/>
         public string EngineerVersion {
             get {
@@ -78,6 +80,17 @@ namespace PlcNext.Common.Project {
             }
             set {
                 this.libraryDescriptionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("File", IsNullable=false)]
+        public string[] ExcludedFiles {
+            get {
+                return this.excludedFilesField;
+            }
+            set {
+                this.excludedFilesField = value;
             }
         }
     }

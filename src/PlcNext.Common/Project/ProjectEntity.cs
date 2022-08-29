@@ -73,5 +73,6 @@ namespace PlcNext.Common.Project
                                                             ? this[EntityKeys.ProjectConfigurationsKey]
                                                              .Value<ProjectConfigurations>()
                                                           : new ProjectConfigurations();
+        public IEnumerable<string> ExcludedFiles => this[EntityKeys.ExcludeFilesKey].Select(e => e.Value<string>());
     }
 }

@@ -3,4 +3,9 @@
 					  xmlns="http://www.phoenixcontact.com/schema/projectconfiguration">
   <LibraryDescription>Saved description</LibraryDescription>
   <LibraryVersion>2021.6.0 alpha</LibraryVersion>
+  <ExcludedFiles>
+    <File>Library.so</File>
+    <File>rary.so</File>
+    <File>Some.so</File>
+  </ExcludedFiles>
 </ProjectConfiguration>

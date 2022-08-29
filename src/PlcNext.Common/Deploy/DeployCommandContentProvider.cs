@@ -36,9 +36,7 @@ namespace PlcNext.Common.Deploy
             return (key == Constants.OutputArgumentName &&
                     CommandEntity.Decorate(owner).CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase)) ||
                    (key == EntityKeys.InternalDeployPathKey &&
-                   TargetEntity.Decorate(owner).HasFullName)||
-                   (key == EntityKeys.ExcludeFilesKey &&
-                    CommandEntity.Decorate(owner.Origin).CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase));
+                   TargetEntity.Decorate(owner).HasFullName);
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -48,10 +46,6 @@ namespace PlcNext.Common.Deploy
                 case EntityKeys.InternalDeployPathKey:
                     VirtualDirectory deployRoot = GetDeployRoot();
                     return owner.Create(key, deployRoot.FullName, deployRoot);
-
-                case EntityKeys.ExcludeFilesKey:
-                    IEnumerable<string> files = GetExcludedFiles();
-                    return owner.Create(key, files.Select(f => owner.Create(key, f)));
 
                 case Constants.OutputArgumentName:
                 default:
@@ -84,15 +78,7 @@ namespace PlcNext.Common.Deploy
                 VirtualDirectory deployRoot = outputRoot.Directory(targetEntity.FullName.Replace(',', '_'),
                                                                    buildEntity.BuildType);
                 return deployRoot;
-            }
-
-            IEnumerable<string> GetExcludedFiles()
-            {
-                CommandEntity command = CommandEntity.Decorate(owner.Origin);
-                return command.GetMultiValueArgument(EntityKeys.ExcludeFilesKey);
-                
-            }
-            
+            }            
         }
     }
 }

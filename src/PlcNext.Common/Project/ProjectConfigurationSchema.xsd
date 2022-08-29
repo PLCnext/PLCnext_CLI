@@ -42,8 +42,34 @@
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="ExcludedFiles" type="FilesList">
+          <xs:annotation>
+            <xs:documentation>
+              A list of files which will not be added to the pcwlx during deploy.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+  
+  <xs:complexType name="FilesList">
+    <xs:annotation>
+      <xs:documentation>
+        A list of file names.
+        Wildcards can be used, too.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="File" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            A file name with extension.
+            Wildcards can be used.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 
 </xs:schema>

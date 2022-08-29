@@ -7,11 +7,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using PlcNext.Common.Tools;
-using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.FileSystem;
-using System.IO;
-using System.Xml.Serialization;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PlcNext.Common.Project
 {
@@ -86,6 +84,15 @@ namespace PlcNext.Common.Project
             set
             {
                 Value.LibraryDescription = value;
+            }
+        }
+
+        public IEnumerable<string> ExcludedFiles
+        {
+            get => Value.ExcludedFiles ?? Enumerable.Empty<string>();
+            set
+            {
+                Value.ExcludedFiles = value.ToArray();
             }
         }
     }

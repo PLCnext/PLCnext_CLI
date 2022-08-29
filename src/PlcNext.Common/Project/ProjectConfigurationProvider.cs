@@ -13,7 +13,9 @@ using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Priority;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -40,7 +42,8 @@ namespace PlcNext.Common.Project
                    key == EntityKeys.EngineerVersionKey ||
                    key == EntityKeys.SolutionVersionKey ||
                    key == EntityKeys.LibraryDescriptionKey ||
-                   key == EntityKeys.LibraryVersionKey;
+                   key == EntityKeys.LibraryVersionKey ||
+                   key == EntityKeys.ExcludeFilesKey;
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -57,6 +60,8 @@ namespace PlcNext.Common.Project
                     return GetLibraryDescription();
                 case EntityKeys.LibraryVersionKey:
                     return GetLibraryVersion();
+                case EntityKeys.ExcludeFilesKey:
+                    return GetExcludedFiles();
                 default:
                     throw new ContentProviderException(key, owner);
             }
@@ -180,6 +185,21 @@ namespace PlcNext.Common.Project
                 }
 
                 return owner.Create(key, project.Configuration.LibraryVersion);
+            }
+
+            Entity GetExcludedFiles()
+            {
+                CommandEntity command = CommandEntity.Decorate(owner.Origin);
+                ProjectEntity project = ProjectEntity.Decorate(owner);
+                if (command.CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase)
+                    && command.IsCommandArgumentSpecified(EntityKeys.ExcludeFilesKey))
+                {
+                    IEnumerable<string> files = command.GetMultiValueArgument(EntityKeys.ExcludeFilesKey);
+                    project.Configuration.ExcludedFiles = files;
+                    return owner.Create(key, files.Select(f => owner.Create(key, f)));
+                }
+
+                return owner.Create(key, project.Configuration.ExcludedFiles.Select(f => owner.Create(key, f)));
             }
         }
     }
