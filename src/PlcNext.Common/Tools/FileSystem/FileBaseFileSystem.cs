@@ -9,6 +9,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.Common.Tools.FileSystem
@@ -16,13 +17,18 @@ namespace PlcNext.Common.Tools.FileSystem
     internal class FileBaseFileSystem : IFileSystem
     {
         private readonly ILog log;
+        private readonly StringComparison pathEquality;
+        
         public VirtualDirectory CurrentDirectory { get; }
 
-        public FileBaseFileSystem(ILog log)
+        public FileBaseFileSystem(ILog log, IEnvironmentService environmentService)
         {
             this.log = log;
+            pathEquality = environmentService.Platform == OSPlatform.Windows
+                               ? StringComparison.OrdinalIgnoreCase
+                               : StringComparison.Ordinal;
             DirectoryInfo currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-            CurrentDirectory = new VirtualDirectory(currentDirectory.Name, new DirectoryInfoContentResolver(currentDirectory, false, log));
+            CurrentDirectory = new VirtualDirectory(currentDirectory.Name, new DirectoryInfoContentResolver(currentDirectory, false, log, pathEquality), pathEquality);
         }
 
         public VirtualDirectory GetDirectory(string path, string basePath = "", bool createNew = true)
@@ -40,7 +46,7 @@ namespace PlcNext.Common.Tools.FileSystem
                 Directory.CreateDirectory(Path.GetFullPath(path));
             }
             DirectoryInfo directory = new DirectoryInfo(Path.GetFullPath(path));
-            VirtualDirectory result = new VirtualDirectory(directory.Name, new DirectoryInfoContentResolver(directory, created, log));
+            VirtualDirectory result = new VirtualDirectory(directory.Name, new DirectoryInfoContentResolver(directory, created, log, pathEquality), pathEquality);
             string parentPath = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(parentPath) && parentPath != path)
             {
@@ -60,7 +66,7 @@ namespace PlcNext.Common.Tools.FileSystem
                 Directory.Delete(path, true);
             }
             
-            return new VirtualDirectory(Path.GetDirectoryName(path), new DirectoryInfoContentResolver(Directory.CreateDirectory(path), true, log));
+            return new VirtualDirectory(Path.GetDirectoryName(path), new DirectoryInfoContentResolver(Directory.CreateDirectory(path), true, log, pathEquality), pathEquality);
         }
 
         public bool DirectoryExists(string path, string basePath = "")

@@ -102,7 +102,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
         private VirtualDirectory CreateDirectory(string name, string fullName)
         {
             IDirectoryContentResolver resolver = Substitute.For<IDirectoryContentResolver>();
-            VirtualDirectory directory = new VirtualDirectory(name, resolver);
+            VirtualDirectory directory = new VirtualDirectory(name, resolver, StringComparison.Ordinal);
             SetupDirectoryResolver(resolver, directory);
             directoryContents[directory] = new HashSet<VirtualEntry>();
             return directory;

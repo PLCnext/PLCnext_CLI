@@ -19,14 +19,17 @@ namespace PlcNext.Common.Tools.FileSystem
     public class VirtualDirectory : VirtualEntry
     {
         private readonly IDirectoryContentResolver contentResolver;
+        private readonly StringComparison pathEquality;
         private readonly List<VirtualEntry> entries = new List<VirtualEntry>();
         private List<VirtualEntry> entriesWhenCleared = new List<VirtualEntry>();
         private bool resolved;
         private readonly object resolveLock = new object();
 
-        public VirtualDirectory(string name, IDirectoryContentResolver contentResolver) : base(name, contentResolver)
+        public VirtualDirectory(string name, IDirectoryContentResolver contentResolver,
+                                StringComparison pathEquality) : base(name, contentResolver)
         {
             this.contentResolver = contentResolver;
+            this.pathEquality = pathEquality;
         }
 
         public IEnumerable<VirtualEntry> Entries
@@ -96,7 +99,7 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public bool FileExists(string filename)
         {
-            VirtualFile result = Entries.OfType<VirtualFile>().FirstOrDefault(d => d.Name == filename);
+            VirtualFile result = Entries.OfType<VirtualFile>().FirstOrDefault(d => d.Name.Equals(filename, pathEquality));
             if (result == null)
             {
                 return false;
@@ -106,7 +109,7 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public bool CheckDirectlyFileExists(string filename)
         {
-            VirtualFile result = contentResolver.GetContent().OfType<VirtualFile>().FirstOrDefault(d => d.Name == filename);
+            VirtualFile result = contentResolver.GetContent().OfType<VirtualFile>().FirstOrDefault(d => d.Name.Equals(filename, pathEquality));
             if (result == null)
             {
                 return false;
@@ -116,7 +119,7 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public bool DirectoryExists(string directoryName)
         {
-            VirtualDirectory result = Entries.OfType<VirtualDirectory>().FirstOrDefault(d => d.Name == directoryName);
+            VirtualDirectory result = Entries.OfType<VirtualDirectory>().FirstOrDefault(d => d.Name.Equals(directoryName, pathEquality));
             if (result == null)
             {
                 return false;
@@ -132,7 +135,7 @@ namespace PlcNext.Common.Tools.FileSystem
             }
 
             string directoryName = directoryParts[0];
-            VirtualDirectory result = Entries.OfType<VirtualDirectory>().FirstOrDefault(d => d.Name == directoryName);
+            VirtualDirectory result = Entries.OfType<VirtualDirectory>().FirstOrDefault(d => d.Name.Equals(directoryName, pathEquality));
             if (result == null)
             {
                 result = contentResolver.Create<VirtualDirectory>(directoryName);
@@ -143,7 +146,7 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public VirtualFile File(string fileName)
         {
-            VirtualFile result = Entries.OfType<VirtualFile>().FirstOrDefault(d => d.Name == fileName);
+            VirtualFile result = Entries.OfType<VirtualFile>().FirstOrDefault(d => d.Name.Equals(fileName, pathEquality));
             if (result == null)
             {
                 result = contentResolver.Create<VirtualFile>(fileName);
@@ -249,7 +252,7 @@ namespace PlcNext.Common.Tools.FileSystem
                 }
             }
 
-            file = current.Entries.OfType<VirtualFile>().FirstOrDefault(f => f.Name == parts[parts.Length - 1]);
+            file = current.Entries.OfType<VirtualFile>().FirstOrDefault(f => f.Name.Equals(parts[parts.Length - 1], pathEquality));
             return file != null;
         }
     }
