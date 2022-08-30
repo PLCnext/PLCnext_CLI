@@ -18,10 +18,13 @@ namespace PlcNext.Common.Tools.FileSystem
     internal class DirectoryInfoContentResolver : FileSystemInfoContentResolver, IDirectoryContentResolver
     {
         private readonly DirectoryInfo directoryInfo;
+        private readonly StringComparison pathEquality;
 
-        public DirectoryInfoContentResolver(DirectoryInfo directoryInfo, bool created, ILog log) : base(directoryInfo, created, log)
+        public DirectoryInfoContentResolver(DirectoryInfo directoryInfo, bool created, ILog log,
+                                            StringComparison pathEquality) : base(directoryInfo, created, log)
         {
             this.directoryInfo = directoryInfo;
+            this.pathEquality = pathEquality;
         }
 
         public IEnumerable<VirtualEntry> GetContent()
@@ -40,7 +43,7 @@ namespace PlcNext.Common.Tools.FileSystem
             {
                 if (info is DirectoryInfo directory)
                 {
-                    return new VirtualDirectory(directory.Name, new DirectoryInfoContentResolver(directory, false, Log));
+                    return new VirtualDirectory(directory.Name, new DirectoryInfoContentResolver(directory, false, Log, pathEquality), pathEquality);
                 }
 
                 return new VirtualFile(info.Name, new FileInfoContentResolver((FileInfo) info, false, Log));
@@ -54,7 +57,7 @@ namespace PlcNext.Common.Tools.FileSystem
             {
                 if (typeof(T) == typeof(VirtualDirectory))
                 {
-                    entry = new VirtualDirectory(name, new DirectoryInfoContentResolver(directoryInfo.CreateSubdirectory(name), true, Log));
+                    entry = new VirtualDirectory(name, new DirectoryInfoContentResolver(directoryInfo.CreateSubdirectory(name), true, Log, pathEquality), pathEquality);
                 }
                 else if(typeof(T) == typeof(VirtualFile))
                 {
