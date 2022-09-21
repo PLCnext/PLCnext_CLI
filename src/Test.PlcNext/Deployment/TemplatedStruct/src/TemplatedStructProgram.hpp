@@ -24,6 +24,19 @@ public: // typedefs
         TCount counter;
     };
 
+    //this is not supported as port type but should not throw a parser exception
+    template <typename TFlag, size_t TCount>
+    struct OtherTest
+    {
+        TFlag flag;
+    };
+
+    //this is not supported as port type but should not throw a parser exception
+    template <typename TFunction, typename ...Args>
+    struct OtherTest2
+    {
+        TFunction xyz;
+    };
 
 public: // construction/destruction
     TemplatedStructProgram(TemplatedStruct::TemplatedStructComponent& templatedStructComponentArg, const String& name);
