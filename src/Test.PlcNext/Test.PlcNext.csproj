@@ -1000,17 +1000,6 @@
 
   <ItemGroup>
     <Folder Include="Deployment\DemoWithoutLibrary\bin\" />
-    <Folder Include="Deployment\Templates\ComponentTemplate\" />
-    <Folder Include="Deployment\Templates\AcfComponentTemplate\" />
-    <Folder Include="Deployment\Templates\BaseProjectTemplate\" />
-    <Folder Include="Deployment\Templates\BaseComponentTemplate\" />
-    <Folder Include="Deployment\Templates\BaseTemplates\" />
-    <Folder Include="Deployment\Templates\ComponentTemplate\" />
-    <Folder Include="Deployment\Templates\AcfProjectTemplate\" />
-    <Folder Include="Deployment\Templates\BaseProjectTemplate\" />
-    <Folder Include="Deployment\Templates\ConsumableLibraryTemplate" />
-    <Folder Include="Deployment\Templates\ProjectTemplate\" />
-    <Folder Include="Deployment\Templates\ProgramTemplate\" />
     <Folder Include="Tools\XUnit\" />
   </ItemGroup>
   

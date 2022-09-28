@@ -118,6 +118,7 @@ namespace PlcNext.Common
             builder.RegisterType<DeployCommandContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<TemplateContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<CppContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
+            builder.RegisterType<GuidContentProvider>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<ProjectSettingsProvider>()
                    .Named<IEntityContentProvider>("Implementation")
                    .As<ITemplateIdentifier>()
