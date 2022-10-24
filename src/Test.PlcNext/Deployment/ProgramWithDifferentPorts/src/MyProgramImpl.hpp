@@ -12,6 +12,8 @@ struct Example {
 	int32 value1;
 	Bit value2;
 	int64 value3[6], value4[1];
+    //#iecdatatype(DWORD)
+    uint32 value5;
 };
 
 //#program
@@ -47,7 +49,40 @@ private: // fields
 	//#iecdatatype(LWORD)
 	uint64 examplePort5[3];
 	//#port
+    //#iecdatatype(ULint)
 	uint64 examplePort6[3];
+
+    //#port
+    //#attributes(Input)
+    uint8 varuint8;
+    //#port
+    //#attributes(Input)    
+    //#iecdatatype(BYTE)
+    uint8 varbyte;
+
+    //#port
+    //#attributes(Input)
+    uint16 varuint16;
+    //#port
+    //#attributes(Input)
+    //#iecdatatype(WORD)
+    uint16 varword;
+
+    //#port
+    //#attributes(Input)
+    uint32 varuint32;
+    //#port
+    //#attributes(Input)
+    //#iecdatatype(DWORD)
+    uint32 vardword;
+
+    //#port
+    //#attributes(Input)
+    uint64 varuint64;
+    //#port
+    //#attributes(Input)
+    //#iecdatatype(LWORD)
+    uint64 varlword;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -228,9 +228,17 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                       new Portmeta("examplePort2","Example","Output", "1"),
                                                                                       new Portmeta("examplePort3","Example","Output", "5"),
                                                                                       new Portmeta("examplePort4","int32","", string.Empty),
-                                                                                      new Portmeta("examplePort5","uint64","", "3"),
+                                                                                      new Portmeta("examplePort5","lword","", "3"),
                                                                                       new Portmeta("examplePort6","uint64","", "3"),
                                                                                       new Portmeta("examplePort7","Example","Output", "5"),
+                                                                                      new Portmeta("varuint8", "uint8", "Input"),
+                                                                                      new Portmeta("varbyte", "byte", "Input"),
+                                                                                      new Portmeta("varuint16", "uint16", "Input"),
+                                                                                      new Portmeta("varword", "word", "Input"),
+                                                                                      new Portmeta("varuint32", "uint32", "Input"),
+                                                                                      new Portmeta("vardword", "dword", "Input"),
+                                                                                      new Portmeta("varuint64", "uint64", "Input"),
+                                                                                      new Portmeta("varlword", "lword", "Input"),
                                                                                   }))).RunAsyncWithTimeout();
         }
 
@@ -970,7 +978,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                             new TypeMember("someWString", "StaticWString"),
                                                                                                             new TypeMember("someString23", "StaticString23"),
                                                                                                             new TypeMember("someWString109", "StaticWString109"),
-                                                                                                            new TypeMember("myData", "uint16"),
+                                                                                                            new TypeMember("myData", "word"),
                                                                                                             new TypeMember("myOtherData", "uint16"),
                                                                                                             new TypeMember("someStringFromDefine", "StaticString42"),
                                                                                                             new TypeMember("someWStringFromDefine", "StaticWString42")
@@ -1037,6 +1045,24 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                      new TypeMember("counter","int16")
                                                                                  })),
                  _ => Then_the_datatype_worksheet_looks_like_NAME("TemplatedStructDataTypes.dt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_struct_typemeta_with_bytetype_on_generate()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ProgramWithDifferentPorts"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_typemeta_file_contains_the_following_structure(new StructTypemetaStructure("Example",
+                                                                                 new[]
+                                                                                 {
+                                                                                     new TypeMember("value1","int32"),
+                                                                                     new TypeMember("value2","bit"),
+                                                                                     new TypeMember("value3","int64"),
+                                                                                     new TypeMember("value4","int64"),
+                                                                                     new TypeMember("value5","dword"),
+                                                                                 }))
                 ).RunAsyncWithTimeout();
         }
 

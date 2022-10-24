@@ -209,6 +209,28 @@ namespace PlcNext.Common.CodeModel
                                    ?? datatypeConversion.Convert(dataSourceDataType);
                 }
 
+                IAttribute attribute = dataSource.HasValue<IField>()
+                                        ? dataSource.Value<IField>()
+                                            .Attributes?
+                                            .FirstOrDefault(a => a.Name.Equals(EntityKeys.IECDataTypeAttributeNameKey, StringComparison.OrdinalIgnoreCase))
+                                        : null;
+                if (attribute != null)
+                {
+#pragma warning disable CA1308 // Normalize strings to uppercase
+                    string attributeValue = attribute.Values.First().ToLowerInvariant();
+#pragma warning restore CA1308 // Normalize strings to uppercase
+
+                    formatTemplate conversionTable = templateRepository.FormatTemplates
+                                                                        .FirstOrDefault(t => t.name.Equals("CppToMetaTypeConversions",
+                                                                                                           StringComparison.OrdinalIgnoreCase));
+                    if (conversionTable?.Verify(dataTypeName, attributeValue) == true)
+                    {
+                        return owner.Create(key, attributeValue);
+                        
+                    }
+                    ValidateIECDataTypeAttribute(dataTypeName, attributeValue);
+                }
+
                 return owner.Create(key, dataTypeName);
             }
 
@@ -301,7 +323,7 @@ namespace PlcNext.Common.CodeModel
 
                     ValidateIECDataTypeAttribute(value, attributeValue);
 
-                    return (true, attributeValue);
+                    return (true, attributeValue.ToUpperInvariant());
                 }
                 else
                 {
@@ -315,23 +337,19 @@ namespace PlcNext.Common.CodeModel
 
                     return (true, result);
                 }
-
-                void ValidateIECDataTypeAttribute(string raw, string converted)
-                {
-                    formatTemplate conversionTable = templateRepository.FormatTemplates
-                                                                        .FirstOrDefault(t => t.name.Equals("AllowedcpptoIECDataTypeConversions",
-                                                                                                           StringComparison.OrdinalIgnoreCase));
-                    if (conversionTable != null)
-                    {
-                        success = conversionTable.Verify(raw, converted);
-                        if (!success)
-                        {
-                            throw new IECAttributeMismatchException(raw, converted);
-                        }
-                    }
-                }
             }
 
+            void ValidateIECDataTypeAttribute(string raw, string converted)
+            {
+                formatTemplate conversionTable = templateRepository.FormatTemplates
+                                                                    .FirstOrDefault(t => t.name.Equals("AllowedcpptoIECDataTypeConversions",
+                                                                                                       StringComparison.OrdinalIgnoreCase));
+                if (conversionTable?.Verify(raw, converted) == false)
+                {
+                    throw new IECAttributeMismatchException(raw, converted);
+                }
+            }
+            
             string FormatStringDataType(string unformattedValue)
             {
                 Match stringMatch = StaticStringRegex.Match(unformattedValue);

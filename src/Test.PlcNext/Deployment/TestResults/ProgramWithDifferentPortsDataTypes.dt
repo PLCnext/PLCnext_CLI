@@ -4,6 +4,7 @@ TYPE
         value2 : BOOL;
         value3 : value3Array;
         value4 : value4Array;
+        value5 : DWORD;
     END_STRUCT
 
     examplePort2Array : ARRAY [0..0] OF Example;

@@ -17,7 +17,6 @@ struct MyStruct {
     public: bool something = true;
 	StaticString<> someString;
 	StaticWString<> someWString;
-    //#iecdatatyPe(STRING)
 	StaticString<23> someString23;
 	StaticWString<109> someWString109;
 
