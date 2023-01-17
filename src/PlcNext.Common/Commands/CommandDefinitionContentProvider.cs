@@ -200,7 +200,7 @@ namespace PlcNext.Common.Commands
                         IEnumerable<Entity> values = Values(multipleValueArgument);
                         return owner.Create(key, values);
                     default:
-                        throw new InvalidOperationException($"Unkown argument type {argument.GetType()}");
+                        throw new InvalidOperationException($"Unknown argument type {argument.GetType()}");
                 }
 
                 IEnumerable<Entity> Values(MultipleValueArgument multipleValueArgument)

@@ -24,8 +24,11 @@ namespace PlcNext.Common.Tools.Settings
         public static readonly string[] SdkPathsDefault = System.Array.Empty<string>();
         public const bool UseSystemCommandsDefault = false;
         public const bool AlwaysWriteExtendedLogDefault = false;
+        public const string MSBuildPathDefault = "";
 
-        public Settings(string attributePrefix, string[] sdkPaths, string cliRepositoryRoot, string cliRepositoryFileName, string cliRepositorySignatureFileName, string httpProxy, string logFilePath, string[] templateLocations, bool useSystemCommands, bool alwaysWriteExtendedLog)
+        public Settings(string attributePrefix, string[] sdkPaths, string cliRepositoryRoot, string cliRepositoryFileName, 
+                        string cliRepositorySignatureFileName, string httpProxy, string logFilePath, string[] templateLocations,
+                        bool useSystemCommands, bool alwaysWriteExtendedLog, string msBuildPath)
         {
             AttributePrefix = attributePrefix;
             SdkPaths = sdkPaths;
@@ -37,6 +40,7 @@ namespace PlcNext.Common.Tools.Settings
             TemplateLocations = templateLocations;
             UseSystemCommands = useSystemCommands;
             AlwaysWriteExtendedLog = alwaysWriteExtendedLog;
+            MSBuildPath = msBuildPath;
         }
 
         public Settings()
@@ -51,6 +55,7 @@ namespace PlcNext.Common.Tools.Settings
             HttpProxy = HttpProxyDefault;
             UseSystemCommands = UseSystemCommandsDefault;
             AlwaysWriteExtendedLog = AlwaysWriteExtendedLogDefault;
+            MSBuildPath = MSBuildPathDefault;
         }
 
         public IReadOnlyCollection<string> SdkPaths { get; }
@@ -72,6 +77,8 @@ namespace PlcNext.Common.Tools.Settings
         public bool UseSystemCommands { get; }
         
         public bool AlwaysWriteExtendedLog { get; }
+
+        public string MSBuildPath { get; }
 
         public override string ToString()
         {

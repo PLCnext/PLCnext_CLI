@@ -46,6 +46,8 @@ namespace PlcNext.Common.Tools.Settings
                            new BoolSettingsProperty(nameof(Settings.UseSystemCommands), settings.UseSystemCommands));
             properties.Add(nameof(Settings.AlwaysWriteExtendedLog),
                            new BoolSettingsProperty(nameof(Settings.AlwaysWriteExtendedLog), settings.AlwaysWriteExtendedLog));
+            properties.Add(nameof(Settings.MSBuildPath),
+                           new SingleSettingsProperty(nameof(Settings.MSBuildPath), settings.MSBuildPath));
         }
 
         public Settings GetSettings()
@@ -59,7 +61,8 @@ namespace PlcNext.Common.Tools.Settings
                                 ((SingleSettingsProperty)properties[nameof(Settings.LogFilePath)]).Value,
                                 ((CollectionSettingsProperty)properties[nameof(Settings.TemplateLocations)]).Values.ToArray(),
                                 ((BoolSettingsProperty)properties[nameof(Settings.UseSystemCommands)]).Value,
-                ((BoolSettingsProperty)properties[nameof(Settings.AlwaysWriteExtendedLog)]).Value);
+                                ((BoolSettingsProperty)properties[nameof(Settings.AlwaysWriteExtendedLog)]).Value,
+                                ((SingleSettingsProperty)properties[nameof(Settings.MSBuildPath)]).Value);
         }
 
         public string GetSetting(string key)

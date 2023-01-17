@@ -55,6 +55,18 @@ namespace Test.PlcNext.SystemTests.Features
                 ).RunAsyncWithTimeout();
         }
 
+        [Scenario]
+        public async Task Load_shared_native_project()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_an_empty_workspace(),
+                _ => When_I_create_a_new_shared_native_project_with_name("TestProject"),
+                _ => When_I_generate_all_metafiles(),
+                _ => When_I_generate_all_codefiles(),
+                _ => Then_the_command_was_executed_without_error()
+                    ).RunAsyncWithTimeout();
+        }
+
         public LoadProject_Feature(ITestOutputHelper helper) : base(helper)
         {
         }

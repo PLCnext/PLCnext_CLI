@@ -38,7 +38,13 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         {
             await ScenarioContext.CreateProject(name, type: SystemTestContext.ProjectType.ConsumableLibrary);
         }
-        
+
+        protected async Task When_I_create_a_new_shared_native_project_with_name(string name)
+        {
+            await ScenarioContext.CreateProject(name, type: SystemTestContext.ProjectType.SharedNativeProject);
+        }
+
+
         protected async Task When_I_create_a_new_acfproject_with_name(string name)
         {
             await ScenarioContext.CreateProject(name, type:SystemTestContext.ProjectType.AcfProject);

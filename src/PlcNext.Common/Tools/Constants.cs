@@ -71,6 +71,7 @@ namespace PlcNext.Common.Tools
         public const string CMakeCommandArgsFileName = "CMakeFlags.txt";
         public const string CMakeTimestampFileName = "FlagsTimestamp.txt";
         public const string ConfigFileName = "PLCnextSettings.xml";
+        public const string MSBuildName = "msbuild";
 
         //progress visualizer
         public const int ProgressMaxResolution = 100;

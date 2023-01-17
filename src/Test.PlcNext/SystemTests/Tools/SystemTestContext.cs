@@ -163,7 +163,8 @@ namespace Test.PlcNext.SystemTests.Tools
         {
             PlmProject,
             AcfProject,
-            ConsumableLibrary
+            ConsumableLibrary,
+            SharedNativeProject
         }
 
         public async Task CreateProject(string projectName = null, string componentName = null, string programName = null,
@@ -182,9 +183,12 @@ namespace Test.PlcNext.SystemTests.Tools
                 case ProjectType.ConsumableLibrary:
                     args = new string[] { "new", "consumablelibrary" };
                     break;
+                case ProjectType.SharedNativeProject:
+                    args = new string[] { "new", "snproject" };
+                    break;
                 default:
                     true.Should().BeFalse($"Project type {type} is unknown.");
-                    args = new string[0];
+                    args = Array.Empty<string>();
                     break;
             }
 

@@ -134,6 +134,17 @@ namespace Test.PlcNext.SystemTests.Features
 	        ).RunAsyncWithTimeout();
         }
 
+        [Scenario]
+        public async Task Create_shared_native_project()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_an_empty_workspace(),
+                _ => When_I_create_a_new_shared_native_project_with_name("SharedNativeTest"),
+                _ => Then_the_files_exist_in_location("SharedNativeTest/SharedNativeTestCpp/CMakeLists.txt", "SharedNativeTest/SharedNativeTestCpp/SharedNativeTestCpp.vcxproj",
+                                                      "SharedNativeTest/SharedNativeTestCpp/plcnext.proj", "SharedNativeTest/SharedNativeTestCSharp/SharedNativeTestCSharp.csproj")
+                ).RunAsyncWithTimeout();
+        }
+
         public Project_Creation_Feature(ITestOutputHelper helper) : base(helper)
         {
         }

@@ -47,6 +47,8 @@ namespace PlcNext.Common.Project {
         
         private bool generateDTArrayNameByTypeField;
         
+        private string cSharpProjectPathField;
+        
         public ProjectSettings() {
             this.versionField = "1.0";
             this.typeField = "project";
@@ -125,6 +127,16 @@ namespace PlcNext.Common.Project {
             }
             set {
                 this.generateDTArrayNameByTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string CSharpProjectPath {
+            get {
+                return this.cSharpProjectPathField;
+            }
+            set {
+                this.cSharpProjectPathField = value;
             }
         }
     }

@@ -306,14 +306,14 @@
   <xs:complexType name="templateArgumentBase">
     <xs:annotation>
       <xs:documentation>
-        Base type for template arguments. Conatins only the name of the argument
+        Base type for template arguments. Contains only the name of the argument
       </xs:documentation>
     </xs:annotation>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
         <xs:documentation>
           <!--TODO: restrictions for long names-->
-          The name of the argument. This is used as the long name when referencing it on the command line as well as an identifier to reference the arguemnt.
+          The name of the argument. This is used as the long name when referencing it on the command line as well as an identifier to reference the argument.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
@@ -348,7 +348,7 @@
         <xs:attribute name="default" type="xs:string" use="optional">
           <xs:annotation>
             <xs:documentation>
-              The default value which will be use if no value is provided via the command line.
+              The default value which will be used if no value is provided via the command line.
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>

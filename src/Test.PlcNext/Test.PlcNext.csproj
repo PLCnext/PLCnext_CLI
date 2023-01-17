@@ -889,9 +889,6 @@
     <EmbeddedResource Include="..\PlcNext\Templates\AppTemplate\TemplateDescription.xml" Link="Deployment\Templates\AppTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\AppTemplate\app_info.json" Link="Deployment\Templates\AppTemplate\app_info.json" />
     <EmbeddedResource Include="..\PlcNext\Templates\AppTemplate\.proj" Link="Deployment\Templates\AppTemplate\.proj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.compmeta" Link="Deployment\Templates\ComponentTemplate\Component.compmeta" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.cpp" Link="Deployment\Templates\ComponentTemplate\Component.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ComponentTemplate\Component.hpp" Link="Deployment\Templates\ComponentTemplate\Component.hpp" />
@@ -928,6 +925,18 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Class.cpp" Link="Deployment\Templates\ConsumableLibraryTemplate\Class.cpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Class.hpp" Link="Deployment\Templates\ConsumableLibraryTemplate\Class.hpp" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\Config.cmake.in" Link="Deployment\Templates\ConsumableLibraryTemplate\Config.cmake.in" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeFunctionBlockTemplate\NativeFunctionBlock.cs" Link="Deployment\Templates\SharedNativeFunctionBlockTemplate\NativeFunctionBlock.cs" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeFunctionTemplate\NativeFunction.cs" Link="Deployment\Templates\SharedNativeFunctionTemplate\NativeFunction.cs" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\Cpp\.proj" Link="Deployment\Templates\SharedNativeProjectTemplate\Cpp\.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\CSharp\Properties\AssemblyInfo.cs" Link="Deployment\Templates\SharedNativeProjectTemplate\CSharp\Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\CSharp\.csproj" Link="Deployment\Templates\SharedNativeProjectTemplate\CSharp\.csproj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeFunctionBlockTemplate\TemplateDescription.xml" Link="Deployment\Templates\SharedNativeFunctionBlockTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeFunctionTemplate\TemplateDescription.xml" Link="Deployment\Templates\SharedNativeFunctionTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\FormatTemplates.xml" Link="Deployment\Templates\SharedNativeProjectTemplate\FormatTemplates.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\Cpp\.h" Link="Deployment\Templates\SharedNativeProjectTemplate\Cpp\.h" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\Cpp\CMakeLists.txt" Link="Deployment\Templates\SharedNativeProjectTemplate\Cpp\CMakeLists.txt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\CSharp\ProjectItems\LibraryDescription.xml" Link="Deployment\Templates\SharedNativeProjectTemplate\CSharp\ProjectItems\LibraryDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\SharedNativeProjectTemplate\TemplateDescription.xml" />
   </ItemGroup>
 
   <ItemGroup>

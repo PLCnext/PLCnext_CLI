@@ -47,7 +47,8 @@ namespace PlcNext.Common.Tools
                                                e.Settings.LogFilePath.CleanPath(),
                                                e.Settings.TemplateLocations.Select(p => p.CleanPath()).ToArray(),
                                                e.Settings.UseSystemCommands,
-                                               e.Settings.AlwaysWriteExtendedLog);
+                                               e.Settings.AlwaysWriteExtendedLog,
+                                               e.Settings.MSBuildPath);
         }
 
         private void OnSettingChanging(object sender, SettingsObserverEventArgs e)

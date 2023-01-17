@@ -39,6 +39,9 @@ namespace PlcNext.Common.Tools
         public const string NegateKey = "negate";
         public const string OriginKey = "origin";
         public const string ContainsLtGt = "containsltgt";
+        public const string IsEmpty = "isempty";
+        public const string ToUpper = "toupper";
+        public const string ToLower = "tolower";
 
         //SettingsContentProvider
         public const string SettingsKey = "settings";
@@ -92,6 +95,7 @@ namespace PlcNext.Common.Tools
         public const string ProjectConfigurationsKey = "__internalprojectconfigurations__";
         public const string GenerateDTArrayNameByTypeKey = "generatedtarraynamebytype";
         public const string MinTargetVersionKey = "mintargetversion";
+        public const string CSharpProjectPath = "csharpprojectpath";
 
         //DeployCommandContentProvider
         public const string InternalDeployPathKey = "__internaldeploypath__";

@@ -39,6 +39,7 @@
         <xs:element minOccurs="0" maxOccurs="unbounded" name="Extension" type="extension"/>
         <xs:element minOccurs="0" maxOccurs="1" name="Type" type="typeDefinition" default="project"/>
         <xs:element name="GenerateDTArrayNameByType" type="xs:boolean" default="false" maxOccurs="1" minOccurs="0" />
+        <xs:element minOccurs="0" maxOccurs="1" name="CSharpProjectPath" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

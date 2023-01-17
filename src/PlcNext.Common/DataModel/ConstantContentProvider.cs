@@ -38,7 +38,10 @@ namespace PlcNext.Common.DataModel
             EntityKeys.NegateKey,
             EntityKeys.OriginKey,
             EntityKeys.ThrowIfMultidimensionalKey,
-            EntityKeys.ContainsLtGt
+            EntityKeys.ContainsLtGt,
+            EntityKeys.IsEmpty,
+            EntityKeys.ToUpper,
+            EntityKeys.ToLower
         };
 
         public ConstantContentProvider(IFileSystem fileSystem)
@@ -139,6 +142,15 @@ namespace PlcNext.Common.DataModel
                     return owner;
                 case EntityKeys.ContainsLtGt:
                     return ContainsLtGt();
+                case EntityKeys.IsEmpty:
+                    return owner.Create(key, string.IsNullOrEmpty(owner.Value<string>()).ToString(CultureInfo.InvariantCulture), 
+                                             string.IsNullOrEmpty(owner.Value<string>()));
+                case EntityKeys.ToUpper:
+                    return owner.Create(key, owner.Value<string>().ToUpperInvariant());
+                case EntityKeys.ToLower:
+#pragma warning disable CA1308 // Normalize strings to uppercase
+                    return owner.Create(key, owner.Value<string>().ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
                 default:
                     throw new ContentProviderException(key, owner);
 

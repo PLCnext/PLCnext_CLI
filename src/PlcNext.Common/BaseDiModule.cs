@@ -135,6 +135,10 @@ namespace PlcNext.Common
                    .WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<NoGenerateEngine>().Keyed<ITemplateFileGenerator>("NoGenerateEngine")
                    .WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<SharedNativeGenerateEngine>().Keyed<ITemplateFileGenerator>(nameof(SharedNativeGenerateEngine))
+                   .WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<SharedNativeBuilder>().Keyed<IBuilder>(nameof(SharedNativeBuilder))
+                   .WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<AcfGenerateStep>().As<IGenerateStep>().InstancePerLifetimeScope();
             if (activateAutoComponents)
             {

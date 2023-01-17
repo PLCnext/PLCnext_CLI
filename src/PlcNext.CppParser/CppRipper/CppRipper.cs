@@ -49,7 +49,7 @@ namespace PlcNext.CppParser.CppRipper
             Stopwatch parsingStopwatch = new Stopwatch();
             parsingStopwatch.Start();
 
-            foreach ((VirtualFile file, VirtualDirectory directory) in sourceDirectories.SelectMany(d => d.Files("*.hpp", true).Select(f => (f, d))))
+            foreach ((VirtualFile file, VirtualDirectory directory) in sourceDirectories.SelectMany(d => d.Files("*.hpp", true).Concat(d.Files("*.h$", true)).Select(f => (f, d))))
             {
                 if (!TryParseFile(file, directory, exceptions, out string[] includes, out Dictionary<string, string> defines, out IEnumerable<IConstant> constants))
                 {
@@ -114,31 +114,19 @@ namespace PlcNext.CppParser.CppRipper
                     switch (type.Key)
                     {
                         case CppStructure structure:
-                            if (structures.ContainsKey(structure.FullName))
-                            {
-                                messages.Add(new ParserMessage("CPP0002", type.Value.Line, type.Value.Column));
-                            }
-                            else
+                            if (!structures.ContainsKey(structure.FullName))
                             {
                                 structures.Add(structure.FullName, (structure, file, directory));
                             }
                             break;
                         case CppClass cppClass:
-                            if (classes.ContainsKey(cppClass.FullName))
-                            {
-                                messages.Add(new ParserMessage("CPP0002", type.Value.Line, type.Value.Column));
-                            }
-                            else
+                            if (!classes.ContainsKey(cppClass.FullName))
                             {
                                 classes.Add(cppClass.FullName, (cppClass, file, directory));
                             }
                             break;
                         case CppEnum cppEnum:
-                            if (enums.ContainsKey(cppEnum.FullName))
-                            {
-                                messages.Add(new ParserMessage("CPP0002", type.Value.Line, type.Value.Column));
-                            }
-                            else
+                            if (!enums.ContainsKey(cppEnum.FullName))
                             {
                                 enums.Add(cppEnum.FullName, (cppEnum, file, directory));
                             }

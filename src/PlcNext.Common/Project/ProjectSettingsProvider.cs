@@ -103,7 +103,8 @@ namespace PlcNext.Common.Project
                    ((AvailableProjectValues.Contains(key) &&
                      owner.HasValue<ProjectDescription>()) ||
                     key == EntityKeys.ProjectIdKey ||
-                    key == EntityKeys.GenerateDTArrayNameByTypeKey);
+                    key == EntityKeys.GenerateDTArrayNameByTypeKey) ||
+                    key == EntityKeys.CSharpProjectPath;
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -122,6 +123,8 @@ namespace PlcNext.Common.Project
                     return GetProjectId();
                 case EntityKeys.GenerateDTArrayNameByTypeKey:
                     return GetGenerateDTArrayNameByTypeFlag();
+                case EntityKeys.CSharpProjectPath:
+                    return GetCSharpProjectPath();
                 default:
                     throw new ContentProviderException(key, owner);
             }
@@ -199,6 +202,17 @@ namespace PlcNext.Common.Project
                 ProjectDescription description = owner.Value<ProjectDescription>();
                 return owner.Create(key, description.Settings.GenerateDTArrayNameByType.ToString(CultureInfo.InvariantCulture),
                                          description.Settings.GenerateDTArrayNameByType);
+            }
+
+            Entity GetCSharpProjectPath()
+            {
+                ProjectEntity project = ProjectEntity.Decorate(owner);
+                if (project.Settings.IsPersistent)
+                {
+                    ProjectDescription description = owner.Value<ProjectDescription>();
+                    return owner.Create(key, description.Settings.CSharpProjectPath);
+                }
+                throw new ContentProviderException(key, owner);
             }
         }
 

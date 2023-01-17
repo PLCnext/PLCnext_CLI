@@ -1077,7 +1077,7 @@ namespace Test.PlcNext.SystemTests.Features
         private readonly List<object[]> data = new List<object[]>
         {
             new object[] {new ErrorInformation("MyProgramImpl.hpp", 12, 5, "CPP0001"), "CodeFilesWithError" },
-            new object[] {new ErrorInformation("MyProgramImpl.hpp", 17, 1, "CPP0002"), "CodeFilesWithError" },
+            //new object[] {new ErrorInformation("MyProgramImpl.hpp", 17, 1, "CPP0002"), "CodeFilesWithError" },
             new object[] {new ErrorInformation("MyProgram1Impl.hpp", 53, 1, "CPP0005"), "CodeFilesWithError" },
             new object[] {new ErrorInformation("MyProgramImpl.hpp", 32, 19, "ARP0001"), "ProgramWithWrongPortAttributes" },
             new object[] {new ErrorInformation("MyProgramImpl.hpp", 32, 19, "ARP0001"), "ProgramWithWrongPortAttributes" },

@@ -52,16 +52,16 @@ namespace PlcNext.Common.Tools
 
         public string GetExecutableCommand(string executableKey, string baseDirectory = "")
         {
-            bool systemCMakeExists = SystemCmakeExist();
-            VirtualFile localCmake = GetExecutable(executableKey);
+            bool systemExecutableExists = SystemExecutableExists();
+            VirtualFile localExecutable = GetExecutable(executableKey, baseDirectory);
             if (settingsProvider.Settings.UseSystemCommands)
             {
-                return systemCMakeExists ? executableKey : localCmake?.FullName;
+                return systemExecutableExists ? executableKey : localExecutable?.FullName;
             }
 
-            return localCmake?.FullName ?? (systemCMakeExists ? executableKey : null);
+            return localExecutable?.FullName ?? (systemExecutableExists ? executableKey : null);
 
-            bool SystemCmakeExist()
+            bool SystemExecutableExists()
             {
                 string command = "which";
                 if (environmentService.Platform == OSPlatform.Windows)

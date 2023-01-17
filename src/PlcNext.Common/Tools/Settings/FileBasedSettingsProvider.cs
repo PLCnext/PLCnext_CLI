@@ -183,9 +183,13 @@ namespace PlcNext.Common.Tools.Settings
                                                            .Element(nameof(Settings.AlwaysWriteExtendedLog))?.Value, out parsed)
                                               ? parsed
                                               : Settings.AlwaysWriteExtendedLogDefault;
-
+                    string msBuildPath = document.Descendants("Settings").FirstOrDefault()?
+                                            .Element(nameof(Settings.MSBuildPath))?.Value
+                                         ?? Settings.MSBuildPathDefault;
                     log.LogInformation($"Used settings {file.FullName}:");
-                    Settings result = new Settings(attributePrefix, paths.ToArray(), cliRpositoryRoot, cliRpositoryFileName, cliRpositorySignatureFileName, httpProxy, logFilePath, templates.ToArray(), systemCommands, extendedLog);
+                    Settings result = new Settings(attributePrefix, paths.ToArray(), cliRpositoryRoot, cliRpositoryFileName,
+                                                    cliRpositorySignatureFileName, httpProxy, logFilePath, templates.ToArray(),
+                                                    systemCommands, extendedLog, msBuildPath);
                     log.LogInformation(JsonConvert.SerializeObject(result, Formatting.Indented));
                     return result;
                 }catch(System.Xml.XmlException e)
@@ -212,6 +216,7 @@ namespace PlcNext.Common.Tools.Settings
                                                                 new XElement("LogFilePath", current.LogFilePath ?? "log.txt"),
                                                                 new XElement("SystemCommands", current.UseSystemCommands.ToString(CultureInfo.InvariantCulture)),
                                                                 new XElement("AlwaysWriteExtendedLog", current.AlwaysWriteExtendedLog.ToString(CultureInfo.InvariantCulture)),
+                                                                new XElement(nameof(Settings.MSBuildPath), current.MSBuildPath??string.Empty),
                                                                 new XElement("SDKS",
                                                                              current.SdkPaths.Select(p => new XElement("SDK", p))
                                                                                     .Cast<object>().ToArray()),
