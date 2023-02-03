@@ -90,7 +90,7 @@ namespace PlcNext.Common.Generate
 
             CommandEntity command = CommandEntity.Decorate(entity.Origin);
             string configuration = command.GetSingleValueArgument("buildtype");
-            arguments  = string.IsNullOrEmpty(configuration) ? $"\"{csharpProjectPath}\"" : $" -p:Configuration={configuration};CppProjectPath=\"{cppProjectPath}\" \"{csharpProjectPath}\"";
+            arguments  = string.IsNullOrEmpty(configuration) ? $"\"{csharpProjectPath}\"" : $" -v:detailed -p:Configuration={configuration};CppProjectPath=\"{cppProjectPath}\" \"{csharpProjectPath}\"";
             using (IProcess process = processManager.StartProcess(msbuildLocation, arguments, executionContext, showOutput: false))
             {
                 await process.WaitForExitAsync().ConfigureAwait(false);
