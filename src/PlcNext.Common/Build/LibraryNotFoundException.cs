@@ -14,7 +14,8 @@ namespace PlcNext.Common.Build
 {
     internal class LibraryNotFoundException : FormattableException
     {
-        public LibraryNotFoundException(string libraryLocation) : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.LibraryNotFound, libraryLocation))
+        public LibraryNotFoundException(string libraryLocation) 
+            : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.LibraryNotFound, libraryLocation))
         {
             
         }

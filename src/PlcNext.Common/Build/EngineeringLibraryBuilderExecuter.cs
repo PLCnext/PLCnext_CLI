@@ -29,7 +29,7 @@ using Entity = PlcNext.Common.DataModel.Entity;
 
 namespace PlcNext.Common.Build
 {
-    internal class EngineeringLibraryBuilderExecuter : ILibraryBuilderExecuter
+    internal partial class EngineeringLibraryBuilderExecuter : ILibraryBuilderExecuter
     {
         private readonly IProcessManager processManager;
         private readonly IFileSystem fileSystem;

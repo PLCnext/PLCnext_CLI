@@ -27,6 +27,11 @@ namespace PlcNext.Common.Tools
         public const string ReleaseFolderName = "Release";
         public const string DebugFolderName = "Debug";
         public const string LibraryFolderName = "bin";
+        public const string CSharpBinFolderName = "CLI";
+        public const string CSharpProjectItemsFolderName = "ProjectItems";
+        public const string CSharpHelpFolderName = "Help";
+        public const string ConfigIndependentFiles = "Common";
+        public const string DeployHelpDirectoryName = "hlp";
 
         //extensions
         public const string TypemetaExtension = "typemeta";
@@ -105,6 +110,8 @@ namespace PlcNext.Common.Tools
         //4: Target name,version
         public const string PlcnextNativeLibraryOptionPattern =
             "/plcnextnativelibfolder \"{0},FolderName={4},DeviceProfileType={1},DeviceProfileVersion={2},Id={3}\"";
+        public const string EclrNativeLibraryOptionPattern =
+            "/eclrnativelibfolder \"{0},AssemblyName={5},FolderName={4},DeviceProfileType={1},DeviceProfileVersion={2},Id={3}\"";
         public const string LibmetaFileType = "MetaLibrary";
         public const string TypemetaFileType = "MetaTypes";
         public const string ProgmetaFileType = "MetaProgram";
@@ -113,6 +120,7 @@ namespace PlcNext.Common.Tools
         public const string ProgramFolderType = "MetaProgramFolder";
         public const string DataTypeWorksheetType = "DataTypeWorksheet";
         public const string AcfConfigurationType = "AcfConfiguration";
+        public const string PrecompiledLibraryType = "PrecompiledLibrary";
         //0: Property key=value
         public const string KeyOptionPattern = "/key \"{0}={1}\"";
         public const string LibraryVersionKey = "LibraryVersion";

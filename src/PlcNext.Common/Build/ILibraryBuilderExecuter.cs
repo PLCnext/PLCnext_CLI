@@ -16,5 +16,7 @@ namespace PlcNext.Common.Build
         int Execute(Entity dataModel);
 
         int ExecuteAcf(Entity dataModel);
+
+        int ExecuteSn(Entity dataModel);
     }
 }

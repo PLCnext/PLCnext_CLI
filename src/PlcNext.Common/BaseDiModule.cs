@@ -89,6 +89,7 @@ namespace PlcNext.Common
             builder.RegisterType<JsonCommandResultVisualizer>().As<ICommandResultVisualizer>().InstancePerLifetimeScope();
             builder.RegisterType<RsaSecurityValidator>().As<ISecurityValidator>().InstancePerLifetimeScope();
             builder.RegisterType<SharpZipFileUnpackService>().As<IFileUnpackService>().InstancePerLifetimeScope();
+            builder.RegisterType<DirectoryPackService>().As<IDirectoryPackService>().InstancePerLifetimeScope();
             builder.RegisterType<ProcessBasedSettingsMigrationInstallationStep>().As<IInstallationStep>().InstancePerLifetimeScope();
             builder.RegisterType<FileBasedBinariesLocator>().As<IBinariesLocator>().InstancePerLifetimeScope();
             builder.RegisterType<TemplateCommandProvider>().As<IDynamicCommandProvider>().InstancePerLifetimeScope();
@@ -139,6 +140,9 @@ namespace PlcNext.Common
                    .WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<SharedNativeBuilder>().Keyed<IBuilder>(nameof(SharedNativeBuilder))
                    .WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<SharedNativeDeployEngine>().Keyed<IDeployService>(nameof(SharedNativeDeployEngine))
+                   .WithAttributeFiltering().InstancePerLifetimeScope();
+            builder.RegisterType<SharedNativeLibraryBuilderDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
             builder.RegisterType<AcfGenerateStep>().As<IGenerateStep>().InstancePerLifetimeScope();
             if (activateAutoComponents)
             {

@@ -9,19 +9,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using PlcNext.Common.Commands;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Project;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
-using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
 
