@@ -3,13 +3,21 @@ TYPE
         blubber : nested;
         test : supernested;
     END_STRUCT
+END_TYPE
 
+
+TYPE
     nested : STRUCT
         fiooba : supernested;
     END_STRUCT
+END_TYPE
 
+
+TYPE
     supernested : STRUCT
         schnacken : BOOL;
     END_STRUCT
-
 END_TYPE
+
+
+

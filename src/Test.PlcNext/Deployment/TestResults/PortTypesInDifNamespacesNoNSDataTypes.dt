@@ -1,0 +1,87 @@
+TYPE
+    InNestedNs : STRUCT
+        u1 : UDINT;
+        u2 : UDINT;
+        u3 : ARRAY_DINT_0_4;
+        innerStruct : Test;
+        u4 : EnumInNestedNs;
+        u5 : EnumTest;
+        someString : STRING;
+        myArrayOfString : ARRAY_STRING_0_2;
+    END_STRUCT
+END_TYPE
+
+
+TYPE
+    InOtherNamespace : STRUCT
+        i1 : UINT;
+        i2 : UINT;
+        i3 : ARRAY_INT_0_9;
+        innerStruct : Test;
+        i4 : EnumInOtherNs;
+        i5 : EnumTest;
+        someString : STRING;
+        myArrayOfString : ARRAY_STRING_0_2;
+    END_STRUCT
+END_TYPE
+
+
+TYPE
+    Test : STRUCT
+        i1 : USINT;
+        i2 : USINT;
+        i3 : ARRAY_SINT_0_9;
+        arrayOfEnums : ARRAY_EnumTest_0_2;
+        i4 : EnumInOtherNs;
+        i5 : EnumTest;
+        someString : STRING;
+    END_STRUCT
+END_TYPE
+
+
+TYPE
+    Test : STRUCT
+        i1 : UDINT;
+        i2 : UDINT;
+        i3 : ARRAY_DINT_0_4;
+        arrayOfEnums : ARRAY_EnumTest_0_2;
+        i4 : EnumInNestedNs;
+        i5 : EnumTest;
+        someString : STRING;
+    END_STRUCT
+END_TYPE
+
+
+TYPE
+    EnumInNestedNs : (e1 := 0, e2 := 1, e3 := 12) OF DINT;
+END_TYPE
+
+
+TYPE
+    EnumInOtherNs : (e1 := 0, e2 := 1, e3 := 12) OF DINT;
+END_TYPE
+
+
+TYPE
+    EnumTest : (e1 := 0, e2 := 1, e3 := 12) OF DINT;
+END_TYPE
+
+
+TYPE
+    EnumTest : (e1 := 0, e2 := 1, e3 := 12) OF DINT;
+END_TYPE
+
+
+TYPE
+    ARRAY_STRING_0_2 : ARRAY [0..2] OF STRING;
+    ARRAY_EnumTest_0_2 : ARRAY [0..2] OF EnumTest;
+    ARRAY_DINT_0_4 : ARRAY [0..4] OF DINT;
+    ARRAY_INT_0_9 : ARRAY [0..9] OF INT;
+    ARRAY_SINT_0_9 : ARRAY [0..9] OF SINT;
+
+    myStringPortString10 : STRING[10];
+    myStringPort2String10 : STRING[10];
+END_TYPE
+
+
+

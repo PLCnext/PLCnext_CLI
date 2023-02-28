@@ -49,6 +49,7 @@ namespace PlcNext.Common.CodeModel
                    key == EntityKeys.FieldArpDataTypeKey && owner.Type == EntityKeys.FormatKey ||
                    key == EntityKeys.TypeMetaDataFormatKey && owner.Type == EntityKeys.FormatKey ||
                    key == EntityKeys.IecDataTypeFormatKey && owner.Type == EntityKeys.FormatKey ||
+                   key == EntityKeys.IecDataTypeNamespaceKey ||
                    key == EntityKeys.ConvertToIECDatatypeKey && owner.Type == EntityKeys.FormatKey ||
                    key == EntityKeys.ExpandHiddenTypesFormatKey && owner.All(e => e.HasValue<IField>()) ||
                    key == EntityKeys.FilterHiddenTypesFormatKey && owner.All(e => e.HasValue<IType>()) ||
@@ -90,6 +91,10 @@ namespace PlcNext.Common.CodeModel
             if (key == EntityKeys.IecDataTypeFormatKey && owner.Type == EntityKeys.FormatKey)
             {
                 return ResolveIECDataType();
+            }
+            if (key == EntityKeys.IecDataTypeNamespaceKey)
+            {
+                return ResolveDataTypeNamespace();
             }
             if (key == EntityKeys.ConvertToIECDatatypeKey && owner.Type == EntityKeys.FormatKey)
             {
@@ -409,6 +414,50 @@ namespace PlcNext.Common.CodeModel
                     : dataTypeName;
 
                 return owner.Create(key, dataTypeName);
+            }
+
+            Entity ResolveDataTypeNamespace()
+            {
+                IEntityBase dataSource = ownerTemplateEntity.FormatOrigin;
+                IDataType dataSourceDataType;
+                IAttribute attribute;
+                if (dataSource.HasValue<IEnum>())
+                {
+                    IEnum dataSourceEnum = dataSource.Value<IEnum>();
+                    dataSourceDataType = dataSourceEnum.BaseTypes.FirstOrDefault();
+                    attribute = dataSourceEnum.Attributes?
+                                              .FirstOrDefault(a => a.Name.Equals(EntityKeys.IECDataTypeAttributeNameKey,
+                                                                                 StringComparison.OrdinalIgnoreCase));
+                }
+                else
+                {
+                    dataSourceDataType = dataSource.HasValue<IDataType>()
+                                                       ? dataSource.Value<IDataType>()
+                                                       : dataSource.Value<IField>().DataType;
+
+                    attribute = dataSource.HasValue<IField>()
+                                ? dataSource.Value<IField>()
+                                            .Attributes?
+                                            .FirstOrDefault(a => a.Name.Equals(EntityKeys.IECDataTypeAttributeNameKey, StringComparison.OrdinalIgnoreCase))
+                                : null;
+                }
+
+                (bool success, _) = FormatIecDataType(dataSourceDataType.Name, attribute);
+
+                if (!success)
+                {
+                    ICodeModel rootCodeModel = dataSource.Root.Value<ICodeModel>();
+                    IType knownType = dataSourceDataType.PotentialFullNames
+                                      .Select(n => rootCodeModel.Type(n))
+                                      .FirstOrDefault(t => t != null);
+                    if (knownType == null)
+                    {
+                        throw new UnknownIecDataTypeException(dataSourceDataType.Name);
+                    }
+
+                    return owner.Create(key, string.IsNullOrEmpty(knownType.Namespace) ? knownType.Namespace : $"{knownType.Namespace}.");
+                }
+                return owner.Create(key, string.Empty);
             }
 
             (IDataType, string) GetEnumBaseType(IEnum @enum)

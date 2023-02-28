@@ -6,7 +6,10 @@ TYPE
         value4 : value4Array;
         value5 : DWORD;
     END_STRUCT
+END_TYPE
 
+
+TYPE
     examplePort2Array : ARRAY [0..0] OF Example;
     examplePort3Array : ARRAY [0..4] OF Example;
     examplePort7Array : ARRAY [0..4] OF Example;
@@ -14,4 +17,8 @@ TYPE
     examplePort6Array : ARRAY [0..2] OF ULINT;
     value3Array : ARRAY [0..5] OF LINT;
     value4Array : ARRAY [0..0] OF LINT;
+
 END_TYPE
+
+
+

@@ -322,7 +322,7 @@
   <xs:complexType name="templateArgumentDefinition">
     <xs:annotation>
       <xs:documentation>
-        A single argument defintion for the template. It contains informations about the name, short name and help as well as the default value.
+        A single argument definition for the template. It contains informations about the name, short name and help as well as the default value.
       </xs:documentation>
     </xs:annotation>
     <xs:complexContent>

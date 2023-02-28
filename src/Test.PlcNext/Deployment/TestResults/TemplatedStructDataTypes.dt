@@ -3,10 +3,15 @@ TYPE
         flag : BOOL;
         counter : DINT;
     END_STRUCT
+END_TYPE
 
+
+TYPE
     Test_LINT_INT : STRUCT
         flag : LINT;
         counter : INT;
     END_STRUCT
-
 END_TYPE
+
+
+

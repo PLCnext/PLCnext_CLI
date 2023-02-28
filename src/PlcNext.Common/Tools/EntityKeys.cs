@@ -72,6 +72,7 @@ namespace PlcNext.Common.Tools
         public const string BigDataProjectKey = "big-data-project";
         public const string NormalProjectKey = "normal-project";
         public const string IecDataTypeFormatKey = "iecdatatypeformat";
+        public const string IecDataTypeNamespaceKey = "iecdatatypenamespace";
         public const string StringConstantReplaceKey = "stringconstantreplace";
         public const string MultiplicityConstantReplaceKey = "multiplicityconstantreplace";
         public const string IsArray = "isarray";
@@ -109,7 +110,9 @@ namespace PlcNext.Common.Tools
         public const string InternalInstallationPathsKey = "__internalstagingprefix__";
 
         //CommandDefinitionContentProvider
-        public const string GenerateDatatypesArgumentName = "no-datatypes-worksheet";
+        public const string DatatypeNamespacesArgument = "datatype-namespaces";
+        public const string NoDatatypeNamespacesArgument = "no-datatype-namespaces";
+        public const string GenerateDatatypeNamespaces = "generate-namespaces";
 
         //TargetParser
         public const string TargetFullNameKey = "targetfullname";

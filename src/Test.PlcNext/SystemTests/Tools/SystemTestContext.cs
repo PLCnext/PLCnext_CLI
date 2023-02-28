@@ -501,7 +501,8 @@ namespace Test.PlcNext.SystemTests.Tools
         }
 
         public async Task GenerateMeta(bool addPath, string[] sourceDirectories = null, string[] includes = null, 
-                                       bool autoDetection = true, bool noDatatypesWorksheet = false)
+                                       bool autoDetection = true, bool noDatatypesWorksheet = false,
+                                       bool generateNamespaces = false, bool generateNoNamespaces = false)
         {
             List<string> arguments = new List<string>(new[] { "generate", "config" });
             if (addPath)
@@ -532,6 +533,16 @@ namespace Test.PlcNext.SystemTests.Tools
             if(noDatatypesWorksheet)
             {
                 arguments.Add("--no-datatypes-worksheet");
+            }
+
+            if (generateNamespaces)
+            {
+                arguments.Add("--datatype-namespaces");
+            }
+
+            if (generateNoNamespaces)
+            {
+                arguments.Add("--no-datatype-namespaces");
             }
 
             await CommandLineParser.Parse(arguments.ToArray());

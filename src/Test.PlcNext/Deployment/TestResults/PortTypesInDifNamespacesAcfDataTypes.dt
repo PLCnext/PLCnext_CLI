@@ -1,0 +1,96 @@
+NAMESPACE PortTypesInDifNamespacesAcf.NestedNamespace
+TYPE
+    InNestedNs : STRUCT
+        u1 : UDINT;
+        u2 : UDINT;
+        u3 : ARRAY_DINT_0_4;
+        innerStruct : PortTypesInDifNamespacesAcf.NestedNamespace.Test;
+        u4 : PortTypesInDifNamespacesAcf.NestedNamespace.MyNestedEnums.EnumInNestedNs;
+        u5 : PortTypesInDifNamespacesAcf.NestedNamespace.MyEnums.EnumTest;
+        someString : STRING;
+        myArrayOfString : ARRAY_STRING_0_2;
+    END_STRUCT
+END_TYPE
+END_NAMESPACE
+
+NAMESPACE OtherNamespace
+TYPE
+    InOtherNamespace : STRUCT
+        i1 : UINT;
+        i2 : UINT;
+        i3 : ARRAY_INT_0_9;
+        innerStruct : OtherNamespace.Test;
+        i4 : OtherNamespace.MyOtherEnums.EnumInOtherNs;
+        i5 : OtherNamespace.MyEnums.EnumTest;
+        someString : STRING;
+        myArrayOfString : ARRAY_STRING_0_2;
+    END_STRUCT
+END_TYPE
+END_NAMESPACE
+
+NAMESPACE OtherNamespace
+TYPE
+    Test : STRUCT
+        i1 : USINT;
+        i2 : USINT;
+        i3 : ARRAY_SINT_0_9;
+        arrayOfEnums : ARRAY_OtherNamespace_MyEnums_EnumTest_0_2;
+        i4 : OtherNamespace.MyOtherEnums.EnumInOtherNs;
+        i5 : OtherNamespace.MyEnums.EnumTest;
+        someString : STRING;
+    END_STRUCT
+END_TYPE
+END_NAMESPACE
+
+NAMESPACE PortTypesInDifNamespacesAcf.NestedNamespace
+TYPE
+    Test : STRUCT
+        i1 : UDINT;
+        i2 : UDINT;
+        i3 : ARRAY_DINT_0_4;
+        arrayOfEnums : ARRAY_PortTypesInDifNamespacesAcf_NestedNamespace_MyEnums_EnumTest_0_2;
+        i4 : PortTypesInDifNamespacesAcf.NestedNamespace.MyNestedEnums.EnumInNestedNs;
+        i5 : PortTypesInDifNamespacesAcf.NestedNamespace.MyEnums.EnumTest;
+        someString : STRING;
+    END_STRUCT
+END_TYPE
+END_NAMESPACE
+
+NAMESPACE PortTypesInDifNamespacesAcf.NestedNamespace.MyNestedEnums
+TYPE
+    EnumInNestedNs : (e1 := 0, e2 := 1, e3 := 12) OF DINT;
+END_TYPE
+END_NAMESPACE
+
+NAMESPACE OtherNamespace.MyOtherEnums
+TYPE
+    EnumInOtherNs : (e1 := 0, e2 := 1, e3 := 12) OF DINT;
+END_TYPE
+END_NAMESPACE
+
+NAMESPACE OtherNamespace.MyEnums
+TYPE
+    EnumTest : (e1 := 0, e2 := 1, e3 := 12) OF DINT;
+END_TYPE
+END_NAMESPACE
+
+NAMESPACE PortTypesInDifNamespacesAcf.NestedNamespace.MyEnums
+TYPE
+    EnumTest : (e1 := 0, e2 := 1, e3 := 12) OF DINT;
+END_TYPE
+END_NAMESPACE
+
+TYPE
+    ARRAY_STRING_0_2 : ARRAY [0..2] OF STRING;
+    ARRAY_OtherNamespace_MyEnums_EnumTest_0_2 : ARRAY [0..2] OF OtherNamespace.MyEnums.EnumTest;
+    ARRAY_PortTypesInDifNamespacesAcf_NestedNamespace_MyEnums_EnumTest_0_2 : ARRAY [0..2] OF PortTypesInDifNamespacesAcf.NestedNamespace.MyEnums.EnumTest;
+    ARRAY_DINT_0_4 : ARRAY [0..4] OF DINT;
+    ARRAY_INT_0_9 : ARRAY [0..9] OF INT;
+    ARRAY_SINT_0_9 : ARRAY [0..9] OF SINT;
+
+    myStringPortString10 : STRING[10];
+    myStringPort2String10 : STRING[10];
+END_TYPE
+
+
+

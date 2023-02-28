@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Templates;
@@ -46,6 +45,7 @@ namespace PlcNext.Common.Commands
                    key != EntityKeys.TemplateKey &&
                    (key == EntityKeys.PathKey ||
                     key == EntityKeys.FullNameKey ||
+                    key == EntityKeys.GenerateDatatypeNamespaces ||
                     HasArgument() ||
                     HasRelationship());
 
@@ -83,6 +83,10 @@ namespace PlcNext.Common.Commands
             {
                 return GetFullName();
             }
+            if (key == EntityKeys.GenerateDatatypeNamespaces)
+            {
+                return GetGenerateNamespacesFlag();
+            }
 
             return GetArgument();
 
@@ -104,6 +108,20 @@ namespace PlcNext.Common.Commands
                 string basePath = owner.IsRoot() ? string.Empty : owner.Root.Path;
                 string path = fileSystem.GetDirectory(Value(singleValueArgument), basePath, false).FullName;
                 return owner.Create(key, path, singleValueArgument);
+            }
+
+            Entity GetGenerateNamespacesFlag()
+            {
+                BoolArgument doGenerate = owner.Value<CommandDefinition>()
+                                                    .Argument<BoolArgument>(EntityKeys.DatatypeNamespacesArgument);
+                BoolArgument doNotGenerate = owner.Value<CommandDefinition>()
+                                                    .Argument<BoolArgument>(EntityKeys.NoDatatypeNamespacesArgument);
+                if(doGenerate != null && doGenerate.Value)
+                {
+                    return owner.Create(key, true.ToString(CultureInfo.InvariantCulture), true);
+                }
+                return owner.Create(key, false.ToString(CultureInfo.InvariantCulture), false);
+
             }
 
             string Value(Argument arg, string argumentName = null)

@@ -4,22 +4,36 @@ TYPE
         myB : TypeB;
         myC : TypeC;
     END_STRUCT
+END_TYPE
 
+
+TYPE
     TypeA : STRUCT
         value1 : INT;
         value2 : ARRAY_INT_0_9;
     END_STRUCT
+END_TYPE
 
+
+TYPE
     TypeB : STRUCT
         value1 : DINT;
         value2 : ARRAY_DINT_0_9;
     END_STRUCT
+END_TYPE
 
+
+TYPE
     TypeC : STRUCT
         value1 : DINT;
         value2 : ARRAY_DINT_0_9;
     END_STRUCT
+END_TYPE
 
+
+TYPE
     ARRAY_INT_0_9 : ARRAY [0..9] OF INT;
     ARRAY_DINT_0_9 : ARRAY [0..9] OF DINT;
+
 END_TYPE
+

@@ -1,9 +1,10 @@
 TYPE
     ARRAY_DINT_0_9 : ARRAY [0..9] OF DINT;
+
     someString23String23 : STRING[23];
-    
     someWString109WString109 : WSTRING[109];
-    
     someWStringFromDefineWString42 : WSTRING[42];
-    
 END_TYPE
+
+
+

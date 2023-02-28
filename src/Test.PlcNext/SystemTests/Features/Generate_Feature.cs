@@ -713,7 +713,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("MultipleNamespaces190"),
                 _ => Given_is_the_working_directory_PATH("MultipleNamespaces190"),
                 _ => When_I_generate_all_codefiles_with_the_source_directories("src", "extern"),
-                _ => Then_the_user_was_informed_that_there_are_multiple_root_namespaces_for_target_version()).RunAsyncWithTimeout();
+                _ => Then_the_user_was_informed_that_there_are_multiple_root_namespaces_for_target_version()
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -723,7 +724,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("MultipleNamespaces206"),
                 _ => Given_is_the_working_directory_PATH("MultipleNamespaces206"),
                 _ => When_I_generate_all_codefiles_with_the_source_directories("src", "extern"),
-                _ => Then_the_library_files_are_generated_containing_the_components("MultipleNamespacesComponent")).RunAsyncWithTimeout();
+                _ => Then_the_library_files_are_generated_containing_the_components("MultipleNamespacesComponent")
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -744,7 +746,8 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                        new TypeMember("EcoShValvePosition","float64"),
                                                                                                        new TypeMember("HGBValvePosition","float64"),
                                                                                                        new TypeMember("CPValvePosition","float64"),
-                                                                                                   }))).RunAsyncWithTimeout();
+                                                                                                   }))
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -754,7 +757,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ComponentsInMultipleNamespaces"),
                 _ => Given_is_the_working_directory_PATH("ComponentsInMultipleNamespaces"),
                 _ => When_I_generate_all_codefiles_with_the_source_directories("src", "extern"),
-                _ => Then_the_user_was_informed_that_there_are_multiple_root_namespaces()).RunAsyncWithTimeout();
+                _ => Then_the_user_was_informed_that_there_are_multiple_root_namespaces()
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -764,7 +768,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("NoEntities"),
                 _ => Given_is_the_working_directory_PATH("NoEntities"),
                 _ => When_I_generate_all_codefiles_from_inside_the_project_folder(),
-                _ => Then_the_library_files_are_generated_containing_the_components()).RunAsyncWithTimeout();
+                _ => Then_the_library_files_are_generated_containing_the_components()
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -775,7 +780,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_working_directory_PATH("TwoComponentsAndPrograms"),
                 _ => When_I_generate_all_codefiles_from_inside_the_project_folder(),
                 _ => Then_the_provider_files_are_generated_for_component("MyComponent", new[] { "MyProgram", "MyProgram2" }),
-                _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram" })).RunAsyncWithTimeout();
+                _ => Then_the_provider_files_are_generated_for_component("MyOtherComponent", new[] { "MyOtherProgram" })
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -794,7 +800,8 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("AcfProjectv216"),
                 _ => When_I_generate_all_metafiles_with_no_datatypes_worksheet(),
-                _ => Then_the_datatypes_worksheet_was_not_generated()).RunAsyncWithTimeout();
+                _ => Then_the_datatypes_worksheet_was_not_generated()
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -803,7 +810,8 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithNestedAndStructInStruct"),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_the_datatype_worksheet_looks_like_NAME("ProgramWithNestedAndStructInStructDataTypes.dt")).RunAsyncWithTimeout();
+                _ => Then_the_datatype_worksheet_looks_like_NAME("ProgramWithNestedAndStructInStructDataTypes.dt")
+				).RunAsyncWithTimeout();
 
         }
 
@@ -814,7 +822,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ProgramWithDifferentPorts"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithDifferentPorts"),
                 _ => When_I_generate_meta_from_inside_the_project_folder(),
-                _ => Then_the_datatype_worksheet_looks_like_NAME("ProgramWithDifferentPortsDataTypes.dt")).RunAsyncWithTimeout();
+                _ => Then_the_datatype_worksheet_looks_like_NAME("ProgramWithDifferentPortsDataTypes.dt")
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -824,7 +833,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ProgramWithDifferentPortsWithDTArrayFlag"),
                 _ => Given_is_the_working_directory_PATH("ProgramWithDifferentPortsWithDTArrayFlag"),
                 _ => When_I_generate_meta_from_inside_the_project_folder(),
-                _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("ProgramWithDifferentPorts", "ProgramWithDifferentPortsDataTypesNew.dt")).RunAsyncWithTimeout();
+                _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("ProgramWithDifferentPorts", "ProgramWithDifferentPortsDataTypesNew.dt")
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -834,7 +844,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ArrayDatatypes"),
                 _ => Given_is_the_working_directory_PATH("ArrayDatatypes"),
                 _ => When_I_generate_meta_from_inside_the_project_folder(),
-                _ => Then_the_datatype_worksheet_looks_like_NAME("ArrayDatatypesDataTypes.dt")).RunAsyncWithTimeout();
+                _ => Then_the_datatype_worksheet_looks_like_NAME("ArrayDatatypesDataTypes.dt")
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -844,7 +855,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("ArrayDatatypesWithoutDTArrayFlag"),
                 _ => Given_is_the_working_directory_PATH("ArrayDatatypesWithoutDTArrayFlag"),
                 _ => When_I_generate_meta_from_inside_the_project_folder(),
-                _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("ArrayDatatypes", "ArrayDatatypesDataTypesOld.dt")).RunAsyncWithTimeout();
+                _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("ArrayDatatypes", "ArrayDatatypesDataTypesOld.dt")
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]
@@ -864,7 +876,58 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("EnumTest"),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_the_datatype_worksheet_looks_like_NAME("EnumTestDataTypes.dt")).RunAsyncWithTimeout();
+                _ => Then_the_datatype_worksheet_looks_like_NAME("EnumTestDataTypes.dt")
+				).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_with_namespaces_explicit()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PortTypesInDifNamespaces"),
+                _ => When_I_generate_all_metafiles_with_namespaces(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("PortTypesInDifNamespacesDataTypes.dt")
+				).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_without_namespaces_explicit()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PortTypesInDifNamespaces"),
+                _ => When_I_generate_all_metafiles_with_no_namespaces(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("PortTypesInDifNamespacesNoNSDataTypes.dt")
+				).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_with_namespaces_default()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PortTypesInDifNamespaces"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("PortTypesInDifNamespacesNoNSDataTypes.dt")
+				).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_with_namespaces_for_old_array_naming_scheme()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PortTypesInDifNamespacesOldProject"),
+                _ => When_I_generate_all_metafiles_with_namespaces(),
+                _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("PortTypesInDifNamespaces","PortTypesInDifNamespacesOldProjectDataTypes.dt")
+				).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_with_namespaces_for_acf()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PortTypesInDifNamespacesAcf"),
+                _ => When_I_generate_all_metafiles_with_namespaces(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("PortTypesInDifNamespacesAcfDataTypes.dt")
+				).RunAsyncWithTimeout();
         }
 
         [Scenario]

@@ -1,12 +1,20 @@
 TYPE
     Test2Enum : (Val1 := 0, Val2 := 1) OF DINT;
+END_TYPE
 
+
+TYPE
     TestEnum : (Val1 := 0, Val2 := 1) OF DINT;
+END_TYPE
 
+
+TYPE
     ARRAY_DINT_0_5 : ARRAY [0..5] OF DINT;
     ARRAY_DINT_0_4 : ARRAY [0..4] OF DINT;
+
     myStr2String12 : STRING[12];
-    
     myStrString12 : STRING[12];
-    
 END_TYPE
+
+
+
