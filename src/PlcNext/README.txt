@@ -53,6 +53,7 @@ will be used as the name for the managing component.
 Q.	Can I change the prefix '#' for all markings such as '#port' and
 '#component'?
 
-A.	Yes. In the 'settings.xml' is an attribute called 'AttributePrefix'. This
-value is used to define the prefix. Warning: This setting applies to all
-projects. All attributes need to be changed accordingly.
+A.	Yes. The setting 'AttributePrefix' is used for that. To change it the command
+'plcncli set setting AttributePrefix !' can be used. In this example the prefix
+would change to '!'. Warning: This setting applies to all projects. All 
+attributes need to be changed accordingly.
