@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -28,6 +29,7 @@ namespace PlcNext.CommandLine
         private bool useChildVerbsAsCategory;
         private readonly List<Option> options = new List<Option>();
         private readonly List<Example> examples = new List<Example>();
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
         private Type baseType = typeof(DynamicVerb);
         
         private static ModuleBuilder moduleBuilder;
@@ -54,7 +56,7 @@ namespace PlcNext.CommandLine
             this.helpText = helpText;
         }
 
-        public VerbTypeFactory SetBaseType(Type baseType)
+        public VerbTypeFactory SetBaseType([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type baseType)
         {
             this.baseType = baseType;
             return this;

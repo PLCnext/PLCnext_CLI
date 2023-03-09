@@ -21,8 +21,8 @@ namespace PlcNext.CommandLine
     {
         private readonly IEnumerable<IDynamicCommandProvider> commandProviders;
 
-        private readonly Dictionary<IEnumerable<string>, Type> createdTypes =
-            new Dictionary<IEnumerable<string>, Type>(new SequenceEqualComparer<string>());
+        private readonly Dictionary<IEnumerable<string>, TotalAccessType> createdTypes =
+            new Dictionary<IEnumerable<string>, TotalAccessType>(new SequenceEqualComparer<string>());
         private readonly Dictionary<IEnumerable<string>, IEnumerable<Type>> resultCache =
             new Dictionary<IEnumerable<string>, IEnumerable<Type>>(new SequenceEqualComparer<string>());
         private readonly Dictionary<Type, CommandDefinition> typeDefintionMatch =
@@ -50,9 +50,9 @@ namespace PlcNext.CommandLine
             List<Type> types = new List<Type>();
             Type baseType = null;
             if (createdTypes.ContainsKey(path) &&
-                createdTypes[path].GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() == null)
+                createdTypes[path].Type.GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() == null)
             {
-                baseType = createdTypes[path];
+                baseType = createdTypes[path].Type;
             }
             foreach (CommandDefinition definition in definitions)
             {
@@ -103,7 +103,7 @@ namespace PlcNext.CommandLine
                 Type type = builder.Build();
                 types.Add(type);
                 createdTypes.Add(path.Concat(new[] {definition.Name}).ToArray(),
-                                 type);
+                                 type.ToTotalAccessType());
                 typeDefintionMatch.Add(type, definition);
             }
             resultCache.Add(path,types);
@@ -117,7 +117,7 @@ namespace PlcNext.CommandLine
 
         public IEnumerable<Type> GetDynamicVerbs(Type currentVerb)
         {
-            IEnumerable<string> path = createdTypes.FirstOrDefault(kv => kv.Value == currentVerb).Key
+            IEnumerable<string> path = createdTypes.FirstOrDefault(kv => kv.Value.Type == currentVerb).Key
                                        ?? GetVerbPath();
 
             IEnumerable<string> GetVerbPath()

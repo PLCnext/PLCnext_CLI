@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using CommandLine;
@@ -101,6 +102,7 @@ namespace PlcNext.CommandLine
             Choices = choices;
         }
 
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)]
         public Type Current { get; }
 
         public IEnumerable<Type> Choices { get; }
@@ -140,6 +142,11 @@ namespace PlcNext.CommandLine
 
             // remember FindLastIndex returns zero-based index
             return index + 1;
+        }
+
+        public static TotalAccessType ToTotalAccessType(this Type type)
+        {
+            return new TotalAccessType(type);
         }
     }
 }

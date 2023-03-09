@@ -53,12 +53,9 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
             return multiplicities.ToArray();
         }
         
-        public static CppComment[] GetFieldComments(this ParseNode declaration)
+        public static CppComment[] GetFieldComments(this ParseNode[] content)
         {
-            ParseNode content = declaration.ChildrenSkipUnnamed().First(n => n.RuleType == "plus" && n.RuleName == "declaration_content");
-            return content.ChildrenSkipUnnamed()
-                          .ToArray()
-                          .SkipAfterLastVisibilityGroup()
+            return content.SkipAfterLastVisibilityGroup()
                           .Where(IsComment)
                           .Where(c => !string.IsNullOrEmpty(c.ToString()))
                           .Select(CppComment.Parse)
@@ -70,13 +67,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
             }
         }
         
-        public static ParseNode[] GetFieldTypeNodes(this ParseNode declaration, ParseNode[] identifiers)
+        public static ParseNode[] GetFieldTypeNodes(this ParseNode[] content, ParseNode[] identifiers)
         {
             return GetTypeDeclarationName() ?? GetNodes(identifiers);
             
             ParseNode[] GetTypeDeclarationName()
             {
-                ParseNode typeDeclaration = declaration.GetHierarchy().FirstOrDefault(n => n.RuleName == "type_decl");
+                ParseNode typeDeclaration = content.SelectMany(c => c.GetHierarchy()).FirstOrDefault(n => n.RuleName == "type_decl");
                 return typeDeclaration?.GetHierarchy().Select(Identifier).Where(n => n != null).ToArray();
 
                 ParseNode Identifier(ParseNode node)
@@ -100,12 +97,41 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
                                  .ToArray();
             }
         }
-        
-        public static bool IsValidFieldDeclaration(this ParseNode declaration)
+
+        public static ParseNode[] GetFieldDeclarationContent(this ParseNode declaration)
         {
-            return !declaration.GetHierarchy().Any(IsForbiddenParanthesisGroup) &&
-                   declaration.GetHierarchy().All(n => n.RuleName != "typedef_decl") &&
-                   declaration.GetHierarchy().All(n => n.RuleName != "pp_directive");
+            ParseNode declarationContent = declaration.ChildrenSkipUnnamed().FirstOrDefault(n => n.RuleType == "plus" && n.RuleName == "declaration_content");
+            if (declarationContent == null)
+            {
+                return Array.Empty<ParseNode>();
+            }
+
+            ParseNode[] content = declarationContent.ChildrenSkipUnnamed()
+                                                    .ToArray();
+            IEnumerable<ParseNode> braceGroups = content.Where(c => c.FirstOrDefault()?.RuleName == nameof(CppStructuralGrammar.brace_group));
+            foreach (ParseNode braceGroup in braceGroups.Reverse())
+            {
+                ParseNode[] remaining = content.SkipWhile(n => n != braceGroup).Skip(1)
+                                               .ToArray();
+                if (remaining.Any(c => c.GetHierarchy()
+                                        .Count(temp => temp.RuleName == nameof(CppStructuralGrammar.identifier))
+                                         >= 2))
+                {
+                    //at least 2 identifier necessary: typ name + field name
+                    content = remaining;
+                    break;
+                }
+            }
+
+            return content;
+        }
+        
+        public static bool IsValidFieldDeclaration(this ParseNode[] content)
+        {
+            ParseNode[] allNodes = content.SelectMany(c => c.GetHierarchy()).ToArray();
+            return !allNodes.Any(IsForbiddenParanthesisGroup) &&
+                   allNodes.All(n => n.RuleName != "typedef_decl") &&
+                   allNodes.All(n => n.RuleName != "pp_directive");
             
             bool IsForbiddenParanthesisGroup(ParseNode n)
             {
@@ -124,16 +150,9 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
                 return parent.TakeWhile(c => c != n).All(c => !EqualsMatch.IsMatch(c.ToString()));
             }
         }
-        public static ParseNode[] GetFieldIdentifier(this ParseNode declaration)
+        public static ParseNode[] GetFieldIdentifier(this ParseNode[] content)
         {
-            ParseNode content = declaration.ChildrenSkipUnnamed().FirstOrDefault(n => n.RuleType == "plus" && n.RuleName == "declaration_content");
-            if (content == null)
-            {
-                return Array.Empty<ParseNode>();
-            }
-
-            return content.ChildrenSkipUnnamed()
-                          .TakeWhile(n => !EqualsMatch.IsMatch(n.ToString()))
+            return content.TakeWhile(n => !EqualsMatch.IsMatch(n.ToString()))
                           .Select(Identifier)
                           .Where(n => n != null)
                           .ToArray();
@@ -153,16 +172,9 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
             }
         }
         
-        public static ParseNode[] GetFieldValue(this ParseNode declaration)
+        public static ParseNode[] GetFieldValue(this ParseNode[] content)
         {
-            ParseNode content = declaration.ChildrenSkipUnnamed().FirstOrDefault(n => n.RuleType == "plus" && n.RuleName == "declaration_content");
-            if (content == null)
-            {
-                return Array.Empty<ParseNode>();
-            }
-
-            return content.ChildrenSkipUnnamed()
-                          .SkipWhile(n => !EqualsMatch.IsMatch(n.ToString()))
+            return content.SkipWhile(n => !EqualsMatch.IsMatch(n.ToString()))
                           .Skip(1)
                           .Where(n => n.ToString() != ";")
                           .ToArray();

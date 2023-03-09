@@ -78,11 +78,12 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
             void ParseConstant(ParseNode declaration)
             {
-                if (declaration.IsValidFieldDeclaration() && ContainsConstIdentifier())
+                ParseNode[] content = declaration.GetFieldDeclarationContent();
+                if (content.IsValidFieldDeclaration() && ContainsConstIdentifier())
                 {
                     
                 }
-                if (!declaration.IsValidFieldDeclaration() ||
+                if (!content.IsValidFieldDeclaration() ||
                     !ContainsConstIdentifier() ||
                     IsPartOfMethodDefinition() ||
                     HasTypeDeclarationParent(declaration))
@@ -92,17 +93,17 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
 //paran_group
 //declaration_list
-                ParseNode[] identifiers = declaration.GetFieldIdentifier()
-                                                     .SkipWhile(i => i.ToString().Trim() != "const")
-                                                     .Skip(1)
-                                                     .ToArray();
+                ParseNode[] identifiers = content.GetFieldIdentifier()
+                                                 .SkipWhile(i => i.ToString().Trim() != "const")
+                                                 .Skip(1)
+                                                 .ToArray();
                 if (!identifiers.Any())
                 {
                     return;
                 }
 
-                ParseNode[] typeNodes = declaration.GetFieldTypeNodes(identifiers);
-                ParseNode[] valueNodes = declaration.GetFieldValue();
+                ParseNode[] typeNodes = content.GetFieldTypeNodes(identifiers);
+                ParseNode[] valueNodes = content.GetFieldValue();
                 if (identifiers.SequenceEqual(typeNodes))
                 {
                     return;
@@ -131,7 +132,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
                 bool ContainsConstIdentifier()
                 {
-                    return declaration.GetFieldIdentifier().FirstOrDefault()?
+                    return content.GetFieldIdentifier().FirstOrDefault()?
                               .ToString().Trim() == "const";
                 }
 

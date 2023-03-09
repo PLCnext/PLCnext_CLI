@@ -44,18 +44,20 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                                                   List<ParserMessage> messages, string attributePrefix,
                                                   CppType containingType)
         {
-            if (!declaration.IsValidFieldDeclaration())
+            ParseNode[] content = declaration.GetFieldDeclarationContent();
+            
+            if (!content.IsValidFieldDeclaration())
             {
                 return Enumerable.Empty<CppField>();
             }
 
-            ParseNode[] identifiers = declaration.GetFieldIdentifier();
+            ParseNode[] identifiers = content.GetFieldIdentifier();
             if (identifiers.FirstOrDefault()?.ToString() == "using")
             {
                 //using directive inside class/struct
                 return Enumerable.Empty<CppField>();
             }
-            ParseNode[] typeNodes = declaration.GetFieldTypeNodes(identifiers);
+            ParseNode[] typeNodes = content.GetFieldTypeNodes(identifiers);
             if (identifiers.SequenceEqual(typeNodes))
             {
                 if (typeNodes.Any())
@@ -77,7 +79,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
             IEnumerable<(string name, string[] multiplicity)> fields = fieldIdentifiers 
                .Select(i => (i.ToString(), i.GetParent().GetFieldMultiplicity()));
-            CppComment[] comments = declaration.GetFieldComments();
+            CppComment[] comments = content.GetFieldComments();
 
             return fields.Select(fd => new CppField(fd.name, dataType, comments, fd.multiplicity, attributePrefix, containingType));
         }

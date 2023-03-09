@@ -10,6 +10,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -398,10 +399,12 @@ namespace PlcNext.CommandLine
                     if (typeInfo.Current.GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() != null)
                     {
                         ChildVerbsAttribute childVerbs = typeInfo.Current.GetCustomAttribute<ChildVerbsAttribute>();
-                        IEnumerable<Type> childVerbTypes = (childVerbs?.Types ?? Enumerable.Empty<Type>())
-                           .Concat(dynamicVerbFactory.GetDynamicVerbs(typeInfo.Current));
-                        IEnumerable<(string verbName, UsageExample[] examples)> childExamples = childVerbTypes.Select(t => (t.GetCustomAttribute<VerbAttribute>().Name,
-                                                                                                                                       GetExamplesFromVerb(t)))
+                        IEnumerable<TotalAccessType> childVerbTypes = (childVerbs?.Types ?? Enumerable.Empty<Type>())
+                                                                     .Concat(dynamicVerbFactory.GetDynamicVerbs(
+                                                                                 typeInfo.Current))
+                                                                     .Select(t => t.ToTotalAccessType());
+                        IEnumerable<(string verbName, UsageExample[] examples)> childExamples = childVerbTypes.Select(t => (t.Type.GetCustomAttribute<VerbAttribute>().Name,
+                                                                                                                                       GetExamplesFromVerb(t.Type)))
                                                                                                               .Where(e => e.Item2.Any());
                         foreach ((string verbName, UsageExample[] usageExamples) in childExamples)
                         {
@@ -428,7 +431,7 @@ namespace PlcNext.CommandLine
                     helpTextFooter.AddPostOptionsLine(string.Empty);
                 }
 
-                UsageExample[] GetExamplesFromVerb(Type verbType)
+                UsageExample[] GetExamplesFromVerb([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)] IReflect verbType)
                 {
                     PropertyInfo property = verbType.GetProperties(BindingFlags.Public | BindingFlags.Static)
                                                     .FirstOrDefault(p => p.GetCustomAttribute<UsageAttribute>() != null &&
