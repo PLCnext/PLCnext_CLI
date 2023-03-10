@@ -140,10 +140,10 @@ namespace PlcNext.Common.CodeModel
             }
         }
 
-        private record TargetedReplacement(string Replacement, IConstant Constant, int StartIndex,
+        private record TargetedConstantReplacement(string Replacement, IConstant Constant, int StartIndex,
                                            int Length)
         {
-            public bool Overlaps(TargetedReplacement other)
+            public bool Overlaps(TargetedConstantReplacement other)
             {
                 return StartIndex <= other.StartIndex && StartIndex+Length >= other.StartIndex;
             }
@@ -152,8 +152,8 @@ namespace PlcNext.Common.CodeModel
         private static string ReplaceConstants(string replaceable, IEnumerable<string> accessibleNamespaces, ICodeModel codeModel)
         {
             IEnumerable<ConstantReplacement> accessibleConstants = GetAccessibleConstants();
-            TargetedReplacement[] targetedReplacements = GetReplacementTargets();
-            IEnumerable<TargetedReplacement> filteredReplacements = FilterReplacements();
+            TargetedConstantReplacement[] targetedReplacements = GetReplacementTargets();
+            IEnumerable<TargetedConstantReplacement> filteredReplacements = FilterReplacements();
 
             return filteredReplacements.Reverse()
                                        .Aggregate(replaceable, (current, replacement) => current.Remove(replacement.StartIndex, replacement.Length)
@@ -171,14 +171,63 @@ namespace PlcNext.Common.CodeModel
                                         a.Key))
                             .Distinct();
 
-            TargetedReplacement[] GetReplacementTargets()
+            TargetedConstantReplacement[] GetReplacementTargets()
             {
                 return accessibleConstants.Where(c => replaceable.Contains(c.PartialName))
-                                          .Select(c => new TargetedReplacement(c.Replacement,
+                                          .Select(c => new TargetedConstantReplacement(c.Replacement,
                                                       c.Constant,
                                                       replaceable.IndexOf(c.PartialName, StringComparison.Ordinal),
                                                       c.PartialName.Length))
                                           .ToArray();
+            }
+
+            IEnumerable<TargetedConstantReplacement> FilterReplacements()
+            {
+                TargetedConstantReplacement lastConstantReplacement = null;
+                IOrderedEnumerable<TargetedConstantReplacement> orderedReplacements = targetedReplacements.OrderBy(r => r.StartIndex)
+                                                                                                  .ThenByDescending(r => r.Length);
+                foreach (TargetedConstantReplacement targetedReplacement in orderedReplacements)
+                {
+                    if (lastConstantReplacement != null && 
+                        lastConstantReplacement.Overlaps(targetedReplacement))
+                    {
+                        continue;
+                    }
+
+                    yield return targetedReplacement;
+                    lastConstantReplacement = targetedReplacement;
+                }
+            }
+        }
+
+        private static (string, bool) ReplaceWithDefineConstants(string replaceable, Dictionary<string, string> macros)
+        {
+            IEnumerable<DefineReplacement> defines = GetDefineReplacements();
+            TargetedReplacement[] targetedReplacements = GetReplacementTargets();
+            IEnumerable<TargetedReplacement> filteredReplacements = FilterReplacements();
+
+            string replaced = filteredReplacements.Reverse()
+                                                  .Aggregate(replaceable, (current, replacement) => current
+                                                                .Remove(replacement.StartIndex, replacement.Length)
+                                                                .Insert(replacement.StartIndex,
+                                                                        ReplaceWithDefineConstants(replacement.Replacement, 
+                                                                            macros).Item1));
+
+            return (replaced, replaced != replaceable);
+
+            IEnumerable<DefineReplacement> GetDefineReplacements()
+                => macros.Select(m => new DefineReplacement(
+                                     m.Key,
+                                     m.Value))
+                         .Distinct();
+
+            TargetedReplacement[] GetReplacementTargets()
+            {
+                return defines.Where(c => replaceable.Contains(c.Name))
+                              .Select(c => new TargetedReplacement(c.Replacement,
+                                                                   replaceable.IndexOf(c.Name, StringComparison.Ordinal),
+                                                                   c.Name.Length))
+                              .ToArray();
             }
 
             IEnumerable<TargetedReplacement> FilterReplacements()
@@ -200,22 +249,37 @@ namespace PlcNext.Common.CodeModel
             }
         }
 
-        private static (string, bool) ReplaceWithDefineConstants(string macro, Dictionary<string, string> macros)
+        private record DefineReplacement(string Name, string Replacement)
         {
-            bool changed = true;
-            bool replaced = false;
-            while (changed)
+            public virtual bool Equals(DefineReplacement other)
             {
-                string replacable = macros.Keys.FirstOrDefault(k => macro.Contains(k));
-                changed = !string.IsNullOrEmpty(replacable);
-                if (changed)
+                if (ReferenceEquals(null, other))
                 {
-                    macro = macro.Replace(replacable, macros[replacable]);
-                    replaced = true;
+                    return false;
                 }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return Name == other.Name;
             }
-            return (macro, replaced);
+
+            public override int GetHashCode()
+            {
+                return (Name != null ? Name.GetHashCode() : 0);
+            }
         }
+
+        private record TargetedReplacement(string Replacement, int StartIndex,
+                                           int Length)
+        {
+            public bool Overlaps(TargetedReplacement other)
+            {
+                return StartIndex <= other.StartIndex && StartIndex+Length >= other.StartIndex;
+            }
+        };
 
         private Dictionary<string, string> GetDefineConstants(Entity owner)
         {
