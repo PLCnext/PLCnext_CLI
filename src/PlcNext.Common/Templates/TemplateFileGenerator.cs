@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.DataModel;
+using PlcNext.Common.Generate;
 using PlcNext.Common.Project;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
@@ -31,6 +32,7 @@ namespace PlcNext.Common.Templates
         private readonly ITemplateRepository repository;
         private readonly IFileSystem fileSystem;
         private readonly ExecutionContext executionContext;
+        private readonly FileGenerationHelper generationHelper;
 
         public TemplateFileGenerator(ITemplateResolver resolver, ITemplateRepository repository, IFileSystem fileSystem, ExecutionContext executionContext)
         {
@@ -38,6 +40,7 @@ namespace PlcNext.Common.Templates
             this.repository = repository;
             this.fileSystem = fileSystem;
             this.executionContext = executionContext;
+            generationHelper = new FileGenerationHelper(resolver, repository, fileSystem);
         }
 
         public async Task<IEnumerable<VirtualFile>> InitalizeTemplate(Entity dataModel, ChangeObservable observable)
@@ -67,7 +70,7 @@ namespace PlcNext.Common.Templates
 
                 foreach (templateFile file in template.File.Where(f => !f.excluded))
                 {
-                    (string content, Encoding encoding) = await GetResolvedTemplateContent(dataModel, file, template).ConfigureAwait(false);
+                    (string content, Encoding encoding) = await generationHelper.GetResolvedTemplateContent(dataModel, file, template).ConfigureAwait(false);
 
                     if (Equals(content, default) && Equals(encoding,default))
                     {
@@ -314,31 +317,6 @@ namespace PlcNext.Common.Templates
             }
         }
 
-        private async Task<(string content, Encoding encoding)> GetResolvedTemplateContent(Entity dataModel, templateFile file, TemplateDescription template)
-        {
-            string content;
-            Encoding encoding;
-            VirtualFile virtualFile = fileSystem.GetFile(file.template, repository.GetTemplateBase(template));
-            if (!virtualFile.Exists)
-            {
-                return default;
-            }
-            using (Stream fileStream = fileSystem.GetFile(file.template, repository.GetTemplateBase(template)).OpenRead())
-            using (StreamReader reader = new StreamReader(fileStream, Encoding.UTF8, true))
-            {
-                encoding = reader.CurrentEncoding;
-                content = await reader.ReadToEndAsync().ConfigureAwait(false);
-            }
-            
-            if (encoding.BodyName == Encoding.UTF8.BodyName)
-            {
-                encoding = new UTF8Encoding(false);
-            }
-
-            content = await resolver.ResolveAsync(content, dataModel).ConfigureAwait(false);
-            return (content, encoding);
-        }
-
         private async Task<VirtualFile> GetFile(Entity dataModel, templateFile file, bool forced, string basePath,
                                    TemplateDescription template)
         {
@@ -420,7 +398,7 @@ namespace PlcNext.Common.Templates
                     if (!CheckProjectVersionRestrictions(file))
                         continue;
 
-                    (string content, Encoding encoding) = await GetResolvedTemplateContent(generatableEntity, file, template).ConfigureAwait(false);
+                    (string content, Encoding encoding) = await generationHelper.GetResolvedTemplateContent(generatableEntity, file, template).ConfigureAwait(false);
 
                     if (Equals(content, default) && Equals(encoding,default))
                     {

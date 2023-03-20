@@ -129,7 +129,7 @@ namespace PlcNext.Common.Build
                                                    target.EngineerVersion,
                                                    guidFactory.Create().ToString("D", CultureInfo.InvariantCulture),
                                                    target.ShortFullName.Replace(",", "_"),
-                                                   copiedLibrary.Name));
+                                                   projectName));
                 }
             }
 

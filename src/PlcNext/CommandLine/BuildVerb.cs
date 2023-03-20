@@ -34,7 +34,7 @@ namespace PlcNext.CommandLine
                                                     "because the cmake options will be interpreted as targets.")]
         public IEnumerable<string> Targets { get; set; }
 
-        [Option(CommandLineConstants.BuildtypeChar, CommandLineConstants.BuildtypeOption, HelpText = "Build type for the build, e.g. Release")]
+        [Option(CommandLineConstants.BuildtypeChar, CommandLineConstants.BuildtypeOption, HelpText = "Build type for the build, e.g. Debug. Default is Release.")]
         public string BuildType { get; set; }
 
         [Option(CommandLineConstants.ConfigureOption, HelpText = "Force CMake to make a new configuration", SetName = "Configure")]

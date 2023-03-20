@@ -138,8 +138,6 @@ namespace PlcNext.Common
                    .WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<SharedNativeGenerateEngine>().Keyed<ITemplateFileGenerator>(nameof(SharedNativeGenerateEngine))
                    .WithAttributeFiltering().InstancePerLifetimeScope();
-            builder.RegisterType<SharedNativeBuilder>().Keyed<IBuilder>(nameof(SharedNativeBuilder))
-                   .WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<SharedNativeDeployEngine>().Keyed<IDeployService>(nameof(SharedNativeDeployEngine))
                    .WithAttributeFiltering().InstancePerLifetimeScope();
             builder.RegisterType<SharedNativeLibraryBuilderDeployStep>().As<IDeployStep>().InstancePerLifetimeScope();
