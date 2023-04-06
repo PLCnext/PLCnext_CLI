@@ -120,8 +120,13 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                 resolvedString = resolvedString.Trim();
                 if (!string.IsNullOrEmpty(resolvedString))
                 {
-                    object result = Calculator.Evaluate(resolvedString);
-                    return result.ToString();
+                    try {
+                        object result = Calculator.Evaluate(resolvedString);
+                        return result.ToString();
+                    }catch  (EvaluationException ex) 
+                    {
+                        return resolvedString;
+                    }
                 }
                 return resolvedString;
             }
