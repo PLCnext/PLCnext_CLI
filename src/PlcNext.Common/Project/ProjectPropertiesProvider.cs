@@ -48,12 +48,14 @@ namespace PlcNext.Common.Project
         private readonly ITargetParser targetParser;
         private readonly ISdkRepository sdkRepository;
         private readonly IFileSystem fileSystem;
+        private readonly ExecutionContext executionContext;
 
-        public ProjectPropertiesProvider(ITargetParser targetParser, ISdkRepository sdkRepository, IFileSystem fileSystem)
+        public ProjectPropertiesProvider(ITargetParser targetParser, ISdkRepository sdkRepository, IFileSystem fileSystem, ExecutionContext context)
         {
             this.targetParser = targetParser;
             this.sdkRepository = sdkRepository;
             this.fileSystem = fileSystem;
+            this.executionContext = context;
         }
 
         public void Initialize(Entity root)
@@ -172,10 +174,17 @@ namespace PlcNext.Common.Project
                     BuildEntity buildEntity = BuildEntity.Decorate(project.Targets.First());
                     if (buildEntity.HasBuildSystem)
                     {
-                        ExternalLibraries = buildEntity.BuildSystem.ExternalLibraries;
-                        return;
+                        try
+                        {
+                            ExternalLibraries = buildEntity.BuildSystem.ExternalLibraries;
+                            return;
+                        }
+                        catch (FormattableException ex)
+                        {
+                            Exceptions = Exceptions.Concat(new[] { ex });
+                            executionContext.WriteWarning("External libraries could not be fetched");
+                        }
                     }
-
                 }
                 ExternalLibraries = Enumerable.Empty<string>();
             }
