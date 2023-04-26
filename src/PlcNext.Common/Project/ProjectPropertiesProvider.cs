@@ -181,8 +181,7 @@ namespace PlcNext.Common.Project
                         }
                         catch (FormattableException ex)
                         {
-                            Exceptions = Exceptions.Concat(new[] { ex });
-                            executionContext.WriteWarning("External libraries could not be fetched");
+                            executionContext.WriteError("External libraries could not be fetched" );
                         }
                     }
                 }
