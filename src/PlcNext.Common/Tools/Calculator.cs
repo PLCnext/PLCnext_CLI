@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System;
+
 namespace PlcNext.Common.Tools
 {
     public static class Calculator
@@ -17,7 +19,7 @@ namespace PlcNext.Common.Tools
             {
                 return new NCalc.Expression(expression).Evaluate();
             }
-            catch (NCalc.EvaluationException)
+            catch (Exception)
             {
                 throw new EvaluationException(expression);
             }
