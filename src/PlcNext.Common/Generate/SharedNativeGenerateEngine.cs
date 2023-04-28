@@ -197,10 +197,13 @@ namespace PlcNext.Common.Generate
             {
                 VirtualDirectory baseDirectory = GetBaseDirectory("code");
                 VirtualDirectory sourceDirectory = fileSystem.GetDirectory(Constants.SourceFolderName, project.Path);
+                VirtualDirectory niBuilderOutputDirectory = fileSystem.GetDirectory(niBuilderOutputPath, csharpProjectPath, createNew: false);
 
-                IEnumerable<VirtualFile> filesAfter = fileSystem.GetDirectory(niBuilderOutputPath, csharpProjectPath, createNew: false)?.Files() ?? Enumerable.Empty<VirtualFile>();
+                IEnumerable<VirtualFile> filesAfter = niBuilderOutputDirectory?.Files() ?? Enumerable.Empty<VirtualFile>();
 
-                IEnumerable<VirtualFile> newFiles = filesAfter.Where(f => !filesBefore.Keys.Select(file => file.Name).Contains(f.Name) 
+                RenameLibraryFile();
+
+                IEnumerable <VirtualFile> newFiles = filesAfter.Where(f => !filesBefore.Keys.Select(file => file.Name).Contains(f.Name) 
                                                                           || filesBefore[filesBefore.Keys.Where(file => file.Name == f.Name).FirstOrDefault()].CompareTo(f.LastWriteTime) != 0)
                                                                 .Where(f => f.Name.EndsWith(".cpp", StringComparison.InvariantCultureIgnoreCase) 
                                                                             || f.Name.EndsWith(".hpp", StringComparison.InvariantCultureIgnoreCase)
@@ -211,6 +214,33 @@ namespace PlcNext.Common.Generate
                 CopyFilesToOverwrite();
                 CopyFilesToNotOverwrite();
                 WarnIfFilesFoundWhichShouldBeDeleted();
+
+                void RenameLibraryFile()
+                {
+                    string oldName = $"{project.Name}-template3.h";
+                    string newName = $"{project.Name}-template32.h";
+                    VirtualFile fileToRename = filesAfter.Where(file => file.Name == oldName).FirstOrDefault();
+                    if (fileToRename == null || !fileToRename.Exists)
+                    {
+                        return;
+                    }
+
+                    VirtualFile newFile = niBuilderOutputDirectory.File(newName);
+                    
+                    using (Stream sourceStream = fileToRename.OpenRead())
+                    using (Stream destinationStream = newFile.OpenWrite())
+                    {
+                        destinationStream.SetLength(0);
+                        sourceStream.CopyTo(destinationStream);
+                    }
+                    newFile.Touch();
+                    observable.OnNext(new Change(() => newFile.Delete(), $"Renamed the file {newFile.FullName}."));
+
+                    VirtualFile file = niBuilderOutputDirectory.File(oldName);
+                    file.Delete();
+                    observable.OnNext(new Change(() => file.Restore(), $"Deleted the file {file.FullName}."));
+                    filesAfter = filesAfter.Where(f => f.Name != newFile.Name).Concat(new[] { newFile });
+                }
 
                 void CopyFilesToOverwrite()
                 {
@@ -239,6 +269,7 @@ namespace PlcNext.Common.Generate
                             using (Stream sourceStream = source.OpenRead())
                             using (Stream destinationStream = newFile.OpenWrite())
                             {
+                                destinationStream.SetLength(0);
                                 sourceStream.CopyTo(destinationStream);
                             }
                             observable.OnNext(new Change(() => newFile.Delete(), $"Generated the file {newFile.FullName}."));
@@ -252,10 +283,6 @@ namespace PlcNext.Common.Generate
                     foreach (VirtualFile file in newFiles.Where(file => !copiedFiles.Contains(file)))
                     {
                         string newFileName = RemoveTemplateFromFileName(file.Name);
-                        if (newFileName.EndsWith("-cli3.h", StringComparison.InvariantCulture))
-                        {
-                            newFileName = newFileName.Replace("-cli3.h", "-cli32.h");
-                        }
                         CopyNotOverwritableFile(file.Name, newFileName);
                     }
 
@@ -268,6 +295,7 @@ namespace PlcNext.Common.Generate
                             using (Stream sourceStream = source.OpenRead())
                             using (Stream destinationStream = newFile.OpenWrite())
                             {
+                                destinationStream.SetLength(0);
                                 sourceStream.CopyTo(destinationStream);
                             }
                             observable.OnNext(new Change(() => newFile.Delete(), $"Generated the file {newFile.FullName}."));
