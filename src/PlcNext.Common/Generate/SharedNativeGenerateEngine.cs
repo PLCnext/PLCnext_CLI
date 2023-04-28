@@ -73,6 +73,11 @@ namespace PlcNext.Common.Generate
         {
             await GenerateTemplateFiles(rootEntity).ConfigureAwait(false);
 
+            if (generator != "all" && generator != "code")
+            {
+                return;
+            }
+
             ProjectEntity project = ProjectEntity.Decorate(rootEntity);
             string csharpProjectPath = project.CSharpProjectPath;
             if (!Path.IsPathRooted(csharpProjectPath))
