@@ -74,7 +74,7 @@ namespace PlcNext.CppParser.CppRipper
 
             template_decl
                 = TEMPLATE + ((Delimiter("<") + Plus(TYPENAME + identifier + Opt(COMMA) + Eat(multiline_ws)) + Delimiter(">"))
-                              | NoFail(Nested("<",">")))
+                              | Nested("<",">"))
                 + ws;
 
             typedef_decl
