@@ -414,8 +414,8 @@ namespace PlcNext.CppParser.CppRipper
                 = digit_sequence + exponent_part
                 | simple_float + exponent_part;
             unsigned_float
-                = simple_float
-                | exponential_float;
+                = exponential_float
+                | simple_float;
             hex_prefix
                 = CharSeq("0X") | CharSeq("0x");
             hex_literal
@@ -432,7 +432,7 @@ namespace PlcNext.CppParser.CppRipper
                 = unsigned_suffix + Opt(long_suffix) + Opt(long_suffix)
                   | long_suffix + Opt(long_suffix) + Opt(unsigned_suffix);
             int_literal
-                = unsigned_literal + Not(dot) + Opt(integer_suffix);
+                = unsigned_literal + Not(dot) + Not(exponent_prefix) + Opt(integer_suffix);
             float_literal
                 = unsigned_float + Opt(float_suffix);
             char_literal
