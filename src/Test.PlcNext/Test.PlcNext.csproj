@@ -568,6 +568,12 @@
     <EmbeddedResource Include="Deployment\ConstArraySize\src\ConstArraySizeComponent.cpp" />
     <None Remove="Deployment\TestResults\ConstantStaticStringLengthDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\ConstantStaticStringLengthDataTypes.dt" />
+    <None Remove="Deployment\PortsWithoutLeadingSemicolon\src\Defect_4334Component.hpp" />
+    <EmbeddedResource Include="Deployment\Defect_4334\src\Defect_4334Component.hpp" />
+    <None Remove="Deployment\PortsWithoutLeadingSemicolon\src\Defect_4334Program.hpp" />
+    <EmbeddedResource Include="Deployment\Defect_4334\src\Defect_4334Program.hpp" />
+    <None Remove="Deployment\PortsWithoutLeadingSemicolon\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\Defect_4334\CMakeLists.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -580,6 +586,7 @@
     <EmbeddedResource Include="Deployment\ConstantStaticStringLength\plcnext.proj" />
     <EmbeddedResource Include="Deployment\OtherNamespaceConstant\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ConstArraySize\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\Defect_4334\plcnext.proj" />
     <Content Include="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1061,6 +1068,11 @@
   <ItemGroup>
     <Folder Include="Deployment\DemoWithoutLibrary\bin\" />
     <Folder Include="Tools\XUnit\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Deployment\Defect_4334\src\Defect_4334Component.cpp" />
+    <EmbeddedResource Include="Deployment\Defect_4334\src\Defect_4334Program.cpp" />
   </ItemGroup>
   
   <Choose>
