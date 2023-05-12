@@ -1001,6 +1001,22 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Parse_ports_without_leading_semicolon()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("Defect_4334"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_there_are_progmeta_files_with_the_following_content(new ProgmetaData("Defect_4334Program",
+                                                                                  new[] { "Defect_4334Component", "Defect_4334Program" },
+                                                                                  new[]
+                                                                                  {
+                                                                                      new Portmeta("portField","boolean","Input|Retain"),
+                                                                                      new Portmeta("portField1","boolean","Input|Retain"),
+                                                                                  }))
+            ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_no_datatypes_worksheet()
         {
             await Runner.AddSteps(

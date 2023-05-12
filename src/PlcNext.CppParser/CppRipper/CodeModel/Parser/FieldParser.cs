@@ -113,9 +113,9 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
             {
                 ParseNode[] remaining = content.SkipWhile(n => n != braceGroup).Skip(1)
                                                .ToArray();
-                if (remaining.Any(c => c.GetHierarchy()
-                                        .Count(temp => temp.RuleName == nameof(CppStructuralGrammar.identifier))
-                                         >= 2))
+                if (remaining.SelectMany(c => c.GetHierarchy())
+                             .Count(temp => temp.RuleName == nameof(CppStructuralGrammar.identifier))
+                                         >= 2)
                 {
                     //at least 2 identifier necessary: typ name + field name
                     content = remaining;

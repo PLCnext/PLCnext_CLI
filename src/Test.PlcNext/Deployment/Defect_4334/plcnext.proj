@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.phoenixcontact.com/schema/cliproject">
+  <Target>AXCF2152,2023.0.1 LTS (23.0.1.69 beta)</Target>
+  <Target>AXCF2152,2022.9.0 (22.9.0.19 beta)</Target>
+  <Id>2b9f4c00-7649-4873-8c8b-94b759f37b5a</Id>
+  <Version>2.0</Version>
+  <Name>Defect_4334</Name>
+  <GenerateDTArrayNameByType>true</GenerateDTArrayNameByType>
+</ProjectSettings>
