@@ -28,8 +28,17 @@ namespace PlcNext.Common.Build
         public int ExecuteSn(Entity dataModel)
         {
             ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
-            CodeEntity projectCodeEntity = CodeEntity.Decorate(project);
-            string projectName = projectCodeEntity.Namespace;
+            string projectName = string.Empty;
+            try
+            {
+                CodeEntity projectCodeEntity = CodeEntity.Decorate(project);
+                projectName = projectCodeEntity.Namespace;
+            }
+            catch (FormattableException e)
+            {
+                executionContext.WriteInformation("Namespace was not used as name because of the following error: " + e.Message, false);
+                projectName = project.Name;
+            }
             IEnumerable<Entity> targets = project.Targets.ToArray();
             if (!targets.Any())
             {
