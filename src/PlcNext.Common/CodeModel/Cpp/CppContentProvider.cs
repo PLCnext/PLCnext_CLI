@@ -57,7 +57,7 @@ namespace PlcNext.Common.CodeModel.Cpp
             Entity ResolveInclude()
             {
                 IEntityBase templateOrigin = GetTemplateOrigin(out IEntityBase formatOrigin);
-                CommandEntity commandEntity = CommandEntity.Decorate(owner.Origin);
+                CommandEntity commandEntity = CommandEntity.FindUpperCommand(owner);
                 string basePath = string.Empty;
                 if (templateOrigin.HasContent(EntityKeys.BaseDirectoryKey) &&
                     !string.IsNullOrEmpty(templateOrigin[EntityKeys.BaseDirectoryKey].Value<string>()))

@@ -29,6 +29,26 @@ namespace PlcNext.Common.Commands
             return Decorate<CommandEntity>(commandEntity) ?? new CommandEntity(commandEntity);
         }
 
+        public static CommandEntity FindUpperCommand(IEntityBase current)
+        {
+            IEntityBase commandEntity = null;
+            do
+            {
+                if (current.Value<CommandDefinition>() != null)
+                {
+                    commandEntity = current;
+                }
+
+                current = current.Owner;
+            } while (commandEntity == null && current != null);
+
+            if (commandEntity == null)
+            {
+                throw new InvalidOperationException("There should always be a command somewhere.");
+            }
+            return Decorate<CommandEntity>(commandEntity) ?? new CommandEntity(commandEntity);
+        }
+
         public bool IsCommandArgumentSpecified(string argument)
         {
             return Value<CommandDefinition>()?.Argument<Argument>(argument)
