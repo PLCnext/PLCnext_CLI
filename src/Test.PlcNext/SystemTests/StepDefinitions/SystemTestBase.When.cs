@@ -183,16 +183,6 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             await ScenarioContext.GenerateMeta(true, includes: includes);
         }
 
-        protected async Task When_I_generate_all_metafiles_with_namespaces()
-        {
-            await ScenarioContext.GenerateMeta(true, generateNamespaces:true);
-        }
-
-        protected async Task When_I_generate_all_metafiles_with_no_namespaces()
-        {
-            await ScenarioContext.GenerateMeta(true, generateNoNamespaces: true);
-        }
-
         protected async Task When_I_generate_all_metafiles_with_no_datatypes_worksheet()
         {
             await ScenarioContext.GenerateMeta(true, noDatatypesWorksheet: true);

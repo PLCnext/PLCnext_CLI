@@ -49,6 +49,10 @@ namespace PlcNext.Common.Project {
         
         private string cSharpProjectPathField;
         
+        private bool generateNamespacesField;
+        
+        private bool generateNamespacesFieldSpecified;
+        
         public ProjectSettings() {
             this.versionField = "1.0";
             this.typeField = "project";
@@ -137,6 +141,27 @@ namespace PlcNext.Common.Project {
             }
             set {
                 this.cSharpProjectPathField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool GenerateNamespaces {
+            get {
+                return this.generateNamespacesField;
+            }
+            set {
+                this.generateNamespacesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool GenerateNamespacesSpecified {
+            get {
+                return this.generateNamespacesFieldSpecified;
+            }
+            set {
+                this.generateNamespacesFieldSpecified = value;
             }
         }
     }

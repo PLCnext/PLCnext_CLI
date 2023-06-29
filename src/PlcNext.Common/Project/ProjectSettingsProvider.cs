@@ -104,6 +104,7 @@ namespace PlcNext.Common.Project
                      owner.HasValue<ProjectDescription>()) ||
                     key == EntityKeys.ProjectIdKey ||
                     key == EntityKeys.GenerateDTArrayNameByTypeKey) ||
+                    key == EntityKeys.GenerateDatatypeNamespaces ||
                     key == EntityKeys.CSharpProjectPath;
         }
 
@@ -125,6 +126,8 @@ namespace PlcNext.Common.Project
                     return GetGenerateDTArrayNameByTypeFlag();
                 case EntityKeys.CSharpProjectPath:
                     return GetCSharpProjectPath();
+                case EntityKeys.GenerateDatatypeNamespaces:
+                    return GetGenerateNamespacesFlag();
                 default:
                     throw new ContentProviderException(key, owner);
             }
@@ -213,6 +216,23 @@ namespace PlcNext.Common.Project
                     return owner.Create(key, description.Settings.CSharpProjectPath);
                 }
                 throw new ContentProviderException(key, owner);
+            }
+
+            Entity GetGenerateNamespacesFlag()
+            {
+                ProjectEntity project = ProjectEntity.Decorate(owner.Root);
+
+                if (!project.Settings.IsPersistent)
+                {
+                    return owner.Create(key, true.ToString(CultureInfo.InvariantCulture), true);
+                }
+                if (project.Settings.Value.GenerateNamespacesSpecified)
+                {
+                    return owner.Create(key, project.Settings.Value.GenerateNamespaces.ToString(CultureInfo.InvariantCulture), project.Settings.Value.GenerateNamespaces);
+                }
+
+                return owner.Create(key, false.ToString(CultureInfo.InvariantCulture), false);
+
             }
         }
 

@@ -4,6 +4,6 @@
   <Id>cf8e34d2-069c-4669-b976-a813fbf9e28a</Id>
   <Version>2.0</Version>
   <Name>PortTypesInDifNamespaces</Name>
-  <GenerateDTArrayNameByType>false</GenerateDTArrayNameByType>
+  <GenerateDTArrayNameByType>true</GenerateDTArrayNameByType>
   <GenerateNamespaces>true</GenerateNamespaces>
 </ProjectSettings>

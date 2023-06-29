@@ -880,28 +880,18 @@ namespace Test.PlcNext.SystemTests.Features
 				).RunAsyncWithTimeout();
         }
 
-        //    [Scenario]
-        //    public async Task Generate_datatype_worksheet_with_namespaces_explicit()
-        //    {
-        //        await Runner.AddSteps(
-        //            _ => Given_is_the_project("PortTypesInDifNamespaces"),
-        //            _ => When_I_generate_all_metafiles_with_namespaces(),
-        //            _ => Then_the_datatype_worksheet_looks_like_NAME("PortTypesInDifNamespacesDataTypes.dt")
-        //).RunAsyncWithTimeout();
-        //    }
-
-        //[Scenario]
-        //public async Task Generate_datatype_worksheet_without_namespaces_explicit()
-        //{
-        //    await Runner.AddSteps(
-        //        _ => Given_is_the_project("PortTypesInDifNamespaces"),
-        //        _ => When_I_generate_all_metafiles_with_no_namespaces(),
-        //        _ => Then_the_datatype_worksheet_looks_like_NAME("PortTypesInDifNamespacesNoNSDataTypes.dt")
-        //        ).RunAsyncWithTimeout();
-        //}
+        [Scenario]
+        public async Task Generate_datatype_worksheet_with_namespaces_explicit()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PortTypesInDifNamespacesWithNS"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("PortTypesInDifNamespaces", "PortTypesInDifNamespacesDataTypes.dt")
+                ).RunAsyncWithTimeout();
+        }
 
         [Scenario]
-        public async Task Generate_datatype_worksheet_with_namespaces_default()
+        public async Task Generate_datatype_worksheet_with_namespaces_default_old()
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("PortTypesInDifNamespaces"),
@@ -910,25 +900,25 @@ namespace Test.PlcNext.SystemTests.Features
 				).RunAsyncWithTimeout();
         }
 
-    //    [Scenario]
-    //    public async Task Generate_datatype_worksheet_with_namespaces_for_old_array_naming_scheme()
-    //    {
-    //        await Runner.AddSteps(
-    //            _ => Given_is_the_project("PortTypesInDifNamespacesOldProject"),
-    //            _ => When_I_generate_all_metafiles_with_namespaces(),
-    //            _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("PortTypesInDifNamespaces","PortTypesInDifNamespacesOldProjectDataTypes.dt")
-				//).RunAsyncWithTimeout();
-    //    }
+        [Scenario]
+        public async Task Generate_datatype_worksheet_with_namespaces_for_old_array_naming_scheme()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PortTypesInDifNamespacesOldProject"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_datatype_worksheet_for_project_PROJECT_looks_like_NAME("PortTypesInDifNamespaces", "PortTypesInDifNamespacesOldProjectDataTypes.dt")
+                ).RunAsyncWithTimeout();
+        }
 
-    //    [Scenario]
-    //    public async Task Generate_datatype_worksheet_with_namespaces_for_acf()
-    //    {
-    //        await Runner.AddSteps(
-    //            _ => Given_is_the_project("PortTypesInDifNamespacesAcf"),
-    //            _ => When_I_generate_all_metafiles_with_namespaces(),
-    //            _ => Then_the_datatype_worksheet_looks_like_NAME("PortTypesInDifNamespacesAcfDataTypes.dt")
-				//).RunAsyncWithTimeout();
-    //    }
+        [Scenario]
+        public async Task Generate_datatype_worksheet_with_namespaces_for_acf()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("PortTypesInDifNamespacesAcf"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("PortTypesInDifNamespacesAcfDataTypes.dt")
+                ).RunAsyncWithTimeout();
+        }
 
         [Scenario]
         public async Task Generate_datatypes_worksheet_for_StaticString()

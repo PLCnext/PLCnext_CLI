@@ -110,8 +110,6 @@ namespace PlcNext.Common.Tools
         public const string InternalInstallationPathsKey = "__internalstagingprefix__";
 
         //CommandDefinitionContentProvider
-        public const string DatatypeNamespacesArgument = "datatype-namespaces";
-        public const string NoDatatypeNamespacesArgument = "no-datatype-namespaces";
         public const string GenerateDatatypeNamespaces = "generate-namespaces";
 
         //TargetParser

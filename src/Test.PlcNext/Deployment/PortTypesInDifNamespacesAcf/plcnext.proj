@@ -3,4 +3,5 @@
   <Type>acfproject</Type>
   <Version>1.2</Version>
   <Name>PortTypesInDifNamespacesAcf</Name>
+  <GenerateNamespaces>true</GenerateNamespaces>
 </ProjectSettings>
