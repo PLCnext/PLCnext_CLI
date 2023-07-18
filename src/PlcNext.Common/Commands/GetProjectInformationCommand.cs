@@ -70,7 +70,8 @@ namespace PlcNext.Common.Commands
                                                                                                                                         )
                                                                                                                                 )
                                                                                            ),
-                                                    propertiesProvider.ExternalLibraries.Select(p => new CommandResults.Path(p))
+                                                    propertiesProvider.ExternalLibraries.Select(p => new CommandResults.Path(p)),
+                                                    propertiesProvider.GenerateNamespaces
                                                     ),
                 propertiesProvider.Exceptions);
         }

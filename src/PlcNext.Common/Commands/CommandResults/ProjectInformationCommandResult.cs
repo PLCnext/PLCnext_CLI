@@ -20,7 +20,7 @@ namespace PlcNext.Common.Commands.CommandResults
                                                IEnumerable<TargetResult> targets,
                                                IEnumerable<EntityResult> entities,
                                                IEnumerable<UncheckedPath> includePaths,
-                                               IEnumerable<Path> externalLibraries)
+                                               IEnumerable<Path> externalLibraries, bool generateNamespaces)
         {
             Name = name;
             Namespace = ns;
@@ -29,6 +29,7 @@ namespace PlcNext.Common.Commands.CommandResults
             Entities = entities;
             IncludePaths = includePaths;
             ExternalLibraries = externalLibraries;
+            GenerateNamespaces = generateNamespaces;
         }
 
         [JsonProperty(PropertyName = "name")]
@@ -52,6 +53,8 @@ namespace PlcNext.Common.Commands.CommandResults
         [JsonProperty(PropertyName ="externalLibraries")]
         public IEnumerable<Path> ExternalLibraries { get; }
 
+        [JsonProperty(PropertyName = "generateNamespaces")]
+        public bool GenerateNamespaces { get; }
     }
 
     public class EntityResult

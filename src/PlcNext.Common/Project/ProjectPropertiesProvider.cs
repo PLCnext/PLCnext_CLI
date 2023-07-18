@@ -38,6 +38,8 @@ namespace PlcNext.Common.Project
 
         IEnumerable<string> ExternalLibraries { get; }
 
+        bool GenerateNamespaces { get; }
+
         void Initialize(Entity root);
 
         IEnumerable<Exception> Exceptions { get; }
@@ -72,6 +74,7 @@ namespace PlcNext.Common.Project
             SetProjectEntities();
             SetProjectIncludes();
             SetExternalLibraries();
+            SetGenerateNamespaces();
 
             void SetProjectName()
             {
@@ -187,6 +190,11 @@ namespace PlcNext.Common.Project
                 }
                 ExternalLibraries = Enumerable.Empty<string>();
             }
+
+            void SetGenerateNamespaces()
+            {
+                GenerateNamespaces = project.GenerateNamespaces;
+            }
         }
 
         public string ProjectName { get; private set; }
@@ -202,6 +210,8 @@ namespace PlcNext.Common.Project
         public List<IncludePath> IncludePaths { get; private set; }
 
         public IEnumerable<string> ExternalLibraries { get; private set; }
+
+        public bool GenerateNamespaces { get; private set; }
 
         public IEnumerable<Exception> Exceptions { get; private set; }
     }

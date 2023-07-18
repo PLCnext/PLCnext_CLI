@@ -76,5 +76,7 @@ namespace PlcNext.Common.Project
         public IEnumerable<string> ExcludedFiles => this[EntityKeys.ExcludeFilesKey].Select(e => e.Value<string>());
 
         public string CSharpProjectPath => this[EntityKeys.CSharpProjectPath].Value<string>();
+
+        public bool GenerateNamespaces => this[EntityKeys.GenerateDatatypeNamespaces].Value<bool>();
     }
 }
