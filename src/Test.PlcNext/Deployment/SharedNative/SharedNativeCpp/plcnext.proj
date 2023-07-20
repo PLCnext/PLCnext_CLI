@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.phoenixcontact.com/schema/cliproject">
+  <Target>AXCF2152,2022.6.0 (22.6.0.43)</Target>
+  <Version>1.2</Version>
+  <Name>SharedNative</Name>
+  <Type>snproject</Type>
+  <CSharpProjectPath>../SharedNativeCSharp</CSharpProjectPath>
+</ProjectSettings>

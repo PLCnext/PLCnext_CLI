@@ -12,6 +12,8 @@
     <Compile Remove="TestResults\**" />
     <EmbeddedResource Remove="TestResults\**" />
     <None Remove="TestResults\**" />
+    <Compile Remove="Deployment\SharedNative\SharedNativeCSharp\NativeFunctionBlock.cs" />
+    <Compile Remove="Deployment\SharedNative\SharedNativeCSharp\Properties\AssemblyInfo.cs" />
     <None Remove="Deployment\AcfProjectv210\CMakeLists.txt" />
     <None Remove="Deployment\AcfProjectv210\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
     <None Remove="Deployment\AcfProjectv210\How_to_deploy.txt" />
@@ -163,6 +165,8 @@
     <None Remove="Deployment\ProjectWithRedundancyAttribute\src\ProjectWithRedundancyAttributeComponent.hpp" />
     <None Remove="Deployment\ProjectWithRedundancyAttribute\src\ProjectWithRedundancyAttributeProgram.cpp" />
     <None Remove="Deployment\ProjectWithRedundancyAttribute\src\ProjectWithRedundancyAttributeProgram.hpp" />
+    <None Remove="Deployment\SharedNative\SharedNativeCpp\CMakeLists.txt" />
+    <None Remove="Deployment\SharedNative\SharedNativeCSharp\ProjectItems\LibraryDescription.xml" />
     <None Remove="Deployment\StandardAcfProject\CMakeLists.txt" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />
@@ -230,6 +234,8 @@
     <None Remove="Deployment\TestResults\ProgramWithDifferentPortsDataTypesNew.dt" />
     <None Remove="Deployment\TestResults\ProgramWithNestedAndStructInStructDataTypes.dt" />
     <None Remove="Deployment\TestResults\ProjectWithRedundancyAttributeLibrary.meta.cpp" />
+    <None Remove="Deployment\TestResults\SharedNativeArgs.txt" />
+    <None Remove="Deployment\TestResults\SharedNativeWithoutSoArgs.txt" />
     <None Remove="Deployment\TestResults\StandardLibraryWithEngineerVersion.txt" />
     <None Remove="Deployment\TestResults\StandardLibraryWithSavedVersionAndDescription.txt" />
     <None Remove="Deployment\TestResults\StandardLibraryWithSolutionVersion.txt" />
@@ -311,6 +317,10 @@
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespaces\src\PortTypesInDifNamespacesComponent.hpp" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespaces\src\PortTypesInDifNamespacesProgram.cpp" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespaces\src\PortTypesInDifNamespacesProgram.hpp" />
+    <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCpp\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCSharp\NativeFunctionBlock.cs" />
+    <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCSharp\ProjectItems\LibraryDescription.xml" />
+    <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCSharp\Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructComponent.cpp" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructComponent.hpp" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructProgram.cpp" />
@@ -320,6 +330,8 @@
     <EmbeddedResource Include="Deployment\TestResults\PortTypesInDifNamespacesDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\PortTypesInDifNamespacesNoNSDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\PortTypesInDifNamespacesOldProjectDataTypes.dt" />
+    <EmbeddedResource Include="Deployment\TestResults\SharedNativeWithoutSoArgs.txt" />
+    <EmbeddedResource Include="Deployment\TestResults\SharedNativeArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\StandardLibraryWithExternalLib.txt" />
     <EmbeddedResource Include="Deployment\Demo\bin\AXCF2152_20.6.0.12345\Debug\libDemo.so" />
     <EmbeddedResource Include="Deployment\DynamicPorts\CMakeLists.txt" />
@@ -1018,6 +1030,7 @@
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespacesWithNS\plcnext.proj" />
     <EmbeddedResource Include="Deployment\HiddenComponentPort\plcnext.proj" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCpp\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespacesOldProject\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespacesAcf\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespaces\plcnext.proj" />

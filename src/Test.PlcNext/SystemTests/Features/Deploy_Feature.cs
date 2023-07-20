@@ -650,6 +650,32 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_user_was_informed_that_the_deploy_options_are_wrong_combined()
                 ).RunAsyncWithTimeout();
         }
+
+        [Scenario]
+        public async Task Deploy_SharedNative_deploys_so()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("SharedNative"),
+                _ => Given_is_the_working_directory_PATH("SharedNative/SharedNativeCpp"),
+                _ => Given_is_that_the_file_exists("bin\\AXCF2152_22.6.0.43\\Release\\libSharedNative.so"),
+                _ => Given_is_that_the_file_exists("bin\\Common\\SharedNative.dll"),
+                _ => When_I_deploy(new DeployCommandArgs { }),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("SharedNativeArgs.txt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Deploy_SharedNative_without_deploying_so()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("SharedNative"),
+                _ => Given_is_the_working_directory_PATH("SharedNative/SharedNativeCpp"),
+                _ => Given_is_that_the_file_exists("bin\\AXCF2152_22.6.0.43\\Release\\libSharedNative.so"),
+                _ => Given_is_that_the_file_exists("bin\\Common\\SharedNative.dll"),
+                _ => When_I_deploy(new DeployCommandArgs { ExcludedFiles = new[] { "*.so"} }),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("SharedNativeWithoutSoArgs.txt")
+                ).RunAsyncWithTimeout();
+        }
     }
 
     public class DeployCommandArgs

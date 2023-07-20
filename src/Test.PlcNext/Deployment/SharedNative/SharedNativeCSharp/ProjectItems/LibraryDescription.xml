@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Library Description="SharedNative">
+  <ToolboxCategories>
+    <!--<ToolboxCategory Id="Category1ID" Name="Category1 Name"/>-->
+    <!--<ToolboxCategory Id="Category2ID" Name="Category2 Name"/>-->
+  </ToolboxCategories>
+  <ProgramOrganizationUnits>
+    <!--<ProgramOrganizationUnit Name="POUName1" ToolboxCategoryId="Category1ID" Description="Text describing the POU1" />-->
+    <!--<ProgramOrganizationUnit Name="POUName2" ToolboxCategoryId="Category2ID" Description="Text describing the POU2" />-->
+  </ProgramOrganizationUnits>
+</Library>

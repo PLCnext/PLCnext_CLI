@@ -120,6 +120,9 @@ namespace PlcNext.Common.Build
 
             void WriteLibraryFile(StreamWriter writer)
             {
+                if (project.ExcludedFiles.Where(s => projectLibraries.Values.FirstOrDefault().Parent.Files(s).Any()).Any())
+                    return;
+
                 foreach (TargetEntity target in projectLibraries.Keys.Select(TargetEntity.Decorate))
                 {
                     VirtualFile copiedLibrary = projectFileEntity

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project InitialTargets="PLCnextMain" ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid></ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharedNative</RootNamespace>
+    <AssemblyName>SharedNative</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>eCLR3.3</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputPath>Cli</OutputPath>
+    <!-- This entry fixes the issue of build warning that System.Core reference could not be added, which is added implicitly by the build system. -->
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>Cli\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>Cli\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="ProjectItems\LibraryDescription.xml" />
+    <Content Include="Cli\*-template*.h" />
+    <Content Include="Cli\*-template.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="eclrlib" />
+    <Reference Include="pcoslib" />
+    <Reference Include="IecEngineering" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(PLCNEXT_TOOLCHAIN_INSTALLDIR)\eCLR\eCLR-Programming-Reference.chm">
+      <Link>Documentation\eCLR-Programming-Reference.chm</Link>
+    </None>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Help\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <!--Disable fast-up-to-date-check to execute the AfterBuild-Steps again when they have been failed before-->
+  <PropertyGroup>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Build templates for the native interfaces -->
+    <CreateNativeInterfaces>true</CreateNativeInterfaces>
+    <!-- Build the Firmware library for PLCnext Engineer (*.pcwlx) -->
+    <CreateEngineeringLibrary>false</CreateEngineeringLibrary>
+    <PLCnCLIProjectType>snproject</PLCnCLIProjectType>
+    <EclrProjectName>SharedNative</EclrProjectName>
+    <MinCliVersion>22.3.0</MinCliVersion>
+  </PropertyGroup>
+
+  <Target Name="PLCnextMain">
+    <Error Text="PLCnext toolchain file PLCnext.targets is missing. Reinstall the PLCnCLI!" Condition="!Exists('$(PLCNEXT_TOOLCHAIN_INSTALLDIR)\eCLR\PLCnext.targets')" />
+    <CallTarget Targets="CheckPLCnextTools" Condition="Exists('$(PLCNEXT_TOOLCHAIN_INSTALLDIR)\eCLR\PLCnext.targets')" />
+  </Target>
+
+  <Import Project="$(PLCNEXT_TOOLCHAIN_INSTALLDIR)\eCLR\PLCnext.targets" />
+  
+
+</Project>

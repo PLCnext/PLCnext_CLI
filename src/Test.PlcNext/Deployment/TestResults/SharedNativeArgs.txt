@@ -1,0 +1,4 @@
+﻿/out "bin\SharedNative.pcwlx"
+/id 89b2c2bc-b296-4ab4-a057-b6add1e37138
+/eclrnativelibfolder ".*\AXCF2152_22.6.0.43,AssemblyName=SharedNative,FolderName=AXCF2152_22.6.0,DeviceProfileType=AXCF2152,DeviceProfileVersion=2022.6.0,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/file "PrecompiledLibrary:bin\Common\SharedNative.dll,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:bin"
