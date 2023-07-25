@@ -162,6 +162,12 @@
       "items": {
         "$ref": "#/definitions/Path"
       }
+    },
+    "generateNamespaces": {
+      "type": [
+        "boolean",
+        "null"
+      ]
     }
   },
   "required": [
@@ -171,6 +177,7 @@
     "targets",
     "entities",
     "includePaths",
-    "externalLibraries"
+    "externalLibraries",
+    "generateNamespaces"
   ]
 }
