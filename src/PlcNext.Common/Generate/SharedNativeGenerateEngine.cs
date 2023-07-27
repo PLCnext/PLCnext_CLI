@@ -99,7 +99,7 @@ namespace PlcNext.Common.Generate
             }
             if (!EclrVersionIsSupported(userInterface.Information))
             {
-                throw new FormattableException("This version of the PLCnCLI supports only eCLR version 3.3.0");
+                throw new FormattableException("This version of the PLCnCLI supports only eCLR versions 3.3.0 and 3.4.0");
             }
             string niBuilderOutputPath = GetProjectOutputPath(userInterface.Information);
 
@@ -388,7 +388,8 @@ namespace PlcNext.Common.Generate
             Match match = Regex.Match(information, @"@begineclrversion(?<eclrversion>.*)@endeclrversion");
             if (match.Success)
             {
-                return match.Groups["eclrversion"].Value.Equals("eCLR3.3", StringComparison.OrdinalIgnoreCase);
+                return match.Groups["eclrversion"].Value.Equals("eCLR3.3", StringComparison.OrdinalIgnoreCase) ||
+                    match.Groups["eclrversion"].Value.Equals("eCLR3.4", StringComparison.OrdinalIgnoreCase);
             }
             return false;
         }

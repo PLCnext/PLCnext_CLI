@@ -80,7 +80,7 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No fields definied for the specified type..
+        ///   Looks up a localized string similar to No fields defined for the specified type..
         /// </summary>
         internal static string CPP0001 {
             get {

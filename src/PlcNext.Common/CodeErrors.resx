@@ -122,7 +122,7 @@
 {2}</value>
   </data>
   <data name="CPP0001" xml:space="preserve">
-    <value>No fields definied for the specified type.</value>
+    <value>No fields defined for the specified type.</value>
   </data>
   <data name="CPP0002" xml:space="preserve">
     <value>The type is already defined in the same namespace.</value>
