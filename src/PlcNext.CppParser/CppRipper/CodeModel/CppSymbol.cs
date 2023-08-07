@@ -109,6 +109,10 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                     if ((ns + "::" + parentName).EndsWith(prefix, StringComparison.OrdinalIgnoreCase))
                     {
                         string tempValue = symbols.Where(s => s.Name == elementName).FirstOrDefault()?.Value;
+                        if (string.IsNullOrEmpty(tempValue))
+                        {
+                            tempValue = elementName;
+                        }
                         resolvedString += tempValue + " ";
                     }
                     else
