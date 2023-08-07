@@ -45,8 +45,10 @@ namespace PlcNext.Common.Deploy
             {
                 return;
             }
+            
+            string csharpProjectPath = Path.Combine(project.Path, project.CSharpProjectPath);
 
-            if (fileSystem.DirectoryExists(Constants.CSharpBinFolderName, project.CSharpProjectPath))
+            if (fileSystem.DirectoryExists(Constants.CSharpBinFolderName, csharpProjectPath))
             {
                 CommandEntity command = CommandEntity.Decorate(dataModel);
                 string basePath = project.Path;
@@ -71,7 +73,7 @@ namespace PlcNext.Common.Deploy
                 void CopyDlls()
                 {
                     VirtualDirectory sourceDirectory = fileSystem.GetDirectory(Constants.CSharpBinFolderName,
-                                                                               Path.Combine(basePath, project.CSharpProjectPath),
+                                                                               csharpProjectPath,
                                                                                false);
                     foreach (VirtualFile deployableFile in sourceDirectory.Files("*.dll"))
                     {
@@ -91,7 +93,7 @@ namespace PlcNext.Common.Deploy
                 void CopyProjectItems()
                 {
                     VirtualDirectory sourceDirectory = fileSystem.GetDirectory(Constants.CSharpProjectItemsFolderName,
-                                                                         Path.Combine(basePath, project.CSharpProjectPath), false);
+                                                                               csharpProjectPath, false);
 
                     foreach (VirtualFile deployableFile in sourceDirectory.Files(searchRecursive: true))
                     {
@@ -112,13 +114,12 @@ namespace PlcNext.Common.Deploy
 
                 void CopyHelpFiles()
                 {
-                    if (!fileSystem.DirectoryExists(Constants.CSharpHelpFolderName,
-                                                                         Path.Combine(basePath, project.CSharpProjectPath)))
+                    if (!fileSystem.DirectoryExists(Constants.CSharpHelpFolderName, csharpProjectPath))
                     {
                         return;
                     }
                     VirtualDirectory sourceDirectory = fileSystem.GetDirectory(Constants.CSharpHelpFolderName,
-                                                                         Path.Combine(basePath, project.CSharpProjectPath), false);
+                                                                               csharpProjectPath, false);
                     
                     const string helpFileSuffix = "FBFun.chm";
                     List<string> usedCultures = new List<string>();
