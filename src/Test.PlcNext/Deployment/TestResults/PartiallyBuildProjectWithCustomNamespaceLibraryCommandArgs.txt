@@ -1,9 +1,9 @@
 ﻿/out "bin\RNS_ST_Update_Proj_Targets_2237.pcwlx"
 /id d2a4142f-5069-4640-b696-2e3f90899ef3
 /plcnextnativelibfolder ".*\AXCF2152_19.0.0.17548,FolderName=AXCF2152_19.0.0,DeviceProfileType=AXCF2152,DeviceProfileVersion=2019.0.0,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
-/file "MetaLibrary:bin\AXCF2152_19.0.0.17548\Release\RNS_ST_Update_Proj_Targets_2237.libmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
-/file "MetaTypes:bin\AXCF2152_19.0.0.17548\Release\RNS_ST_Update_Proj_Targets_2237.typemeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/file "MetaLibrary:bin\config\RNS_ST_Update_Proj_Targets_2237.libmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/file "MetaTypes:bin\config\RNS_ST_Update_Proj_Targets_2237.typemeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
 /folder "Logical Elements/Component1,FolderType=MetaComponentFolder,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
-/file "MetaComponent:bin\AXCF2152_19.0.0.17548\Release\Component1\Component1.compmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:Component1"
+/file "MetaComponent:bin\config\Component1\Component1.compmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:Component1"
 /folder "Logical Elements/Component1/CppProgram11,FolderType=MetaProgramFolder,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
-/file "MetaProgram:bin\AXCF2152_19.0.0.17548\Release\Component1\CppProgram11\CppProgram11.progmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:Component1/CppProgram11
+/file "MetaProgram:bin\config\Component1\CppProgram11\CppProgram11.progmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:Component1/CppProgram11

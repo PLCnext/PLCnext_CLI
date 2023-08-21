@@ -121,6 +121,7 @@ namespace Test.PlcNext.SystemTests.Features
                 {
                     LibraryLocation = "foo",
                     MetaFileDirectory = Path.Combine("ba", "Meta"),
+                    MetaFileOutputDirectory = Path.Combine("..", "..", "config"),
                     OutputDirectory = "out",
                     BuildType = "Debug"
                 }),
@@ -182,6 +183,7 @@ namespace Test.PlcNext.SystemTests.Features
                 {
                     Targets = new[] { "AXCF2152,1.0" },
                     MetaFileDirectory = Path.Combine("ba", "Meta"),
+                    MetaFileOutputDirectory = Path.Combine("..", "..", "config"),
                     OutputDirectory = "out",
                     Files = new []{ "foo/AXCF2152_1.0.0.12345/Release/libDemo.so|.|axcf2152,1.0" },
                     BuildType = "Debug"
@@ -684,6 +686,8 @@ namespace Test.PlcNext.SystemTests.Features
         public string LibraryLocation { get; internal set; }
 
         public string MetaFileDirectory { get; internal set; }
+        
+        public string MetaFileOutputDirectory { get; internal set; }
 
         public string OutputDirectory { get; internal set; }
 

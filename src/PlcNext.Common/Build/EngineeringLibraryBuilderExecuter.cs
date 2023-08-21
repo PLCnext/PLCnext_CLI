@@ -106,14 +106,19 @@ namespace PlcNext.Common.Build
             {
                 TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
                 VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
+                //VirtualDirectory configDirectory = deployDirectory.Parent.Parent.Directory("config");
+                VirtualDirectory configDirectory = DeployEntity.Decorate(target).ConfigDirectory;
 
-                if (!fileSystem.FileExists(Path.Combine(deployDirectory.FullName, $"{projectName}.libmeta")))
+                if (!fileSystem.FileExists(Path.Combine(configDirectory.FullName, $"{projectName}.libmeta")))
                 {
-                    throw new MetaLibraryNotFoundException(deployDirectory.FullName);
+                    if (!fileSystem.FileExists(Path.Combine(deployDirectory.FullName, $"{projectName}.libmeta")))
+                    {
+                        throw new MetaLibraryNotFoundException(configDirectory.FullName +" or "+deployDirectory.FullName);
+                    }
                 }
 
-                PatchLibmeta(fileSystem.GetFile(Path.Combine(deployDirectory.FullName, $"{projectName}.libmeta")));
-                IEnumerable<VirtualFile> metaFiles = deployDirectory.Files(searchRecursive: true);
+                PatchLibmeta(fileSystem.GetFile(Path.Combine(configDirectory.FullName, $"{projectName}.libmeta")));
+                IEnumerable<VirtualFile> metaFiles = configDirectory.Files(searchRecursive: true).Union(deployDirectory.Files(searchRecursive: true));
 
                 IEnumerable<Entity> componentsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
                                                                                      .Where(e => e.Type.Equals("component", StringComparison.OrdinalIgnoreCase))
@@ -122,7 +127,7 @@ namespace PlcNext.Common.Build
                                                                                      .ToArray();
                 if (componentsWithoutMetaFile.Any())
                 {
-                    throw new MetaFileNotFoundException(deployDirectory.FullName, $"{componentsWithoutMetaFile.First().Name}.{Constants.CompmetaExtension}");
+                    throw new MetaFileNotFoundException(configDirectory.FullName, $"{componentsWithoutMetaFile.First().Name}.{Constants.CompmetaExtension}");
                 }
 
                 IEnumerable<Entity> programsWithoutMetaFile = projectTemplateEntity.EntityHierarchy
@@ -132,7 +137,7 @@ namespace PlcNext.Common.Build
                                                                                    .ToArray();
                 if (programsWithoutMetaFile.Any())
                 {
-                    throw new MetaFileNotFoundException(deployDirectory.FullName, $"{programsWithoutMetaFile.First().Name}.{Constants.ProgmetaExtension}");
+                    throw new MetaFileNotFoundException(configDirectory.FullName, $"{programsWithoutMetaFile.First().Name}.{Constants.ProgmetaExtension}");
                 }
             }
 
@@ -309,9 +314,11 @@ namespace PlcNext.Common.Build
 
             void WriteMetadata(StreamWriter writer)
             {
-                VirtualDirectory deployDirectory = DeployEntity.Decorate(projectLibraries.Keys.First()).DeployDirectory;
+                //VirtualDirectory deployDirectory = DeployEntity.Decorate(projectLibraries.Keys.First()).DeployDirectory;
+                VirtualDirectory configDirectory = DeployEntity.Decorate(projectLibraries.Keys.First()).ConfigDirectory;
                 HashSet<VirtualDirectory> createDirectories = new HashSet<VirtualDirectory>();
-                foreach (VirtualFile metaFile in deployDirectory.Files(searchRecursive: true))
+                foreach (VirtualFile metaFile in configDirectory.Files(searchRecursive: true))
+                             //.Union(deployDirectory.Files(searchRecursive: true)))
                 {
                     string destinationPath;
                     string fileType;
@@ -349,7 +356,7 @@ namespace PlcNext.Common.Build
                                                    MakeRelative(metaFile.FullName),
                                                    guidFactory.Create().ToString("D", CultureInfo.InvariantCulture),
                                                    destinationPath));
-                    processedMetaFiles.Add(metaFile.GetRelativePath(deployDirectory));
+                    processedMetaFiles.Add(metaFile.GetRelativePath(configDirectory));
                 }
 
                 void CreateComponentDirectory(VirtualDirectory componentDirectory)
@@ -486,7 +493,7 @@ namespace PlcNext.Common.Build
             void CheckMetaFiles(Entity target)
             {
                 TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
-                VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
+                VirtualDirectory deployDirectory = DeployEntity.Decorate(project).ConfigDirectory;
 
                 if (!fileSystem.FileExists(Path.Combine(deployDirectory.FullName, $"{projectName}.libmeta")))
                 {

@@ -1452,7 +1452,14 @@ namespace Test.PlcNext.SystemTests.Tools
 
             if (!string.IsNullOrEmpty(deployArgs.MetaFileDirectory))
             {
-                files.Add($"{deployArgs.MetaFileDirectory}/*|.");
+                if (!string.IsNullOrEmpty(deployArgs.MetaFileOutputDirectory))
+                {
+                    files.Add($"{deployArgs.MetaFileDirectory}/*|{deployArgs.MetaFileOutputDirectory}");
+                }
+                else
+                {
+                    files.Add($"{deployArgs.MetaFileDirectory}/*|.");
+                }
             }
 
             if (!string.IsNullOrEmpty(deployArgs.OutputDirectory))

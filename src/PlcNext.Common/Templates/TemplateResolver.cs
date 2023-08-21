@@ -113,6 +113,8 @@ namespace PlcNext.Common.Templates
                         return ForeachSequence();
                     case "NO-DUPLICATE-LINES":
                         return RemoveDuplicateLinesSequence();
+                    case "PLAIN":
+                        return content;
                     default:
                         throw new UnrecognizedControlSequenceException(sequence);
                 }

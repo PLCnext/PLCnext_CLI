@@ -28,5 +28,7 @@ namespace PlcNext.Common.Deploy
         }
 
         public VirtualDirectory DeployDirectory => FileEntity.Decorate(this[EntityKeys.InternalDeployPathKey]).Directory;
+        
+        public VirtualDirectory ConfigDirectory => FileEntity.Decorate(this[EntityKeys.InternalConfigPathKey]).Directory;
     }
 }

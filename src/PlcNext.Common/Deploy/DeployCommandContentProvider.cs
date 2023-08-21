@@ -36,7 +36,9 @@ namespace PlcNext.Common.Deploy
             return (key == Constants.OutputArgumentName &&
                     CommandEntity.Decorate(owner).CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase)) ||
                    (key == EntityKeys.InternalDeployPathKey &&
-                   TargetEntity.Decorate(owner).HasFullName);
+                    TargetEntity.Decorate(owner).HasFullName)||
+                   (key == EntityKeys.InternalConfigPathKey &&
+                    TargetEntity.Decorate(owner).HasFullName);
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -46,6 +48,10 @@ namespace PlcNext.Common.Deploy
                 case EntityKeys.InternalDeployPathKey:
                     VirtualDirectory deployRoot = GetDeployRoot();
                     return owner.Create(key, deployRoot.FullName, deployRoot);
+         
+                case EntityKeys.InternalConfigPathKey:
+                    VirtualDirectory configDirectory = GetConfigDirectory();
+                    return owner.Create(key, configDirectory.FullName, configDirectory);
 
                 case Constants.OutputArgumentName:
                 default:
@@ -78,7 +84,14 @@ namespace PlcNext.Common.Deploy
                 VirtualDirectory deployRoot = outputRoot.Directory(targetEntity.FullName.Replace(',', '_'),
                                                                    buildEntity.BuildType);
                 return deployRoot;
-            }            
+            }       
+            VirtualDirectory GetConfigDirectory()
+            {
+                Entity project = owner.Root;
+                CommandEntity commandOrigin = CommandEntity.Decorate(owner.Origin);
+                VirtualDirectory configDirectory = fileSystem.GetDirectory(commandOrigin.Output, project.Path).Directory("config");
+                return configDirectory;
+            }       
         }
     }
 }

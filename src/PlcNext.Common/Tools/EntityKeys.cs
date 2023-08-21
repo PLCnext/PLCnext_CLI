@@ -100,6 +100,7 @@ namespace PlcNext.Common.Tools
 
         //DeployCommandContentProvider
         public const string InternalDeployPathKey = "__internaldeploypath__";
+        public const string InternalConfigPathKey = "__internalconfigpath__";
         public const string ExcludeFilesKey = "excludefiles";
 
         //CMakeBuildContentProvider
