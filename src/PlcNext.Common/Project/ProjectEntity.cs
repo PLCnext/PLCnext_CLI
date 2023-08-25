@@ -44,10 +44,14 @@ namespace PlcNext.Common.Project
                                                           : new MutableProjectSettings();
 
         public Version Version => HasValue<Version>()
-                                      ? Value<Version>()
-                                      : HasContent(EntityKeys.ProjectVersionKey)
-                                          ? this[EntityKeys.ProjectVersionKey].Value<Version>()
-                                          : new Version(1, 0);
+            ? Value<Version>()
+            : HasContent(EntityKeys.ProjectVersionKey)
+                ? this[EntityKeys.ProjectVersionKey].Value<Version>()
+                : new Version(1, 0);
+
+        public Version ToolProjectVersion => HasContent(EntityKeys.ToolProjectVersionKey)
+                ? this[EntityKeys.ToolProjectVersionKey].Value<Version>()
+                : new Version(1, 0);
 
         public IEnumerable<Entity> Targets => HasContent(EntityKeys.TargetsKey)
                                                   ? this[EntityKeys.TargetsKey]

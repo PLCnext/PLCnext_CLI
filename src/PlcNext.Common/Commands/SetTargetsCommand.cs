@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Text;
 using PlcNext.Common.Project;
 using PlcNext.Common.Project.Persistence;
+using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.FileSystem;
@@ -37,6 +38,11 @@ namespace PlcNext.Common.Commands
         protected override int Execute(SetTargetsCommandArgs args, ChangeObservable observable)
         {
             ProjectEntity project = ProjectEntity.Decorate(entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root);
+            if (project.Version.Major > project.ToolProjectVersion.Major)
+            {
+                throw new ProjectVersionTooHighException($"{project.ToolProjectVersion}", $"{project.Version}");
+            }
+            
             FileEntity fileEntity = FileEntity.Decorate(project);
             if (!project.Settings.IsPersistent)
                 throw new TargetNotSettableForProjectException();

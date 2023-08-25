@@ -256,6 +256,9 @@
   <data name="RelationshipTypeNotFound" xml:space="preserve">
     <value>The specified {0} '{1}' was not found. Available types are:{2}</value>
   </data>
+  <data name="ProjectVersionMismatch" xml:space="preserve">
+    <value>The project was created with a higher version ({0}) of PLCnCli than the current ({1}) and can not be processed. Please update the PLCnCli toolchain</value>
+  </data>
   <data name="ControlSequenceEndTagNotFound" xml:space="preserve">
     <value>There is a control sequence '{0}' without the matching end tag 'end-{0}'.</value>
   </data>

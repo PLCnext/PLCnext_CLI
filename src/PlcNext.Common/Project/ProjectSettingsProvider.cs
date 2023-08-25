@@ -31,6 +31,7 @@ namespace PlcNext.Common.Project
     {
         private readonly ExecutionContext executionContext;
         private readonly IGuidFactory guidFactory;
+        private readonly Version toolProjectVersion = new(3, 0);
         public string IdentifierKey => "ProjectSettingsIdentifier";
 
         private readonly IFileSystem fileSystem;
@@ -105,7 +106,8 @@ namespace PlcNext.Common.Project
                     key == EntityKeys.ProjectIdKey ||
                     key == EntityKeys.GenerateDTArrayNameByTypeKey) ||
                     key == EntityKeys.GenerateDatatypeNamespaces ||
-                    key == EntityKeys.CSharpProjectPath;
+                   key == EntityKeys.CSharpProjectPath||
+                   key == EntityKeys.ToolProjectVersionKey;
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -120,6 +122,8 @@ namespace PlcNext.Common.Project
                     return GetProjectSettings();
                 case EntityKeys.ProjectVersionKey:
                     return GetProjectVersion();
+                case EntityKeys.ToolProjectVersionKey:
+                    return GetToolProjectVersion();
                 case EntityKeys.ProjectIdKey:
                     return GetProjectId();
                 case EntityKeys.GenerateDTArrayNameByTypeKey:
@@ -193,6 +197,11 @@ namespace PlcNext.Common.Project
             {
                 ProjectDescription description = owner.Value<ProjectDescription>();
                 return owner.Create(key, Version.Parse(description.Settings.Version));
+            }
+            
+            Entity GetToolProjectVersion()
+            {
+                return owner.Create(key, toolProjectVersion.ToString(), toolProjectVersion);
             }
 
             Entity GetGenerateDTArrayNameByTypeFlag()

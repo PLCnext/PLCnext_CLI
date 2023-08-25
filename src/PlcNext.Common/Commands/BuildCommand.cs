@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac.Features.Indexed;
 using PlcNext.Common.DataModel;
+using PlcNext.Common.Project;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.SDK;
@@ -37,6 +38,12 @@ namespace PlcNext.Common.Commands
             string buildProperties = string.Join(" ", args.BuildProperties.Select(Unescape));
 
             Entity rootEntity = entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root;
+            ProjectEntity project = ProjectEntity.Decorate(rootEntity);
+            if (project.Version.Major > project.ToolProjectVersion.Major)
+            {
+                throw new ProjectVersionTooHighException($"{project.ToolProjectVersion}", $"{project.Version}");
+            }
+            
             TemplateEntity templateEntity = TemplateEntity.Decorate(rootEntity);
 
             BuildInformation buildInfo = new BuildInformation(rootEntity, args.BuildType, args.Configure, args.NoConfigure, buildProperties, args.Output);

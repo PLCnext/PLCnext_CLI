@@ -86,6 +86,8 @@ namespace PlcNext.Common.Tools
         //ProjectSettingsProvider
         public const string ProjectSettingsKey = "__internalprojectsettings__";
         public const string ProjectVersionKey = "__internalprojectversion__";
+
+        public const string ToolProjectVersionKey = "toolprojectversion";
         public const string ProjectIdKey = "__internalprojectid__";
         public const string TargetsKey = "targets";
         public const string ValidatedTargetsKey = "validatedtargets";

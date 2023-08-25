@@ -15,6 +15,7 @@ using Autofac.Features.Indexed;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Deploy;
 using PlcNext.Common.Generate;
+using PlcNext.Common.Project;
 using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.DynamicCommands;
@@ -136,6 +137,13 @@ namespace PlcNext.Common.Templates
             if (generateCommands.Contains(definition))
             {
                 Entity dataModel = entityFactory.Create(definition.Name, definition);
+                Entity root = dataModel.Root;
+                ProjectEntity project = ProjectEntity.Decorate(root);
+                if (project.Version.Major > project.ToolProjectVersion.Major)
+                {
+                    throw new ProjectVersionTooHighException($"{project.ToolProjectVersion}", $"{project.Version}");
+                }
+
                 userInterface.WriteInformation(definition.Name == "all"
                                                    ? $"Generating all files for {dataModel.Root.Path}."
                                                    : $"Generating all files with the '{definition.Name}' " +
@@ -145,8 +153,6 @@ namespace PlcNext.Common.Templates
                 TemplateEntity templateEntity = TemplateEntity.Decorate(dataModel.Root);
                 await templateFileGenerators[templateEntity.Template.generateEngine].GenerateFiles(dataModel.Root, definition.Name, singleValueArgument.Value, singleValueArgument.IsDefined, observable)
                                            .ConfigureAwait(false);
-
-                Entity root = dataModel.Root;
                 TemplateDescription template = TemplateEntity.Decorate(root).Template;
                 foreach (templateGenerateStep generateStep in template.GenerateStep?.Where(s => !String.IsNullOrEmpty(s.identifier)) ?? Enumerable.Empty<templateGenerateStep>())
                 {
@@ -176,8 +182,13 @@ namespace PlcNext.Common.Templates
             if (definition == deployCommand)
             {
                 Entity dataModel = entityFactory.Create(definition.Name, definition);
-                TemplateEntity templateEntity = TemplateEntity.Decorate(dataModel.Root);
+                ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
+                if (project.Version.Major > project.ToolProjectVersion.Major)
+                {
+                    throw new ProjectVersionTooHighException($"{project.ToolProjectVersion}", $"{project.Version}");
+                }
                 
+                TemplateEntity templateEntity = TemplateEntity.Decorate(dataModel.Root);
                 deployServices[templateEntity.Template.deployEngine].DeployFiles(dataModel);
 
                 Entity root = dataModel.Root;
