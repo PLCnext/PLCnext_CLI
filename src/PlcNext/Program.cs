@@ -111,11 +111,11 @@ namespace PlcNext
                                               Console.WriteLine(m);
                                               log.LogInformation(m);
                                           })
-                                         .AddPotentialLocation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                         .AddPotentialLocation(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.DoNotVerify),
                                                                             "plcncli.Common"),new Version(19,0))
                                          .AddMigrationFile("settings.xml")
                                          .AddMigrationFile("sdk-properties.xml")
-                                         .SetMigrationDestination(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                         .SetMigrationDestination(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.DoNotVerify),
                                                                                (Assembly.GetEntryAssembly()??Assembly.GetExecutingAssembly()).GetName().Name))
                                          .AddConversionStep<ConversionFrom190>()
                                          .Execute();

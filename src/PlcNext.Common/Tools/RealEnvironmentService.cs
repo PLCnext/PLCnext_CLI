@@ -97,7 +97,7 @@ namespace PlcNext.Common.Tools
     public class EnvironmentPathNames : IEnvironmentPathNames
     {
         public string this[string key] => Enum.TryParse(key, true, out Environment.SpecialFolder folder)
-                                              ? Environment.GetFolderPath(folder)
+                                              ? Environment.GetFolderPath(folder, Environment.SpecialFolderOption.DoNotVerify)
                                               : Assembly.GetEntryAssembly().GetName().Name;
 
         public bool ContainsKey(string key)
