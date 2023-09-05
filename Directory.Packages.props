@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ItemGroup>
+    <PackageVersion Include="Autofac" Version="[8.0.0]" />
+    <PackageVersion Include="Antlr4.Runtime.Standard" Version="[4.13.1]" />
+    <PackageVersion Include="CommandLineParser" Version="[2.9.1]" />
+    <PackageVersion Include="FluentAssertions" Version="[6.12.0]" />
+    <PackageVersion Include="JunitXml.TestLogger" Version="[3.0.134]" />
+    <PackageVersion Include="LightBDD.XUnit2" Version="[3.7.0]" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="[3.8.0]" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="[7.0.4]" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="[17.8.0]" />
+    <PackageVersion Include="Mono.Cecil" Version="[0.11.5]" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="[3.1.1]" />
+    <PackageVersion Include="MSTest.TestFramework" Version="[3.1.1]" />
+    <PackageVersion Include="NCalcSync" Version="[3.8.0-g2ec2a48a42]" />
+    <PackageVersion Include="Newtonsoft.Json" Version="[13.0.3]" />
+    <PackageVersion Include="NSubstitute" Version="[5.1.0]" />
+    <PackageVersion Include="NuGet.Versioning" Version="[6.8.0]" />
+    <PackageVersion Include="PhoenixContact.CleanCodeAnalyzer" Version="[1.0.565]" />
+    <PackageVersion Include="SharpCompress" Version="[0.36.0]" />
+    <PackageVersion Include="SharpZipLib" Version="[1.4.2]" />
+    <PackageVersion Include="Serilog" Version="[3.1.1]" />
+    <PackageVersion Include="Serilog.Formatting.Compact" Version="[1.1.0]" />
+    <PackageVersion Include="Serilog.Sinks.Async" Version="[1.5.0]" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="[5.0.0]" />
+    <PackageVersion Include="StyleCop.Analyzers" Version="[1.1.118]" />
+    <PackageVersion Include="System.CodeDom" Version="[7.0.0]" />
+    <PackageVersion Include="System.Management" Version="[7.0.2]" />
+    <PackageVersion Include="System.Reactive" Version="[6.0.0]" />
+    <PackageVersion Include="System.Reflection.Emit" Version="[4.7.0]" />
+    <PackageVersion Include="xunit" Version="[2.6.6]" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="[2.5.6]" />
+    <PackageVersion Include="XunitXml.TestLogger" Version="[3.1.17]" />
+    <PackageVersion Include="ZstdSharp.Port" Version="[0.7.4]" />
+ </ItemGroup>
+</Project>
