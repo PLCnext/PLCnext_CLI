@@ -1081,6 +1081,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="XunitXml.TestLogger" Version="3.0.70" />
+    <PackageReference Include="JunitXml.TestLogger" Version="3.0.134" />
   </ItemGroup>
 
   <ItemGroup>
@@ -1104,15 +1105,5 @@
     <EmbeddedResource Include="Deployment\Defect_4334\src\Defect_4334Component.cpp" />
     <EmbeddedResource Include="Deployment\Defect_4334\src\Defect_4334Program.cpp" />
   </ItemGroup>
-  
-  <Choose>
-    <When Condition="Exists('..\Tools\JUnitLogger\JUnit.TestLogger.dll')">
-      <ItemGroup>
-        <Reference Include="JUnit.TestLogger">
-          <HintPath>..\Tools\JUnitLogger\JUnit.TestLogger.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
 
 </Project>
