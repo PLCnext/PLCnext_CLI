@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
+    <PackageReference Include="Autofac" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="System.ServiceModel.Primitives" />
   </ItemGroup>
 
   <ItemGroup>

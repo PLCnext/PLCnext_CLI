@@ -34,7 +34,6 @@
     <When Condition="'$(FxCopAnalysisEnabled)' == 'true'">
       <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-          <Version>2.9.4</Version>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -46,7 +45,6 @@
     <When Condition="'$(StyleCopAnalysisEnabled)' == 'true'">
       <ItemGroup>
         <PackageReference Include="StyleCop.Analyzers">
-          <Version>1.0.2</Version>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -57,9 +55,7 @@
   <Choose>
     <When Condition="'$(CleanCodeAnalysisEnabled)' == 'true'">
       <ItemGroup>
-        <PackageReference Include="PhoenixContact.CleanCodeAnalyzer">
-          <Version>1.0.81</Version>
-        </PackageReference>
+        <PackageReference Include="PhoenixContact.CleanCodeAnalyzer" />
       </ItemGroup>  
     </When>
   </Choose>
