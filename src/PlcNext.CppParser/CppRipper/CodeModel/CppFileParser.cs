@@ -9,11 +9,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.IO;
 using PlcNext.Common.Tools.Settings;
 using PlcNext.Common.Tools.UI;
 using PlcNext.CppParser.CppRipper.CodeModel.Parser;
@@ -40,7 +43,20 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             List<CodeSpecificException> codeSpecificExceptions = new();
             List<ParserMessage> messages = new();
             CppStreamParser parser = new();
-            ParseNode root = parser.Parse(file.OpenRead());
+
+            string text;
+            using (TextReader reader = new StreamReader(file.OpenRead()))
+            {
+                text = reader.ReadToEnd();
+            }
+            
+            text = Regex.Replace(text, @"^\s*#(?!define|include)(?:(?!\*/|/\*).)+$", string.Empty, RegexOptions.Compiled | RegexOptions.Multiline);
+            var stream = RecyclableMemoryStreamManager.Instance.GetStream();
+            var bytes = Encoding.UTF8.GetBytes(text);
+            stream.Write(bytes, 0, bytes.Length);
+            stream.Position = 0;
+            
+            ParseNode root = parser.Parse(stream);
             if (!parser.Succeeded)
             {
                 messages.Add(parser.Exception == null

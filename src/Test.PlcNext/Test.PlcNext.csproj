@@ -54,6 +54,11 @@
     <None Remove="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.cpp" />
     <None Remove="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.hpp" />
     <None Remove="Deployment\CMakeArgsFile\CMakeFlags.txt" />
+    <None Remove="Deployment\CppSpecial\CMakeLists.txt" />
+    <None Remove="Deployment\CppSpecial\src\CppSpecialComponent.cpp" />
+    <None Remove="Deployment\CppSpecial\src\CppSpecialComponent.hpp" />
+    <None Remove="Deployment\CppSpecial\src\CppSpecialProgram.cpp" />
+    <None Remove="Deployment\CppSpecial\src\CppSpecialProgram.hpp" />
     <None Remove="Deployment\Demo\bin\AXCF2152_20.6.0.12345\Debug\libDemo.so" />
     <None Remove="Deployment\DuplicatePortName\src1\Program1.cpp" />
     <None Remove="Deployment\DuplicatePortName\src1\Program1.hpp" />
@@ -279,6 +284,11 @@
     <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileComponent.hpp" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.cpp" />
     <EmbeddedResource Include="Deployment\CMakeArgsFile\src\CMakeArgsFileProgram.hpp" />
+    <EmbeddedResource Include="Deployment\CppSpecial\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\CppSpecial\src\CppSpecialComponent.cpp" />
+    <EmbeddedResource Include="Deployment\CppSpecial\src\CppSpecialComponent.hpp" />
+    <EmbeddedResource Include="Deployment\CppSpecial\src\CppSpecialProgram.cpp" />
+    <EmbeddedResource Include="Deployment\CppSpecial\src\CppSpecialProgram.hpp" />
     <EmbeddedResource Include="Deployment\DuplicatePortName\src1\Program1.cpp" />
     <EmbeddedResource Include="Deployment\DuplicatePortName\src1\Program1.hpp" />
     <EmbeddedResource Include="Deployment\DuplicatePortName\src\DuplicatePortNameComponent.cpp" />
@@ -1027,6 +1037,7 @@
     <EmbeddedResource Include="Deployment\ArrayDatatypes\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ArrayDatatypesWithoutDTArrayFlag\plcnext.proj" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\CppSpecial\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespacesWithNS\plcnext.proj" />
     <EmbeddedResource Include="Deployment\HiddenComponentPort\plcnext.proj" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\plcnext.proj" />

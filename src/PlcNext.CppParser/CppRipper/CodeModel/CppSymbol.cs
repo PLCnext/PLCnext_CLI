@@ -117,7 +117,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                     }
                     else
                     {
-                        throw new SymbolResolveException(current, ns + "::" + parentName);
+                        resolvedString += current;
                     }
 
                 }

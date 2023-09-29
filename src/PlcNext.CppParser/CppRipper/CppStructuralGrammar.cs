@@ -48,7 +48,7 @@ namespace PlcNext.CppParser.CppRipper
         {
             generic = (identifier + Delimiter("<") + 
                       Recursive(() => CommaList(Eat(simple_ws)+node+Eat(simple_ws))) + 
-                      Delimiter(">")) |
+                      Delimiter(">") + Opt(identifier_extension)) |
                       (identifier + Delimiter("<") + Delimiter(">"));
             
             comment_set

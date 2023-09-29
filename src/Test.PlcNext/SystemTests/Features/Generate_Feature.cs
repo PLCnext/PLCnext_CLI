@@ -1007,6 +1007,16 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Parse_special_cpp_constructs_without_error()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("CppSpecial"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Then_the_command_was_executed_without_error()
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Generate_no_datatypes_worksheet()
         {
             await Runner.AddSteps(

@@ -112,6 +112,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Parser
             foreach (ParseNode braceGroup in braceGroups.Reverse())
             {
                 ParseNode[] remaining = content.SkipWhile(n => n != braceGroup).Skip(1)
+                                               .Where(n => !braceGroups.Contains(n))
                                                .ToArray();
                 if (remaining.SelectMany(c => c.GetHierarchy())
                              .Count(temp => temp.RuleName == nameof(CppStructuralGrammar.identifier))
