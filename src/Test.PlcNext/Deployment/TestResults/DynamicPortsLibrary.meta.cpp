@@ -27,6 +27,7 @@ using namespace Arp::Plc::Commons::Meta;
                     {
                         // FieldDefinitions:
                         { "fiooba", offsetof(::DynamicPorts::DynamicPortsProgram::nested, fiooba), DataType::Struct, CTN<DynamicPorts::DynamicPortsProgram::nested::supernested>(), sizeof(DynamicPorts::DynamicPortsProgram::nested::supernested), alignof(DynamicPorts::DynamicPortsProgram::nested::supernested), {  }, StandardAttribute::None },
+                        { "enumField", offsetof(::DynamicPorts::DynamicPortsProgram::nested, enumField), DataType::Enum | DataType::Int8, CTN<DynamicPorts::DynamicPortsProgram::MyEnum2>(), sizeof(DynamicPorts::DynamicPortsProgram::MyEnum2), alignof(DynamicPorts::DynamicPortsProgram::MyEnum2), {  }, StandardAttribute::None },
                     }
                 },
                 {   // TypeDefinition: DynamicPorts::DynamicPortsProgram::nested::supernested
@@ -45,6 +46,34 @@ using namespace Arp::Plc::Commons::Meta;
             }
             // End TypeDefinitions
         );
+        {
+            TypeDefinition typeDefinition{DataType::Enum | DataType::Int8, CTN<DynamicPorts::DynamicPortsProgram::MyEnum2>(), sizeof(DynamicPorts::DynamicPortsProgram::MyEnum2), alignof(DynamicPorts::DynamicPortsProgram::MyEnum2), StandardAttribute::None, {}};
+            {
+                FieldDefinition field{"Member1", 0, DataType::Enum | DataType::Int8, String::Empty, sizeof(DynamicPorts::DynamicPortsProgram::MyEnum2), alignof(DynamicPorts::DynamicPortsProgram::MyEnum2), {}, StandardAttribute::None};
+                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<DynamicPorts::DynamicPortsProgram::MyEnum2>::type>(DynamicPorts::DynamicPortsProgram::MyEnum2::Member1));
+                typeDefinition.AddField(std::move(field));
+            }
+            {
+                FieldDefinition field{"Member2", 0, DataType::Enum | DataType::Int8, String::Empty, sizeof(DynamicPorts::DynamicPortsProgram::MyEnum2), alignof(DynamicPorts::DynamicPortsProgram::MyEnum2), {}, StandardAttribute::None};
+                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<DynamicPorts::DynamicPortsProgram::MyEnum2>::type>(DynamicPorts::DynamicPortsProgram::MyEnum2::Member2));
+                typeDefinition.AddField(std::move(field));
+            }
+            typeDomain.AddTypeDefinition(std::move(typeDefinition));
+        }
+        {
+            TypeDefinition typeDefinition{DataType::Enum | DataType::Int8, CTN<DynamicPorts::DynamicPortsProgram::MyEnum1>(), sizeof(DynamicPorts::DynamicPortsProgram::MyEnum1), alignof(DynamicPorts::DynamicPortsProgram::MyEnum1), StandardAttribute::None, {}};
+            {
+                FieldDefinition field{"Member1", 0, DataType::Enum | DataType::Int8, String::Empty, sizeof(DynamicPorts::DynamicPortsProgram::MyEnum1), alignof(DynamicPorts::DynamicPortsProgram::MyEnum1), {}, StandardAttribute::None};
+                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<DynamicPorts::DynamicPortsProgram::MyEnum1>::type>(DynamicPorts::DynamicPortsProgram::MyEnum1::Member1));
+                typeDefinition.AddField(std::move(field));
+            }
+            {
+                FieldDefinition field{"Member2", 0, DataType::Enum | DataType::Int8, String::Empty, sizeof(DynamicPorts::DynamicPortsProgram::MyEnum1), alignof(DynamicPorts::DynamicPortsProgram::MyEnum1), {}, StandardAttribute::None};
+                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<DynamicPorts::DynamicPortsProgram::MyEnum1>::type>(DynamicPorts::DynamicPortsProgram::MyEnum1::Member2));
+                typeDefinition.AddField(std::move(field));
+            }
+            typeDomain.AddTypeDefinition(std::move(typeDefinition));
+        }
     }
 
 } // end of namespace DynamicPorts

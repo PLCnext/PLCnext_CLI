@@ -16,11 +16,29 @@ using namespace Arp::Plc::Commons::Esm;
 class DynamicPortsProgram : public ProgramBase, private Loggable<DynamicPortsProgram>
 {
 public: // typedefs
+
+    //#typeinformation
+    enum class MyEnum1 : Arp::int8 {
+        Member1,
+        Member2 = 100,
+    };
+
+    enum class MyEnum2 : Arp::int8 {
+        Member1,
+        Member2 = 100,
+    };
+
+    enum class MyEnum3 : Arp::int8 {
+        Member1,
+        Member2 = 100,
+    };
+
 	struct nested{
 			struct supernested{
 				Bit schnacken;
 			};
 			supernested fiooba;
+            MyEnum2 enumField;
 		};
 
     //#typeinformation

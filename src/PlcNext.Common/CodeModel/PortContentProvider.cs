@@ -29,6 +29,7 @@ namespace PlcNext.Common.CodeModel
                    (key == EntityKeys.PortStructsKey ||
                     key == EntityKeys.PortAndTypeInformationStructs ||
                     key == EntityKeys.PortEnumsKey ||
+                    key == EntityKeys.PortAndTypeInformationEnumsKey ||
                     key == EntityKeys.PortArraysKey ||
                     key == EntityKeys.VariablePortStringsKey) ||
                    key == EntityKeys.BigDataProjectKey ||
@@ -55,6 +56,10 @@ namespace PlcNext.Common.CodeModel
                 case EntityKeys.PortEnumsKey:
                 {
                     return owner.Create(key, GetPortEnums().Select(c => c.Base));
+                }
+                case EntityKeys.PortAndTypeInformationEnumsKey:
+                {
+                    return owner.Create(key, GetPortAndTypeInformationEnums().Select(c => c.Base));
                 }
                 case EntityKeys.PortArraysKey:
                 {
@@ -103,6 +108,32 @@ namespace PlcNext.Common.CodeModel
                 return GetAllPorts(owner).Concat(GetPortStructures(owner).SelectMany(p => p.Fields))
                                          .Select(f => f.ResolvedType)
                                          .Where(t => t.AsEnum != null)
+                                         .Distinct(new FullNameCodeEntityComparer());
+            }
+
+            IEnumerable<CodeEntity> GetPortAndTypeInformationEnums()
+            {
+                IEnumerable<CodeEntity> GetAllEnums()
+                {
+                    ICodeModel model = owner.Root.Value<ICodeModel>();
+                    IEnumerable<IEnum> enums = model.Enums.Keys;
+                    return enums.Select(s => CodeEntity.Decorate(owner.Create(s?.FullName, s)));
+                }
+
+                bool HasTypeInformationAttribute(CodeEntity enumEntity)
+                {
+                    return enumEntity.AsType != null &&
+                           enumEntity.AsType.HasAttributeWithoutValue(EntityKeys.TypeInformationAttributeKey);
+                }
+
+                HashSet<CodeEntity> typeInfoAttributedEnums =
+                    new(GetAllEnums().Where(HasTypeInformationAttribute),
+                        new FullNameCodeEntityComparer());
+
+                return GetAllPorts(owner).Concat(GetPortAndTypeInformationStructures(owner).SelectMany(p => p.Fields))
+                                         .Select(f => f.ResolvedType)
+                                         .Where(t => t.AsEnum != null)
+                                         .Concat(typeInfoAttributedEnums)
                                          .Distinct(new FullNameCodeEntityComparer());
             }
 
