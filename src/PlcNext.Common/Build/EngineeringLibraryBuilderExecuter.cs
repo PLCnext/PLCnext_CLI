@@ -490,7 +490,7 @@ namespace PlcNext.Common.Build
 
             return result;
 
-            void CheckMetaFiles(Entity target)
+            void CheckMetaFiles(Entity _)
             {
                 TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
                 VirtualDirectory deployDirectory = DeployEntity.Decorate(project).ConfigDirectory;

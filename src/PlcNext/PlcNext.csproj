@@ -10,9 +10,10 @@
     <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
+    <NoWarn>$(NoWarn);CA1812;IL2026;IL2069;IL2075;IL2090;IL2104;IL2118</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

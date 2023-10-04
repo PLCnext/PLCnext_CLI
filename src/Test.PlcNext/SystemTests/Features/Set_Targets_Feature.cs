@@ -36,6 +36,31 @@ namespace Test.PlcNext.SystemTests.Features
         }
         
         [Scenario]
+        public async Task Add_two_targets_to_project_with_targets_adds_target_check_sorted()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("Standard"),
+                _ => When_I_add_the_target("AXCF2152","20.6"),
+                _ => When_I_add_the_target("AXCF2152","2.0"),
+                _ => Then_the_project_supports_the_targets_sorted("AXCF2152,1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)"
+                                                                , "AXCF2152,2.0 LTS (2.0.0.12345 branches/release/2.0.0/ beta)"
+                                                                , "AXCF2152,20.6 LTS (20.6.0.12345 branches/release/20.6.0/ beta)")
+            ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Add_single_target_to_project_with_unsorted_targets_adds_target_check_sorted()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("StandardWithUnsortedTargets"),
+                _ => When_I_add_the_target("AXCF2152", "20.6"),
+                _ => Then_the_project_supports_the_targets_sorted("AXCF2152,1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)"
+                                                                , "AXCF2152,2.0 LTS (2.0.0.12345 branches/release/2.0.0/ beta)"
+                                                                , "AXCF2152,20.6 LTS (20.6.0.12345 branches/release/20.6.0/ beta)")
+            ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Add_single_target_to_project_without_targets_adds_target()
         {
             await Runner.AddSteps(

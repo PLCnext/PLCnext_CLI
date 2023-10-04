@@ -85,7 +85,6 @@ namespace PlcNext.Common.Tools.IO
         /// <summary>
         /// Dispose allocated resources.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "stream")]
         public void Dispose()
         {
             Dispose(true);

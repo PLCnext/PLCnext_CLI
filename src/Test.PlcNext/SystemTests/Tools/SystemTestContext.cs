@@ -277,14 +277,14 @@ namespace Test.PlcNext.SystemTests.Tools
             message.Should().NotBeNull(reason);
         }
 
-        internal void CheckTargetSupported(string[] targets)
+        internal void CheckTargetSupported(string[] targets, bool sorted)
         {
             knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
             using (Stream fileContent = fileSystemAbstraction.Open(Path.Combine(knownProjectName, projectFileName)))
             {
                 fileContent.Should().NotBeNull($"{projectFileName} file was expected to exist in folder {knownProjectName}");
                 ProjectMetaFileChecker.Check(fileContent)
-                                      .SupportsTargetTypes(targets);
+                                      .SupportsTargetTypes(targets, sorted);
             }
         }
 
@@ -1147,10 +1147,8 @@ namespace Test.PlcNext.SystemTests.Tools
         {
             get
             {
-                string location = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(location);
-                string path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
+                string location = Assembly.GetExecutingAssembly().Location;
+                return Path.GetDirectoryName(location);
             }
         }
 

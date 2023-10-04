@@ -2,10 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <LangVersion>default</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NoWarn>$(NoWarn);CA1812</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -172,6 +176,10 @@
     <None Remove="Deployment\ProjectWithRedundancyAttribute\src\ProjectWithRedundancyAttributeProgram.hpp" />
     <None Remove="Deployment\SharedNative\SharedNativeCpp\CMakeLists.txt" />
     <None Remove="Deployment\SharedNative\SharedNativeCSharp\ProjectItems\LibraryDescription.xml" />
+    <None Remove="Deployment\StandardWithUnsortedTargets\src\Standard\MyComponent.cpp" />
+    <None Remove="Deployment\StandardWithUnsortedTargets\src\Standard\MyComponent.hpp" />
+    <None Remove="Deployment\StandardWithUnsortedTargets\src\Standard\MyComponent\MyProgram.cpp" />
+    <None Remove="Deployment\StandardWithUnsortedTargets\src\Standard\MyComponent\MyProgram.hpp" />
     <None Remove="Deployment\StandardAcfProject\CMakeLists.txt" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.cpp" />
     <None Remove="Deployment\StandardAcfProject\src\StandardAcfProjectComponent.hpp" />
@@ -331,6 +339,11 @@
     <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCSharp\NativeFunctionBlock.cs" />
     <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCSharp\ProjectItems\LibraryDescription.xml" />
     <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCSharp\Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Deployment\StandardWithUnsortedTargets\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\StandardWithUnsortedTargets\src\Standard\MyComponent.cpp" />
+    <EmbeddedResource Include="Deployment\StandardWithUnsortedTargets\src\Standard\MyComponent.hpp" />
+    <EmbeddedResource Include="Deployment\StandardWithUnsortedTargets\src\Standard\MyComponent\MyProgram.cpp" />
+    <EmbeddedResource Include="Deployment\StandardWithUnsortedTargets\src\Standard\MyComponent\MyProgram.hpp" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructComponent.cpp" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructComponent.hpp" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructProgram.cpp" />

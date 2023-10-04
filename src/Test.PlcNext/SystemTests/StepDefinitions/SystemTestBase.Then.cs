@@ -105,7 +105,12 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 
         protected void Then_the_project_supports_the_targets(params string[] targets)
         {
-            ScenarioContext.CheckTargetSupported(targets);
+            ScenarioContext.CheckTargetSupported(targets, false);
+        }
+
+        protected void Then_the_project_supports_the_targets_sorted(params string[] targets)
+        {
+            ScenarioContext.CheckTargetSupported(targets, true);
         }
 
         protected void Then_the_project_contains_component_and_program_cpp_and_hpp_files()

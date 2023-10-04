@@ -26,17 +26,15 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
         public MockedEnvironmentServiceAbstraction()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            string location = assembly.CodeBase;
-            UriBuilder uri = new UriBuilder(location);
-            string path = Uri.UnescapeDataString(uri.Path);
+            string location = assembly.Location;
             environmentService.AssemblyVersion.Returns(new Version(2,0,0));
-            environmentService.AssemblyDirectory.Returns(Path.GetDirectoryName(path));
+            environmentService.AssemblyDirectory.Returns(Path.GetDirectoryName(location));
             environmentService.PlatformName.Returns("linux");
             environmentService.Architecture.Returns("x64");
             environmentService.Platform.Returns(OSPlatform.Linux);
             IEnvironmentPathNames pathNames = Substitute.For<IEnvironmentPathNames>();
             pathNames.ContainsKey("ApplicationData").Returns(true);
-            pathNames["ApplicationData"].Returns(Path.GetDirectoryName(path));
+            pathNames["ApplicationData"].Returns(Path.GetDirectoryName(location));
             pathNames.ContainsKey("ApplicationName").Returns(true);
             pathNames["ApplicationName"].Returns(assembly.GetName().Name);
             environmentService.PathNames.Returns(pathNames);

@@ -44,13 +44,19 @@ namespace Test.PlcNext.Tools
             return new ProjectMetaFileChecker(fileStream);
         }
 
-        public ProjectMetaFileChecker SupportsTargetTypes(string[] targets)
+        public ProjectMetaFileChecker SupportsTargetTypes(string[] targets, bool sorted)
         {
             settings.Should().NotBeNull($"project settings could not be loaded. {message}");
             string[] actualTargets = settings.Target ?? new string[0];
             actualTargets.Length.Should().Be(targets.Count());
             actualTargets.Except(targets).Any().Should().BeFalse();
             targets.Except(actualTargets).Any().Should().BeFalse();
+
+            if (sorted)
+            {
+                actualTargets.SequenceEqual(targets).Should().BeTrue();
+            }
+
             return this;
         }
     }

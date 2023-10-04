@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<ProjectSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.phoenixcontact.com/schema/cliproject">
+  <Target>AXCF2152,2.0 LTS (2.0.0.12345 branches/release/2.0.0/ beta)</Target>
+  <Target>AXCF2152,1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)</Target>
+</ProjectSettings>

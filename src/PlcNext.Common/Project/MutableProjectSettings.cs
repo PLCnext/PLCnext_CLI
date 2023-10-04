@@ -71,7 +71,11 @@ namespace PlcNext.Common.Project
 
         public void SetTargets(IEnumerable<string> targets)
         {
-            Value.Target = targets.ToArray();
+            Value.Target = targets
+                .OrderBy(
+                    temp => temp)
+                .ToArray();
+
             UpdateProjectSettingsFile("Update project targets.");
         }
 

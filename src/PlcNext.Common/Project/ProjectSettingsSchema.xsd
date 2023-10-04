@@ -13,7 +13,6 @@
         </xs:documentation>
       </xs:annotation>
       <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="Target" type="targetDefinition"/>
         <xs:element minOccurs="0" name="Id" type="guid">
           <xs:annotation>
             <xs:documentation>
@@ -36,11 +35,12 @@
             </xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="Extension" type="extension"/>
         <xs:element minOccurs="0" maxOccurs="1" name="Type" type="typeDefinition" default="project"/>
-        <xs:element name="GenerateDTArrayNameByType" type="xs:boolean" default="false" maxOccurs="1" minOccurs="0" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GenerateDTArrayNameByType" type="xs:boolean" default="false" />
         <xs:element minOccurs="0" maxOccurs="1" name="CSharpProjectPath" type="xs:string" />
-        <xs:element name="GenerateNamespaces" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+        <xs:element minOccurs="0" maxOccurs="1" name="GenerateNamespaces" type="xs:boolean"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Target" type="targetDefinition"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Extension" type="extension"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

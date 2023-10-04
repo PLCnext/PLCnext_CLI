@@ -182,7 +182,7 @@ namespace PlcNext.Common.Project
                             ExternalLibraries = buildEntity.BuildSystem.ExternalLibraries;
                             return;
                         }
-                        catch (FormattableException ex)
+                        catch (FormattableException)
                         {
                             executionContext.WriteError("External libraries could not be fetched" );
                         }
