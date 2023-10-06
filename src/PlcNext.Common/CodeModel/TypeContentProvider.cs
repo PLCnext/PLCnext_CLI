@@ -247,7 +247,7 @@ namespace PlcNext.Common.CodeModel
             }
         }
 
-        private IEnumerable<IField> GetAllInheritedFields(ICodeModel model, IType type)
+        private static IEnumerable<IField> GetAllInheritedFields(ICodeModel model, IType type)
         {
             IEnumerable<IType> allTypes = GetAllTypes(type);
             return allTypes.SelectMany(t => t.Fields);

@@ -133,7 +133,7 @@ namespace PlcNext.CommandLine
         public static void AddToHelpText(this MultilineTextAttribute textAttribute, HelpText helpText)
         {
             string[] strArray = new[] { textAttribute.Line1, textAttribute.Line2, textAttribute.Line3, textAttribute.Line4, textAttribute.Line5 };
-            strArray.Take(GetLastLineWithText(strArray)).Aggregate(helpText, (current, line) => helpText.AddPreOptionsLine(line));
+            var _ = strArray.Take(GetLastLineWithText(strArray)).Aggregate(helpText, (current, line) => helpText.AddPreOptionsLine(line));
         }
 
         private static int GetLastLineWithText(string[] value)

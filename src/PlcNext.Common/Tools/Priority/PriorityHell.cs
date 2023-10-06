@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -87,9 +88,9 @@ namespace PlcNext.Common.Tools.Priority
 
                 void PrintSubject(T subject)
                 {
-                    builder.AppendLine($"Subject \"{subject.SubjectIdentifier}\"");
-                    builder.AppendLine($"|_ Predecessor: \"{subject.HigherPrioritySubject}\"");
-                    builder.AppendLine($"|_ Successor: \"{subject.LowerPrioritySubject}\"");
+                    builder.AppendLine(CultureInfo.InvariantCulture, $"Subject \"{subject.SubjectIdentifier}\"");
+                    builder.AppendLine(CultureInfo.InvariantCulture, $"|_ Predecessor: \"{subject.HigherPrioritySubject}\"");
+                    builder.AppendLine(CultureInfo.InvariantCulture, $"|_ Successor: \"{subject.LowerPrioritySubject}\"");
                     builder.AppendLine();
                 }
             }

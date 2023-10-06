@@ -16,7 +16,7 @@ using System.Text;
 
 namespace PlcNext.Migration
 {
-    internal class MigrationChain
+    internal sealed class MigrationChain
     {
         private readonly Action<string> writeMessage;
         private readonly List<IConversionStep> steps = new List<IConversionStep>();

@@ -16,7 +16,7 @@ namespace PlcNext.Common.Tools.IO
     {
         private BuddyAllocator buddyAllocactor;
         private Stream stream;
-        private bool isDisposed = false;
+        private bool isDisposed;
         private readonly string tempFile;
 
         /// <summary>

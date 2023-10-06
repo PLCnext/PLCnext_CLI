@@ -115,7 +115,7 @@ namespace PlcNext.Common.Tools.SDK
         {
             unchecked
             {
-                return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ (LongVersion != null ? LongVersion.GetHashCode() : 0);
+                return ((Name != null ? Name.GetHashCode(StringComparison.Ordinal) : 0) * 397) ^ (LongVersion != null ? LongVersion.GetHashCode(StringComparison.Ordinal) : 0);
             }
         }
 

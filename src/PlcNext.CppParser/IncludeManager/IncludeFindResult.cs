@@ -11,7 +11,7 @@ using PlcNext.Common.Tools.FileSystem;
 
 namespace PlcNext.CppParser.IncludeManager
 {
-    internal class IncludeFindResult
+    internal sealed class IncludeFindResult
     {
         public VirtualFile IncludeFile { get; }
         public VirtualDirectory IncludeBaseDirectory { get; }

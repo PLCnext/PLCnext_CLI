@@ -18,7 +18,7 @@ namespace PlcNext.CommandLine
 {
     [Verb(CommandLineConstants.CompilerSpecificationsVerb, HelpText = "Lists the compiler specifications - such as the default include path, macros,... - for all used compilers.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class GetCompilerSpecificationsVerb : GetVerb
+    internal sealed class GetCompilerSpecificationsVerb : GetVerb
     {
         [Option(CommandLineConstants.PathChar, CommandLineConstants.PathOption, HelpText = "Directory where the plcnext.proj file is located.")]
         public string Path { get; set; }

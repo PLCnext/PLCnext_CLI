@@ -126,9 +126,9 @@ namespace PlcNext.Common.DataModel
         public T MetaData<T>(string key = "")
         {
             MetaDataKey metaDataKey = new MetaDataKey(typeof(T), key);
-            if (metaData.ContainsKey(metaDataKey))
+            if (metaData.TryGetValue(metaDataKey, out object metaDataValue))
             {
-                return (T) metaData[metaDataKey];
+                return (T)metaDataValue;
             }
 
             return default(T);
@@ -330,7 +330,7 @@ namespace PlcNext.Common.DataModel
 
         #region Helper
 
-        private bool TryConvertToFunc(object obj, out Func<object> creationFunction, out Type functionReturnType)
+        private static bool TryConvertToFunc(object obj, out Func<object> creationFunction, out Type functionReturnType)
         {
             creationFunction = null;
             functionReturnType = null;
@@ -386,7 +386,7 @@ namespace PlcNext.Common.DataModel
             {
                 unchecked
                 {
-                    return ((Type != null ? Type.GetHashCode() : 0) * 397) ^ (Key != null ? Key.GetHashCode() : 0);
+                    return ((Type != null ? Type.GetHashCode() : 0) * 397) ^ (Key != null ? Key.GetHashCode(StringComparison.Ordinal) : 0);
                 }
             }
 

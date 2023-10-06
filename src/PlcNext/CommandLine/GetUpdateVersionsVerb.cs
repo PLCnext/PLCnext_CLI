@@ -16,7 +16,7 @@ namespace PlcNext.CommandLine
 {
     [Verb("update-versions", HelpText = "Lists all available versions to update/downgrade the program.", Hidden = true)]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class GetUpdateVersionsVerb : GetVerb
+    internal sealed class GetUpdateVersionsVerb : GetVerb
     {
         protected override async Task<int> Execute(ICommandManager commandManager)
         {

@@ -19,7 +19,7 @@ namespace PlcNext.CommandLine
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Verb(CommandLineConstants.ProjectTargetsVerb, HelpText = "Updates the targets of the given project. All targets without matching SDK are updated to the next higher available version.")]
-    internal class UpdateProjectTargetsVerb : UpdateVerb
+    internal sealed class UpdateProjectTargetsVerb : UpdateVerb
     {
         [Option(CommandLineConstants.PathChar, CommandLineConstants.PathOption, HelpText = "Path to the project settings file.", Default = "./" + Constants.ProjectFileName)]
         public string Path { get; set; }

@@ -18,7 +18,7 @@ namespace PlcNext.Common.Tools.DynamicCommands
         private string name = string.Empty;
         private string help = string.Empty;
         private bool useChildVerbsAsCategory;
-        private CommandDefinition baseDefinition = null;
+        private CommandDefinition baseDefinition;
         private readonly List<Argument> arguments = new List<Argument>();
         private readonly List<CommandExample> examples = new List<CommandExample>();
 

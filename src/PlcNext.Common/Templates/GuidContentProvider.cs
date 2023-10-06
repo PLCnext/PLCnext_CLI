@@ -34,7 +34,7 @@ namespace PlcNext.Common.Templates
             throw new ContentProviderException(key, owner);
         }
 
-        private string GenerateGuid(string value, Entity owner)
+        private static string GenerateGuid(string value, Entity owner)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -47,9 +47,8 @@ namespace PlcNext.Common.Templates
             byte[] bytes = Encoding.ASCII.GetBytes(value + projectName);
 
 #pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
-            using MD5 md5 = MD5.Create();
+            return new Guid(MD5.HashData(bytes)).ToString();
 #pragma warning restore CA5351 // Do Not Use Broken Cryptographic Algorithms
-            return new Guid(md5.ComputeHash(bytes)).ToString();
         }
     }
 }

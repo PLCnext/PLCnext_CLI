@@ -17,7 +17,7 @@ using PlcNext.Common.Tools.DynamicCommands;
 
 namespace PlcNext.CommandLine
 {
-    internal class CollectiveDynamicVerbsFactory : IDynamicVerbFactory, IDisposable
+    internal sealed class CollectiveDynamicVerbsFactory : IDynamicVerbFactory, IDisposable
     {
         private readonly IEnumerable<IDynamicCommandProvider> commandProviders;
 
@@ -36,9 +36,9 @@ namespace PlcNext.CommandLine
         public IEnumerable<Type> GetDynamicVerbs(IEnumerable<string> path)
         {
             path = path.ToArray();
-            if (resultCache.ContainsKey(path))
+            if (resultCache.TryGetValue(path, out IEnumerable<Type> result))
             {
-                return resultCache[path];
+                return result;
             }
 
             List<CommandDefinition> definitions = new List<CommandDefinition>();
@@ -49,10 +49,10 @@ namespace PlcNext.CommandLine
 
             List<Type> types = new List<Type>();
             Type baseType = null;
-            if (createdTypes.ContainsKey(path) &&
-                createdTypes[path].Type.GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() == null)
+            if (createdTypes.TryGetValue(path, out TotalAccessType totalAccessType) &&
+                totalAccessType.Type.GetCustomAttribute<UseChildVerbsAsCategoryAttribute>() == null)
             {
-                baseType = createdTypes[path].Type;
+                baseType = totalAccessType.Type;
             }
             foreach (CommandDefinition definition in definitions)
             {
@@ -133,7 +133,7 @@ namespace PlcNext.CommandLine
             VerbTypeFactory.ClearStaticCaches();
         }
 
-        private class SequenceEqualComparer<T> : IEqualityComparer<IEnumerable<T>>
+        private sealed class SequenceEqualComparer<T> : IEqualityComparer<IEnumerable<T>>
         {
             public bool Equals(IEnumerable<T> x, IEnumerable<T> y)
             {

@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Text;
 using PlcNext.Common.Tools.Events;
 
+#pragma warning disable CA1021
+
 namespace PlcNext.Common.Tools
 {
     public interface ITransactionFactory

@@ -86,7 +86,7 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public override int GetHashCode()
         {
-            int result = (FullName != null ? FullName.GetHashCode() : 0);
+            int result = (FullName != null ? FullName.GetHashCode(StringComparison.Ordinal) : 0);
             return result;
         }
 

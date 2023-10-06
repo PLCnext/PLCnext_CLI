@@ -40,7 +40,7 @@ namespace PlcNext.CppParser.CppRipper
                     begin = 0;
                     cnt = Index - begin;
                 }
-                return "... " + Text.Substring(begin, cnt);
+                return String.Concat("... ", Text.AsSpan(begin, cnt));
             }
         }
 
@@ -55,7 +55,7 @@ namespace PlcNext.CppParser.CppRipper
                 int cnt = 25;
                 if (Index + cnt > Text.Length)
                     cnt = Text.Length - Index;
-                return Text.Substring(Index, cnt) + " ... ";
+                return String.Concat(Text.AsSpan(Index, cnt), " ... ");
             }
         }
         #endregion

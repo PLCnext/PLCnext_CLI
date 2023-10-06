@@ -12,7 +12,7 @@ using System;
 namespace PlcNext.Common.Tools.UI
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class CustomFormatDataStructureAttribute : Attribute
+    public sealed class CustomFormatDataStructureAttribute : Attribute
     {
         
     }

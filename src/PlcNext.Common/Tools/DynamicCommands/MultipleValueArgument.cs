@@ -56,9 +56,9 @@ namespace PlcNext.Common.Tools.DynamicCommands
         public override bool IsDefined { get; protected set; }
         public char Separator { get; }
 
-        public override void SetValue(object obj)
+        public override void SetValue(object value)
         {
-            if (obj is IEnumerable<string> stringValues)
+            if (value is IEnumerable<string> stringValues)
             {
                 if (stringValues.Any())
                 {
@@ -66,7 +66,7 @@ namespace PlcNext.Common.Tools.DynamicCommands
                     Values = stringValues;
                 }
             }
-            else if(obj != null)
+            else if(value != null)
             {
                 throw new ArgumentTypeMismatchException();
             }

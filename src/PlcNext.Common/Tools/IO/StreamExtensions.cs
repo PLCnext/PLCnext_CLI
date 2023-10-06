@@ -30,9 +30,9 @@ namespace PlcNext.Common.Tools.IO
             byte[] buffer = new byte[Constants.StreamCopyBufferSize];
             long totalBytesRead = 0;
             int bytesRead;
-            while ((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) != 0)
+            while ((bytesRead = await source.ReadAsync(buffer).ConfigureAwait(false)) != 0)
             {
-                await destination.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+                await destination.WriteAsync(buffer.AsMemory(0, bytesRead)).ConfigureAwait(false);
                 totalBytesRead += bytesRead;
                 progress?.Invoke(totalBytesRead);
             }

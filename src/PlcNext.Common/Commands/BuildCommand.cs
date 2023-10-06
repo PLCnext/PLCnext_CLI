@@ -53,7 +53,7 @@ namespace PlcNext.Common.Commands
 
             string Unescape(string arg)
             {
-                return arg.Replace("%22","\"");
+                return arg.Replace("%22","\"", StringComparison.Ordinal);
             }
         }
     }

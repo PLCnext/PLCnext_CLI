@@ -20,7 +20,7 @@ using PlcNext.CppParser.IncludeManager;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
 {
-    internal class CppIncludeManager :IIncludeManager
+    internal sealed class CppIncludeManager :IIncludeManager
     {
         private readonly IFileParser fileParser;
         private readonly IIncludeCache includeCache;

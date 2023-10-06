@@ -146,7 +146,7 @@ namespace PlcNext.Common.DataModel
                 unchecked
                 {
                     int hashCode = (entity != null ? entity.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (key != null ? key.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (key != null ? key.GetHashCode(StringComparison.Ordinal) : 0);
                     return hashCode;
                 }
             }

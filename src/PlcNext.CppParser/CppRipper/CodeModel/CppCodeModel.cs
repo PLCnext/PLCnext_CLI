@@ -20,7 +20,7 @@ using PlcNext.Common.Tools.SDK;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppCodeModel : ICodeModel
+    internal sealed class CppCodeModel : ICodeModel
     {
         private readonly Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes;
         private readonly Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures;
@@ -144,7 +144,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                         continue;
                     dataTypes.Add(match.Value.Trim());
                 }
-                string name = templatedStructName.Replace(string.IsNullOrEmpty(structure.Namespace) ? string.Empty : structure.Namespace + "::", string.Empty);
+                string name = templatedStructName.Replace(string.IsNullOrEmpty(structure.Namespace) ? string.Empty : structure.Namespace + "::", string.Empty, StringComparison.Ordinal);
 
                 return structure.CreateTemplatedStructure(name, dataTypes.ToArray());
             }

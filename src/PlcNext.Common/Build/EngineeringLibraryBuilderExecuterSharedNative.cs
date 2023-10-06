@@ -126,7 +126,7 @@ namespace PlcNext.Common.Build
                 foreach (TargetEntity target in projectLibraries.Keys.Select(TargetEntity.Decorate))
                 {
                     VirtualFile copiedLibrary = projectFileEntity
-                                                .TempDirectory.Directory(target.FullName.Replace(",", "_"))
+                                                .TempDirectory.Directory(target.FullName.Replace(",", "_", StringComparison.Ordinal))
                                                 .File(projectLibraries[target.Base].Name);
                     executionContext.Observable.OnNext(new Change(() => { }, $"Copy library file to {copiedLibrary.FullName}"));
                     using (Stream source = projectLibraries[target.Base].OpenRead(true))
@@ -140,7 +140,7 @@ namespace PlcNext.Common.Build
                                                    target.Name,
                                                    target.EngineerVersion,
                                                    guidFactory.Create().ToString("D", CultureInfo.InvariantCulture),
-                                                   target.ShortFullName.Replace(",", "_"),
+                                                   target.ShortFullName.Replace(",", "_", StringComparison.Ordinal),
                                                    projectName));
                 }
             }
@@ -174,7 +174,7 @@ namespace PlcNext.Common.Build
                         writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
                                                        "/file \":{0}:{1}\"",
                                                        file.GetRelativeOrAbsolutePath(projectFileEntity.Directory),
-                                                       TargetEntity.Decorate(target).ShortFullName.Replace(",", "_")));
+                                                       TargetEntity.Decorate(target).ShortFullName.Replace(",", "_", StringComparison.Ordinal)));
                     }
                 }
             }

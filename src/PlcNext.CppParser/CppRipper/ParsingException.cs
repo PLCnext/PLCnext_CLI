@@ -75,12 +75,12 @@ namespace PlcNext.CppParser.CppRipper
             // based on the fact that we will be replacing tabs 
             // with spaces.
             string tmp = line.Substring(0, Col);
-            tmp = tmp.Replace("\t", tab);
+            tmp = tmp.Replace("\t", tab, StringComparison.Ordinal);
             ptr = new String(' ', tmp.Length);
             ptr += "^";
 
             // Replace tabs with spaces
-            line = line.Replace("\t", tab);
+            line = line.Replace("\t", tab, StringComparison.Ordinal);
         }
 
         public string Location

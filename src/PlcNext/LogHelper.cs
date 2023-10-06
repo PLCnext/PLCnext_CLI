@@ -68,7 +68,7 @@ namespace PlcNext
             }
             log.LogInformation($"Arguments: {string.Join(" ", args)}");
             log.LogInformation($"Execution context: {Directory.GetCurrentDirectory()}");
-            log.LogInformation($"Process id: {Process.GetCurrentProcess().Id}");
+            log.LogInformation($"Process id: {Environment.ProcessId}");
         }
     }
 }

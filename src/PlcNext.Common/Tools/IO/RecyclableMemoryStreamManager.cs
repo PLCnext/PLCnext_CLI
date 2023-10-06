@@ -14,6 +14,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
+#pragma warning disable CA1003
+#pragma warning disable CA1711
+
 namespace PlcNext.Common.Tools.IO
 {
     /// <summary>

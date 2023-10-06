@@ -264,7 +264,7 @@ namespace PlcNext.Common.CodeModel
 
             public int GetHashCode(CodeEntity obj)
             {
-                return $"{obj.Namespace}.{obj.Name}".GetHashCode();
+                return $"{obj.Namespace}.{obj.Name}".GetHashCode(StringComparison.Ordinal);
             }
         }
     }

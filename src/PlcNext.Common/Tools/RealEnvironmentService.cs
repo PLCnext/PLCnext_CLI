@@ -84,10 +84,11 @@ namespace PlcNext.Common.Tools
                     return Path.GetDirectoryName(mainModule.FileName);
                 }
 #endif
-                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                string path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
+
+#pragma warning disable IL3000 //This code should never be reached in release build
+                string location = Assembly.GetExecutingAssembly().Location;
+                return Path.GetDirectoryName(location);
+#pragma warning restore IL3000
             }
         }
 

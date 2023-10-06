@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+#pragma warning disable CA1711
+
 namespace PlcNext.Common.CodeModel
 {
     public interface IEnum : IType

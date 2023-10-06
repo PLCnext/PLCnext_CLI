@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using PlcNext.Common.Tools.FileSystem;
@@ -34,10 +35,10 @@ namespace PlcNext.Common.Tools.UI
         private string prefix = string.Empty;
 
         private const int MaxCharsPerLine = 80;
-        private int currentLineCharCount = 0;
-        private int currentErrorLineCharCount = 0;
-        private bool wasLastWriteWithNewLine = false;
-        private bool wasLastErrorWriteWithNewLine = false;
+        private int currentLineCharCount;
+        private int currentErrorLineCharCount;
+        private bool wasLastWriteWithNewLine;
+        private bool wasLastErrorWriteWithNewLine;
 
         private static readonly Dictionary<ConsoleColor, ConsoleColor> ErrorColors = new Dictionary<ConsoleColor, ConsoleColor>
         {
@@ -106,7 +107,7 @@ namespace PlcNext.Common.Tools.UI
                     string key = resolveMatch.Groups["resolvable"].Value;
                     if (environmentService.PathNames.ContainsKey(key))
                     {
-                        resolved = resolved.Replace(resolveMatch.Value, environmentService.PathNames[key]);
+                        resolved = resolved.Replace(resolveMatch.Value, environmentService.PathNames[key], StringComparison.Ordinal);
                     }
 
                     resolveMatch = resolvePattern.Match(resolved);
@@ -217,10 +218,10 @@ namespace PlcNext.Common.Tools.UI
                     if (currentLineCharCount + s.Length >= MaxCharsPerLine)
                     {
                         int charsFittingOnLine = MaxCharsPerLine - currentLineCharCount;
-                        Console.Write(s.Substring(0, charsFittingOnLine) + Environment.NewLine);
+                        Console.Write(String.Concat(s.AsSpan(0, charsFittingOnLine), Environment.NewLine));
 
-                        s = prefix + s.Substring(charsFittingOnLine,
-                            s.Length - charsFittingOnLine);
+                        s = String.Concat(prefix, s.AsSpan(charsFittingOnLine,
+                            s.Length - charsFittingOnLine));
 
                         currentLineCharCount = s.Length;
                     }
@@ -247,10 +248,10 @@ namespace PlcNext.Common.Tools.UI
                     if (currentErrorLineCharCount + s.Length >= MaxCharsPerLine)
                     {
                         int charsFittingOnLine = MaxCharsPerLine - currentErrorLineCharCount;
-                        Console.Error.Write(s.Substring(0, charsFittingOnLine) + Environment.NewLine);
+                        Console.Error.Write(String.Concat(s.AsSpan(0, charsFittingOnLine), Environment.NewLine));
 
-                        s = prefix + s.Substring(charsFittingOnLine,
-                            s.Length - charsFittingOnLine);
+                        s = String.Concat(prefix, s.AsSpan(charsFittingOnLine,
+                            s.Length - charsFittingOnLine));
                     }
                     currentErrorLineCharCount = s.Length;
                 }
@@ -272,8 +273,8 @@ namespace PlcNext.Common.Tools.UI
 
             void SwitchColorsToError()
             {
-                ConsoleColor foreground = ErrorColors.ContainsKey(Console.BackgroundColor)
-                                              ? ErrorColors[Console.BackgroundColor]
+                ConsoleColor foreground = ErrorColors.TryGetValue(Console.BackgroundColor, out ConsoleColor color)
+                                              ? color
                                               : ConsoleColor.Red;
                 if (foreground == Console.ForegroundColor)
                 {
@@ -288,8 +289,8 @@ namespace PlcNext.Common.Tools.UI
 
             void SwitchColorsToWarning()
             {
-                ConsoleColor foreground = WarningColors.ContainsKey(Console.BackgroundColor)
-                                              ? WarningColors[Console.BackgroundColor]
+                ConsoleColor foreground = WarningColors.TryGetValue(Console.BackgroundColor, out ConsoleColor color)
+                                              ? color
                                               : ConsoleColor.Red;
                 if (foreground == Console.ForegroundColor)
                 {

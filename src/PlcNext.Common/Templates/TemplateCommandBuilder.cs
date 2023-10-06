@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using PlcNext.Common.DataModel;
@@ -102,7 +103,7 @@ namespace PlcNext.Common.Templates
                     throw new ArgumentNotFoundException(argumentInstance.name, description.name);
                 }
 
-                string value = argumentInstance.value.Contains(' ')
+                string value = argumentInstance.value.Contains(' ', StringComparison.Ordinal)
                                    ? $"\"{argumentInstance.value}\""
                                    : argumentInstance.value;
                 command.Append(argumentInstance.valueSpecified
@@ -118,10 +119,10 @@ namespace PlcNext.Common.Templates
                     throw new RelationshipNotFoundException(relationshipInstance.name, description.name);
                 }
 
-                string value = relationshipInstance.value.Contains(' ')
+                string value = relationshipInstance.value.Contains(' ', StringComparison.Ordinal)
                                    ? $"\"{relationshipInstance.value}\""
                                    : relationshipInstance.value;
-                command.Append($" --{relationshipInstance.name.ToLowerInvariant()} {value}");
+                command.Append(CultureInfo.InvariantCulture, $" --{relationshipInstance.name.ToLowerInvariant()} {value}");
             }
         }
 

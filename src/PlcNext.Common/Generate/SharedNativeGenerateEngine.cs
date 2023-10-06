@@ -355,7 +355,7 @@ namespace PlcNext.Common.Generate
                     {
                         CodeEntity codeEntity = CodeEntity.Decorate(e);
                         return codeEntity;
-                    }).Where(entity => !entity.Type.Contains("project"));
+                    }).Where(entity => !entity.Type.Contains("project", StringComparison.Ordinal));
                     
                     foreach (CodeEntity codeEntity in entities)
                     {
@@ -383,7 +383,7 @@ namespace PlcNext.Common.Generate
             }
         }
 
-        private bool EclrVersionIsSupported(string information)
+        private static bool EclrVersionIsSupported(string information)
         {
             Match match = Regex.Match(information, @"@begineclrversion(?<eclrversion>.*)@endeclrversion");
             if (match.Success)
@@ -394,7 +394,7 @@ namespace PlcNext.Common.Generate
             return false;
         }
 
-        private string GetProjectOutputPath(string information)
+        private static string GetProjectOutputPath(string information)
         {
             Match match = Regex.Match(information, @"@beginoutputpath(?<outputpath>.*)@endoutputpath");
             if (match.Success)

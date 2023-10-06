@@ -18,7 +18,7 @@ using PlcNext.Common.Tools;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppSymbol : ISymbol
+    internal sealed class CppSymbol : ISymbol
     {
         private CppSymbol(string name, string value)
         {
@@ -33,7 +33,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             string value = string.Empty;
             ParseNode valueSplitter = content.FirstOrDefault(c => c.GetHierarchy()
                                                                    .FirstOrDefault(n => n.RuleName == "symbol")
-                                                                  ?.ToString().Contains("=") == true);
+                                                                  ?.ToString().Contains('=', StringComparison.Ordinal) == true);
             if (valueSplitter != null && Array.IndexOf(content,valueSplitter) == 1)
             {
                 name = content[0].ToString();

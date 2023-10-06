@@ -17,6 +17,8 @@ using PlcNext.Common.DataModel;
 using PlcNext.Common.Tools.Priority;
 using PlcNext.Common.Tools.SDK;
 
+#pragma warning disable CA1851
+
 namespace PlcNext.Common.Project
 {
     internal class TargetParser : PriorityContentProvider, ITargetParser

@@ -32,8 +32,8 @@ namespace PlcNext.Common.Project.Persistence
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    line = line.Replace("$(sourceDirectory)", sourceDirectory);
-                    line = line.Replace("$(name)", name);
+                    line = line.Replace("$(sourceDirectory)", sourceDirectory, StringComparison.Ordinal);
+                    line = line.Replace("$(name)", name, StringComparison.Ordinal);
                     writer.WriteLine(line);
                 }
             }

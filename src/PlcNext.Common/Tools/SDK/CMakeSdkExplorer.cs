@@ -152,9 +152,9 @@ namespace PlcNext.Common.Tools.SDK
                             string[] lines = ($"{stringBuilder.Error}{Environment.NewLine}" +
                                               $"{stringBuilder.Information}").Split(new[] {'\n', '\r'},
                                                                                     StringSplitOptions.RemoveEmptyEntries);
-                            IEnumerable<string> paths = lines.SkipWhile(l => !l.Contains("#include <...> search starts here:"))
+                            IEnumerable<string> paths = lines.SkipWhile(l => !l.Contains("#include <...> search starts here:", StringComparison.Ordinal))
                                                                     .Skip(1)
-                                                                    .TakeWhile(l => !l.Contains("End of search list."));
+                                                                    .TakeWhile(l => !l.Contains("End of search list.", StringComparison.Ordinal));
                             return new CompilerSpecification
                             {
                                 IncludePath = GetIncludePaths().ToArray(),
@@ -259,7 +259,7 @@ namespace PlcNext.Common.Tools.SDK
 
                     using (IProcess process = processManager.StartProcessWithSetup(binariesLocator.GetExecutableCommand("cmake"),
                                                                           command, executionContext, setup,
-                                                                          cache.FullName.Replace("\\", "/"),
+                                                                          cache.FullName.Replace("\\", "/", StringComparison.Ordinal),
                                                                           showOutput: false, showError: false))
                     {
                         process.WaitForExit();

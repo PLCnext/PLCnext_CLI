@@ -18,7 +18,7 @@ namespace PlcNext.CommandLine
 {
     [Verb(CommandLineConstants.TargetVerb, HelpText = "Sets the target for a project.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class SetTargetsVerb : SetVerb
+    internal sealed class SetTargetsVerb : SetVerb
     {
         [Option(CommandLineConstants.NameChar, CommandLineConstants.NameOption, HelpText = "The target to be added or removed.", Required = true)]
         public string Name { get; set; }

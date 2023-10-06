@@ -53,7 +53,7 @@ namespace PlcNext.Common.Templates.Description
 
         public override int GetHashCode()
         {
-            return (nameField != null ? nameField.GetHashCode() : 0);
+            return (nameField != null ? nameField.GetHashCode(StringComparison.Ordinal) : 0);
         }
 
         public static bool operator ==(TemplateDescription left, TemplateDescription right)
@@ -104,7 +104,7 @@ namespace PlcNext.Common.Templates.Description
 
         public override int GetHashCode()
         {
-            return (templateField != null ? templateField.GetHashCode() : 0);
+            return (templateField != null ? templateField.GetHashCode(StringComparison.Ordinal) : 0);
         }
 
         public static bool operator ==(templateReference left, templateReference right)
@@ -160,7 +160,7 @@ namespace PlcNext.Common.Templates.Description
 
         public override int GetHashCode()
         {
-            return (nameField != null ? nameField.GetHashCode() : 0);
+            return (nameField != null ? nameField.GetHashCode(StringComparison.Ordinal) : 0);
         }
 
         public static bool operator ==(templateFile left, templateFile right)
@@ -201,7 +201,7 @@ namespace PlcNext.Common.Templates.Description
 
         public override int GetHashCode()
         {
-            return (nameField != null ? nameField.GetHashCode() : 0);
+            return (nameField != null ? nameField.GetHashCode(StringComparison.Ordinal) : 0);
         }
 
         public static bool operator ==(templateRelationshipBase left, templateRelationshipBase right)
@@ -262,7 +262,7 @@ namespace PlcNext.Common.Templates.Description
 
         public override int GetHashCode()
         {
-            return (nameField != null ? nameField.GetHashCode() : 0);
+            return (nameField != null ? nameField.GetHashCode(StringComparison.Ordinal) : 0);
         }
 
         public static bool operator ==(templateArgumentBase left, templateArgumentBase right)

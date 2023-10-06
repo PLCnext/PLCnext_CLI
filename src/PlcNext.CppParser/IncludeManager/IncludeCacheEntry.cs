@@ -14,7 +14,7 @@ using PlcNext.Common.CodeModel;
 
 namespace PlcNext.CppParser.IncludeManager
 {
-    internal class IncludeCacheEntry : IEquatable<IncludeCacheEntry>
+    internal sealed class IncludeCacheEntry : IEquatable<IncludeCacheEntry>
     {
         //For Json.Net
         public IncludeCacheEntry()
@@ -76,10 +76,10 @@ namespace PlcNext.CppParser.IncludeManager
         {
             unchecked
             {
-                int hashCode = (File != null ? File.GetHashCode() : 0);
+                int hashCode = (File != null ? File.GetHashCode(StringComparison.Ordinal) : 0);
                 hashCode = (hashCode * 397) ^ ParsedSuccessfully.GetHashCode();
                 hashCode = (hashCode * 397) ^ LastWriteTime.GetHashCode();
-                hashCode = (hashCode * 397) ^ (BaseDirectory != null ? BaseDirectory.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (BaseDirectory != null ? BaseDirectory.GetHashCode(StringComparison.Ordinal) : 0);
                 hashCode = (hashCode * 397) ^ (Types != null ? Types.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Includes != null ? Includes.GetHashCode() : 0);
                 return hashCode;

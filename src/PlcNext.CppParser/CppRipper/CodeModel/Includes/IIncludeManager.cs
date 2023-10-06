@@ -19,7 +19,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
         IEnumerable<CodeSpecificException> InitializeCodeModel(CppCodeModel codeModel, IncludeManagerParameter parameter);
     }
 
-    internal class IncludeManagerParameter
+    internal sealed class IncludeManagerParameter
     {
         public IncludeManagerParameter(IEnumerable<IncludePath> includeDirectories, IEnumerable<string> knownIncludes, IEnumerable<IncludeDefinition> includeDefinitions)
         {
@@ -33,7 +33,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel.Includes
         public IEnumerable<IncludeDefinition> IncludeDefinitions { get; }
     }
 
-    internal class IncludeDefinition
+    internal sealed class IncludeDefinition
     {
         public IncludeDefinition(string include, VirtualFile definitionSourceFile, VirtualDirectory definitionSourceBaseDirectory)
         {

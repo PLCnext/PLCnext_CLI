@@ -58,7 +58,7 @@ namespace PlcNext.Common.Tools.UI
         {
             if (cleanRegex.IsMatch(message))
             {
-                message = message.Substring(message.IndexOf(':') + 1).TrimStart();
+                message = message.Substring(message.IndexOf(':', StringComparison.Ordinal) + 1).TrimStart();
             }
 
             return message;

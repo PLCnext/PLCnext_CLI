@@ -20,7 +20,7 @@ using PlcNext.CppParser.CppRipper.CodeModel.Includes;
 
 namespace PlcNext.CppParser.CppRipper
 {
-    internal class CppRipper : IParser
+    internal sealed class CppRipper : IParser
     {
         private readonly ILog log;
         private readonly IFileParser fileParser;

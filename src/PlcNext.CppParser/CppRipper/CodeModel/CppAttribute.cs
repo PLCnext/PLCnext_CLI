@@ -15,7 +15,7 @@ using PlcNext.Common.CodeModel;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppAttribute : IAttribute
+    internal sealed class CppAttribute : IAttribute
     {
         public CppAttribute(string name, CodePosition position) : this(name, null, position)
         {

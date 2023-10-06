@@ -18,7 +18,7 @@ namespace PlcNext.CommandLine
 {
     [Verb(CommandLineConstants.BuildVerb, HelpText = "Builds the project.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class BuildVerb : VerbBase
+    internal sealed class BuildVerb : VerbBase
     {
         private string output;
 

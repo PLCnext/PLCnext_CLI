@@ -82,8 +82,8 @@ namespace PlcNext.Common.Project
                 do //Remove double _ and .
                 {
                     length = value.Length;
-                    value = value.Replace("__", "_");
-                    value = value.Replace("..", ".");
+                    value = value.Replace("__", "_", StringComparison.Ordinal);
+                    value = value.Replace("..", ".", StringComparison.Ordinal);
                     newLength = value.Length;
                 } while (length != newLength);
 
@@ -99,11 +99,11 @@ namespace PlcNext.Common.Project
 
                 if (value[0] == '_' && value.Length > 1)
                 {
-                    value = "_" + new string(char.ToUpperInvariant(value[1]), 1) + value.Substring(2);
+                    value = String.Concat("_", new string(char.ToUpperInvariant(value[1]), 1), value.AsSpan(2));
                 }
                 else
                 {
-                    value = new string(char.ToUpperInvariant(value[0]), 1) + value.Substring(1);
+                    value = String.Concat(new string(char.ToUpperInvariant(value[0]), 1), value.AsSpan(1));
                 }
                 if (!Regex.IsMatch(value, @"^_?[A-Z]"))
                 {//Start with uppercase letter
@@ -377,7 +377,7 @@ namespace PlcNext.Common.Project
                                     using (StreamReader streamReader = new StreamReader(fileStream))
                                     {
                                         string content = streamReader.ReadToEnd();
-                                        if (content.Contains("MetaComponentBase"))
+                                        if (content.Contains("MetaComponentBase", StringComparison.Ordinal))
                                         {
                                             fallbackEntity = owner.Create("acfproject");
                                         }

@@ -61,7 +61,7 @@ namespace PlcNext.Common.Templates
                     owner.Value<templateFile>().GetType().GetProperty(key) != null);
         }
 
-        bool IsCheck(Entity entity, string key)
+        private static bool IsCheck(Entity entity, string key)
         {
             if (!key.StartsWith("is", StringComparison.OrdinalIgnoreCase) ||
                 key.Length == 2)
@@ -188,7 +188,7 @@ namespace PlcNext.Common.Templates
                         }
 
                         return codeModel.Type(name) == null &&
-                               relatedType?.FullName.Contains(name) == true;
+                               relatedType?.FullName.Contains(name, StringComparison.Ordinal) == true;
                     }
                 }
 

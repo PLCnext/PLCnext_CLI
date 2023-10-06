@@ -13,7 +13,7 @@ using System.Text;
 
 namespace PlcNext.Migration
 {
-    internal class ConversionFrom190 : IConversionStep
+    internal sealed class ConversionFrom190 : IConversionStep
     {
         public Version BaseVersion => new Version(19, 0);
 

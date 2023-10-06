@@ -14,7 +14,7 @@ using System.Text;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
-    internal class SymbolResolveException : FormattableException
+    internal sealed class SymbolResolveException : FormattableException
     {
         public SymbolResolveException(string symbolName, string parentName) 
             : base($"The symbol {symbolName} in {parentName} could not be resolved. Only elements from the same enum are allowed.")

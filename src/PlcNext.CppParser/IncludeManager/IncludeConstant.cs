@@ -14,7 +14,7 @@ using PlcNext.Common.CodeModel;
 
 namespace PlcNext.CppParser.IncludeManager
 {
-    internal class IncludeConstant : IConstant
+    internal sealed class IncludeConstant : IConstant
     {
         public static IncludeConstant Parse(IConstant arg)
         {

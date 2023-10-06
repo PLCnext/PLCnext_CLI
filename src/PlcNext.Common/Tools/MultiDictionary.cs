@@ -33,8 +33,8 @@ namespace PlcNext.Common.Tools
 
         public List<TValue> Get(TKey key)
         {
-            if (data.ContainsKey(key))
-                return data[key];
+            if (data.TryGetValue(key, out List<TValue> list))
+                return list;
             else
                 return new List<TValue>();
         }
@@ -42,10 +42,10 @@ namespace PlcNext.Common.Tools
         public bool Remove(TKey key, TValue value)
         {
             bool result = false;
-            if (data.ContainsKey(key))
+            if (data.TryGetValue(key, out List<TValue> list))
             {
-                result = data[key].Remove(value);
-                if (!data[key].Any())
+                result = list.Remove(value);
+                if (!list.Any())
                 {
                     data.Remove(key);
                 }

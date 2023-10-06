@@ -136,7 +136,7 @@ namespace PlcNext.Common.CodeModel
 
             public override int GetHashCode()
             {
-                return (PartialName != null ? PartialName.GetHashCode() : 0);
+                return (PartialName != null ? PartialName.GetHashCode(StringComparison.Ordinal) : 0);
             }
         }
 
@@ -173,7 +173,7 @@ namespace PlcNext.Common.CodeModel
 
             TargetedConstantReplacement[] GetReplacementTargets()
             {
-                return accessibleConstants.Where(c => replaceable.Contains(c.PartialName))
+                return accessibleConstants.Where(c => replaceable.Contains(c.PartialName, StringComparison.Ordinal))
                                           .Select(c => new TargetedConstantReplacement(c.Replacement,
                                                       c.Constant,
                                                       replaceable.IndexOf(c.PartialName, StringComparison.Ordinal),
@@ -223,7 +223,7 @@ namespace PlcNext.Common.CodeModel
 
             TargetedReplacement[] GetReplacementTargets()
             {
-                return defines.Where(c => replaceable.Contains(c.Name))
+                return defines.Where(c => replaceable.Contains(c.Name, StringComparison.Ordinal))
                               .Select(c => new TargetedReplacement(c.Replacement,
                                                                    replaceable.IndexOf(c.Name, StringComparison.Ordinal),
                                                                    c.Name.Length))
@@ -268,7 +268,7 @@ namespace PlcNext.Common.CodeModel
 
             public override int GetHashCode()
             {
-                return (Name != null ? Name.GetHashCode() : 0);
+                return (Name != null ? Name.GetHashCode(StringComparison.Ordinal) : 0);
             }
         }
 

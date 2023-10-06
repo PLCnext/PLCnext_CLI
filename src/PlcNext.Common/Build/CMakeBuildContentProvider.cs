@@ -163,7 +163,7 @@ namespace PlcNext.Common.Build
             }
         }
 
-        private IEnumerable<string> FindInstallationPaths(JArray codeModel, string projectName)
+        private static IEnumerable<string> FindInstallationPaths(JArray codeModel, string projectName)
         {
             JObject projectTarget = codeModel.GetProjectTarget(projectName);
 

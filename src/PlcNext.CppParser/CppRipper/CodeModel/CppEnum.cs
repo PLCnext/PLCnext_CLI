@@ -16,7 +16,7 @@ using PlcNext.Common.CodeModel;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppEnum : CppType, IEnum
+    internal sealed class CppEnum : CppType, IEnum
     {
         public CppEnum(string ns, string name, string[] usings, ParseNode content, List<ParserMessage> messages,
                        ParseNode typeDeclaration, string attributePrefix) : base(
@@ -67,7 +67,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                     {
                         return nodes.FirstOrDefault(n => n.GetHierarchy()
                                                           .FirstOrDefault(t => t.RuleName == "symbol")
-                                                         ?.ToString().Contains(",") == true);
+                                                         ?.ToString().Contains(',', StringComparison.Ordinal) == true);
                     }
                 }
                 bool HasParanthesisGroupParent(ParseNode n)

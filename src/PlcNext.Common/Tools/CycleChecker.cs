@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using PlcNext.Common.DataModel;
 
@@ -76,9 +77,9 @@ namespace PlcNext.Common.Tools
             for (int i = 0; i < cycleList.Count; i++)
             {
                 string prefix = i == index || i == cycleList.Count - 1
-                                    ? "#" + Constants.Tab.Substring(1)
+                                    ? String.Concat("#", Constants.Tab.AsSpan(1))
                                     : Constants.Tab;
-                builder.AppendLine($"{prefix}{cycleList[i]}");
+                builder.AppendLine(CultureInfo.InvariantCulture, $"{prefix}{cycleList[i]}");
             }
 
             return builder.ToString();

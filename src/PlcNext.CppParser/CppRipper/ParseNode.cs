@@ -4,6 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+#pragma warning disable CA1024
+#pragma warning disable CA2201
+
 namespace PlcNext.CppParser.CppRipper
 {
     /// <summary>
@@ -162,7 +165,6 @@ namespace PlcNext.CppParser.CppRipper
                 throw new ArgumentNullException(nameof(node));
             }
 
-            Trace.Assert(node != null);
             Trace.Assert(!(node.rule is SkipRule));
             
             // Add the child of a "NoFailRule", rather than a NoFailRule itself.

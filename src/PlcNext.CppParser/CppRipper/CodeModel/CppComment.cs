@@ -13,7 +13,7 @@ using PlcNext.Common.CodeModel;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppComment : IComment
+    internal sealed class CppComment : IComment
     {
         private CppComment(CodePosition position, string content)
         {

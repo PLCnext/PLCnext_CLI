@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
 
+#pragma warning disable CA1021
+
 namespace PlcNext.Common.CodeModel
 {
     public interface IParser

@@ -146,7 +146,7 @@ namespace PlcNext.Common.Deploy
                             return;
                         }
                         IEnumerable<string> cultures = sourceDirectory.Directory(htmlDirectory).Directories.Select(d => d.Name)
-                                                           .Where(d => !d.Equals("images", StringComparison.InvariantCultureIgnoreCase));
+                                                           .Where(d => !d.Equals("images", StringComparison.OrdinalIgnoreCase));
 
                         //CheckCultures(cultures);
 
@@ -156,7 +156,7 @@ namespace PlcNext.Common.Deploy
                         foreach (string culture in cultures)
                         {
                             if (!string.IsNullOrEmpty(culture)
-                                && !culture.Equals("default", StringComparison.InvariantCultureIgnoreCase))
+                                && !culture.Equals("default", StringComparison.OrdinalIgnoreCase))
                             {
                                 destinationDir = fileSystem.GetDirectory(culture, destinationDir.FullName);
                             }
@@ -199,7 +199,7 @@ namespace PlcNext.Common.Deploy
                                 result = true;
                                 for (int i = 0; i < libraryNameTokens.Length; i++)
                                 {
-                                    if (!string.Equals(libraryNameTokens[i], fileTokens[i], StringComparison.InvariantCultureIgnoreCase))
+                                    if (!string.Equals(libraryNameTokens[i], fileTokens[i], StringComparison.OrdinalIgnoreCase))
                                     {
                                         result = false;
                                     }
@@ -215,7 +215,7 @@ namespace PlcNext.Common.Deploy
                         if (fileTokens.Length == libraryNameTokens.Length + 1)
                         {
                             // format is Libname_FBFun
-                            if (checkLibName(fileTokens) && fileTokens[fileTokens.Length - 1].Equals(helpFileSuffix, StringComparison.InvariantCultureIgnoreCase))
+                            if (checkLibName(fileTokens) && fileTokens[fileTokens.Length - 1].Equals(helpFileSuffix, StringComparison.OrdinalIgnoreCase))
                             {
                                 isFileNameOK = true;
                             }
@@ -223,7 +223,7 @@ namespace PlcNext.Common.Deploy
                         else if (fileTokens.Length == libraryNameTokens.Length + 2)
                         {
                             // format is LibName_culture_FBFun where the culture can be of one part (like "en", "de") or of more than one part (like "en-US", "de-DE")
-                            if (checkLibName(fileTokens) && fileTokens[fileTokens.Length - 1].Equals(helpFileSuffix, StringComparison.InvariantCultureIgnoreCase))
+                            if (checkLibName(fileTokens) && fileTokens[fileTokens.Length - 1].Equals(helpFileSuffix, StringComparison.OrdinalIgnoreCase))
                             {
                                 culture = fileTokens[fileTokens.Length - 2];
                                 //try

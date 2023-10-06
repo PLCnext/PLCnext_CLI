@@ -19,7 +19,7 @@ namespace PlcNext.CommandLine
 {
     [Verb(CommandLineConstants.SettingVerb, HelpText = "Sets the settings for the command line tool.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class SetSettingsVerb : SetVerb
+    internal sealed class SetSettingsVerb : SetVerb
     {
         [Value(0, MetaName = "key", HelpText = "The key for the changed setting (key must be first string after setting command).", Required = true)]
         public string Key { get; set; }

@@ -79,7 +79,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         {
             unchecked
             {
-                return ((Name != null ? Name.GetHashCode() : 0) * 397) ^ (Namespace != null ? Namespace.GetHashCode() : 0);
+                return ((Name != null ? Name.GetHashCode(StringComparison.Ordinal) : 0) * 397) ^ (Namespace != null ? Namespace.GetHashCode(StringComparison.Ordinal) : 0);
             }
         }
 

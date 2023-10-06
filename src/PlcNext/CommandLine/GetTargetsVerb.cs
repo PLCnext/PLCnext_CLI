@@ -17,7 +17,7 @@ namespace PlcNext.CommandLine
 {
     [Verb(CommandLineConstants.TargetsVerb, HelpText = "Lists all targets supported by available SDKs.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class GetTargetsVerb : GetVerb
+    internal sealed class GetTargetsVerb : GetVerb
     {
         [Option(CommandLineConstants.ShortChar, CommandLineConstants.ShortOption, HelpText ="Get a shortened form of the version.")]
         public bool Short { get; set; }

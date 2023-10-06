@@ -2,18 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net7.0</TargetFrameworks>
     <AssemblyName Condition="'$(PlcNextToolName)' != ''">$(PlcNextToolName)</AssemblyName>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright (c) 2018 PHOENIX CONTACT GmbH &amp; Co. KG</Copyright>
     <LangVersion>default</LangVersion>
-    <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
 
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <NoWarn>$(NoWarn);CA1812;IL2026;IL2069;IL2075;IL2090;IL2104;IL2118</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

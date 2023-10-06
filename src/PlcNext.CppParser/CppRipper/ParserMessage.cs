@@ -4,7 +4,7 @@ using PlcNext.Common.Tools.FileSystem;
 
 namespace PlcNext.CppParser.CppRipper
 {
-    internal class ParserMessage
+    internal sealed class ParserMessage
     {
         private readonly string errorCode;
         private readonly int line;

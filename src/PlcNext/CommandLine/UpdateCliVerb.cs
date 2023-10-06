@@ -16,7 +16,7 @@ namespace PlcNext.CommandLine
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Verb("cli", HelpText = "Updates the CLI.", Hidden = true)]
-    internal class UpdateCliVerb : UpdateVerb
+    internal sealed class UpdateCliVerb : UpdateVerb
     {
         [Option('v', "version", HelpText = "Specific version to update to.", SetName = "online")]
         public string Version { get; set; }

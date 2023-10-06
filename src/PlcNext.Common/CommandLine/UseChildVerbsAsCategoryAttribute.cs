@@ -14,7 +14,7 @@ using System.Text;
 namespace PlcNext.Common.CommandLine
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class UseChildVerbsAsCategoryAttribute : Attribute
+    public sealed class UseChildVerbsAsCategoryAttribute : Attribute
     {
     }
 }

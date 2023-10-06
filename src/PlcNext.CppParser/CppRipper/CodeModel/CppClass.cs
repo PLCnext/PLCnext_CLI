@@ -14,7 +14,7 @@ using PlcNext.Common.CodeModel;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppClass : CppType, IClass
+    internal sealed class CppClass : CppType, IClass
     {
         public CppClass(string ns, string name, string[] usings, ParseNode content, ParseNode classDeclaration,
                         List<ParserMessage> messages, string attributePrefix) : base(ns, name, usings, content, messages, classDeclaration, attributePrefix)

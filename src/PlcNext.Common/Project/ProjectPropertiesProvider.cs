@@ -115,9 +115,9 @@ namespace PlcNext.Common.Project
                 ProjectCodeEntities = entities.Select(e =>
                 {
                     TemplateEntity te = TemplateEntity.Decorate(e);
-                    return (e, te.RelatedEntites.Where(en => !en.Type.Contains("project")));
+                    return (e, te.RelatedEntites.Where(en => !en.Type.Contains("project", StringComparison.Ordinal)));
                 })
-                    .Where(e => !e.Item1.Type.Contains("project")).ToDictionary(p => p.Item1, p => p.Item2);
+                    .Where(e => !e.Item1.Type.Contains("project", StringComparison.Ordinal)).ToDictionary(p => p.Item1, p => p.Item2);
 
             }
 
@@ -137,7 +137,7 @@ namespace PlcNext.Common.Project
                     {
                         foreach (string includePath in item.Item2)
                         {
-                            IncludePath existingIncludePath = IncludePaths.Where(i => i.PathValue.Equals(includePath, StringComparison.InvariantCulture)).FirstOrDefault();
+                            IncludePath existingIncludePath = IncludePaths.Where(i => i.PathValue.Equals(includePath, StringComparison.Ordinal)).FirstOrDefault();
 
                             if (existingIncludePath == null)
                             {
@@ -151,7 +151,7 @@ namespace PlcNext.Common.Project
                 
                 foreach (IncludePath codeModelIncludeDirectory in codeModel.IncludeDirectories)
                 {
-                    IncludePath existingIncludePath = IncludePaths.Where(p => p.PathValue.Equals(codeModelIncludeDirectory.PathValue, StringComparison.InvariantCulture)).FirstOrDefault();
+                    IncludePath existingIncludePath = IncludePaths.Where(p => p.PathValue.Equals(codeModelIncludeDirectory.PathValue, StringComparison.Ordinal)).FirstOrDefault();
 
                     if (existingIncludePath == null)
                     {

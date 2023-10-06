@@ -15,7 +15,7 @@ using PlcNext.Common.CodeModel;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppCodeLanguage : ICodeLanguage
+    internal sealed class CppCodeLanguage : ICodeLanguage
     {
         public string CombineNamespace(params string[] namespaceParts)
         {

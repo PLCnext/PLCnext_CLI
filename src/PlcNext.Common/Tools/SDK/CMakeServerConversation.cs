@@ -360,7 +360,7 @@ namespace PlcNext.Common.Tools.SDK
                 pipeClient = new NamedPipeClientStream(".", pipeName,
                                                        PipeDirection.InOut, PipeOptions.Asynchronous,
                                                        TokenImpersonationLevel.Impersonation);
-                pipeClient.Connect(CMakeServerTimeout);
+                await pipeClient.ConnectAsync(CMakeServerTimeout).ConfigureAwait(false);
                 if (!pipeClient.IsConnected)
                 {
                     throw new FormattableException("Could not connect to server");
@@ -399,7 +399,12 @@ namespace PlcNext.Common.Tools.SDK
             }
             catch (Exception)
             {
-                pipeClient?.Dispose();
+#pragma warning disable CA1508 //false positive
+                if (pipeClient != null)
+                {
+                    await pipeClient.DisposeAsync().ConfigureAwait(false);
+                }
+#pragma warning restore CA1508
                 process?.Dispose();
                 throw;
             }
@@ -436,7 +441,7 @@ namespace PlcNext.Common.Tools.SDK
             do
             {
                 byte[] buffer = new byte[BufferSize];
-                readBytes = await ioStream.ReadAsync(buffer, 0, BufferSize).ConfigureAwait(false);
+                readBytes = await ioStream.ReadAsync(buffer).ConfigureAwait(false);
                 message.Append(streamEncoding.GetString(buffer, 0, readBytes));
                 log.LogVerbose($"Read {readBytes} bytes from cmake server.");
             } while (readBytes == BufferSize && !EndsWithEndTag());

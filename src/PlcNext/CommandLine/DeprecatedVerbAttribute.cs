@@ -14,7 +14,7 @@ using System.Text;
 namespace PlcNext.CommandLine
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class DeprecatedVerbAttribute : Attribute
+    public sealed class DeprecatedVerbAttribute : Attribute
     {
         public DeprecatedVerbAttribute(string alternativeVerb)
         {

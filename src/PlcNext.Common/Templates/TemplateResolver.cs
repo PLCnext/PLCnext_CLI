@@ -84,7 +84,7 @@ namespace PlcNext.Common.Templates
                 resolved.Append(ResolveControlSequence(controlSequenceDataMatch.Groups["expression"].Value,
                                                        controlSequenceDataMatch.Groups["parameter"].Value,
                                                        controlSequenceDataMatch.Groups["content"].Value));
-                if (controlSequenceDataMatch.Value.Contains('\n'))
+                if (controlSequenceDataMatch.Value.Contains('\n', StringComparison.Ordinal))
                 {
                     Match newlineMatch = newlineSearcher.Match(stringToResolve, endIndex);
                     if (newlineMatch.Success && newlineMatch.Index == endIndex)
@@ -320,7 +320,7 @@ namespace PlcNext.Common.Templates
                         textControlSequence = textControlSequence.Substring(0, textControlSequence.Length - 1);
                         value = ResolveTextControlSequences(value, textControlSequence);
                     }
-                    result = result.Replace(controlSequenceMatch.Value, value);
+                    result = result.Replace(controlSequenceMatch.Value, value, StringComparison.Ordinal);
                     controlSequenceMatch = controlSequenceMatch.NextMatch();
                 }
 
@@ -345,7 +345,7 @@ namespace PlcNext.Common.Templates
 
             int Count(string data, string substring)
             {
-                return (data.Length - data.Replace(substring, string.Empty).Length) / substring.Length;
+                return (data.Length - data.Replace(substring, string.Empty, StringComparison.Ordinal).Length) / substring.Length;
             }
         }
 
@@ -356,7 +356,7 @@ namespace PlcNext.Common.Templates
                                          TaskScheduler.Default);
         }
 
-        private string ResolveTextControlSequences(string value, string textControlSequence)
+        private static string ResolveTextControlSequences(string value, string textControlSequence)
         {
             if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(textControlSequence))
             {

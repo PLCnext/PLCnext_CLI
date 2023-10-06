@@ -18,7 +18,7 @@ namespace PlcNext.Common.Tools.IO
     {
         private readonly IPageBuffer pageBuffer;
         private readonly object lockToken = new object();
-        private bool isDisposed = false;
+        private bool isDisposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PageStreamFactory"/> class.

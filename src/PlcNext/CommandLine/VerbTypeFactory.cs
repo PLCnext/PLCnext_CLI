@@ -22,7 +22,7 @@ using TypeInfo = System.Reflection.TypeInfo;
 
 namespace PlcNext.CommandLine
 {
-    internal class VerbTypeFactory
+    internal sealed class VerbTypeFactory
     {
         private readonly string name;
         private readonly string helpText;
@@ -298,7 +298,7 @@ namespace PlcNext.CommandLine
             moduleBuilder = null;
         }
 
-        private class Example
+        private sealed class Example
         {
             public Example(string command, string description)
             {
@@ -310,7 +310,7 @@ namespace PlcNext.CommandLine
             public string Description { get; }
         }
 
-        private class Option
+        private sealed class Option
         {
             public string Name { get; }
             public char ShortName { get; }

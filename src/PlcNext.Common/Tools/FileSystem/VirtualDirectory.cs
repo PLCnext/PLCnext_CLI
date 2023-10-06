@@ -129,6 +129,11 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public VirtualDirectory Directory(params string[] directoryParts)
         {
+            if (directoryParts == null)
+            {
+                throw new ArgumentNullException(nameof(directoryParts));
+            }
+
             if (!directoryParts.Any())
             {
                 return this;
@@ -162,7 +167,11 @@ namespace PlcNext.Common.Tools.FileSystem
                 throw new ArgumentNullException(nameof(searchString));
             }
 
-            string regexPattern = searchString.Replace(".", "\\.").Replace("*", ".*").Replace("?", ".");
+            string regexPattern = searchString
+                .Replace(".", "\\.", StringComparison.Ordinal)
+                .Replace("*", ".*", StringComparison.Ordinal)
+                .Replace("?", ".", StringComparison.Ordinal);
+
             Regex pattern = new Regex(regexPattern);
             return Files(pattern, searchRecursive);
         }

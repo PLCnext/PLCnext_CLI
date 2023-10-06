@@ -80,7 +80,7 @@ namespace PlcNext.Common.Tools
 
         private BinaryLocator GetLocator(string baseDirectory)
         {
-            if (locators.ContainsKey(baseDirectory)) return locators[baseDirectory];
+            if (locators.TryGetValue(baseDirectory, out BinaryLocator locator)) return locator;
             if (fileSystem.FileExists(Path.Combine(baseDirectory, Constants.FileNamesFile)))
             {
                 VirtualFile fileNamesFile = fileSystem.GetFile(Path.Combine(baseDirectory, Constants.FileNamesFile));
@@ -94,7 +94,7 @@ namespace PlcNext.Common.Tools
                         string name = element.Name.LocalName;
                         string partPath = element.Attribute("path")?.Value ?? string.Empty;
                         string path = Path.Combine(baseDirectory,
-                                                   partPath.Replace("/", $"{Path.DirectorySeparatorChar}"));
+                                                   partPath.Replace("/", $"{Path.DirectorySeparatorChar}", StringComparison.Ordinal));
                         if (environmentService.Platform == OSPlatform.Windows)
                         {
                             path = path + ".exe";

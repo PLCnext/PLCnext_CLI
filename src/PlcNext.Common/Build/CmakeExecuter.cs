@@ -98,7 +98,7 @@ namespace PlcNext.Common.Build
             
             using (IProcess process = processManager.StartProcessWithSetup(binariesLocator.GetExecutableCommand("cmake"),
                     command, userInterface, setup,
-                    workingDirectory.FullName.Replace("\\", "/"),
+                    workingDirectory.FullName.Replace("\\", "/", StringComparison.Ordinal),
                     showOutput: showOutput, showError: showWarnings))
             {
                 process.WaitForExit();
@@ -253,49 +253,49 @@ namespace PlcNext.Common.Build
                 string GenerateCmakeCommand(string target, string version)
                 {
                     List<string> commandParts = new List<string>();
-                    string sdkRoot = buildInformation.SdkInformation.Root.FullName.Replace("\\", "/");
-                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_TOOLCHAIN_FILE="))
+                    string sdkRoot = buildInformation.SdkInformation.Root.FullName.Replace("\\", "/", StringComparison.Ordinal);
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_TOOLCHAIN_FILE=", StringComparison.Ordinal))
                     {
-                        commandParts.Add(ToolchainFileOption.Replace("%SDK_ROOT%", sdkRoot));
+                        commandParts.Add(ToolchainFileOption.Replace("%SDK_ROOT%", sdkRoot, StringComparison.Ordinal));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DARP_TOOLCHAIN_ROOT="))
+                    if (!buildInformation.BuildProperties.Contains("-DARP_TOOLCHAIN_ROOT=", StringComparison.Ordinal))
                     {
-                        commandParts.Add(ToolchainRootOption.Replace("%SDK_ROOT%", sdkRoot));
+                        commandParts.Add(ToolchainRootOption.Replace("%SDK_ROOT%", sdkRoot, StringComparison.Ordinal));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_BUILD_TYPE="))
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_BUILD_TYPE=", StringComparison.Ordinal))
                     {
-                        commandParts.Add(BuildTypeOption.Replace("%BUILD_TYPE%", GetRealBuildType()));
+                        commandParts.Add(BuildTypeOption.Replace("%BUILD_TYPE%", GetRealBuildType(), StringComparison.Ordinal));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE="))
+                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE=", StringComparison.Ordinal))
                     {
-                        commandParts.Add(DeviceOption.Replace("%TARGET%", $"\"{target}\""));
+                        commandParts.Add(DeviceOption.Replace("%TARGET%", $"\"{target}\"", StringComparison.Ordinal));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE_VERSION="))
+                    if (!buildInformation.BuildProperties.Contains("-DARP_DEVICE_VERSION=", StringComparison.Ordinal))
                     {
-                        commandParts.Add(DeviceVersionOption.Replace("%VERSION%", $"\"{version}\""));
+                        commandParts.Add(DeviceVersionOption.Replace("%VERSION%", $"\"{version}\"", StringComparison.Ordinal));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_STAGING_PREFIX="))
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_STAGING_PREFIX=", StringComparison.Ordinal))
                     {
-                        commandParts.Add(StagingPrefixOption.Replace("%STAGING_PREFIX%", GenerateStagingPrefixForTarget()));
+                        commandParts.Add(StagingPrefixOption.Replace("%STAGING_PREFIX%", GenerateStagingPrefixForTarget(), StringComparison.Ordinal));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_PREFIX_PATH=") &&
+                    if (!buildInformation.BuildProperties.Contains("-DCMAKE_PREFIX_PATH=", StringComparison.Ordinal) &&
                         IsIncludePathAvailable(out string includePath))
                     {
-                        commandParts.Add(PrefixPathOption.Replace("%PREFIX_PATH%", includePath));
+                        commandParts.Add(PrefixPathOption.Replace("%PREFIX_PATH%", includePath, StringComparison.Ordinal));
                     }
-                    if (!buildInformation.BuildProperties.Contains("-G "))
+                    if (!buildInformation.BuildProperties.Contains("-G ", StringComparison.Ordinal))
                     {
                         commandParts.Add(GeneratorOption);
-                        if (buildInformation.SdkInformation.MakeFile != null && !buildInformation.BuildProperties.Contains("-DCMAKE_MAKE_PROGRAM "))
+                        if (buildInformation.SdkInformation.MakeFile != null && !buildInformation.BuildProperties.Contains("-DCMAKE_MAKE_PROGRAM ", StringComparison.Ordinal))
                         {
-                            commandParts.Add(MakeFileOption.Replace("%MAKE_EXE%", $"\"{buildInformation.SdkInformation.MakeFile.FullName.Replace("\\", "/")}\""));
+                            commandParts.Add(MakeFileOption.Replace("%MAKE_EXE%", $"\"{buildInformation.SdkInformation.MakeFile.FullName.Replace("\\", "/", StringComparison.Ordinal)}\"", StringComparison.Ordinal));
                         }
                     }
                     if (!string.IsNullOrEmpty(buildInformation.BuildProperties))
                     {
                         commandParts.Add(buildInformation.BuildProperties);
                     }
-                    commandParts.Add($"\"{buildInformation.RootFileEntity.Directory.FullName.Replace("\\", "/")}\"");
+                    commandParts.Add($"\"{buildInformation.RootFileEntity.Directory.FullName.Replace("\\", "/", StringComparison.Ordinal)}\"");
                     return string.Join(" ", commandParts);
 
                     string GenerateStagingPrefixForTarget()

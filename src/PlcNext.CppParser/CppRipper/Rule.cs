@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+#pragma warning disable CA1002
+#pragma warning disable CA1024
+#pragma warning disable CA2201
+
 namespace PlcNext.CppParser.CppRipper
 {
     /// <summary>
@@ -678,7 +682,7 @@ namespace PlcNext.CppParser.CppRipper
                 return false;
 
             char c = p.Text[p.Index++];
-            return str.Contains(c);
+            return str.Contains(c, StringComparison.Ordinal);
         }
     }
 

@@ -19,7 +19,7 @@ namespace PlcNext.CommandLine
 {
     [Verb(CommandLineConstants.SettingVerb, HelpText = "Lists all settings or a specific setting with their value.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class GetSettingVerb : GetVerb
+    internal sealed class GetSettingVerb : GetVerb
     {
         [Value(0, MetaName = "key", HelpText = "Get the value for the specified key (key must be first string after setting command).", Required = false)]
         public string Key { get; set; }

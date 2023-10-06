@@ -61,7 +61,7 @@ namespace PlcNext.Common.Tools.Settings
 
             async Task Migrate()
             {
-                using (IProgressNotifier progress = parentProgress?.Spawn(migratableSettings.Count() + 1))
+                using (IProgressNotifier progress = parentProgress?.Spawn(migratableSettings.Length + 1))
                 {
                     foreach (string setting in migratableSettings)
                     {

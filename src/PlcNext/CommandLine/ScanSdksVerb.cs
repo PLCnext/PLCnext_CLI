@@ -17,7 +17,7 @@ namespace PlcNext.CommandLine
     [Verb("explore-sdks", HelpText = "Forces the CLI to explores all configured SDKs. This will override the cached values of already explored SDKs.",
         Hidden = true)]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class ScanSdksVerb : VerbBase
+    internal sealed class ScanSdksVerb : VerbBase
     {
         protected override Task<int> Execute(ICommandManager commandManager)
         {

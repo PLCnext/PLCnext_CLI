@@ -18,7 +18,7 @@ namespace PlcNext.CommandLine
 {
     [Verb(CommandLineConstants.SdksVerb, HelpText = "Lists all available SDKs.")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class GetSdksVerb : GetVerb
+    internal sealed class GetSdksVerb : GetVerb
     {
         [Usage]
         public static IEnumerable<UsageExample> GetSdksUsageExample =>

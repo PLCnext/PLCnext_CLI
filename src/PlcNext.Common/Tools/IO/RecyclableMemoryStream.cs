@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
+#pragma warning disable CA1045
+
 namespace PlcNext.Common.Tools.IO
 {
     /// <summary>
@@ -98,7 +100,7 @@ namespace PlcNext.Common.Tools.IO
             }
         }
 
-        private int disposedState = 0;
+        private int disposedState;
 
         private readonly string allocationStack;
         private string disposeStack;

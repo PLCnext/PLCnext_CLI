@@ -168,22 +168,22 @@ namespace PlcNext.Common.Tools
             userInterface.SetPrefix(prefix);
         }
 
-        void ILog.LogVerbose(string message)
+        public void LogVerbose(string message)
         {
             WriteVerbose(message, false);
         }
 
-        void ILog.LogInformation(string message)
+        public void LogInformation(string message)
         {
             WriteInformation(message, false);
         }
 
-        void ILog.LogWarning(string message)
+        public void LogWarning(string message)
         {
             WriteWarning(message, false);
         }
 
-        void ILog.LogError(string message)
+        public void LogError(string message)
         {
             WriteError(message, false);
         }

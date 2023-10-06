@@ -19,7 +19,7 @@ using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.CppParser.IncludeManager
 {
-    internal class JsonIncludeCache : IIncludeCache
+    internal sealed class JsonIncludeCache : IIncludeCache
     {
         public static readonly Version CurrentVersion = new Version(1,2);
         private IDictionary<string, IncludeCacheEntry> cache;
@@ -189,7 +189,7 @@ namespace PlcNext.CppParser.IncludeManager
             }
         }
 
-        private class IncludeCacheTransaction : IIncludeCacheTransaction
+        private sealed class IncludeCacheTransaction : IIncludeCacheTransaction
         {
             private readonly JsonIncludeCache cache;
 

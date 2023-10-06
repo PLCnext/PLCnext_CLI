@@ -20,7 +20,7 @@ namespace PlcNext.Common.Tools.UI
         private readonly HashSet<ConsoleProgressNotifierBase> children = new();
         protected readonly IProgressNotifier Parent;
         private const string PrefixArrow = "-> ";
-        protected bool wasDisposed = false;
+        protected bool wasDisposed;
 
         protected ConsoleProgressNotifierBase(IUserInterface userInterface, string startMessage, IProgressNotifier parent)
         {

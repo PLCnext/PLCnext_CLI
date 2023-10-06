@@ -23,7 +23,7 @@ using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
-    internal class CppFileParser : IFileParser
+    internal sealed class CppFileParser : IFileParser
     {
         public static readonly Regex StatementParser = new Regex(@"^(?<Key>[^\s\(\)]+)\s+(?<Value>.+?)(?:\s*\/\/.*)?$",
                                                                  RegexOptions.Compiled);
@@ -84,7 +84,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             IEnumerable<ParseNode> declarations = root.GetHierarchy()
                                                       .Where(n => n.RuleName == "declaration" &&
                                                                   n.RuleType == "choice" &&
-                                                                  n.ToString().Contains("const "));
+                                                                  n.ToString().Contains("const ", StringComparison.Ordinal));
             foreach (ParseNode declaration in declarations)
             {
                 ParseConstant(declaration);

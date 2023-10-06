@@ -18,8 +18,7 @@ namespace PlcNext.CommandLine
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     [Verb(CommandLineConstants.SdkVerb, HelpText = "Installs the SDK.")]
-
-    internal class InstallSdkVerb : InstallVerb
+    internal sealed class InstallSdkVerb : InstallVerb
     {
         [Option(CommandLineConstants.PathChar, CommandLineConstants.PathOption, HelpText = "The path to the packed SDK (.tar.xz or .sh).", Required = true)]
         public string Sdk { get; set; }

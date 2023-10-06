@@ -9,7 +9,7 @@ namespace PlcNext.CppParser.CppRipper
     /// where the comments relate to items.
     /// </summary>
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    class CppStructuralGrammar
+    internal sealed class CppStructuralGrammar
         : CppBaseGrammar
     {
         public Rule paran_group;

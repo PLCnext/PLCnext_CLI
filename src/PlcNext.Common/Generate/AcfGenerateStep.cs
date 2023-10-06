@@ -57,7 +57,7 @@ namespace PlcNext.Common.Generate
                                     if (reader.MoveToContent() == XmlNodeType.Element && reader.Name == "Component")
                                     {
                                         string componenttype = reader.GetAttribute("type");
-                                        if(componenttype.Contains("::"))
+                                        if(componenttype.Contains("::", StringComparison.Ordinal))
                                         {
                                             throw new OldAcfConfigException();
                                         }

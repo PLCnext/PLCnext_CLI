@@ -13,7 +13,9 @@ namespace PlcNext.Common.Tools.IO
 {
     internal class PageStream : Stream
     {
+#pragma warning disable CA2213 // Disposable fields should be disposed
         private IPage page;
+#pragma warning restore CA2213 // Disposable fields should be disposed
         private long length;
         private long position;
 

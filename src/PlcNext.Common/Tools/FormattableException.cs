@@ -69,7 +69,7 @@ namespace PlcNext.Common.Tools
 
         public override int GetHashCode()
         {
-            return (Message != null ? Message.GetHashCode() : 0);
+            return (Message != null ? Message.GetHashCode(StringComparison.Ordinal) : 0);
         }
 
         public static bool operator ==(FormattableException left, FormattableException right)

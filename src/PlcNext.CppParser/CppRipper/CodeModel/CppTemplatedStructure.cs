@@ -17,7 +17,7 @@ using System.Text;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppTemplatedStructure : CppStructure
+    internal sealed class CppTemplatedStructure : CppStructure
     {
         public CppTemplatedStructure(string ns, string name, IComment[] comments, IEnumerable<IDataType> baseTypes, string[] usings, 
             string attributePrefix, string[] templateIdentifier, string[] templateArguments, bool isTemplated, IEnumerable<CppField> fields) 

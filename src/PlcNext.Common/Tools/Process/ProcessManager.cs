@@ -97,7 +97,7 @@ namespace PlcNext.Common.Tools.Process
             return facade;
         }
 
-        private static int CurrentProcessId => System.Diagnostics.Process.GetCurrentProcess().Id;
+        private static int CurrentProcessId => Environment.ProcessId;
 
         public IEnumerable<int> GetOtherInstancesProcessIds()
         {
@@ -225,6 +225,7 @@ namespace PlcNext.Common.Tools.Process
 
         private void KillProcessAndChildren(int pid)
         {
+#pragma warning disable CA1416 // Analyzer does not check correctly the if expression
             if (platform == OSPlatform.Windows)
             {
                 try
@@ -246,6 +247,7 @@ namespace PlcNext.Common.Tools.Process
                     executionContext.WriteVerbose($"Error while closing child process - this can happen when the child process is already shutting down.{Environment.NewLine}{e}",showOutput);
                 }
             }
+#pragma warning restore CA1416
 
             // Then kill parents.
             try

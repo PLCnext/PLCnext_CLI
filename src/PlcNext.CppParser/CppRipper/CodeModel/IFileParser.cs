@@ -20,7 +20,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
         ParserResult Parse(VirtualFile file);
     }
 
-    internal class ParserResult
+    internal sealed class ParserResult
     {
         public ParserResult(IEnumerable<CodeSpecificException> exceptions, IDictionary<IType, CodePosition> types, string[] includes, Dictionary<string, string> defineStatements,
                             IEnumerable<IConstant> constants, bool success)

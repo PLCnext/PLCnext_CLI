@@ -231,7 +231,10 @@ namespace PlcNext.Common.Installation
                     using (Stream batchResourceStream = currentAssembly.GetManifestResourceStream("PlcNext.Common.Installation.copy_version.bat"))
                     using (Stream batchFileStream = batchFile.OpenWrite())
                     {
-                        batchResourceStream?.CopyTo(batchFileStream);
+                        if (batchFileStream != null)
+                        {
+                            await batchResourceStream.CopyToAsync(batchFileStream).ConfigureAwait(false);
+                        }
                     }
 
                     processManager.StartProcess(batchFile.FullName,

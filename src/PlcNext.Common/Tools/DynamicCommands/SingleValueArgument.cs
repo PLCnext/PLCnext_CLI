@@ -46,14 +46,14 @@ namespace PlcNext.Common.Tools.DynamicCommands
 
         public override bool IsDefined { get; protected set; }
 
-        public override void SetValue(object obj)
+        public override void SetValue(object value)
         {
-            if (obj is string stringValue)
+            if (value is string stringValue)
             {
                 IsDefined = true;
                 Value = stringValue;
             }
-            else if (obj != null)
+            else if (value != null)
             {
                 throw new ArgumentTypeMismatchException();
             }

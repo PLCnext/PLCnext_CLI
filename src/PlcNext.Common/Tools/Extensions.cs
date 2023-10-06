@@ -30,8 +30,8 @@ namespace PlcNext.Common.Tools
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return name.Replace("-", "")
-                       .Replace("_", "")
+            return name.Replace("-", "", StringComparison.Ordinal)
+                       .Replace("_", "", StringComparison.Ordinal)
                        .ToLowerInvariant();
         }
 
@@ -55,7 +55,7 @@ namespace PlcNext.Common.Tools
                 string key = resolveMatch.Groups["resolvable"].Value;
                 if (pathNames.ContainsKey(key))
                 {
-                    resolved = resolved.Replace(resolveMatch.Value, pathNames[key]);
+                    resolved = resolved.Replace(resolveMatch.Value, pathNames[key], StringComparison.Ordinal);
                 }
 
                 resolveMatch = resolvePattern.Match(resolved);

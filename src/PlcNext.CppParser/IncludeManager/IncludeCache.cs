@@ -11,7 +11,7 @@ using System;
 
 namespace PlcNext.CppParser.IncludeManager
 {
-    internal class IncludeCache
+    internal sealed class IncludeCache
     {
         public Version Version { get; set; }
         

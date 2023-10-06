@@ -61,7 +61,7 @@ namespace PlcNext.Common.DataModel
                     fallback);
         }
 
-        private string MapFileAccessKey(string key)
+        private static string MapFileAccessKey(string key)
         {
             if (key == EntityKeys.PathKey)
             {
@@ -137,7 +137,7 @@ namespace PlcNext.Common.DataModel
                 case EntityKeys.OriginKey:
                     return owner.Origin;
                 case EntityKeys.ThrowIfMultidimensionalKey:
-                    if (owner.Value<string>()?.Contains(",") == true)
+                    if (owner.Value<string>()?.Contains(',', StringComparison.Ordinal) == true)
                         throw new MultidimensionalArrayNotSupportedException();
                     return owner;
                 case EntityKeys.ContainsLtGt:
@@ -187,7 +187,7 @@ namespace PlcNext.Common.DataModel
                     Entity ContainsLtGt()
                     {
                         string value = owner.Value<string>();
-                        bool result = value.Contains("<") || value.Contains(">");
+                        bool result = value.Contains('<', StringComparison.Ordinal) || value.Contains('>', StringComparison.Ordinal);
                         return owner.Create(key, result.ToString(CultureInfo.InvariantCulture), result);
                         
                     }

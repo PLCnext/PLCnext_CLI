@@ -19,7 +19,7 @@ namespace PlcNext.CommandLine
 {
     [Verb(ProjectInformationVerb, HelpText = "Lists project information like name, targets, ...")]
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class GetProjectInformationVerb : GetVerb
+    internal sealed class GetProjectInformationVerb : GetVerb
     {
         [Option(PathChar, PathOption, HelpText = "Directory where the plcnext.proj file is located.")]
         public string Path { get; set; }

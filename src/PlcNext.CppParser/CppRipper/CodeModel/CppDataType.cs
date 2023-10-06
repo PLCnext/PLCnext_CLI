@@ -16,7 +16,7 @@ using PlcNext.Common.CodeModel;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppDataType : CppCodeEntity, IDataType
+    internal sealed class CppDataType : CppCodeEntity, IDataType
     {
         private readonly IEnumerable<string> potentialPrefixes;
         public IEnumerable<string> PotentialFullNames => potentialPrefixes.Select(p => $"{p}::{Name}")

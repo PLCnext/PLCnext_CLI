@@ -7,37 +7,28 @@
     <CleanCodeAnalysisEnabled Condition="'$(CleanCodeAnalysisEnabled)'==''" >false</CleanCodeAnalysisEnabled>
   </PropertyGroup>
   
+  <PropertyGroup>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
+    <AnalysisMode>All</AnalysisMode>
+  </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-    <CodeAnalysisRuleSet>..\_Build_\PxCSWFxCopRules.ruleset</CodeAnalysisRuleSet>
     <DefineConstants>DEBUG;TRACE;CODE_ANALYSIS</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-    <CodeAnalysisRuleSet>..\_Build_\PxCSWFxCopRules.ruleset</CodeAnalysisRuleSet>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-  
-  <Choose>
-    <When Condition="'$(FxCopAnalysisEnabled)' == 'true'">
-	  <ItemGroup>
-		<CodeAnalysisDictionary Include="..\_Build_\PxCSWGlobalCustomDictionary.xml">
-		  <Link>Properties\PxCSWGlobalCustomDictionary.xml</Link>
-		  <SubType>Designer</SubType>
-		</CodeAnalysisDictionary>
-	  </ItemGroup>
-    </When>
-  </Choose>
 
   <Choose>
     <When Condition="'$(FxCopAnalysisEnabled)' == 'true'">
       <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-      </ItemGroup>  
+      </ItemGroup>
     </When>
   </Choose>
  

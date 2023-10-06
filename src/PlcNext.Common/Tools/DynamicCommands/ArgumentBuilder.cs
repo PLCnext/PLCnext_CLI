@@ -17,13 +17,13 @@ namespace PlcNext.Common.Tools.DynamicCommands
     {
         private readonly CommandDefinitionBuilder commandDefinitionBuilder;
         private string name = string.Empty;
-        private char shortName = default(char);
+        private char shortName;
         private string help = string.Empty;
-        private bool mandatory = false;
-        private Func<string, (bool success, string message, string newValue)> restriction = null;
+        private bool mandatory;
+        private Func<string, (bool success, string message, string newValue)> restriction;
         private ArgumentType argumentType = ArgumentType.Bool;
-        private object value = null;
-        private string setName = null;
+        private object value;
+        private string setName;
         private char separator = Constants.OptionsSeparator;
 
         private ArgumentBuilder(CommandDefinitionBuilder commandDefinitionBuilder)

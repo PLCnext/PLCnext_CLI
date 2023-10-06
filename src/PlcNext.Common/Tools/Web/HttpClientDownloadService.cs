@@ -40,6 +40,7 @@ namespace PlcNext.Common.Tools.Web
             using (HttpClientHandler clientHandler = new HttpClientHandler())
             using (IProgressNotifier progress = parentProgress?.Spawn(1.0, $"Download {url}"))
             {
+                clientHandler.CheckCertificateRevocationList = true;
                 if (webProxy != null)
                 {
                     clientHandler.Proxy = webProxy;

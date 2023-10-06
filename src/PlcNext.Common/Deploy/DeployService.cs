@@ -101,7 +101,7 @@ namespace PlcNext.Common.Deploy
                 string relativePath = null;
                 bool recreateStructure = false;
                 string[] path = fileSystem.GetPath(from);
-                int firstWildCard = path.TakeWhile(p => !p.Contains('*') && !p.Contains('?')).Count();
+                int firstWildCard = path.TakeWhile(p => !p.Contains('*', StringComparison.Ordinal) && !p.Contains('?', StringComparison.Ordinal)).Count();
                 if (firstWildCard != path.Length)
                 {
                     baseDirectory = fileSystem.GetDirectory(Path.Combine(path.Take(firstWildCard).ToArray()), project.Path, false);

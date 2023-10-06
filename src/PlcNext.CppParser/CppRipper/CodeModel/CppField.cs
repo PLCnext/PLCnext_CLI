@@ -16,7 +16,7 @@ using PlcNext.CppParser.CppRipper.CodeModel.Parser;
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
-    internal class CppField : CppCodeEntity, IField
+    internal sealed class CppField : CppCodeEntity, IField
     {
         public CppField(string name, IDataType dataType, CppComment[] comments, string[] multiplicity,
                         string attributePrefix, IType containingType = null) : base(name, attributePrefix)

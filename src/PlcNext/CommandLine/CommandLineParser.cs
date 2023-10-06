@@ -27,7 +27,7 @@ using TypeInfo = CommandLine.TypeInfo;
 
 namespace PlcNext.CommandLine
 {
-    internal class CommandLineParser : ICommandLineParser
+    internal sealed class CommandLineParser : ICommandLineParser
     {
         private readonly IUserInterface userInterface;
         private readonly ICommandManager commandManager;
@@ -116,7 +116,7 @@ namespace PlcNext.CommandLine
             }
         }
 
-        private string ConvertToString(object verb)
+        private static string ConvertToString(object verb)
         {
             string command = GetCommand();
             Dictionary<string, string> options = GetOptions();
@@ -358,7 +358,7 @@ namespace PlcNext.CommandLine
                 if (!string.IsNullOrEmpty(helpLine))
                 {
                     int index = helpLine.IndexOf("help ", StringComparison.Ordinal);
-                    list[list.IndexOf(helpLine)] = helpLine.Substring(0,index) + "--help " + helpLine.Substring(index + "help ".Length +2);
+                    list[list.IndexOf(helpLine)] = String.Concat(helpLine.AsSpan(0, index), "--help ", helpLine.AsSpan(index + "help ".Length + 2));
                 }
             }
 
@@ -369,7 +369,7 @@ namespace PlcNext.CommandLine
                 if (!string.IsNullOrEmpty(versionLine))
                 {
                     int index = versionLine.IndexOf("version ", StringComparison.Ordinal);
-                    list[list.IndexOf(versionLine)] = versionLine.Substring(0, index) + "--version " + versionLine.Substring(index + "version ".Length + 2);
+                    list[list.IndexOf(versionLine)] = String.Concat(versionLine.AsSpan(0, index), "--version ", versionLine.AsSpan(index + "version ".Length + 2));
                 }
             }
 

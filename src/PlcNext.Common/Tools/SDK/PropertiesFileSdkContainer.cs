@@ -59,7 +59,7 @@ namespace PlcNext.Common.Tools.SDK
                             string key = resolveMatch.Groups["resolvable"].Value;
                             if (environmentService.PathNames.ContainsKey(key))
                             {
-                                resolved = resolved.Replace(resolveMatch.Value, environmentService.PathNames[key]);
+                                resolved = resolved.Replace(resolveMatch.Value, environmentService.PathNames[key], StringComparison.Ordinal);
                             }
 
                             resolveMatch = resolvePattern.Match(resolved);

@@ -58,7 +58,7 @@ namespace PlcNext.Common.CodeModel
                    key == EntityKeys.BaseDirectoryKey && HasBaseDirectory(owner, out _);
         }
 
-        private bool HasBaseDirectory(Entity owner, out string baseDirectory)
+        private static bool HasBaseDirectory(Entity owner, out string baseDirectory)
         {
             baseDirectory = null;
 
@@ -285,9 +285,9 @@ namespace PlcNext.Common.CodeModel
 
             (bool success, string value) FormatDataType(string unformattedValue)
             {
-                if (unformattedValue.Contains('<'))
+                if (unformattedValue.Contains('<', StringComparison.Ordinal))
                 {
-                    unformattedValue = unformattedValue.Substring(0, unformattedValue.IndexOf('<'));
+                    unformattedValue = unformattedValue.Substring(0, unformattedValue.IndexOf('<', StringComparison.Ordinal));
                 }
 
                 string result = owner.Create("temporaryCtnFormatContainer", unformattedValue).Format()["knownDataTypes"].Value<string>();
@@ -409,7 +409,7 @@ namespace PlcNext.Common.CodeModel
                                         .Format()["escapeTemplatedStructName"]
                                         .Format()["convertToIECDataType"].Value<string>();
                 }
-                dataTypeName = dataTypeName.Contains("::")
+                dataTypeName = dataTypeName.Contains("::", StringComparison.Ordinal)
                     ? dataTypeName.Substring(dataTypeName.LastIndexOf("::", StringComparison.InvariantCulture) + "::".Length)
                     : dataTypeName;
 
