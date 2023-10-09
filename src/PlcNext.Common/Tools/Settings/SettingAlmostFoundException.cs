@@ -14,10 +14,10 @@ using System.Text;
 
 namespace PlcNext.Common.Tools.Settings
 {
-    internal class SettingKeyIsEmptyException : FormattableException
+    internal class SettingAlmostFoundException : FormattableException
     {
-        public SettingKeyIsEmptyException(string keys) :
-            base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.SettingsKeyIsNotSet, keys))
+        public SettingAlmostFoundException(string settingsName, string closestSetting) :
+            base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.SettingAlmostFound, settingsName, closestSetting))
         {
 
         }

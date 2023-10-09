@@ -25,5 +25,7 @@ namespace PlcNext.Common.Tools.Settings
         string GetSettingValue(string setting);
 
         IEnumerable<string> GetSettingKeys();
+        
+        string GetSettingDescription(string key);
     }
 }

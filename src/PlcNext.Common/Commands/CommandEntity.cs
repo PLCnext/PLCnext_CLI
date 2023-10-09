@@ -31,19 +31,17 @@ namespace PlcNext.Common.Commands
 
         public static CommandEntity FindUpperCommand(IEntityBase current)
         {
+            if (current == null) throw new ArgumentNullException(nameof(current));
             IEntityBase commandEntity = null;
-            if (current != null)
+            do
             {
-                do
+                if (current.Value<CommandDefinition>() != null)
                 {
-                    if (current.Value<CommandDefinition>() != null)
-                    {
-                        commandEntity = current;
-                    }
+                    commandEntity = current;
+                }
 
-                    current = current.Owner;
-                } while (commandEntity == null && current != null);
-            }
+                current = current.Owner;
+            } while (commandEntity == null && current != null);
 
             if (commandEntity == null)
             {

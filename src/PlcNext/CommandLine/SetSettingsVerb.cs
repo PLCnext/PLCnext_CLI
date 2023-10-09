@@ -21,7 +21,7 @@ namespace PlcNext.CommandLine
     [Obfuscation(Exclude = true, ApplyToMembers = true)]
     internal sealed class SetSettingsVerb : SetVerb
     {
-        [Value(0, MetaName = "key", HelpText = "The key for the changed setting (key must be first string after setting command).", Required = true)]
+        [Value(0, MetaName = "key", HelpText = "The key for the changed setting (key must be first string after setting command).", Required = false)]
         public string Key { get; set; }
 
         [Value(1, MetaName = "value", HelpText = "The value for the changed setting (value must be second string after setting command).", Required = false)]
@@ -35,6 +35,9 @@ namespace PlcNext.CommandLine
 
         [Option('c', CommandLineConstants.ClearOption, HelpText = "Indicates that the value should be cleared (set to empty).", Required = false, SetName = "mode")]
         public bool Clear { get; set; }
+        
+        [Option(CommandLineConstants.DescriptionChar, CommandLineConstants.DescriptionOption, HelpText = "Get the description for a key.", Required = false)]
+        public bool Description { get; set; }
 
         [Usage]
         public static IEnumerable<UsageExample> SetSettingsUsageExample =>
@@ -49,7 +52,7 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new SetSettingsCommandArgs(Key, Value, Add, Remove, Clear))))
+            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new SetSettingsCommandArgs(Key, Value, Add, Remove, Clear, Description))))
                                        .ConfigureAwait(false);
         }
     }

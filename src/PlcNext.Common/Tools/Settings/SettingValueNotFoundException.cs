@@ -16,7 +16,8 @@ namespace PlcNext.Common.Tools.Settings
 {
     internal class SettingValueNotFoundException : FormattableException
     {
-        public SettingValueNotFoundException(string value, string closestValue) : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.SettingNotFound, value, closestValue))
+        public SettingValueNotFoundException(string value, string values) : 
+            base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.SettingValueNotFound, value, values))
         {
 
         }

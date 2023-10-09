@@ -37,7 +37,6 @@ namespace PlcNext.Common
             builder.RegisterType<ProcessManager>().As<IProcessManager>().As<IProcessInformationService>()
                    .InstancePerLifetimeScope().PropertiesAutowired();
             builder.RegisterType<ConsoleProgressVisualizer>().As<IProgressVisualizer>().InstancePerLifetimeScope();
-            builder.RegisterType<HttpClientDownloadService>().As<IDownloadService>().InstancePerLifetimeScope();
             builder.RegisterType<RealEnvironmentService>().As<IEnvironmentService>().InstancePerLifetimeScope();
             builder.RegisterType<FormattableExceptionHandler>().As<IExceptionHandler>().InstancePerLifetimeScope();
             builder.RegisterType<GuidFactory>().As<IGuidFactory>().InstancePerLifetimeScope();

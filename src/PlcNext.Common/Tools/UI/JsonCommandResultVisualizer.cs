@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -51,9 +52,13 @@ namespace PlcNext.Common.Tools.UI
 
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    formattedObject.Add("error", new JValue(errorMessage));
+                    executionContext.WriteInformation(errorMessage);
+                    //formattedObject.Add("error", new JValue(errorMessage));
                 }
-                executionContext.WriteInformation(formattedObject.ToString(Formatting.Indented));
+                if (formattedObject.Descendants().Any())
+                {
+                    executionContext.WriteInformation(formattedObject.ToString(Formatting.Indented));
+                }
             }
         }
     }

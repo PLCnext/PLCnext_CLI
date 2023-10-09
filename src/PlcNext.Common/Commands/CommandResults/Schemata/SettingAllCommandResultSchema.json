@@ -36,30 +36,6 @@
             "null"
           ]
         },
-        "CliRepositoryRoot": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "CliRepositoryFileName": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "CliRepositorySignatureFileName": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "HttpProxy": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
         "LogFilePath": {
           "type": [
             "string",
@@ -77,10 +53,6 @@
         "SdkPaths",
         "TemplateLocations",
         "AttributePrefix",
-        "CliRepositoryRoot",
-        "CliRepositoryFileName",
-        "CliRepositorySignatureFileName",
-        "HttpProxy",
         "LogFilePath",
         "UseSystemCommands",
         "AlwaysWriteExtendedLog"

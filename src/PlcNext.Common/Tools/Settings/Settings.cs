@@ -16,26 +16,17 @@ namespace PlcNext.Common.Tools.Settings
     {
         public const string LogFilePathDefault = "{ApplicationData}/{ApplicationName}/log.txt";
         public const string AttributePrefixDefault = "#";
-        public const string CliRepositoryRootDefault = "http://localhost/cli";
-        public const string CliRepositoryFileNameDefault = "repository.xml";
-        public const string CliRepositorySignatureFileNameDefault = "repository.xml.cer";
-        public const string HttpProxyDefault = "";
         public static readonly string[] TemplateLocationsDefault = new[] { "./Templates/Templates.xml" };
         public static readonly string[] SdkPathsDefault = System.Array.Empty<string>();
         public const bool UseSystemCommandsDefault = false;
         public const bool AlwaysWriteExtendedLogDefault = false;
         public const string MSBuildPathDefault = "";
 
-        public Settings(string attributePrefix, string[] sdkPaths, string cliRepositoryRoot, string cliRepositoryFileName, 
-                        string cliRepositorySignatureFileName, string httpProxy, string logFilePath, string[] templateLocations,
+        public Settings(string attributePrefix, string[] sdkPaths, string logFilePath, string[] templateLocations,
                         bool useSystemCommands, bool alwaysWriteExtendedLog, string msBuildPath)
         {
             AttributePrefix = attributePrefix;
             SdkPaths = sdkPaths;
-            CliRepositoryRoot = cliRepositoryRoot;
-            CliRepositoryFileName = cliRepositoryFileName;
-            CliRepositorySignatureFileName = cliRepositorySignatureFileName;
-            HttpProxy = httpProxy;
             LogFilePath = logFilePath;
             TemplateLocations = templateLocations;
             UseSystemCommands = useSystemCommands;
@@ -47,12 +38,8 @@ namespace PlcNext.Common.Tools.Settings
         {
             AttributePrefix = AttributePrefixDefault;
             SdkPaths = SdkPathsDefault;
-            CliRepositoryRoot = CliRepositoryRootDefault;
-            CliRepositoryFileName = CliRepositoryFileNameDefault;
-            CliRepositorySignatureFileName = CliRepositorySignatureFileNameDefault;
             LogFilePath = LogFilePathDefault;
             TemplateLocations = TemplateLocationsDefault;
-            HttpProxy = HttpProxyDefault;
             UseSystemCommands = UseSystemCommandsDefault;
             AlwaysWriteExtendedLog = AlwaysWriteExtendedLogDefault;
             MSBuildPath = MSBuildPathDefault;
@@ -63,14 +50,6 @@ namespace PlcNext.Common.Tools.Settings
         public IReadOnlyCollection<string> TemplateLocations { get; }
 
         public string AttributePrefix { get; }
-
-        public string CliRepositoryRoot { get; }
-
-        public string CliRepositoryFileName { get; }
-
-        public string CliRepositorySignatureFileName { get; }
-
-        public string HttpProxy { get; }
 
         public string LogFilePath { get; }
 

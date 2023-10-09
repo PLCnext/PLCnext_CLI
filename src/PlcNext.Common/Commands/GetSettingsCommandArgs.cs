@@ -15,13 +15,15 @@ namespace PlcNext.Common.Commands
 {
     public class GetSettingsCommandArgs : CommandArgs
     {
-        public GetSettingsCommandArgs(string key, bool all)
+        public GetSettingsCommandArgs(string key, bool all, bool description)
         {
             Key = key;
             All = all;
+            Description = description;
         }
 
         public string Key { get; }
         public bool All { get; }
+        public bool Description { get; }
     }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="TemplateLocations" xml:space="preserve">
+        <value>The location of the templates.</value>
+    </data>
+    <data name="AttributePrefix" xml:space="preserve">
+        <value>The prefix of attributes</value>
+    </data>
+    <data name="SdkPaths" xml:space="preserve">
+        <value>The paths to the SDKs</value>
+    </data>
+    <data name="LogFilePath" xml:space="preserve">
+        <value>The path to the log file</value>
+    </data>
+    <data name="UseSystemCommands" xml:space="preserve">
+        <value>Use system commands</value>
+    </data>
+    <data name="AlwaysWriteExtendedLog" xml:space="preserve">
+        <value>Always write an extended log</value>
+    </data>
+    <data name="MSBuildPath" xml:space="preserve">
+        <value>The path to the MS build files</value>
+    </data>
+</root>

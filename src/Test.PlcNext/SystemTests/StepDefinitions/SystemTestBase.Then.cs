@@ -85,6 +85,13 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             Then_the_user_was_informed_that_the_value_does_not_exist_and_asked_if_the_value_SUGGESTION_was_suggested(
                 string suggestion)
         {
+            ScenarioContext.CheckUserInformedOfError(typeof(SettingValueAlmostFoundException));
+            ScenarioContext.CheckUserInformedOfError(suggestion, $"it should contain{suggestion}");
+        }
+        
+        protected void
+        Then_the_user_was_informed_that_the_value_does_not_exist()
+        {
             ScenarioContext.CheckUserInformedOfError(typeof(SettingValueNotFoundException));
         }
 

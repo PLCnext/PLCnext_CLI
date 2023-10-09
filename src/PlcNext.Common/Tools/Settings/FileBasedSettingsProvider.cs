@@ -77,6 +77,11 @@ namespace PlcNext.Common.Tools.Settings
         {
             return Parser.GetSetting(key);
         }
+        
+        public string GetSettingDescription(string key)
+        {
+            return Parser.GetSettingDescription(key);
+        }
 
         public IEditableSettings StartSettingTransaction()
         {
@@ -160,18 +165,6 @@ namespace PlcNext.Common.Tools.Settings
                     string attributePrefix = document.Descendants("Settings").FirstOrDefault()?
                                                      .Attribute("AttributePrefix")?.Value
                                              ?? Settings.AttributePrefixDefault;
-                    string cliRpositoryRoot = document.Descendants("Settings").FirstOrDefault()?
-                                                .Element("CliRepositoryRoot")?.Value
-                                             ?? Settings.CliRepositoryRootDefault;
-                    string cliRpositoryFileName = document.Descendants("Settings").FirstOrDefault()?
-                                                 .Element("CliRepositoryFileName")?.Value
-                                              ?? Settings.CliRepositoryFileNameDefault;
-                    string cliRpositorySignatureFileName = document.Descendants("Settings").FirstOrDefault()?
-                                                     .Element("CliRepositorySignatureFileName")?.Value
-                                                  ?? Settings.CliRepositorySignatureFileNameDefault;
-                    string httpProxy = document.Descendants("Settings").FirstOrDefault()?
-                                                              .Element("HttpProxy")?.Value
-                                            ?? Settings.HttpProxyDefault;
                     string logFilePath = document.Descendants("Settings").FirstOrDefault()?
                                             .Element("LogFilePath")?.Value
                                          ?? Settings.LogFilePathDefault;
@@ -187,8 +180,7 @@ namespace PlcNext.Common.Tools.Settings
                                             .Element(nameof(Settings.MSBuildPath))?.Value
                                          ?? Settings.MSBuildPathDefault;
                     log.LogInformation($"Used settings {file.FullName}:");
-                    Settings result = new Settings(attributePrefix, paths.ToArray(), cliRpositoryRoot, cliRpositoryFileName,
-                                                    cliRpositorySignatureFileName, httpProxy, logFilePath, templates.ToArray(),
+                    Settings result = new Settings(attributePrefix, paths.ToArray(), logFilePath, templates.ToArray(),
                                                     systemCommands, extendedLog, msBuildPath);
                     log.LogInformation(JsonConvert.SerializeObject(result, Formatting.Indented));
                     return result;
@@ -209,10 +201,6 @@ namespace PlcNext.Common.Tools.Settings
                 stream.SetLength(0);
                 XDocument document = new XDocument(new XElement("Settings",
                                                                 new XAttribute("AttributePrefix", current.AttributePrefix),
-                                                                new XElement("CliRepositoryRoot", current.CliRepositoryRoot),
-                                                                new XElement("CliRepositoryFileName", current.CliRepositoryFileName),
-                                                                new XElement("CliRepositorySignatureFileName", current.CliRepositorySignatureFileName),
-                                                                new XElement("HttpProxy", current.HttpProxy??string.Empty),
                                                                 new XElement("LogFilePath", current.LogFilePath ?? "log.txt"),
                                                                 new XElement("SystemCommands", current.UseSystemCommands.ToString(CultureInfo.InvariantCulture)),
                                                                 new XElement("AlwaysWriteExtendedLog", current.AlwaysWriteExtendedLog.ToString(CultureInfo.InvariantCulture)),

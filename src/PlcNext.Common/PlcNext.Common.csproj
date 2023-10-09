@@ -14,6 +14,15 @@
     <Compile Remove="Tools\CalcEngine\**" />
     <EmbeddedResource Remove="Tools\CalcEngine\**" />
     <None Remove="Tools\CalcEngine\**" />
+    <EmbeddedResource Update="SettingDescriptons.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SettingDescriptons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="SettingDescriptons.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SettingDescriptons.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

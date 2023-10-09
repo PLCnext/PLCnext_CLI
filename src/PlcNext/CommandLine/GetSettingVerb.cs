@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -26,6 +27,9 @@ namespace PlcNext.CommandLine
 
         [Option(CommandLineConstants.AllChar, CommandLineConstants.AllOption, HelpText = "Get all available keys with their value.", Required = false)]
         public bool All { get; set; }
+        
+        [Option(CommandLineConstants.DescriptionChar, CommandLineConstants.DescriptionOption, HelpText = "Get the description for a key.", Required = false)]
+        public bool Description { get; set; }
 
         [Usage]
         public static IEnumerable<UsageExample> GetSettingUsageExample =>
@@ -39,7 +43,12 @@ namespace PlcNext.CommandLine
 
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new GetSettingsCommandArgs(Key??string.Empty, All))))
+            if (Key?.Equals("All", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                Key = string.Empty;
+                All = true;
+            }
+            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new GetSettingsCommandArgs(Key??string.Empty, All, Description))))
                                        .ConfigureAwait(false);
         }
     }

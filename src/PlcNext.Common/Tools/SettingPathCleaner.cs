@@ -40,10 +40,6 @@ namespace PlcNext.Common.Tools
         {
             e.Settings = new Settings.Settings(e.Settings.AttributePrefix,
                                                e.Settings.SdkPaths.Select(p => p.CleanPath()).ToArray(),
-                                               e.Settings.CliRepositoryRoot,
-                                               e.Settings.CliRepositoryFileName,
-                                               e.Settings.CliRepositorySignatureFileName,
-                                               e.Settings.HttpProxy,
                                                e.Settings.LogFilePath.CleanPath(),
                                                e.Settings.TemplateLocations.Select(p => p.CleanPath()).ToArray(),
                                                e.Settings.UseSystemCommands,

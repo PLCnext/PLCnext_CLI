@@ -106,7 +106,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
             {
                 if (command == "get setting --all" || command == "get setting -a")
                 {
-                    userInterface.WriteInformation(@"{""AttributePrefix"": ""#"",  ""CliRepositoryRoot"": ""http://localhost/cli"", ""FancySetting"": [""a"", ""b""]}");
+                    userInterface.WriteInformation(@"{""AttributePrefix"": ""#"",  ""FancySetting"": [""a"", ""b""]}");
                 }
             }
         }

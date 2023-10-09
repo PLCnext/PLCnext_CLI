@@ -66,12 +66,10 @@ namespace PlcNext.Common
             builder.RegisterType<GetSettingsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GetTargetsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<GetProjectInformationCommand>().As<ICommand>().InstancePerLifetimeScope();
-            builder.RegisterType<GetUpdateVersionsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<InstallSdkCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<ScanSdksCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<SetSettingsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<SetTargetsCommand>().As<ICommand>().InstancePerLifetimeScope();
-            builder.RegisterType<UpdateCliCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateTargetsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<TargetParser>().As<ITargetParser>().Named<IEntityContentProvider>("Implementation").InstancePerLifetimeScope();
             builder.RegisterType<AutomaticRollbackTransactionFactory>().As<ITransactionFactory>().InstancePerLifetimeScope();
@@ -85,7 +83,6 @@ namespace PlcNext.Common
                    .As<ISettingsProvider>()
                    .As<ISettingsObserver>()
                    .InstancePerLifetimeScope();
-            builder.RegisterType<HttpCliUpdater>().As<ICliUpdater>().InstancePerLifetimeScope();
             builder.RegisterType<JsonCommandResultVisualizer>().As<ICommandResultVisualizer>().InstancePerLifetimeScope();
             builder.RegisterType<RsaSecurityValidator>().As<ISecurityValidator>().InstancePerLifetimeScope();
             builder.RegisterType<SharpZipFileUnpackService>().As<IFileUnpackService>().InstancePerLifetimeScope();

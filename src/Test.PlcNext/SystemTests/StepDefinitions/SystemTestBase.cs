@@ -45,6 +45,8 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         }
 
         protected bool IsWindowsSystem => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        
+        protected string Adapt(string path) => IsWindowsSystem?path.Replace('/','\\'):path;
 
         public void Dispose()
         {

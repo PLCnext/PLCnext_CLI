@@ -27,37 +27,25 @@ namespace PlcNext.Common.Tools.Settings
         private void ParseSettings(Settings settings)
         {
             properties.Add(nameof(Settings.AttributePrefix),
-                           new SingleSettingsProperty(nameof(Settings.AttributePrefix), settings.AttributePrefix));
+                           new SingleSettingsProperty(nameof(Settings.AttributePrefix), settings.AttributePrefix, SettingDescriptons.AttributePrefix));
             properties.Add(nameof(Settings.SdkPaths),
-                           new CollectionSettingsProperty(nameof(Settings.SdkPaths), settings.SdkPaths.ToList()));
-            properties.Add(nameof(Settings.CliRepositoryRoot),
-                           new SingleSettingsProperty(nameof(Settings.CliRepositoryRoot), settings.CliRepositoryRoot));
-            properties.Add(nameof(Settings.CliRepositoryFileName),
-                           new SingleSettingsProperty(nameof(Settings.CliRepositoryFileName), settings.CliRepositoryFileName));
-            properties.Add(nameof(Settings.CliRepositorySignatureFileName),
-                           new SingleSettingsProperty(nameof(Settings.CliRepositorySignatureFileName), settings.CliRepositorySignatureFileName));
-            properties.Add(nameof(Settings.HttpProxy),
-                           new SingleSettingsProperty(nameof(Settings.HttpProxy), settings.HttpProxy));
+                           new CollectionSettingsProperty(nameof(Settings.SdkPaths), settings.SdkPaths.ToList(), SettingDescriptons.SdkPaths));
             properties.Add(nameof(Settings.LogFilePath),
-                           new SingleSettingsProperty(nameof(Settings.LogFilePath), settings.LogFilePath));
+                           new SingleSettingsProperty(nameof(Settings.LogFilePath), settings.LogFilePath, SettingDescriptons.LogFilePath));
             properties.Add(nameof(Settings.TemplateLocations),
-                           new CollectionSettingsProperty(nameof(Settings.TemplateLocations), settings.TemplateLocations.ToList()));
+                           new CollectionSettingsProperty(nameof(Settings.TemplateLocations), settings.TemplateLocations.ToList(), SettingDescriptons.TemplateLocations));
             properties.Add(nameof(Settings.UseSystemCommands),
-                           new BoolSettingsProperty(nameof(Settings.UseSystemCommands), settings.UseSystemCommands));
+                           new BoolSettingsProperty(nameof(Settings.UseSystemCommands), settings.UseSystemCommands, SettingDescriptons.UseSystemCommands));
             properties.Add(nameof(Settings.AlwaysWriteExtendedLog),
-                           new BoolSettingsProperty(nameof(Settings.AlwaysWriteExtendedLog), settings.AlwaysWriteExtendedLog));
+                           new BoolSettingsProperty(nameof(Settings.AlwaysWriteExtendedLog), settings.AlwaysWriteExtendedLog, SettingDescriptons.AlwaysWriteExtendedLog));
             properties.Add(nameof(Settings.MSBuildPath),
-                           new SingleSettingsProperty(nameof(Settings.MSBuildPath), settings.MSBuildPath));
+                           new SingleSettingsProperty(nameof(Settings.MSBuildPath), settings.MSBuildPath, SettingDescriptons.MSBuildPath));
         }
 
         public Settings GetSettings()
         {
             return new Settings(((SingleSettingsProperty) properties[nameof(Settings.AttributePrefix)]).Value,
                                 ((CollectionSettingsProperty) properties[nameof(Settings.SdkPaths)]).Values.ToArray(),
-                                ((SingleSettingsProperty)properties[nameof(Settings.CliRepositoryRoot)]).Value,
-                                ((SingleSettingsProperty)properties[nameof(Settings.CliRepositoryFileName)]).Value,
-                                ((SingleSettingsProperty)properties[nameof(Settings.CliRepositorySignatureFileName)]).Value,
-                                ((SingleSettingsProperty)properties[nameof(Settings.HttpProxy)]).Value,
                                 ((SingleSettingsProperty)properties[nameof(Settings.LogFilePath)]).Value,
                                 ((CollectionSettingsProperty)properties[nameof(Settings.TemplateLocations)]).Values.ToArray(),
                                 ((BoolSettingsProperty)properties[nameof(Settings.UseSystemCommands)]).Value,
@@ -76,16 +64,30 @@ namespace PlcNext.Common.Tools.Settings
             CollectionSettingsProperty collection = (CollectionSettingsProperty)property;
             return string.Join(";", collection.Values);
         }
+       
+        public string GetSettingDescription(string key)
+        {
+            SettingsProperty property = GetProperty(key);
+            return property?.Description;
+        }
 
         private SettingsProperty GetProperty(string key)
         {
             if (string.IsNullOrEmpty(key))
             {
-                throw new SettingKeyIsEmptyException();
+                throw new SettingKeyIsEmptyException(string.Join(", ", properties.Keys));
             }
             if (!properties.ContainsKey(key))
             {
-                throw new SettingNotFoundException(key, key.GetClosestMatch(properties.Keys));
+                string closestMatch = key.GetClosestMatch(properties.Keys);
+                if (LevenshteinDistance.Compute(closestMatch.ToUpperInvariant(), key.ToUpperInvariant()) < 4)
+                {
+                    throw new SettingAlmostFoundException(key, closestMatch);
+                }
+                else
+                {
+                    throw new SettingNotFoundException(key, string.Join(", ", properties.Keys));
+                }
             }
 
             SettingsProperty property = properties[key];
@@ -147,7 +149,15 @@ namespace PlcNext.Common.Tools.Settings
                     bool deleted = collection.Values.Remove(v);
                     if (!deleted)
                     {
-                        valueNotFoundExceptions.Add(new SettingValueNotFoundException(v, v.GetClosestMatch(collection.Values)));
+                        string closestMatch = v.GetClosestMatch(collection.Values);
+                        if (LevenshteinDistance.Compute(closestMatch.ToUpperInvariant(), v.ToUpperInvariant()) < 4)
+                        {
+                            throw new SettingValueAlmostFoundException(v, closestMatch);
+                        }
+                        else
+                        {
+                            throw new SettingValueNotFoundException(v, string.Join(", ", collection.Values));
+                        }
                     }
                 }
 
@@ -183,17 +193,19 @@ namespace PlcNext.Common.Tools.Settings
 
         private class SettingsProperty
         {
-            protected SettingsProperty(string key)
+            protected SettingsProperty(string key, string description)
             {
                 Key = key;
+                Description = description;
             }
 
             protected string Key { get; }
+            public string Description { get; }
         }
 
         private class SingleSettingsProperty : SettingsProperty
         {
-            public SingleSettingsProperty(string key, string value) : base(key)
+            public SingleSettingsProperty(string key, string value, string description) : base(key, description)
             {
                 Value = value;
             }
@@ -208,7 +220,7 @@ namespace PlcNext.Common.Tools.Settings
 
         private class BoolSettingsProperty : SingleSettingsProperty
         {
-            public BoolSettingsProperty(string key, bool value) : base(key, value.ToString(CultureInfo.InvariantCulture))
+            public BoolSettingsProperty(string key, bool value, string description) : base(key, value.ToString(CultureInfo.InvariantCulture), description)
             {
                 Value = value;
             }
@@ -234,7 +246,7 @@ namespace PlcNext.Common.Tools.Settings
 
         private class CollectionSettingsProperty : SettingsProperty
         {
-            public CollectionSettingsProperty(string key, List<string> values) : base(key)
+            public CollectionSettingsProperty(string key, List<string> values, string description) : base(key, description)
             {
                 Values = values;
             }

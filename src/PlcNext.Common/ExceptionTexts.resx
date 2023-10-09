@@ -135,16 +135,22 @@
   <data name="SettingIsNoCollection" xml:space="preserve">
     <value>Setting '{0}' is no collection setting (add and remove is not possible).</value>
   </data>
-  <data name="SettingNotFound" xml:space="preserve">
+  <data name="SettingAlmostFound" xml:space="preserve">
     <value>The setting '{0}' does not exist. Do you mean '{1}'?</value>
   </data>
+  <data name="SettingNotFound" xml:space="preserve">
+    <value>The setting '{0}' does not exist. Possible keys are: {1}</value>
+  </data>
+  <data name="SettingValueNotFound" xml:space="preserve">
+    <value>The setting value '{0}' does not exist. Possible values are: {1}</value>
+  </data>
   <data name="SettingsKeyIsNotSet" xml:space="preserve">
-    <value>A setting key must be provided.</value>
+    <value>A setting key must be provided, Possible setting keys are: {0}</value>
   </data>
   <data name="SettingsValueIsNotSet" xml:space="preserve">
     <value>A value must be provided for the chosen setting.</value>
   </data>
-  <data name="SettingValueNotFound" xml:space="preserve">
+  <data name="SettingValueAlmostFound" xml:space="preserve">
     <value>The value '{0}' does not exist. Do you mean '{1}'?</value>
   </data>
   <data name="TargetArchitectureNotFound" xml:space="preserve">

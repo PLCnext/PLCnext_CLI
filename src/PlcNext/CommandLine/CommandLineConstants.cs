@@ -132,6 +132,10 @@ namespace PlcNext.CommandLine
 
         //DeployVerb
         public const string DeployVerb = "deploy";
+        
+        //Settings description
+        public const char DescriptionChar = 'd';
+        public const string DescriptionOption = "description";
     }
 
 }

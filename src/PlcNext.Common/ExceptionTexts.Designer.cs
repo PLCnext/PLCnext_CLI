@@ -574,6 +574,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The setting &apos;{0}&apos; does not exist. Do you mean &apos;{1}&apos;?.
+        /// </summary>
+        internal static string SettingAlmostFound {
+            get {
+                return ResourceManager.GetString("SettingAlmostFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Setting &apos;{0}&apos; is no collection setting (add and remove is not possible)..
         /// </summary>
         internal static string SettingIsNoCollection {
@@ -583,7 +592,7 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The setting &apos;{0}&apos; does not exist. Do you mean &apos;{1}&apos;?.
+        ///   Looks up a localized string similar to The setting &apos;{0}&apos; does not exist. Possible keys are: {1}.
         /// </summary>
         internal static string SettingNotFound {
             get {
@@ -601,7 +610,7 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A setting key must be provided..
+        ///   Looks up a localized string similar to A setting key must be provided, Possible setting keys are: {0}.
         /// </summary>
         internal static string SettingsKeyIsNotSet {
             get {
@@ -629,6 +638,15 @@ namespace PlcNext.Common {
         
         /// <summary>
         ///   Looks up a localized string similar to The value &apos;{0}&apos; does not exist. Do you mean &apos;{1}&apos;?.
+        /// </summary>
+        internal static string SettingValueAlmostFound {
+            get {
+                return ResourceManager.GetString("SettingValueAlmostFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The setting value &apos;{0}&apos; does not exist. Possible values are: {1}.
         /// </summary>
         internal static string SettingValueNotFound {
             get {

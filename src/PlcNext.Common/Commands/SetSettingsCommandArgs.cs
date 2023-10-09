@@ -15,13 +15,14 @@ namespace PlcNext.Common.Commands
 {
     public class SetSettingsCommandArgs : CommandArgs
     {
-        public SetSettingsCommandArgs(string key, string value, bool add, bool remove, bool clear)
+        public SetSettingsCommandArgs(string key, string value, bool add, bool remove, bool clear, bool description)
         {
             Key = key;
             Value = value;
             Add = add;
             Remove = remove;
             Clear = clear;
+            Description = description;
         }
 
         public string Key { get; }
@@ -33,5 +34,6 @@ namespace PlcNext.Common.Commands
         public bool Remove { get; }
         
         public bool Clear { get; }
+        public bool Description { get; }
     }
 }

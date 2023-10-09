@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json.Linq;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Project;
 using PlcNext.Common.Templates;
@@ -25,19 +26,36 @@ namespace PlcNext.Common.Commands
         private readonly ISettingsProvider settingsProvider;
         private readonly IEntityFactory entityFactory;
 
-        public SetSettingsCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, ISettingsProvider settingsProvider, IEntityFactory entityFactory) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer)
+        public SetSettingsCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, ISettingsProvider settingsProvider, IEntityFactory entityFactory) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer, true)
         {
             this.settingsProvider = settingsProvider;
             this.entityFactory = entityFactory;
         }
 
-        protected override int Execute(SetSettingsCommandArgs args, ChangeObservable observable)
+        protected override CommandResult ExecuteDetailed(SetSettingsCommandArgs args, ChangeObservable observable)
         {
             Entity rootEntity = entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root;
             ProjectEntity project = ProjectEntity.Decorate(rootEntity);
             if (project.Version.Major > project.ToolProjectVersion.Major)
             {
                 throw new ProjectVersionTooHighException($"{project.ToolProjectVersion}", $"{project.Version}");
+            }
+            if (args.Description)
+            {
+                if (string.IsNullOrEmpty(args.Key))
+                {
+                    var result = new JObject();
+                    foreach (var key in settingsProvider.GetSettingKeys())
+                    {
+                        result.Add(GetSingleDescription(key));
+                    }
+                    return new CommandResult(0, new JObject(result));
+                }
+                return new CommandResult(0,  new JObject(GetSingleDescription(args.Key)));
+            }
+            if (string.IsNullOrEmpty(args.Key))
+            {
+                throw new SettingKeyIsEmptyException(string.Join(", ", settingsProvider.GetSettingKeys()));
             }
             using (IEditableSettings editableSettings = settingsProvider.StartSettingTransaction())
             {
@@ -59,7 +77,12 @@ namespace PlcNext.Common.Commands
                 }
             }
 
-            return 0;
+            return new CommandResult(0, null);
+            
+            object GetSingleDescription(string key)
+            {
+                return new JProperty(key, settingsProvider.GetSettingDescription(key));
+            }
         }
     }
 }

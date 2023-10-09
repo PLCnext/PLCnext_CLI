@@ -45,10 +45,8 @@ namespace PlcNext.Common.Templates
             CodeEntity codeEntity = CodeEntity.Decorate(owner.Root);
             string projectName = $"{codeEntity.Namespace}.{codeEntity.Name}";
             byte[] bytes = Encoding.ASCII.GetBytes(value + projectName);
-
-#pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
-            return new Guid(MD5.HashData(bytes)).ToString();
-#pragma warning restore CA5351 // Do Not Use Broken Cryptographic Algorithms
+            byte[] hash = ((HashAlgorithm) CryptoConfig.CreateFromName("MD5")).ComputeHash(bytes);
+            return new Guid(hash).ToString();
         }
     }
 }
