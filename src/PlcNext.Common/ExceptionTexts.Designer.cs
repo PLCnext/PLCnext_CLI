@@ -502,6 +502,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Regex engine has timed out while trying to match the pattern {0} on input {1}.
+        /// </summary>
+        internal static string RegexTimeout {
+            get {
+                return ResourceManager.GetString("RegexTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The related {0} can only be defined once but is not defined or defined multiple times for {1}..
         /// </summary>
         internal static string RelationshipMultiplicityMismatch {

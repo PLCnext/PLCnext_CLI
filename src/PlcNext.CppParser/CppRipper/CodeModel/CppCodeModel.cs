@@ -16,6 +16,7 @@ using PlcNext.Common.CodeModel;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.SDK;
+using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.CppParser.CppRipper.CodeModel
 {
@@ -30,21 +31,26 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         private Func<string, IType> findTypeInIncludes;
 
-        private static readonly Regex TemplateNameRegex = new Regex(@"^(?<Name>[^<]*)<(?<Value>(,?.*)+)>$",
-                                                                 RegexOptions.Compiled);
-        private static readonly Regex TemplateValuesRegex = new Regex(@"[^,<>]+(?(?=<)[^>]*>)", RegexOptions.Compiled);
+        private static readonly Regex TemplateNameRegex = new (@"^(?<Name>[^<]*)<(?<Value>.*)>$",
+                                                                RegexOptions.Compiled, TimeSpan.FromSeconds(5));
+        private static readonly Regex TemplateValuesRegex = new (@"[^,<>]+(?(?=<)[^>]*>)", 
+                                                                RegexOptions.Compiled, TimeSpan.FromSeconds(5));
+
+        private readonly ILog log;
 
         public CppCodeModel(Dictionary<string, (CppClass, VirtualFile, VirtualDirectory)> classes,
                             Dictionary<string, (CppStructure, VirtualFile, VirtualDirectory)> structures,
                             Dictionary<string, (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory)> enums,
                             Dictionary<string, string> defineStatements,
-                            IEnumerable<IConstant> constants)
+                            IEnumerable<IConstant> constants,
+                            ILog log)
         {
             this.classes = classes;
             this.structures = structures;
             this.enums = enums;
             DefineStatements = defineStatements;
             Constants = new HashSet<IConstant>(constants);
+            this.log = log;
         }
 
         public IDictionary<IStructure, VirtualFile> Structures =>
@@ -113,32 +119,50 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
 
         private CppTemplatedStructure FindTemplatedStruct(string structureName)
         {
-            Match match = TemplateNameRegex.Match(structureName);
-            if (match.Success)
+            try
             {
-                templatedStructures.TryGetValue(structureName, out (CppTemplatedStructure templStruct, VirtualFile _, VirtualDirectory d) templatedResult);
-                if (templatedResult.templStruct != null)
+                Match match = TemplateNameRegex.Match(structureName);
+                if (match.Success)
                 {
-                    return templatedResult.templStruct;
-                }
-                string name = match.Groups["Name"].Value.Trim();
-                structures.TryGetValue(name, out (CppStructure structure, VirtualFile f, VirtualDirectory d) result);
+                    templatedStructures.TryGetValue(structureName, out (CppTemplatedStructure templStruct, VirtualFile _, VirtualDirectory d) templatedResult);
+                    if (templatedResult.templStruct != null)
+                    {
+                        return templatedResult.templStruct;
+                    }
+                    string name = match.Groups["Name"].Value.Trim();
+                    structures.TryGetValue(name, out (CppStructure structure, VirtualFile f, VirtualDirectory d) result);
 
-                if (result.structure?.IsTemplated == true)
-                {
-                    CppTemplatedStructure cppTemplatedStructure = ReplaceTemplateArgumentsWithRealDataTypes(result.structure, 
-                                                                                match.Groups["Value"].Value, structureName);
-                    templatedStructures.Add(structureName, (cppTemplatedStructure, result.f, result.d));
-                    return cppTemplatedStructure;
+                    if (result.structure?.IsTemplated == true)
+                    {
+                        CppTemplatedStructure cppTemplatedStructure = ReplaceTemplateArgumentsWithRealDataTypes(result.structure,
+                                                                                    match.Groups["Value"].Value, structureName);
+                        templatedStructures.Add(structureName, (cppTemplatedStructure, result.f, result.d));
+                        return cppTemplatedStructure;
+                    }
                 }
+            }catch(RegexMatchTimeoutException e)
+            {
+                log.LogError(new RegexTimeoutException(e.Pattern, structureName).Message);
             }
             return null;
 
-            CppTemplatedStructure ReplaceTemplateArgumentsWithRealDataTypes(CppStructure structure, string templateValues, string templatedStructName)
+            CppTemplatedStructure ReplaceTemplateArgumentsWithRealDataTypes(CppStructure structure, 
+                    string templateValues, string templatedStructName)
             {
-                MatchCollection matches = TemplateValuesRegex.Matches(templateValues);
+                MatchCollection matches = null;
+
+                try
+                {
+                   matches = TemplateValuesRegex.Matches(templateValues);
+                }
+                catch (RegexMatchTimeoutException e)
+                {
+                    log.LogError(new RegexTimeoutException(e.Pattern, structureName).Message);
+                }
+
                 List<string> dataTypes = new List<string>();
-                foreach (Match match in matches)
+
+                foreach (Match match in matches.Cast<Match>())
                 {
                     if (string.IsNullOrEmpty(match.Value.Trim()))
                         continue;

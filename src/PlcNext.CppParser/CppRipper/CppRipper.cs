@@ -69,7 +69,7 @@ namespace PlcNext.CppParser.CppRipper
                 }
             }
 
-            CppCodeModel model = new CppCodeModel(classes, structures, enums, defineStatements, parsedConstants);
+            CppCodeModel model = new CppCodeModel(classes, structures, enums, defineStatements, parsedConstants, log);
             
             model.SourceDirectories = sourceDirectories;
 

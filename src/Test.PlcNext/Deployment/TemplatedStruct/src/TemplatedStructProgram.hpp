@@ -72,6 +72,8 @@ public: /* Ports
         //#name(NameOfPort)
         Test<int64, int16> port2;
 
+        Test<Test<int16>> port3;
+
 private: // fields
     TemplatedStruct::TemplatedStructComponent& templatedStructComponent;
 

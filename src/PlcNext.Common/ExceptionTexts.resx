@@ -400,4 +400,7 @@
   <data name="DuplicatePortName" xml:space="preserve">
     <value>The port name '{0}'occurs more than once in the project.</value>
   </data>
+  <data name="RegexTimeout" xml:space="preserve">
+    <value>The Regex engine has timed out while trying to match the pattern {0} on input {1}</value>
+  </data>
 </root>
