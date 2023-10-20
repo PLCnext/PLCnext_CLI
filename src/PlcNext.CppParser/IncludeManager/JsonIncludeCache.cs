@@ -83,8 +83,8 @@ namespace PlcNext.CppParser.IncludeManager
                     else
                     {
                         IncludeCache deserializedCache = serializer.Deserialize<IncludeCache>(jsonReader);
-                        result = deserializedCache.CacheEntries;
-                        Version = deserializedCache.Version;
+                        result = deserializedCache?.CacheEntries;
+                        Version = deserializedCache?.Version;
                     }
                     cache = result?.ToDictionary(r => r.File, r => r)?? new Dictionary<string, IncludeCacheEntry>();
                 }

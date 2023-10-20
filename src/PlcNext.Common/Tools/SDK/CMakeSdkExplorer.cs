@@ -13,11 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PlcNext.Common.Tools.FileSystem;
@@ -33,18 +30,20 @@ namespace PlcNext.Common.Tools.SDK
         private readonly IProcessManager processManager;
         private readonly IBinariesLocator binariesLocator;
         private readonly ExecutionContext executionContext;
-        private readonly IOutputFormatterPool formatterPool;
-        private static readonly Regex MakroDefinition = new Regex(@"#define (?<name>\S*)(?<value> \S*)?");
-        private readonly HashSet<string> exploredPaths = new HashSet<string>();
+        private readonly ICMakeConversation cmakeConversation;
+        private static readonly Regex MacroDefinition = new(@"#define (?<name>\S*)(?<value> \S*)?");
+        private readonly HashSet<string> exploredPaths = new();
 
-        public CMakeSdkExplorer(IFileSystem fileSystem, IEnvironmentService environmentService, IProcessManager processManager, IBinariesLocator binariesLocator, ExecutionContext executionContext, IOutputFormatterPool formatterPool)
+        public CMakeSdkExplorer(IFileSystem fileSystem, IEnvironmentService environmentService, IProcessManager processManager,
+            IBinariesLocator binariesLocator, ExecutionContext executionContext, IOutputFormatterPool formatterPool,
+            ICMakeConversation cmakeConversation)
         {
             this.fileSystem = fileSystem;
             this.environmentService = environmentService;
             this.processManager = processManager;
             this.binariesLocator = binariesLocator;
             this.executionContext = executionContext;
-            this.formatterPool = formatterPool;
+            this.cmakeConversation = cmakeConversation;
         }
 
         public async Task<SdkSchema> ExploreSdk(string sdkRootPath, bool forceExploration = false)
@@ -86,31 +85,17 @@ namespace PlcNext.Common.Tools.SDK
                     
                 async Task<SdkSchema> ExploreSampleProject(VirtualDirectory temporaryDirectory, string makeExecutable)
                 {
-                    VirtualDirectory sourceDirectory = temporaryDirectory;
                     VirtualDirectory binaryDirectory = temporaryDirectory.Directory("cache");
 
-                    using (CMakeConversation conversation = await CMakeConversation.Start(processManager,
-                                                                                          binariesLocator,
-                                                                                          formatterPool,
-                                                                                          temporaryDirectory,
-                                                                                          environmentService.Platform == OSPlatform.Windows,
-                                                                                          executionContext,
-                                                                                          sourceDirectory,
-                                                                                          binaryDirectory)
-                                                                                   .ConfigureAwait(false))
-                    {
-                        JArray cache = await conversation.GetCache().ConfigureAwait(false);
-                        JArray codeModel = await conversation.GetCodeModel().ConfigureAwait(false);
-                        return ExploreCMakeOutput(cache, codeModel);
-                    }
+                    JObject codeModel2 = await cmakeConversation.GetCodeModel("MyProject", binaryDirectory).ConfigureAwait(false);
+                    JObject cache = await cmakeConversation.GetCache(binaryDirectory).ConfigureAwait(false);
+                    return ExploreCMakeOutput(cache, codeModel2);
 
-                    SdkSchema ExploreCMakeOutput(JArray cache, JArray codeModel)
+                    SdkSchema ExploreCMakeOutput(JObject cache, JObject codeModel)
                     {
-                        string[] supportedDevices = GetCacheEntry("ARP_SUPPORTED_DEVICES")["value"].Value<string>()
-                                                                                                 .Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries);
-                        string[] supportedVersions = GetCacheEntry("ARP_SUPPORTED_VERSIONS")["value"].Value<string>()
-                                                                                                   .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        IEnumerable<string> includePaths = GetIncludePathsFromCodeModel(out string sysroot);
+                        string[] supportedDevices = GetCacheEntry("ARP_SUPPORTED_DEVICES").Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries);
+                        string[] supportedVersions = GetCacheEntry("ARP_SUPPORTED_VERSIONS").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        IEnumerable<string> includePaths = GetIncludePathsFromCodeModel(codeModel2, out string sysroot);
                         CompilerSpecification specification = GetCompilerSpecs(sysroot);
 
                         return new SdkSchema
@@ -130,8 +115,8 @@ namespace PlcNext.Common.Tools.SDK
 
                         CompilerSpecification GetCompilerSpecs(string cmakeSysroot)
                         {
-                            string compiler = GetCacheEntry("CMAKE_CXX_COMPILER")["value"].Value<string>();
-                            string flags = GetCacheEntry("CMAKE_CXX_FLAGS")["value"].Value<string>();
+                            string compiler = GetCacheEntry("CMAKE_CXX_COMPILER");
+                            string flags = GetCacheEntry("CMAKE_CXX_FLAGS");
                             string command = $"--sysroot=\"{cmakeSysroot}\" {flags} -E -P -v -dD a.cxx";
                             StringBuilderUserInterface stringBuilder = new StringBuilderUserInterface(executionContext,true,true,true,true);
 
@@ -166,7 +151,7 @@ namespace PlcNext.Common.Tools.SDK
 
                             IEnumerable<MakroDefinition> GetMakros()
                             {
-                                return lines.Select(l => MakroDefinition.Match(l))
+                                return lines.Select(l => MacroDefinition.Match(l))
                                             .Where(l => l.Success)
                                             .Select(m => m.Groups["value"].Success
                                                              ? new MakroDefinition
@@ -184,58 +169,26 @@ namespace PlcNext.Common.Tools.SDK
                             }
                         }
 
-                        IEnumerable<string> GetIncludePathsFromCodeModel(out string cmakeSysroot)
+                        IEnumerable<string> GetIncludePathsFromCodeModel(JObject cmakeTarget, out string cmakeSysroot)
                         {
-                            JObject project = codeModel.OfType<JObject>()
-                                                       .Where(o => o.ContainsKey("projects"))
-                                                       .SelectMany(o => o["projects"])
-                                                       .OfType<JObject>()
-                                                       .FirstOrDefault(o => o.ContainsKey("name") &&
-                                                                            o["name"].Value<string>() == "MyProject");
-                            if (project == null)
-                            {
-                                throw new FormattableException($"The code model does not contain any project with the name 'MyProject'. " +
-                                                               $"The code model contains the following data:{Environment.NewLine}" +
-                                                               $"{codeModel.ToString(Formatting.Indented)}");
-                            }
+                            cmakeSysroot = cmakeTarget["link"]?["sysroot"]?["path"]?.Value<string>();
 
-                            JObject target = project.ContainsKey("targets")
-                                                 ? project["targets"].OfType<JObject>()
-                                                                     .Where(o => o.ContainsKey("name"))
-                                                                     .FirstOrDefault(o => o["name"].Value<string>() == "MyProject")
-                                                 : null;
-                            if (target == null)
-                            {
-                                throw new FormattableException($"The project 'MyProject' does not contain any target with the name 'MyProject'. " +
-                                                               $"The project contains the following data:{Environment.NewLine}" +
-                                                               $"{project.ToString(Formatting.Indented)}");
-                            }
-
-                            cmakeSysroot = target["sysroot"].Value<string>();
-
-                            return target.ContainsKey("fileGroups")
-                                       ? target["fileGroups"].OfType<JObject>()
-                                                             .Where(o => o.ContainsKey("includePath"))
-                                                             .SelectMany(o => o["includePath"])
-                                                             .OfType<JObject>()
-                                                             .Where(o => o.ContainsKey("path"))
-                                                             .Select(o => o["path"].Value<string>())
-                                                             .Where(p => fileSystem.DirectoryExists(p))
-                                                             .Select(p => fileSystem.GetDirectory(p).FullName)
-                                       : Enumerable.Empty<string>();
+                            return cmakeTarget["compileGroups"]?
+                                .SelectMany(grp => grp["includes"]?
+                                    .Select(inc => inc["path"]?.Value<string>()));
                         }
 
-                        JObject GetCacheEntry(string key)
+                        string GetCacheEntry(string key)
                         {
-                            JObject entry = cache.OfType<JObject>().FirstOrDefault(t => t.ContainsKey("key") &&
-                                                                                        t["key"].Value<string>() == key);
+                            JObject entry = cache["entries"]?.OfType<JObject>().FirstOrDefault(t => t.ContainsKey("name") &&
+                                                                                        t["name"]?.Value<string>() == key);
                             if (entry == null)
                             {
                                 throw new FormattableException($"The cache entry {key} was expected, but not found. The cache contains the following data:{Environment.NewLine}" +
                                                                $"{cache.ToString(Formatting.Indented)}");
                             }
 
-                            return entry;
+                            return entry["value"]?.Value<string>();
                         }
                     }
                 }
@@ -275,11 +228,9 @@ namespace PlcNext.Common.Tools.SDK
                     foreach (string resource in resources)
                     {
                         string fileName = resource.Substring(resourceBaseString.Length);
-                        using (Stream fileStream = temporaryDirectory.File(fileName).OpenWrite())
-                        using (Stream resourceStream = assembly.GetManifestResourceStream(resource))
-                        {
-                            resourceStream?.CopyTo(fileStream);
-                        }
+                        using Stream fileStream = temporaryDirectory.File(fileName).OpenWrite();
+                        using Stream resourceStream = assembly.GetManifestResourceStream(resource);
+                        resourceStream?.CopyTo(fileStream);
                     }
                 }
 

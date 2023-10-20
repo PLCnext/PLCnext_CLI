@@ -264,5 +264,10 @@ namespace PlcNext.Common.Tools.FileSystem
             file = current.Entries.OfType<VirtualFile>().FirstOrDefault(f => f.Name.Equals(parts[parts.Length - 1], pathEquality));
             return file != null;
         }
+        
+        public override string ToString()
+        {
+            return FullName; //(Parent != null ? $"{Parent}/" : "") + Name;
+        }
     }
 }

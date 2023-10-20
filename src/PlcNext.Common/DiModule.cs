@@ -40,7 +40,7 @@ namespace PlcNext.Common
             builder.RegisterType<RealEnvironmentService>().As<IEnvironmentService>().InstancePerLifetimeScope();
             builder.RegisterType<FormattableExceptionHandler>().As<IExceptionHandler>().InstancePerLifetimeScope();
             builder.RegisterType<GuidFactory>().As<IGuidFactory>().InstancePerLifetimeScope();
-            builder.RegisterType<CMakeConversationExecuter>().As<ICMakeConversation>().InstancePerLifetimeScope();
+            builder.RegisterType<CMakeConversation>().As<ICMakeConversation>().InstancePerLifetimeScope();
             builder.RegisterType<CMakeSdkExplorer>().As<ISdkExplorer>().InstancePerLifetimeScope();
         }
     }

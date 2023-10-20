@@ -45,27 +45,21 @@ namespace PlcNext.Common.Build
             };
             (bool success, VirtualDirectory cmakeFolder) = cmakeExecuter.EnsureConfigured(
                 buildInformation, showWarningsToUser: true, observable, showMessagesToUser: false);
-            JArray codeModel = buildInformation.BuildEntity.BuildSystem.Value<JArray>();
+            JObject codeModel = buildInformation.BuildEntity.BuildSystem.Value<JObject>();
             IEnumerable<string> includePaths = GetIncludePathsFromCodeModel();
             return new BuildSystemProperties(includePaths);
 
             IEnumerable<string> GetIncludePathsFromCodeModel()
             {
-                List<string> result = new List<string>();
-                JObject cmakeTarget = codeModel.GetProjectTarget(rootEntity.Name, false);
-                if (cmakeTarget != null && cmakeTarget["fileGroups"] is JArray fileGroups)
+                JObject cmakeTarget = codeModel;
+                var paths = 
+                    cmakeTarget["compileGroups"]?
+                        .SelectMany(grp => grp["includes"]?.Select(inc => inc["path"]?.Value<string>()));
+                if (paths != null)
                 {
-                    foreach (JObject fileGroup in fileGroups.OfType<JObject>())
-                    {
-                        if (fileGroup["includePath"] is JArray paths)
-                        {
-                            result.AddRange(paths.Select(path => path["path"]?.Value<string>())
-                                                 .Where(include => !string.IsNullOrEmpty(include)));
-                        }
-                    }
+                    return paths.ToArray();
                 }
-
-                return result;
+                return Enumerable.Empty<string>();
             }
         }
     }

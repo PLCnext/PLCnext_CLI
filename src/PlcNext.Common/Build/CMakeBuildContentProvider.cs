@@ -55,10 +55,10 @@ namespace PlcNext.Common.Build
                 (key == EntityKeys.InternalBuildSystemKey &&
                 GetBuildSystemDirectory(owner) != null) ||
                 (key == EntityKeys.InternalExternalLibrariesKey &&
-                 owner.HasValue<JArray>() &&
+                 owner.HasValue<JObject>() &&
                  owner.Type.Equals(EntityKeys.InternalBuildSystemKey, StringComparison.OrdinalIgnoreCase)) ||
                 (key == EntityKeys.InternalInstallationPathsKey &&
-                 owner.HasValue<JArray>() &&
+                 owner.HasValue<JObject>() &&
                  owner.Type.Equals(EntityKeys.InternalBuildSystemKey, StringComparison.OrdinalIgnoreCase)) ||
                    key == EntityKeys.InternalBuildSystemDirectoryKey;
         }
@@ -69,7 +69,7 @@ namespace PlcNext.Common.Build
             if (!targetEntity.HasFullName)
             {
                 return validateExist
-                           ? (VirtualDirectory) null
+                           ? null
                            : throw new InvalidOperationException("Need to use a target entity as base.");
             }
             string buildType = GetBuildType(owner);
@@ -128,16 +128,15 @@ namespace PlcNext.Common.Build
                     return owner.Create(key, directory);
                 case EntityKeys.InternalBuildSystemKey:
                     VirtualDirectory buildSystemDirectory = GetBuildSystemDirectory(owner);
-                    JArray codeModel = GetCodeModel(owner, buildSystemDirectory);
+                    JObject codeModel = GetCodeModel(owner, owner.Root.Name, buildSystemDirectory);
                     return owner.Create(key, codeModel, buildSystemDirectory);
                 case EntityKeys.InternalExternalLibrariesKey:
-                    IEnumerable<string> externalLibraries = FindExternalLibrariesInCodeModel(owner.Value<JArray>(),
-                                                                                             owner.Root.Name,
-                                                                                             owner.Value<VirtualDirectory>());
+                   IEnumerable<string> externalLibraries = FindExternalLibrariesInCodeModel(owner.Value<JObject>(),
+                        owner.Root.Name,
+                        owner.Value<VirtualDirectory>());
                     return owner.Create(key, externalLibraries.Select(l => owner.Create(key, l)));
                 case EntityKeys.InternalInstallationPathsKey:
-                    IEnumerable<string> installationPaths = FindInstallationPaths(owner.Value<JArray>(),
-                                                                                  owner.Root.Name);
+                    IEnumerable<string> installationPaths = FindInstallationPaths(owner.Value<JObject>());
                     return owner.Create(key, installationPaths.Select(p => owner.Create(key, p)));
                 default:
                     VirtualFile cmakeFile = GetCMakeFile(owner);
@@ -163,41 +162,55 @@ namespace PlcNext.Common.Build
             }
         }
 
-        private static IEnumerable<string> FindInstallationPaths(JArray codeModel, string projectName)
+        private static IEnumerable<string> FindInstallationPaths(JObject codeModel)
         {
-            JObject projectTarget = codeModel.GetProjectTarget(projectName);
+            JObject projectTarget = codeModel;
 
-            JArray installationPaths = projectTarget.ContainsKey("installPaths")
-                                           ? projectTarget["installPaths"] as JArray
-                                           : null;
-            if (installationPaths != null)
+            if (projectTarget.TryGetValue("install", out JToken installSection))
             {
-                return installationPaths.Select(t => t.Value<string>());
+                if (installSection is JObject installSectionObject)
+                {
+                    if (installSectionObject.TryGetValue("destinations", out var destinations))
+                    {
+                        if (destinations is JArray destinationsArray)
+                        {
+                            return destinationsArray
+                                .Select(t =>
+                                    (t as JObject)?.ContainsKey("path") == true ? ((JObject)t)["path"].Value<string>() : "")
+                                .Where(s => !string.IsNullOrEmpty(s));
+                        }
+                    }
+                }
             }
-
             return Enumerable.Empty<string>();
         }
 
-        private IEnumerable<string> FindExternalLibrariesInCodeModel(JArray codeModel, string projectName,
+        private IEnumerable<string> FindExternalLibrariesInCodeModel(JObject codeModel, string projectName,
                                                                      VirtualDirectory binaryDirectory)
         {
             List<string> result = new List<string>();
-            JObject projectTarget = codeModel.GetProjectTarget(projectName);
-
-            string cmakeSysroot = projectTarget["sysroot"].Value<string>();
+            JObject projectTarget = codeModel;
+            
+            string cmakeSysroot = projectTarget["link"]?["sysroot"]?["path"]?.Value<string>();
             if (cmakeSysroot == null || !fileSystem.DirectoryExists(cmakeSysroot))
             {
                 throw new FormattableException($"The cmake sysroot {cmakeSysroot} does not exist.");
             }
             cmakeSysroot = cmakeSysroot.CleanPath();
 
-            string linkLibraries = projectTarget["linkLibraries"].Value<string>();
-            if (linkLibraries == null)
+            JArray linkLibrariesSection = projectTarget["link"]?["commandFragments"]?.Value<JArray>();
+            if (linkLibrariesSection == null)
             {
                 throw new FormattableException($"The target '{projectName}' does not contain any data of type linkLibraries. " +
                                                $"The target contains the following data:{Environment.NewLine}" +
                                                $"{projectTarget.ToString(Formatting.Indented)}");
             }
+
+            IEnumerable<string> libraries = linkLibrariesSection
+                .Where(elem => elem["role"]?.Value<string>()?.Equals("libraries", StringComparison.OrdinalIgnoreCase) == true)
+                .Select(elem => elem["fragment"]?.Value<string>() ?? string.Empty);
+
+            string linkLibraries = string.Join(" ", libraries);
 
             List<string> rPaths = new List<string>(new[] { binaryDirectory.FullName });
             List<(int, int)> rPathMatches = new List<(int, int)>();
@@ -255,16 +268,14 @@ namespace PlcNext.Common.Build
                 }
             }
         }
-
-        private JArray GetCodeModel(Entity owner, VirtualDirectory buildSystemDirectory)
+        private JObject GetCodeModel(Entity owner, string projectName, VirtualDirectory buildSystemDirectory)
         {
             VirtualDirectory temp = FileEntity.Decorate(owner).TempDirectory;
-            JArray codeModel = null;
+            JObject codeModel = null;
             try
             {
-                codeModel = cmakeConversation.GetCodeModelFromServer(temp.Directory("cmake"),
-                                                                     FileEntity.Decorate(owner.Root).Directory,
-                                                                     buildSystemDirectory);
+                codeModel = cmakeConversation.GetCodeModel(projectName,
+                    buildSystemDirectory).ConfigureAwait(false).GetAwaiter().GetResult();
             }
             catch (TimeoutException e)
             {
@@ -276,7 +287,7 @@ namespace PlcNext.Common.Build
             }
             return codeModel;
         }
-
+      
         private static string GetBuildType(Entity owner)
         {
             CommandEntity commandEntity = CommandEntity.Decorate(owner.Origin);

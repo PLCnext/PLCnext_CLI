@@ -38,8 +38,8 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
 
         public MockedCMakeConversationAbstraction()
         {
-            cmakeConversation.GetCodeModelFromServer(null, null, null)
-                    .ReturnsForAnyArgs(info => new JArray(CodeModel));
+            cmakeConversation.GetCodeModel(null, null)
+                    .ReturnsForAnyArgs(info => new JObject(CodeModel));
         }
 
         public void Dispose()

@@ -23,6 +23,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SettingDescriptons.resx</DependentUpon>
     </Compile>
+    <Compile Remove="Tools\SDK\CMakeServerConversation.cs" />
   </ItemGroup>
 
   <ItemGroup>

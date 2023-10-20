@@ -1350,14 +1350,20 @@ namespace Test.PlcNext.SystemTests.Tools
                 .Aggregate(string.Empty, (current, s) => $"{current}{Path.GetDirectoryName(s).Replace("\\", "\\\\")}:")
                                  ?? string.Empty;
 
-            string includes = includePaths != null
+            string includesLegacy = includePaths != null
                                   ?string.Join($",{Environment.NewLine}",
                                                                includePaths.Select(p => $"{{ \"path\" : \"{p}\" }}"))
                                   :string.Empty;
-
+            string includes = includePaths != null
+                ?"\"includes\" : [" + 
+                 string.Join($",{Environment.NewLine}" , includePaths.Select(p => $"{{ \"path\" : \"{p}\" }}")) +
+                 "]"
+                :string.Empty;
+            
             content = content.Replace("{$externalLibs}", libs);
             content = content.Replace("{$searchPaths}", searchPaths);
             content = content.Replace("{$includePaths}", includes);
+            content = content.Replace("{$includePathsLegacy}", includesLegacy);
 
             string separator = string.Concat(Path.DirectorySeparatorChar).Replace("\\", "\\\\");
             content = content.Replace("/", separator);

@@ -1,23 +1,142 @@
 {
-  "projects": [
+  "link": {
+    "commandFragments": [
+      {
+        "fragment": "",
+        "role": "flags"
+      },
+      {
+        "fragment": "-Wl,-rpath,\"{$searchPaths}/usr/lib\" ",
+        "role": "flags"
+      },
+      {
+        "fragment": "{$externalLibs}",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.Acf",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.Commons",
+        "role": "libraries"
+      },
+      {
+        "fragment": "C:/test/sdk1/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/lib/libArp.System.Core.a",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Plc.Commons",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.Rsc",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.Commons.Services",
+        "role": "libraries"
+      },
+      {
+        "fragment": "C:/test/sdk1/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/lib/libArp.System.Lm.Services.a",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.Nm",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.NmPayload",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.Security",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.Security.Services",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.Um",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.System.Ve",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Plc.Domain",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Plc.Gds",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Plc.Meta",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Plc.Retain",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Device.Interface",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Services.NotificationLogger",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Services.OpcUAServer",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Services.TraceController",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Services.DataLogger",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Hardware.Nim",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lcppformat",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lpthread",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Io.Axioline",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Io.Interbus",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Io.Profibus",
+        "role": "libraries"
+      },
+      {
+        "fragment": "-lArp.Io.ProfinetStack",
+        "role": "libraries"
+      }
+    ],
+    "sysroot": {
+      "path": "{$root}/sysroots"
+    }
+  },
+  "compileGroups": [
     {
-      "name": "{$name}",
-      "targets": [
-        {
-          "name": "{$name}",
-          "sysroot": "{$root}/sysroots",
-          "linkLibraries": "-Wl,-rpath,\"{$searchPaths}/usr/lib\" {$externalLibs} -lArp.System.Acf -lArp.System.Commons \"{$root}/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/lib/libArp.System.Core.a\" -lArp.Plc.Commons \"{$root}/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/lib/libboost_regex-mt.so\" -lArp.System.Rsc -lpthread -lcppformat -lArp.System.Rsc -lpthread -lcppformat -lArp.System.Nm \"{$root}/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/lib/libArp.System.NmPayload.a\" -lArp.System.Security -lArp.System.Security.Services -lArp.System.Um -lArp.System.Ve -lArp.Plc.Domain -lArp.Plc.Gds -lArp.Plc.Meta -lArp.Device.Interface -lArp.Io.Axioline -lArp.Io.Interbus -lArp.Io.ProfinetStack -lArp.Services.NotificationLogger -lArp.Services.OpcUAServer -lArp.Services.TraceController",
-          "fileGroups": [
-            {
-              "includePath": [
-                {$includePaths}
-              ],
-              "isGenerated": false,
-              "language": "CXX"
-            }
-          ]
-        }
-      ]
+      {$includePaths}
     }
   ]
 }
