@@ -270,10 +270,6 @@ namespace PlcNext.Common.Build
         }
         private JObject GetCodeModel(Entity owner, string projectName, VirtualDirectory buildSystemDirectory)
         {
-<<<<<<< 2679b38633985e18828294829159615ac65bfbed
-=======
-            VirtualDirectory temp = FileEntity.Decorate(owner).TempDirectory;
->>>>>>> 131600d605a45ad595faa2e04d7b16eb648fde2f
             JObject codeModel = null;
             try
             {
