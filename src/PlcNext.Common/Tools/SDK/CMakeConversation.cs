@@ -19,9 +19,9 @@ namespace PlcNext.Common.Tools.SDK;
 
 internal class CMakeConversation : ICMakeConversation
 {
-    const string CmakeApiSubDirectory = "\\.cmake\\api\\v1\\";
-    const string CmakeApiQuerySubDirectory = CmakeApiSubDirectory + "query\\";
-    const string CmakeApiReplySubDirectory = CmakeApiSubDirectory + "reply\\";
+    static readonly string CmakeApiSubDirectory = Path.Combine(".cmake","api","v1");
+    static readonly string CmakeApiQuerySubDirectory =Path.Combine( CmakeApiSubDirectory, "query");
+    static readonly string CmakeApiReplySubDirectory = Path.Combine(CmakeApiSubDirectory,"reply");
     const string CmakeFileApiCodemodelQuery = "codemodel-v2";
     const string CmakeFileApiCacheQuery =  "cache-v2";
     
@@ -64,8 +64,8 @@ internal class CMakeConversation : ICMakeConversation
     
     static async Task<string> CreateCmakeFileApiQuery(VirtualDirectory binaryDirectory, string cmakeFileApiQuery)
     {
-        string cmakeFileApiQueryDirectory = binaryDirectory.FullName + CmakeApiQuerySubDirectory;
-        string cmakeFileApiReplyDirectory = binaryDirectory.FullName + CmakeApiReplySubDirectory;
+        string cmakeFileApiQueryDirectory = Path.Combine(binaryDirectory.FullName, CmakeApiQuerySubDirectory);
+        string cmakeFileApiReplyDirectory = Path.Combine(binaryDirectory.FullName, CmakeApiReplySubDirectory);
         if (Directory.Exists(cmakeFileApiQueryDirectory))
         {
             Directory.Delete(cmakeFileApiQueryDirectory, recursive: true);
@@ -75,7 +75,7 @@ internal class CMakeConversation : ICMakeConversation
             Directory.Delete(cmakeFileApiReplyDirectory, recursive: true);
         }
         Directory.CreateDirectory(cmakeFileApiQueryDirectory);
-        await using (File.Create(cmakeFileApiQueryDirectory + cmakeFileApiQuery))
+        await using (File.Create(Path.Combine(cmakeFileApiQueryDirectory, cmakeFileApiQuery)))
         {
         }
         return cmakeFileApiReplyDirectory;
