@@ -44,8 +44,10 @@ internal class CMakeConversation : ICMakeConversation
 
         await RunCmake(binaryDirectory).ConfigureAwait(true);
 
-        string targetFileName = Directory.GetFiles(cmakeFileApiReplyDirectory,
-                $"target-{projectName}-*", SearchOption.TopDirectoryOnly).FirstOrDefault();
+        string targetFileName = Directory.Exists(cmakeFileApiReplyDirectory)
+            ? Directory.GetFiles(cmakeFileApiReplyDirectory, $"target-{projectName}-*", SearchOption.TopDirectoryOnly)
+                .FirstOrDefault()
+            : null;
 
         return await DeserializeResult(targetFileName).ConfigureAwait(true);
     }
@@ -56,8 +58,10 @@ internal class CMakeConversation : ICMakeConversation
 
         await RunCmake(binaryDirectory).ConfigureAwait(true);
         
-        string targetFileName = Directory.GetFiles(cmakeFileApiReplyDirectory,
-                $"cache-v2-*", SearchOption.TopDirectoryOnly).FirstOrDefault();
+        string targetFileName = Directory.Exists(cmakeFileApiReplyDirectory)
+            ? Directory.GetFiles(cmakeFileApiReplyDirectory,
+                $"cache-v2-*", SearchOption.TopDirectoryOnly).FirstOrDefault()
+            : null;
             
         return await DeserializeResult(targetFileName).ConfigureAwait(true);
     }
