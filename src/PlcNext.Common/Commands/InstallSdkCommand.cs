@@ -37,6 +37,11 @@ namespace PlcNext.Common.Commands
         {
             VirtualDirectory directory = fileSystem.GetDirectory(args.Destination);
 
+            if (directory.FullName.Contains(' ', StringComparison.Ordinal))
+            {
+                throw new SdkPathWithSpacesException(directory.FullName);
+            }
+
             VirtualFile sdk;
             if (fileSystem.FileExists(args.Sdk))
             {
