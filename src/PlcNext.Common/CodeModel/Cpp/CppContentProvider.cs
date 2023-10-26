@@ -59,20 +59,30 @@ namespace PlcNext.Common.CodeModel.Cpp
                 IEntityBase templateOrigin = GetTemplateOrigin(out IEntityBase formatOrigin);
                 CommandEntity commandEntity = CommandEntity.FindUpperCommand(owner);
                 string basePath = string.Empty;
+
                 if (templateOrigin.HasContent(EntityKeys.BaseDirectoryKey) &&
                     !string.IsNullOrEmpty(templateOrigin[EntityKeys.BaseDirectoryKey].Value<string>()))
                 {
-                    string path = templateOrigin.Path;
-                    string relative = path.Split(new[] {templateOrigin[EntityKeys.BaseDirectoryKey].Value<string>()},
-                                                 StringSplitOptions.None)
-                                          .Last();
-                    Match match = splitRegex.Match(relative);
-                    if (match.Success && match.Groups["split"].Success)
+                    if (templateOrigin.Path.Contains(templateOrigin[EntityKeys.BaseDirectoryKey].Value<string>(),
+                            StringComparison.Ordinal))
                     {
-                        relative = match.Groups["split"].Value;
-                    }
+                        string path = templateOrigin.Path;
+                        string relative = path.Split(
+                                new[] { templateOrigin[EntityKeys.BaseDirectoryKey].Value<string>() },
+                                StringSplitOptions.None)
+                            .Last();
+                        Match match = splitRegex.Match(relative);
+                        if (match.Success && match.Groups["split"].Success)
+                        {
+                            relative = match.Groups["split"].Value;
+                        }
 
-                    basePath = relative.Replace('\\', '/');
+                        basePath = relative.Replace('\\', '/');
+                    }
+                    else
+                    { // has base directory which is not sub directory to the template path => use global path 
+                        basePath = templateOrigin.Path.Replace('\\', '/');
+                    }
                 }
                 else if (commandEntity.IsCommandArgumentSpecified(EntityKeys.OutputKey) &&
                          templateOrigin != templateOrigin.Root)
@@ -89,6 +99,10 @@ namespace PlcNext.Common.CodeModel.Cpp
                             basePath = match.Groups["split"].Value;
                         }
                     }
+                }
+                else
+                {
+                    // use file without path (local file)
                 }
 
                 string result = resolver.Resolve(formatOrigin.Name, templateOrigin);
