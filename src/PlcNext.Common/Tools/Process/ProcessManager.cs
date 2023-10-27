@@ -19,7 +19,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Mono.Unix;
 using Nito.AsyncEx;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
@@ -87,8 +86,7 @@ namespace PlcNext.Common.Tools.Process
 
             if (environmentService.Platform == OSPlatform.Linux && setup != null)
             {
-                var fileInfo = new UnixFileInfo(setup);
-                fileInfo.FileAccessPermissions = fileInfo.FileAccessPermissions | FileAccessPermissions.UserExecute;
+                SetExecutableFlag(setup);
             }
             
             ProcessFacade facade = new ProcessFacade(commandName, arguments, workingDirectory, redirectedContext, displayName, showOutput, showError, killOnDispose,
@@ -106,6 +104,14 @@ namespace PlcNext.Common.Tools.Process
                          .Select(p => p.Id)
                          .Where(id => id != CurrentProcessId)
                          .ToArray();
+        }
+
+        private static void SetExecutableFlag(string setup)
+        {
+#pragma warning disable CA1416 // Validate platform compatibility
+            var fileInfo = new FileInfo(setup);
+            fileInfo.UnixFileMode = fileInfo.UnixFileMode | UnixFileMode.UserExecute;
+#pragma warning restore CA1416 // Validate platform compatibility
         }
     }
 

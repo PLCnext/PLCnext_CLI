@@ -50,7 +50,6 @@
     <PackageReference Include="Autofac" />
     <PackageReference Include="CommandLineParser" />
     <PackageReference Include="CoreCLR-NCalc" />
-    <PackageReference Include="Mono.Posix.NETStandard" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Nito.AsyncEx" />
     <PackageReference Include="NuGet.Versioning" />
