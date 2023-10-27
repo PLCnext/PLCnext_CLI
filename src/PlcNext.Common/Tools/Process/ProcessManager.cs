@@ -19,7 +19,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Nito.AsyncEx;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
 
@@ -127,7 +126,7 @@ namespace PlcNext.Common.Tools.Process
         private readonly string processName;
         private readonly bool outputReadStarted;
         private readonly bool errorReadStarted;
-        private readonly AsyncAutoResetEvent exitedResetEvent = new AsyncAutoResetEvent(false);
+        private readonly TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
         private bool disposed;
         private readonly string displayName;
         #endregion
@@ -185,19 +184,19 @@ namespace PlcNext.Common.Tools.Process
             else
             {
                 processName = "unknown process";
-                exitedResetEvent.Set();
+                taskCompletionSource.SetResult();
             }
         }
 
 
         private void InternalProcessOnExited(object sender, EventArgs e)
         {
-            exitedResetEvent.Set();
+            taskCompletionSource.SetResult();
         }
 
         public async Task WaitForExitAsync()
         {
-            await exitedResetEvent.WaitAsync().ConfigureAwait(false);
+            await taskCompletionSource.Task.ConfigureAwait(false);
         }
 
         public void WaitForExit()

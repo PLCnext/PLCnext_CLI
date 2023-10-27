@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
-using Nito.AsyncEx.Synchronous;
 
 namespace Test.PlcNext
 {
@@ -26,7 +25,7 @@ namespace Test.PlcNext
             Task completedTask = await Task.WhenAny(runnerTask, Task.Delay(timeout, taskCancel.Token));
             completedTask.Should().Be(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
             taskCancel.Cancel();
-            completedTask.WaitAndUnwrapException(CancellationToken.None);
+            completedTask.Wait(CancellationToken.None);
         } 
 
         public static void RunWithTimeout(Action runAction, int timeout = 20000, bool checkTimeout = true)
@@ -39,7 +38,7 @@ namespace Test.PlcNext
                 completedTask.Should().Be(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
             }
             taskCancel.Cancel();
-            completedTask.WaitAndUnwrapException(CancellationToken.None);
+            completedTask.Wait(CancellationToken.None);
         } 
 
         public static T RunWithTimeout<T>(Func<T> runAction, int timeout = 20000)
@@ -49,7 +48,7 @@ namespace Test.PlcNext
             Task completedTask = Task.WhenAny(runnerTask, Task.Delay(timeout, taskCancel.Token)).GetAwaiter().GetResult();
             completedTask.Should().Be(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
             taskCancel.Cancel();
-            completedTask.WaitAndUnwrapException(CancellationToken.None);
+            completedTask.Wait(CancellationToken.None);
             return ((Task<T>) completedTask).Result;
         } 
     }

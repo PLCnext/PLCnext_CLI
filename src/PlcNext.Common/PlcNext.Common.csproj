@@ -51,7 +51,6 @@
     <PackageReference Include="CommandLineParser" />
     <PackageReference Include="CoreCLR-NCalc" />
     <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="Nito.AsyncEx" />
     <PackageReference Include="NuGet.Versioning" />
     <PackageReference Include="SharpCompress" />
     <PackageReference Include="SharpZipLib" />
