@@ -49,7 +49,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" />
     <PackageReference Include="CommandLineParser" />
-    <PackageReference Include="CoreCLR-NCalc" />
+    <PackageReference Include="NCalcSync" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="NuGet.Versioning" />
     <PackageReference Include="SharpCompress" />
