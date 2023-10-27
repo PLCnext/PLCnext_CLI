@@ -67,6 +67,7 @@ namespace PlcNext.Common
             builder.RegisterType<GetProjectInformationCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<InstallSdkCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<ScanSdksCommand>().As<ICommand>().InstancePerLifetimeScope();
+            builder.RegisterType<CheckProjectCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<SetSettingsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<SetTargetsCommand>().As<ICommand>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateTargetsCommand>().As<ICommand>().InstancePerLifetimeScope();
