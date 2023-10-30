@@ -73,7 +73,7 @@ namespace PlcNext.Common.Templates
             if (context.SequenceEqual(new[] {"new"}))
             {
                 List<CommandDefinition> commandDefinitions = new List<CommandDefinition>();
-                foreach (TemplateDescription template in repository.Templates)
+                foreach (TemplateDescription template in repository.Templates.OrderBy(tmpl => tmpl.name))
                 {
                     if (template.isHidden || commandDefinitions.Any(d => d.Name == template.name))
                     {
@@ -89,7 +89,7 @@ namespace PlcNext.Common.Templates
             if (context.SequenceEqual(new[] {"deploy"}))
             {
                 List<CommandDefinition> commandDefinitions = new List<CommandDefinition>();
-                foreach (TemplateDescription template in repository.Templates)
+                foreach (TemplateDescription template in repository.Templates.OrderBy(tmpl => tmpl.name))
                 {
                     if (template.isHidden || 
                         commandDefinitions.Any(d => d.Name == template.name) ||
