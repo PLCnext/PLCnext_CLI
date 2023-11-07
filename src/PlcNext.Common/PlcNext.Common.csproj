@@ -56,7 +56,6 @@
     <PackageReference Include="SharpZipLib" />
     <PackageReference Include="System.Management" />
     <PackageReference Include="System.Reflection.Emit" />
-    <PackageReference Include="System.Runtime.Extensions" />
   </ItemGroup>
 
   <ItemGroup>

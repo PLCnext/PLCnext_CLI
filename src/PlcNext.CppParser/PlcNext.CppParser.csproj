@@ -20,7 +20,6 @@
   <ItemGroup>
     <PackageReference Include="Autofac" />
     <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="System.ServiceModel.Primitives" />
   </ItemGroup>
 
   <ItemGroup>
