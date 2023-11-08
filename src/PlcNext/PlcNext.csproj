@@ -5,12 +5,13 @@
     <TargetFrameworks>net7.0</TargetFrameworks>
     <AssemblyName Condition="'$(PlcNextToolName)' != ''">$(PlcNextToolName)</AssemblyName>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright (c) 2018 PHOENIX CONTACT GmbH &amp; Co. KG</Copyright>
+    <Copyright>Copyright (c) 2023 PHOENIX CONTACT GmbH &amp; Co. KG</Copyright>
     <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Company>PHOENIX CONTACT GmbH &amp; Co. KG</Company>
   </PropertyGroup>
 
   <ItemGroup>

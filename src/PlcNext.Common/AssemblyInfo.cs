@@ -7,10 +7,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
 
-[assembly: NeutralResourcesLanguage("en")]
+[assembly: NeutralResourcesLanguage("en-US")]
+[assembly: AssemblyTrademark("PHOENIX CONTACT GmbH & Co. KG")]
+
 #if !PUBLISHBUILD
 [assembly: InternalsVisibleTo("Test.PlcNext")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

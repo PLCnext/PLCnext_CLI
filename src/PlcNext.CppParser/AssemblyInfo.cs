@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using System.Reflection;
 using System.Resources;
 
-[assembly: NeutralResourcesLanguage("en")]
+[assembly: NeutralResourcesLanguage("en-US")]
+[assembly: AssemblyTrademark("PHOENIX CONTACT GmbH & Co. KG")]

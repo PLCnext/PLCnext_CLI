@@ -8,6 +8,8 @@
 
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Copyright>Copyright (c) 2023 PHOENIX CONTACT GmbH &amp; Co. KG</Copyright>
+    <Company>PHOENIX CONTACT GmbH &amp; Co. KG</Company>
   </PropertyGroup>
 
   <ItemGroup>
