@@ -8,7 +8,6 @@
 #endregion
 
 using Autofac.Features.AttributeFilters;
-using PlcNext.Common.Build;
 using PlcNext.Common.CodeModel;
 using PlcNext.Common.Commands;
 using PlcNext.Common.DataModel;
@@ -85,11 +84,11 @@ namespace PlcNext.Common.Generate
                 csharpProjectPath = Path.Combine(project.Path, csharpProjectPath);
             }
 
-            string msbuildLocation = MSBuildFinder.FindMsBuild(environmentService, fileSystem, settingsProvider, binariesLocator, rootEntity);
+            MSBuild msbuild = MSBuildFinder.FindMsBuild(environmentService, fileSystem, settingsProvider, binariesLocator, rootEntity);
 
             StringBuilderUserInterface userInterface = new StringBuilderUserInterface(log, writeInformation: true, writeError: true);
-            string arguments = $"-target:GetProjectVariables \"{csharpProjectPath}\"";
-            using (IProcess process = processManager.StartProcess(msbuildLocation, arguments, userInterface))
+            string arguments = $"{(string.IsNullOrEmpty(msbuild.Parameters) ? string.Empty : msbuild.Parameters+" ")}-target:GetProjectVariables \"{csharpProjectPath}\"";
+            using (IProcess process = processManager.StartProcess(msbuild.FullName, arguments, userInterface))
             {
                 await process.WaitForExitAsync().ConfigureAwait(false);
                 if (process.ExitCode != 0)
@@ -111,7 +110,7 @@ namespace PlcNext.Common.Generate
             Dictionary<VirtualFile, DateTime> filesBefore = outputFolderFiles.ToDictionary(f => f, f => f.LastWriteTime);
                 
 
-            await BuildCSharpProject(rootEntity, csharpProjectPath, project.Path, msbuildLocation).ConfigureAwait(false);
+            await BuildCSharpProject(rootEntity, csharpProjectPath, project.Path, msbuild).ConfigureAwait(false);
 
             CopyNIBuilderFilesToCpp();
 
@@ -368,12 +367,13 @@ namespace PlcNext.Common.Generate
             }
         }
 
-        private async Task BuildCSharpProject(Entity entity, string csharpProjectPath, string cppProjectPath, string msbuildLocation)
+        private async Task BuildCSharpProject(Entity entity, string csharpProjectPath, string cppProjectPath, MSBuild msbuild)
         {
             CommandEntity command = CommandEntity.Decorate(entity.Origin);
             string configuration = command.GetSingleValueArgument(EntityKeys.BuildTypeKey);
             string arguments = string.IsNullOrEmpty(configuration) ? $"\"{csharpProjectPath}\"" : $" -v:normal -p:Configuration={configuration};CppProjectPath=\"{cppProjectPath}\" \"{csharpProjectPath}\"";
-            using (IProcess process = processManager.StartProcess(msbuildLocation, arguments, executionContext))
+            arguments = (string.IsNullOrEmpty(msbuild.Parameters) ? string.Empty : msbuild.Parameters + " ")+arguments;
+            using (IProcess process = processManager.StartProcess(msbuild.FullName, arguments, executionContext))
             {
                 await process.WaitForExitAsync().ConfigureAwait(false);
                 if (process.ExitCode != 0)
