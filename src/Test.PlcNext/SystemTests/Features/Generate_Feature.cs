@@ -1012,7 +1012,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("CppSpecial"),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_the_command_was_executed_without_error()
+                _ => Then_the_generate_command_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 

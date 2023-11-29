@@ -397,9 +397,14 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckCodeEntityCreatedInDefaultNamespace($"{entityName}.hpp");
         }
 
-        protected void Then_the_command_was_executed_without_error()
+        protected void Then_the_generate_command_was_executed_without_error()
         {
             ScenarioContext.CheckUserInformed("generated all", "message of successfull generation expected");
+        }
+
+        protected void Then_the_deploy_was_executed_without_error()
+        {
+            ScenarioContext.CheckUserInformed("Successfully deployed", "message of successfull deploy expected");
         }
 
         protected void Then_the_user_was_informed_that_the_comment_is_ambiguous()

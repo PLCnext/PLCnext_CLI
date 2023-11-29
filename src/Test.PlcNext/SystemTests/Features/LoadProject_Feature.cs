@@ -31,7 +31,7 @@ namespace Test.PlcNext.SystemTests.Features
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramsWithCorrectComments"),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_the_command_was_executed_without_error()
+                _ => Then_the_generate_command_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -63,7 +63,7 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => When_I_create_a_new_shared_native_project_with_name("TestProject"),
                 _ => When_I_generate_all_metafiles(),
                 _ => When_I_generate_all_codefiles(),
-                _ => Then_the_command_was_executed_without_error()
+                _ => Then_the_generate_command_was_executed_without_error()
                     ).RunAsyncWithTimeout();
         }
 

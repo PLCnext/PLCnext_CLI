@@ -37,8 +37,7 @@ namespace PlcNext.Common.Deploy
                     CommandEntity.Decorate(owner).CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase)) ||
                    (key == EntityKeys.InternalDeployPathKey &&
                     TargetEntity.Decorate(owner).HasFullName)||
-                   (key == EntityKeys.InternalConfigPathKey &&
-                    TargetEntity.Decorate(owner).HasFullName);
+                   key == EntityKeys.InternalConfigPathKey;
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)

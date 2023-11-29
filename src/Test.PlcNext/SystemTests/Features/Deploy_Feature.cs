@@ -10,10 +10,8 @@
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Test.PlcNext.SystemTests.StepDefinitions;
 using Xunit.Abstractions;
@@ -39,7 +37,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_deploy(new DeployCommandArgs{BuildType = "Debug"}),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryCommandArgs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryCommandArgs.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -53,7 +52,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_deploy(new DeployCommandArgs { Id = "3125fbc7-77b1-47c4-b5f9-39872cd6df9c", BuildType = "Debug" }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryCommandArgsWithSpecificId.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryCommandArgsWithSpecificId.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -67,7 +67,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("PrjN_ST_Update_Proj_Targets_2237"),
                 _ => When_I_deploy(new DeployCommandArgs { BuildType = "Release" }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("PartiallyBuildProjectWithCustomNamespaceLibraryCommandArgs.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -125,7 +126,8 @@ namespace Test.PlcNext.SystemTests.Features
                     OutputDirectory = "out",
                     BuildType = "Debug"
                 }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryDifferentPathsCommandArgs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryDifferentPathsCommandArgs.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -140,7 +142,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_deploy(new DeployCommandArgs{ BuildType = "Debug" }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryCommandArgs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryCommandArgs.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -166,7 +169,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_deploy(new DeployCommandArgs { Targets = new[] { "axcf2152,100.0", "axcf2152,200" } }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoWithMultibinaryLibraryCommandArgs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoWithMultibinaryLibraryCommandArgs.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -188,7 +192,8 @@ namespace Test.PlcNext.SystemTests.Features
                     Files = new []{ "foo/AXCF2152_1.0.0.12345/Release/libDemo.so|.|axcf2152,1.0" },
                     BuildType = "Debug"
                 }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryDifferentPathsCommandArgs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryDifferentPathsCommandArgs.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -218,7 +223,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_directory_exists("sysroots"),
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo"),
                 _ => When_I_deploy(new DeployCommandArgs{ BuildType = "Debug" }),
-                _ => Then_the_library_was_generated()
+                _ => Then_the_library_was_generated(),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -240,7 +246,8 @@ namespace Test.PlcNext.SystemTests.Features
                     Files = new[] { "foo/AXCF2152_1.0.0.12345/Release/libDemo.so|.|axcf2152,1.0.0.12345" },
                     BuildType = "Debug"
                 }),
-                _ => Then_the_library_was_generated()
+                _ => Then_the_library_was_generated(),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -259,7 +266,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("Demo", "Some/Path/T,o/Some.so"),
                 _ => When_I_deploy(new DeployCommandArgs{ BuildType = "Debug" }),
                 _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibs.txt"),
-                _ => Then_the_user_was_informed_that_the_library_must_be_transferred_manually("Some.so")
+                _ => Then_the_user_was_informed_that_the_library_must_be_transferred_manually("Some.so"),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -277,7 +285,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("StandardNew", "My/Cust,om/Lib/rary.so", "My/Other/Library.so", "Some/Path/T,o/Some.so"),
                 _ => When_I_deploy(new DeployCommandArgs { BuildType= "Release", ExcludedFiles = new[] { "Library.so", "rary.so" } }),
                 _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithExternalLib.txt"),
-                _ => Then_the_libmeta_file_of_project_NAME_is_generated_with_the_dependencies("Standard","rary.so", "Library.so", "Some.so")
+                _ => Then_the_libmeta_file_of_project_NAME_is_generated_with_the_dependencies("Standard","rary.so", "Library.so", "Some.so"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -295,7 +304,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_cmake_returns_a_code_model_with_the_following_libraries("StandardNew", "My/Cust,om/Lib/rary.so", "My/Other/Library.so", "Some/Path/T,o/Some.so"),
                 _ => When_I_deploy(new DeployCommandArgs { BuildType = "Release" }),
                 _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithEngineerVersion.txt"),
-                _ => Then_the_libmeta_file_of_project_NAME_is_generated_with_the_dependencies("Standard", "rary.so", "Library.so", "Some.so")
+                _ => Then_the_libmeta_file_of_project_NAME_is_generated_with_the_dependencies("Standard", "rary.so", "Library.so", "Some.so"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -312,7 +322,8 @@ namespace Test.PlcNext.SystemTests.Features
                     ExternalLibraries = new[] { "\"Some/Path/T,o/Some.so\"" },
                     BuildType = "Debug"
                 }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibsForAllTargets.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibsForAllTargets.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -368,7 +379,8 @@ namespace Test.PlcNext.SystemTests.Features
                     Targets = new[] { "axcf2152,100.0.0.12345", "axcf2152,200.0.0.12345" },
                     ExternalLibraries = new[] { "axcf2152,100.0,Some/Path/To/Some.so" }
                 }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibsMultibinary.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("DemoLibraryWithExternalLibsMultibinary.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
             ).RunAsyncWithTimeout();
         }
 
@@ -517,6 +529,19 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Deploy_for_acfproject_deploys_without_error()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_an_empty_workspace(),
+                _ => When_I_create_a_new_acfproject_with_name("AcfProject"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Given_is_the_working_directory_PATH("AcfProject"),
+                _ => When_I_deploy(new DeployCommandArgs { Targets = new[] { "axcf2152,19.0" } }),
+                _ => Then_the_deploy_was_executed_without_error()
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Deploy_files_deploys_the_files_in_correct_location()
         {
             await Runner.AddSteps(
@@ -605,7 +630,8 @@ namespace Test.PlcNext.SystemTests.Features
                         LibraryVersion = "1.2.3.xy",
                         EngineerVersion = "2021.3.1"
                     }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithVersionAndDescription.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithVersionAndDescription.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -616,7 +642,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("StandardNew"),
                 _ => Given_is_the_working_directory_PATH("StandardNew"),
                 _ => When_I_deploy(new DeployCommandArgs()),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithSavedVersionAndDescription.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithSavedVersionAndDescription.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -627,7 +654,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("StandardNew"),
                 _ => Given_is_the_working_directory_PATH("StandardNew"),
                 _ => When_I_deploy(new DeployCommandArgs {  }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithEngineerVersion.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithEngineerVersion.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -638,7 +666,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("StandardNew"),
                 _ => Given_is_the_working_directory_PATH("StandardNew"),
                 _ => When_I_deploy(new DeployCommandArgs { SolutionVersion = "1.5.0.0" }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithSolutionVersion.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithSolutionVersion.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -662,7 +691,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_file_exists("bin\\AXCF2152_22.6.0.43\\Release\\libSharedNative.so"),
                 _ => Given_is_that_the_file_exists("bin\\Common\\SharedNative.dll"),
                 _ => When_I_deploy(new DeployCommandArgs { }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("SharedNativeArgs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("SharedNativeArgs.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
 
@@ -675,7 +705,8 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_that_the_file_exists("bin\\AXCF2152_22.6.0.43\\Release\\libSharedNative.so"),
                 _ => Given_is_that_the_file_exists("bin\\Common\\SharedNative.dll"),
                 _ => When_I_deploy(new DeployCommandArgs { ExcludedFiles = new[] { "*.so"} }),
-                _ => Then_the_library_was_generated_with_the_following_command_arguments("SharedNativeWithoutSoArgs.txt")
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("SharedNativeWithoutSoArgs.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
                 ).RunAsyncWithTimeout();
         }
     }
