@@ -214,6 +214,7 @@
     <None Remove="Deployment\TemplatedStruct\src\TemplatedStructProgram.cpp" />
     <None Remove="Deployment\TemplatedStruct\src\TemplatedStructProgram.hpp" />
     <None Remove="Deployment\TestResults\AcfDataTypes.dt" />
+    <None Remove="Deployment\TestResults\AcfProjectCommandArgs.txt" />
     <None Remove="Deployment\TestResults\ArrayDatatypesDataTypes.dt" />
     <None Remove="Deployment\TestResults\ArrayDatatypesDataTypesOld.dt" />
     <None Remove="Deployment\TestResults\DemoLibraryCommandArgs.txt" />
@@ -347,6 +348,7 @@
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructComponent.hpp" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructProgram.cpp" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\AcfProjectCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\HiddenComponentPortDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\PortTypesInDifNamespacesAcfDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\PortTypesInDifNamespacesDataTypes.dt" />

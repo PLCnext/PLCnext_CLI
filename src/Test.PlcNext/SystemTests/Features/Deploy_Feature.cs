@@ -517,6 +517,18 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Deploy_for_acfproject_creates_correct_librarybuilder_commands()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("AcfProject"),
+                _ => When_I_generate_all_metafiles(),
+                _ => Given_is_the_working_directory_PATH("AcfProject"),
+                _ => When_I_deploy(new DeployCommandArgs { Targets = new[] { "axcf2152,19.0" } }),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("AcfProjectCommandArgs.txt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Deploy_for_acfproject_deploys_how_to_deploy_file()
         {
             await Runner.AddSteps(

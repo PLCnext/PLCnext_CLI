@@ -481,7 +481,7 @@ namespace PlcNext.Common.Build
                 throw new FormattableException("Please use --target to specify for which targets the library shall be generated.");
             }
             
-            CheckMetaFiles(targets.First());
+            CheckMetaFiles();
 
             string commandOptionsFile = GenerateCommandOptionsForAcf();
             int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project);
@@ -490,7 +490,7 @@ namespace PlcNext.Common.Build
 
             return result;
 
-            void CheckMetaFiles(Entity _)
+            void CheckMetaFiles()
             {
                 TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
                 VirtualDirectory deployDirectory = DeployEntity.Decorate(project).ConfigDirectory;
@@ -538,7 +538,9 @@ namespace PlcNext.Common.Build
                 void WriteMetadata(StreamWriter writer)
                 {
                     VirtualDirectory deployDirectory = DeployEntity.Decorate(targets.First()).DeployDirectory;
-                    foreach (VirtualFile metaFile in deployDirectory.Files(searchRecursive: true))
+                    VirtualDirectory configDirectory = DeployEntity.Decorate(project).ConfigDirectory;
+                    foreach (VirtualFile metaFile in configDirectory.Files(searchRecursive: true)
+                                                                    .Union(deployDirectory.Files(searchRecursive: true)))
                     {
                         string destinationPath;
                         string fileType;
