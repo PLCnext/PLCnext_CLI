@@ -82,6 +82,20 @@ namespace PlcNext.Common.Templates
             return templates[templateDescription];
         }
 
+        public IEnumerable<string> GetTemplateBases(TemplateDescription templateDescription)
+        {
+            yield return templates[templateDescription];
+            while (!string.IsNullOrEmpty(templateDescription?.basedOn))
+            {
+                TemplateDescription basedOnTemplate = templates.Keys.FirstOrDefault(tmpl => tmpl.Description.Equals(templateDescription.basedOn, StringComparison.Ordinal));
+                templateDescription = basedOnTemplate;
+                if (basedOnTemplate != default)
+                {
+                    yield return templates[templateDescription];
+                }
+            }
+        }
+
         private void EnsureTemplates()
         {
             if (templates != null)

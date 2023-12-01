@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using PlcNext.Common.Tools.UI;
@@ -128,6 +129,19 @@ namespace PlcNext.Common.Tools.FileSystem
         {
             path = path.CleanPath();
             return Path.IsPathRooted(path);
+        }
+
+        public VirtualFile GetFirstExistingFile(string filePath, IEnumerable<string> searchDirectories)
+        {
+            foreach (var searchDirectory in searchDirectories)
+            {
+                VirtualFile virtualFile = GetFile(filePath,searchDirectory);
+                if (virtualFile.Exists)
+                {
+                    return virtualFile;
+                }
+            }
+            return null;
         }
     }
 }

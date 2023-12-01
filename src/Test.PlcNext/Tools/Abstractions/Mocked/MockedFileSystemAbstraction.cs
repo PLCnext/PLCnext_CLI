@@ -66,6 +66,13 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                           return GetDirectory(Path.GetDirectoryName(path), callinfo.ArgAt<string>(1))
                                      .File(Path.GetFileName(path));
                       });
+            FileSystem.GetFirstExistingFile(Arg.Any<string>(), Arg.Any<IEnumerable<string>>())
+                .Returns(callinfo =>
+                {
+                    string path = Clean(callinfo.ArgAt<string>(0));
+                    return GetDirectory(Path.GetDirectoryName(path), callinfo.ArgAt<IEnumerable<string>>(1).FirstOrDefault())
+                        .File(Path.GetFileName(path));
+                });
 
             FileSystem.GetTemporaryDirectory().Returns(callinfo => GetTemporaryFolder());
         }

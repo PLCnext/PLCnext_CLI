@@ -8,6 +8,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace PlcNext.Common.Tools.FileSystem
 {
@@ -33,5 +34,6 @@ namespace PlcNext.Common.Tools.FileSystem
         string[] GetPath(string path);
 
         bool IsRooted(string path);
+        VirtualFile GetFirstExistingFile(string fileTemplate, IEnumerable<string> getTemplateBases);
     }
 }

@@ -35,12 +35,12 @@ namespace PlcNext.Common.Generate
         {
             string content;
             Encoding encoding;
-            VirtualFile virtualFile = fileSystem.GetFile(file.template, repository.GetTemplateBase(template));
-            if (!virtualFile.Exists)
+            VirtualFile virtualFile = fileSystem.GetFirstExistingFile(file.template, repository.GetTemplateBases(template));
+            if (virtualFile?.Exists != true)
             {
                 return default;
             }
-            using (Stream fileStream = fileSystem.GetFile(file.template, repository.GetTemplateBase(template)).OpenRead())
+            using (Stream fileStream = virtualFile.OpenRead())
             using (StreamReader reader = new StreamReader(fileStream, Encoding.UTF8, true))
             {
                 encoding = reader.CurrentEncoding;

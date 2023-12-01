@@ -24,5 +24,6 @@ namespace PlcNext.Common.Templates
         IEnumerable<Type.metaDataTemplate> TypeTemplates { get; }
         TemplateDescription Template(string name);
         string GetTemplateBase(TemplateDescription templateDescription);
+        IEnumerable<string> GetTemplateBases(TemplateDescription templateDescription);
     }
 }
