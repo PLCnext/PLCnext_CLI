@@ -47,6 +47,12 @@
         },
         "AlwaysWriteExtendedLog": {
           "type": "boolean"
+        },
+        "MSBuildPath": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "required": [
@@ -55,7 +61,8 @@
         "AttributePrefix",
         "LogFilePath",
         "UseSystemCommands",
-        "AlwaysWriteExtendedLog"
+        "AlwaysWriteExtendedLog",
+        "MSBuildPath"
       ]
     }
   },

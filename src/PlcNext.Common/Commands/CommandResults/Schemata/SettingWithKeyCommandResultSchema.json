@@ -101,6 +101,23 @@
       "required": [
         "AlwaysWriteExtendedLog"
       ]
+    },
+    "MSBuildPathSetting": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "MSBuildPath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "MSBuildPath"
+      ]
     }
   },
   "oneOf": [
@@ -164,6 +181,17 @@
       "properties": {
         "setting": {
           "$ref": "#/definitions/AlwaysWriteExtendedLogSetting"
+        }
+      },
+      "required": [
+        "setting"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "setting": {
+          "$ref": "#/definitions/MSBuildPathSetting"
         }
       },
       "required": [

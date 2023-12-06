@@ -164,10 +164,7 @@
       }
     },
     "generateNamespaces": {
-      "type": [
-        "boolean",
-        "null"
-      ]
+      "type": "boolean"
     }
   },
   "required": [
