@@ -1,0 +1,42 @@
+TYPE
+    instruct : STRUCT
+        blubber : nested;
+        test : supernested;
+        myValue : myValueArray;
+        someWString109 : WSTRING[109];
+    END_STRUCT
+END_TYPE
+
+
+TYPE
+    nested : STRUCT
+        fiooba : supernested;
+        enumField : MyEnum2;
+    END_STRUCT
+END_TYPE
+
+
+TYPE
+    supernested : STRUCT
+        schnacken : BOOL;
+    END_STRUCT
+END_TYPE
+
+
+TYPE
+    MyEnum2 : (Member1 := 0, Member2 := 100) OF SINT;
+END_TYPE
+
+
+TYPE
+    MyEnum1 : (Member1 := 0, Member2 := 100) OF SINT;
+END_TYPE
+
+
+TYPE
+    myValueArray : ARRAY [0..9] OF INT;
+    test3Array : ARRAY [0..4] OF INT;
+
+    test1WString56 : WSTRING[56];
+    test2String10 : STRING[10];
+END_TYPE

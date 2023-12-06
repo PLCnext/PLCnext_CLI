@@ -31,7 +31,9 @@ namespace PlcNext.Common.CodeModel
                     key == EntityKeys.PortEnumsKey ||
                     key == EntityKeys.PortAndTypeInformationEnumsKey ||
                     key == EntityKeys.PortArraysKey ||
-                    key == EntityKeys.VariablePortStringsKey) ||
+                    key == EntityKeys.PortAndTypeInformationArraysKey  ||
+                    key == EntityKeys.VariablePortStringsKey ||
+                    key == EntityKeys.VariablePortAndTypeInformationStringsKey) ||
                    key == EntityKeys.BigDataProjectKey ||
                    key == EntityKeys.NormalProjectKey;
         }
@@ -65,9 +67,17 @@ namespace PlcNext.Common.CodeModel
                 {
                     return owner.Create(key, GetPortArrays().Select(c => c.Base));
                 }
+                case EntityKeys.PortAndTypeInformationArraysKey:
+                {
+                    return owner.Create(key, GetPortAndTypeInformationArrays().Select(c => c.Base));
+                }
                 case EntityKeys.VariablePortStringsKey:
                 {
                     return owner.Create(key, GetVariablePortStrings().Select(c => c.Base));
+                }
+                case EntityKeys.VariablePortAndTypeInformationStringsKey:
+                {
+                    return owner.Create(key, GetVariablePortAndTypeInformationStrings().Select(c => c.Base));
                 }
                 default:
                     throw new ContentProviderException(key, owner);
@@ -120,10 +130,10 @@ namespace PlcNext.Common.CodeModel
                     return enums.Select(s => CodeEntity.Decorate(owner.Create(s?.FullName, s)));
                 }
 
-                bool HasTypeInformationAttribute(CodeEntity enumEntity)
+                bool HasTypeInformationAttribute(CodeEntity entity)
                 {
-                    return enumEntity.AsType != null &&
-                           enumEntity.AsType.HasAttributeWithoutValue(EntityKeys.TypeInformationAttributeKey);
+                    return entity.AsType != null &&
+                           entity.AsType.HasAttributeWithoutValue(EntityKeys.TypeInformationAttributeKey);
                 }
 
                 HashSet<CodeEntity> typeInfoAttributedEnums =
@@ -140,25 +150,88 @@ namespace PlcNext.Common.CodeModel
             IEnumerable<CodeEntity> GetPortArrays()
             {
                 return GetAllPorts(owner).Concat(GetPortStructures(owner).SelectMany(p => p.Fields))
-                                         .Where(t => t.AsField != null &&
-                                                     t.AsField.Multiplicity.Count > 0)
+                                         .Where(IsArray)
                                          .Distinct();
+            }
+
+
+            IEnumerable<CodeEntity> GetPortAndTypeInformationArrays()
+            {
+                IEnumerable<CodeEntity> typeInfoAttributedArrays = GetAllArrays().Where(HasTypeInformationAttribute);
+
+                return GetAllPorts(owner).Concat(GetPortAndTypeInformationStructures(owner).SelectMany(p => p.Fields))
+                                         .Where(IsArray)
+                                         .Concat(typeInfoAttributedArrays);
+
+                IEnumerable<CodeEntity> GetAllArrays()
+                {
+                    return TemplateEntity.Decorate(owner)
+                                 .EntityHierarchy.Select(CodeEntity.Decorate)
+                                 .SelectMany(c => c.Fields)
+                                 .Where(IsArray);
+                }
+
+                bool HasTypeInformationAttribute(CodeEntity entity)
+                {
+                    return entity.AsField != null &&
+                           entity.AsField.HasAttributeWithoutValue(EntityKeys.TypeInformationAttributeKey);
+                }
+            }
+
+            bool IsArray(CodeEntity entity)
+            {
+                return entity.AsField != null && entity.AsField.Multiplicity.Count > 0;
             }
 
             IEnumerable<CodeEntity> GetVariablePortStrings()
             {
+                // only add fields of hidden structs bec. for non-hidden structs with string field
+                // the string datatype will be generated directly in struct definition of dt-worksheet
                 return GetAllPorts(owner).Concat(GetPortStructures(owner)
                                                 .Where(s => s.IsHidden())
                                                 .SelectMany(p => p.Fields))
-                                         .Where(t => t.AsField != null &&
-                                                     StaticStringRegex.IsMatch(t.AsField.DataType.Name) &&
-                                                     StaticStringRegex.Match(t.AsField.DataType.Name).Groups["length"]
-                                                                      .Value != "80" &&
-                                                     !string.IsNullOrEmpty(
-                                                         StaticStringRegex.Match(t.AsField.DataType.Name)
-                                                                          .Groups["length"].Value) &&
-                                                     t.AsField.Multiplicity.Count == 0)
+                                         .Where(IsStringFieldWithNonStandardLegth)
                                          .Distinct();
+            }
+
+            bool IsStringFieldWithNonStandardLegth(CodeEntity entity)
+            {
+                IField field = entity.AsField;
+                if (field == null)
+                    return false;
+
+                return StaticStringRegex.IsMatch(field.DataType.Name)
+                    && StaticStringRegex.Match(field.DataType.Name).Groups["length"].Value != "80"
+                    && !string.IsNullOrEmpty(StaticStringRegex.Match(field.DataType.Name)
+                                                              .Groups["length"].Value)
+                    && field.Multiplicity.Count == 0;
+            }
+
+            IEnumerable<CodeEntity> GetVariablePortAndTypeInformationStrings()
+            {
+                IEnumerable<CodeEntity> typeInfoAttributedStrings = GetAllStrings().Where(HasTypeInformationAttribute);
+
+                return GetAllPorts(owner).Concat(GetPortAndTypeInformationStructures(owner)
+                                                .Where(s => s.IsHidden())
+                                                .SelectMany(p => p.Fields))
+                                         .Where(IsStringFieldWithNonStandardLegth)
+                                         .Concat(typeInfoAttributedStrings)
+                                         .Distinct();
+
+                IEnumerable<CodeEntity> GetAllStrings()
+                {
+                    return TemplateEntity.Decorate(owner)
+                                 .EntityHierarchy.Select(CodeEntity.Decorate)
+                                 .SelectMany(c => c.Fields)
+                                 .Where(IsStringFieldWithNonStandardLegth)
+                                 .Distinct();
+                }
+
+                bool HasTypeInformationAttribute(CodeEntity entity)
+                {
+                    return entity.AsField != null &&
+                           entity.AsField.HasAttributeWithoutValue(EntityKeys.TypeInformationAttributeKey);
+                }
             }
         }
 

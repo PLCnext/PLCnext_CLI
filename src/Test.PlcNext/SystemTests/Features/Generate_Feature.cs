@@ -7,17 +7,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.StepDefinitions;
-using Test.PlcNext.SystemTests.Tools;
 using Test.PlcNext.Tools;
 using Xunit;
 using Xunit.Abstractions;
@@ -1039,8 +1035,10 @@ namespace Test.PlcNext.SystemTests.Features
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("DynamicPorts"),
-                _ => When_I_generate_all_codefiles(),
-                _ => Then_the_typemeta_method_looks_like_NAME("DynamicPortsLibrary.meta.cpp")).RunAsyncWithTimeout();
+                _ => When_I_generate_all(),
+                _ => Then_the_typemeta_method_looks_like_NAME("DynamicPortsLibrary.meta.cpp"),
+                _ => Then_the_datatype_worksheet_looks_like_NAME("DynamicPortsDataTypes.dt")
+                ).RunAsyncWithTimeout();
         }
 
         [Scenario]

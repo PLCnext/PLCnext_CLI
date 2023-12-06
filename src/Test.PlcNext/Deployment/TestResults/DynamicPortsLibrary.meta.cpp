@@ -20,6 +20,8 @@ using namespace Arp::Plc::Commons::Meta;
                         // FieldDefinitions:
                         { "blubber", offsetof(::DynamicPorts::DynamicPortsProgram::instruct, blubber), DataType::Struct, CTN<DynamicPorts::DynamicPortsProgram::nested>(), sizeof(DynamicPorts::DynamicPortsProgram::nested), alignof(DynamicPorts::DynamicPortsProgram::nested), {  }, StandardAttribute::None },
                         { "test", offsetof(::DynamicPorts::DynamicPortsProgram::instruct, test), DataType::Struct, CTN<DynamicPorts::DynamicPortsProgram::nested::supernested>(), sizeof(DynamicPorts::DynamicPortsProgram::nested::supernested), alignof(DynamicPorts::DynamicPortsProgram::nested::supernested), {  }, StandardAttribute::None },
+                        { "myValue", offsetof(::DynamicPorts::DynamicPortsProgram::instruct, myValue), DataType::Int16 | DataType::Array, String::Empty, sizeof(int16), alignof(int16), { 10 }, StandardAttribute::None },
+                        { "someWString109", offsetof(::DynamicPorts::DynamicPortsProgram::instruct, someWString109), DataType::StaticWString, String::Empty, sizeof(StaticWString<109>), alignof(StaticWString<109>), {  }, StandardAttribute::None },
                     }
                 },
                 {   // TypeDefinition: DynamicPorts::DynamicPortsProgram::nested

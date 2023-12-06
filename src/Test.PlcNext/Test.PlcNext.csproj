@@ -224,6 +224,7 @@
     <None Remove="Deployment\TestResults\DemoLibraryWithExternalLibsForAllTargets.txt" />
     <None Remove="Deployment\TestResults\DemoLibraryWithExternalLibsMultibinary.txt" />
     <None Remove="Deployment\TestResults\DemoWithMultibinaryLibraryCommandArgs.txt" />
+    <None Remove="Deployment\TestResults\DynamicPortsDataTypes.dt" />
     <None Remove="Deployment\TestResults\DynamicPortsLibrary.meta.cpp" />
     <None Remove="Deployment\TestResults\EnumTestDataTypes.dt" />
     <None Remove="Deployment\TestResults\ExternalLibraryTest.meta.cpp" />
@@ -348,6 +349,7 @@
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructComponent.hpp" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructProgram.cpp" />
     <EmbeddedResource Include="Deployment\TemplatedStruct\src\TemplatedStructProgram.hpp" />
+    <EmbeddedResource Include="Deployment\TestResults\DynamicPortsDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\AcfProjectCommandArgs.txt" />
     <EmbeddedResource Include="Deployment\TestResults\HiddenComponentPortDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\PortTypesInDifNamespacesAcfDataTypes.dt" />

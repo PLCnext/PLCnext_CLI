@@ -25,7 +25,7 @@ public: // typedefs
 
     enum class MyEnum2 : Arp::int8 {
         Member1,
-        Member2 = 100,
+        Member2 = 100
     };
 
     enum class MyEnum3 : Arp::int8 {
@@ -45,6 +45,8 @@ public: // typedefs
 		struct instruct{
 			nested blubber;
 			nested::supernested test;
+            int16 myValue[10];
+            StaticWString<109> someWString109;
 		};
 
         struct irrelevant
@@ -76,6 +78,15 @@ public: /* Ports
            The attributes comment define the port attributes and is optional.
            The name comment defines the name of the port and is optional. Default is the name of the field.
         */
+
+    //#typeinformation
+    StaticWString<56> test1;
+
+    //#typeinformation
+    StaticString<10> test2;
+
+    //#typeinformation
+    int16 test3[5];
 
 private: // fields
     DynamicPorts::DynamicPortsComponent& dynamicPortsComponent;

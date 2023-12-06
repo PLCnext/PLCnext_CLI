@@ -1021,11 +1021,13 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 //StringBuilder builder = new StringBuilder(reader.ReadToEnd());
                 reader.EndOfStream.Should().BeFalse("file should not be empty or already read.");
+                int line = 0;
                 while(!reader.EndOfStream)
                 {
+                    line++;
                     string actualContent = reader.ReadLine();
                     string expectedContent = resourceReader.EndOfStream ? string.Empty : resourceReader.ReadLine();
-                    actualContent.Should().Be(expectedContent);
+                    actualContent.Should().Be(expectedContent, $"lines {line} should be equal");
                 }
             }
         }
