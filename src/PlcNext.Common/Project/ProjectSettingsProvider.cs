@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using PlcNext.Common.Build;
@@ -20,10 +19,8 @@ using PlcNext.Common.Commands;
 using PlcNext.Common.DataModel;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
-using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.Priority;
-using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.Common.Project
 {
@@ -31,7 +28,7 @@ namespace PlcNext.Common.Project
     {
         private readonly ExecutionContext executionContext;
         private readonly IGuidFactory guidFactory;
-        private readonly Version toolProjectVersion = new(3, 0);
+        private readonly Version toolProjectVersion = new(4, 0);
         public string IdentifierKey => "ProjectSettingsIdentifier";
 
         private readonly IFileSystem fileSystem;
