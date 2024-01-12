@@ -19,6 +19,8 @@ TYPE
     TypeB : STRUCT
         value1 : DINT;
         value2 : ARRAY_DINT_0_9;
+        wstringArrayField : ARRAY_WSTRING14_0_1;
+        stringArrayField : ARRAY_STRING5_0_6;
     END_STRUCT
 END_TYPE
 
@@ -34,6 +36,8 @@ END_TYPE
 TYPE
     ARRAY_INT_0_9 : ARRAY [0..9] OF INT;
     ARRAY_DINT_0_9 : ARRAY [0..9] OF DINT;
+    ARRAY_WSTRING14_0_1 : ARRAY [0..1] OF WSTRING[14];
+    ARRAY_STRING5_0_6 : ARRAY [0..6] OF STRING[5];
 
 END_TYPE
 

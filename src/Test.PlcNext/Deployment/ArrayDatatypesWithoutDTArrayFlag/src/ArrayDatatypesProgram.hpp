@@ -24,6 +24,8 @@ struct TypeA {
 struct TypeB {
     Arp::int32 value1;
     Arp::int32 value2[10];
+    StaticWString<14> wstringArrayField[2];
+    StaticString<5> stringArrayField[7];
 };
 
 struct TypeC {
