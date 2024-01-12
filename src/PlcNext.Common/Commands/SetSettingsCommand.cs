@@ -34,12 +34,6 @@ namespace PlcNext.Common.Commands
 
         protected override CommandResult ExecuteDetailed(SetSettingsCommandArgs args, ChangeObservable observable)
         {
-            Entity rootEntity = entityFactory.Create(Guid.NewGuid().ToByteString(), args).Root;
-            ProjectEntity project = ProjectEntity.Decorate(rootEntity);
-            if (project.Version.Major > project.ToolProjectVersion.Major)
-            {
-                throw new ProjectVersionTooHighException($"{project.ToolProjectVersion}", $"{project.Version}");
-            }
             if (args.Description)
             {
                 if (string.IsNullOrEmpty(args.Key))
