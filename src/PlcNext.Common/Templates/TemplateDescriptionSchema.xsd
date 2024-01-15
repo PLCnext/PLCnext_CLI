@@ -293,9 +293,9 @@
   <xs:complexType name="templateArgumentDefinitions">
     <xs:annotation>
       <xs:documentation>
-        Arguments for the template. Arguments are either overriden from their based on templates or add additionally.
+        Arguments for the template. Arguments are either overriden from their based on templates or added additionally.
         Overriden arguments only need to specify the name to identify the argument and the changed attributes.
-        All no specified attributes remain the same as defined in the base template.
+        All not specified attributes remain the same as defined in the base template.
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -399,9 +399,8 @@
         <xs:attribute name="value" type="xs:string" use="optional" default="true">
           <xs:annotation>
             <xs:documentation>
-              Value to be used as the arguments value. 
-              If the argument requires multiple values, the values need to be seperated by a '|'.
-              If the argument does not has a value, do not specify this attribute.
+              Value to be used as the arguments value.
+              If the argument does not have a value, do not specify this attribute.
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>

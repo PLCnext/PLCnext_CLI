@@ -50,7 +50,7 @@ description itself. -->
       <xs:annotation>
         <xs:documentation>
           If set to OneOrMore the value is interpreted as being multiple values.
-          The split attribute is used to define the seperator.
+          The split attribute is used to define the separator.
           If has-value is false, this attribute is ignored.
           Default is One.
         </xs:documentation>
@@ -59,7 +59,7 @@ description itself. -->
     <xs:attribute name="split" type="xs:string" use="optional" default="|">
       <xs:annotation>
         <xs:documentation>
-          If the multiplicity is OneOrMore this attribute defines the seperator of the values.
+          If the multiplicity is OneOrMore this attribute defines the separator of the values.
           If the multiplicity is One or has-value is false, this attribute is ignored.
           Default is '|'.
         </xs:documentation>
@@ -90,7 +90,7 @@ description itself. -->
   <xs:complexType name="valueRestriction">
     <xs:annotation>
       <xs:documentation>
-        Restricts the values. The restriction is applied to each value seperately if there are more than one value.
+        Restricts the values. The restriction is applied to each value separately if there are more than one value.
       </xs:documentation>
     </xs:annotation>
     <xs:choice>

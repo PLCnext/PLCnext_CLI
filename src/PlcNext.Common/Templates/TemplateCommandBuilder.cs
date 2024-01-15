@@ -103,11 +103,8 @@ namespace PlcNext.Common.Templates
                     throw new ArgumentNotFoundException(argumentInstance.name, description.name);
                 }
 
-                string value = argumentInstance.value.Contains(' ', StringComparison.Ordinal)
-                                   ? $"\"{argumentInstance.value}\""
-                                   : argumentInstance.value;
                 command.Append(argumentInstance.valueSpecified
-                                   ? $" --{argumentInstance.name.ToLowerInvariant()} {value}"
+                                   ? $" --{argumentInstance.name.ToLowerInvariant()} {argumentInstance.value}"
                                    : $" --{argumentInstance.name.ToLowerInvariant()}");
             }
 
