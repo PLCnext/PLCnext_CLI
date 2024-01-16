@@ -309,7 +309,7 @@ namespace PlcNext.CommandLine
                                                                       {
                                                                           typeof(object),
                                                                           typeof(TypeInfo)
-                                                                      }, null)?.Invoke(new[] {null, childTypeInfo})
+                                                                      }, null)?.Invoke(new object[] { childVerbType, childTypeInfo})
                                     is ParserResult<object> childResult)
                             {
                                 helpTextBody.AddOptions(childResult);
