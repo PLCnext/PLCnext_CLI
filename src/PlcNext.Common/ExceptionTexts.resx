@@ -406,4 +406,7 @@
   <data name="RegexTimeout" xml:space="preserve">
     <value>The Regex engine has timed out while trying to match the pattern {0} on input {1}</value>
   </data>
+  <data name="DuplicateFileDeployed" xml:space="preserve">
+    <value>A file with name {0} was added more than once to the library. This is not allowed.</value>
+  </data>
 </root>

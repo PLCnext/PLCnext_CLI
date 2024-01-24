@@ -302,6 +302,10 @@ namespace PlcNext.Common.Build
                     IEnumerable<VirtualFile> files = deployDirectory
                                                     .Files(searchRecursive: true).Except(projectLibraries.Values)
                                                     .Where(f => !processedMetaFiles.Contains(f.GetRelativePath(deployDirectory)));
+                    if (files.GroupBy(f => f.Name).Any(group => group.Count() > 1))
+                    {
+                        throw new DuplicateFileDeployedException(files.GroupBy(f => f.Name).First(group => group.Count() > 1).Key);
+                    }
                     foreach (VirtualFile file in files)
                     {
                         writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
