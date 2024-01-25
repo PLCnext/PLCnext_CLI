@@ -316,7 +316,7 @@ namespace PlcNext.Common.Templates
                                    "path/to/source|path/to/destination(|target). The path/to/source file will be relative to the " +
                                    $"root folder, defined with the '{EntityKeys.PathKey}' argument. It can contain the wildcard '*' " +
                                    $"at the end of the path. In this case all files from the directory and all sub-directories will " +
-                                   $"be deployed. The sub-directories will be recreated in the deployment directory. The path/to/destination will be " +
+                                   $"be deployed into the destination directory without recreating the directory structure. The path/to/destination will be " +
                                    $"relative to the output/targetname/Release directory, where output is defined with the '{Constants.OutputArgumentName}' argument. " +
                                    "Optionally each file can have a target definition. Without the target definition the file is deployed to every target. " +
                                    "Targets need to be defined in the following format: targetname(,targetversion). The version is optional and " +
