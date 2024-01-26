@@ -103,7 +103,8 @@ namespace PlcNext.Common.Templates
 
                 foreach (templateReference reference in SortByRelationship(template.AddTemplate??Enumerable.Empty<templateReference>()))
                 {
-                    if (repository.Template(reference.template) == null)
+                    TemplateDescription templateDescription = repository.Template(reference.template);
+                    if (templateDescription == null)
                     {
                         throw new TemplateReferenceNotDefinedException(reference.template);
                     }
@@ -112,7 +113,7 @@ namespace PlcNext.Common.Templates
                                                                                        .SetName(reference.template);
                     foreach (templateArgumentInstance argumentInstance in reference.Arguments)
                     {
-                        AddArgument(argumentInstance, pseudoDefinition);
+                        AddArgument(argumentInstance, pseudoDefinition, templateDescription);
                     }
 
                     IEnumerable<IGrouping<string, templateRelationshipInstance>> grouped = (reference.Relationship ?? Enumerable.Empty<templateRelationshipInstance>()).GroupBy(r => r.name);
@@ -132,12 +133,41 @@ namespace PlcNext.Common.Templates
 
                 return files;
 
-                void AddArgument(templateArgumentInstance templateArgumentInstance, CommandDefinitionBuilder commandDefinitionBuilder)
+                void AddArgument(templateArgumentInstance templateArgumentInstance,
+                    CommandDefinitionBuilder commandDefinitionBuilder, TemplateDescription templateDescription)
                 {
+                    var argumentDefinition = templateDescription.Arguments.FirstOrDefault(arg => arg.name == templateArgumentInstance.name);
                     string templateArgumentValue = resolver.Resolve(templateArgumentInstance.value, dataModel);
-                    bool argumentHasNoValue = bool.TryParse(templateArgumentValue, out bool boolValue);
-                    string[] argumentSplit = templateArgumentValue.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                    bool isMultiArgument = argumentSplit.Length > 1;
+                    bool argumentHasNoValue;
+                    bool boolValue = false;
+                    bool isMultiArgument;
+                    string[] templateArgumentValues;
+                    string separator = "|";
+                    if (argumentDefinition == null)
+                    {
+                        argumentHasNoValue = bool.TryParse(templateArgumentValue, out boolValue);
+                        templateArgumentValues = templateArgumentValue?.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+                        isMultiArgument = templateArgumentValues?.Length > 1;
+                    }
+                    else
+                    {
+                        argumentHasNoValue = !argumentDefinition.hasvalue;
+                        if (argumentHasNoValue)
+                        {
+                            if (!bool.TryParse(templateArgumentValue, out boolValue))
+                            {
+                                boolValue = false;
+                            }
+                        }
+                        isMultiArgument  = argumentDefinition.multiplicity == multiplicity.OneOrMore;
+                        templateArgumentValues = new [] { templateArgumentValue };
+                        separator = argumentDefinition.separator;
+                        if (isMultiArgument)
+                        {
+                            templateArgumentValues = templateArgumentValue?.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+                        }
+                    }
+                    
                     if (argumentHasNoValue)
                     {
                         commandDefinitionBuilder.CreateArgument()
@@ -149,7 +179,7 @@ namespace PlcNext.Common.Templates
                     {
                         commandDefinitionBuilder.CreateArgument()
                                                 .SetName(templateArgumentInstance.name)
-                                                .SetValue(argumentSplit)
+                                                .SetValue(templateArgumentValues)
                                                 .Build();
                     }
                     else
