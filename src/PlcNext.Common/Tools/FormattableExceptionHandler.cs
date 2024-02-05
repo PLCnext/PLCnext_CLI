@@ -47,7 +47,7 @@ namespace PlcNext.Common.Tools
 
             void WriteError(FormattableException exception)
             {
-                executionContext.WriteError(exception.Message, true, false);
+                executionContext.WriteError(exception.Message, true);
                 Exception inner = exception.InnerException;
                 while (inner != null)
                 {

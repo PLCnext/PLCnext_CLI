@@ -68,8 +68,7 @@
         "name",
         "version",
         "longVersion",
-        "shortVersion",
-        "available"
+        "shortVersion"
       ]
     }
   },

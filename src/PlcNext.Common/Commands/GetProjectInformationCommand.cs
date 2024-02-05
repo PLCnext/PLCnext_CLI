@@ -71,7 +71,8 @@ namespace PlcNext.Common.Commands
                                                                                                                                 )
                                                                                            ),
                                                     propertiesProvider.ExternalLibraries.Select(p => new CommandResults.Path(p)),
-                                                    propertiesProvider.GenerateNamespaces
+                                                    propertiesProvider.GenerateNamespaces,
+                                                    propertiesProvider.CSharpProjectPath
                                                     ),
                 propertiesProvider.Exceptions);
         }

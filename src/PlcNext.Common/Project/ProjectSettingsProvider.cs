@@ -221,6 +221,7 @@ namespace PlcNext.Common.Project
                     ProjectDescription description = owner.Value<ProjectDescription>();
                     return owner.Create(key, description.Settings.CSharpProjectPath);
                 }
+                //do not allow shared native projects without .proj file
                 throw new ContentProviderException(key, owner);
             }
 

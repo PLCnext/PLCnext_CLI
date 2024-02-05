@@ -20,7 +20,8 @@ namespace PlcNext.Common.Commands.CommandResults
                                                IEnumerable<TargetResult> targets,
                                                IEnumerable<EntityResult> entities,
                                                IEnumerable<UncheckedPath> includePaths,
-                                               IEnumerable<Path> externalLibraries, bool generateNamespaces)
+                                               IEnumerable<Path> externalLibraries, bool generateNamespaces,
+                                               string cSharpProjectPath)
         {
             Name = name;
             Namespace = ns;
@@ -30,6 +31,7 @@ namespace PlcNext.Common.Commands.CommandResults
             IncludePaths = includePaths;
             ExternalLibraries = externalLibraries;
             GenerateNamespaces = generateNamespaces;
+            CSharpProjectPath = cSharpProjectPath;
         }
 
         [JsonProperty(PropertyName = "name")]
@@ -55,6 +57,9 @@ namespace PlcNext.Common.Commands.CommandResults
 
         [JsonProperty(PropertyName = "generateNamespaces")]
         public bool GenerateNamespaces { get; }
+
+        [JsonProperty(PropertyName = "cSharpProjectPath", NullValueHandling = NullValueHandling.Ignore, Required = Required.Default)]
+        public string CSharpProjectPath { get; }
     }
 
     public class EntityResult

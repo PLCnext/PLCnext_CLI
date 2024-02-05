@@ -102,8 +102,7 @@
         "name",
         "version",
         "longVersion",
-        "shortVersion",
-        "available"
+        "shortVersion"
       ]
     }
   },
@@ -165,6 +164,12 @@
     },
     "generateNamespaces": {
       "type": "boolean"
+    },
+    "cSharpProjectPath": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "required": [

@@ -47,7 +47,7 @@ namespace PlcNext.Common.Commands.CommandResults
         [JsonProperty(PropertyName = "shortVersion")]
         public string ShortVersion { get; }
         
-        [JsonProperty(PropertyName = "available")]
+        [JsonProperty(PropertyName = "available", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Available { get; }
     }
 }

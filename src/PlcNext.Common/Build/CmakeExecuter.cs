@@ -33,7 +33,6 @@ namespace PlcNext.Common.Build
         private readonly IFileSystem fileSystem;
         private readonly IEnvironmentService environmentService;
         private readonly ExecutionContext executionContext;
-        private readonly IOutputFormatterPool formatterPool;
 
         private const string ToolchainFileOption = "-DCMAKE_TOOLCHAIN_FILE=\"%SDK_ROOT%/toolchain.cmake\"";
         private const string GeneratorOption = "-G \"Unix Makefiles\"";
@@ -47,7 +46,8 @@ namespace PlcNext.Common.Build
 
         private static Regex IncludeDirectoryPattern = new Regex(@"^(?<name>[^\s]*)_(?<version>\d*\.\d*\.\d*\.\d*)$", RegexOptions.Compiled);
 
-        public CmakeExecuter(IProcessManager processManager, IUserInterface userInterface, IBinariesLocator binariesLocator, IFileSystem fileSystem, IEnvironmentService environmentService, ExecutionContext executionContext, IOutputFormatterPool formatterPool)
+        public CmakeExecuter(IProcessManager processManager, IUserInterface userInterface, IBinariesLocator binariesLocator, 
+                             IFileSystem fileSystem, IEnvironmentService environmentService, ExecutionContext executionContext)
         {
             this.processManager = processManager;
             this.userInterface = userInterface;
@@ -55,7 +55,6 @@ namespace PlcNext.Common.Build
             this.fileSystem = fileSystem;
             this.environmentService = environmentService;
             this.executionContext = executionContext;
-            this.formatterPool = formatterPool;
         }
 
         public void ExecuteBuild(BuildInformation buildInformation, ChangeObservable observable)
