@@ -87,7 +87,7 @@ namespace PlcNext.Common.Templates
             yield return templates[templateDescription];
             while (!string.IsNullOrEmpty(templateDescription?.basedOn))
             {
-                TemplateDescription basedOnTemplate = templates.Keys.FirstOrDefault(tmpl => tmpl.Description.Equals(templateDescription.basedOn, StringComparison.Ordinal));
+                TemplateDescription basedOnTemplate = templates.Keys.FirstOrDefault(tmpl => tmpl.name?.Equals(templateDescription.basedOn, StringComparison.Ordinal) == true);
                 templateDescription = basedOnTemplate;
                 if (basedOnTemplate != default)
                 {
