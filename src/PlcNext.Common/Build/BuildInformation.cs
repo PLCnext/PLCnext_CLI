@@ -27,7 +27,6 @@ namespace PlcNext.Common.Build
                                                                RootProjectEntity.Targets.FirstOrDefault(e => e.Value<Target>() == Target));
         public SdkInformation SdkInformation { get; set; }
         public Target Target { get; set; }
-        public string BuildType { get; }
         public bool Configure { get; }
         public bool NoConfigure { get; }
         public string BuildProperties { get; set; }
@@ -35,11 +34,10 @@ namespace PlcNext.Common.Build
         public bool BuildPropertiesSetByFile { get; set; }
         public string Output { get; }
 
-        public BuildInformation(Entity rootEntity, string buildType, bool configure, bool noConfigure,
+        public BuildInformation(Entity rootEntity, bool configure, bool noConfigure,
                                 string buildProperties, string output)
         {
             RootEntity = rootEntity;
-            BuildType = buildType;
             Configure = configure;
             NoConfigure = noConfigure;
             BuildProperties = buildProperties;

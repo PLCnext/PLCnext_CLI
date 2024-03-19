@@ -34,7 +34,6 @@ namespace PlcNext.Common.Build
                                                                    ChangeObservable observable)
         {
             BuildInformation buildInformation = new BuildInformation(rootEntity,
-                                                                     null,
                                                                      false,
                                                                      false,
                                                                      string.Empty,

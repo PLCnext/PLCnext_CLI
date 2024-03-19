@@ -37,9 +37,12 @@ namespace PlcNext.CommandLine
                                                                   " The system paths defined by the SDK are still used.")]
         public bool NoIncludePathDetection { get; set; }
 
+        [Option(CommandLineConstants.BuildtypeChar, CommandLineConstants.BuildtypeOption, HelpText = "Build type for the background cmake build, e.g. Debug. Default is Release.")]
+        public string BuildType { get; set; }
+
         protected override async Task<int> Execute(ICommandManager commandManager)
         {
-            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new GetProjectInformationCommandArgs(Path, SourceDirectories, NoIncludePathDetection))))
+            return await commandManager.Execute(AddVerbName(AddDeprecatedInformation(new GetProjectInformationCommandArgs(Path, SourceDirectories, NoIncludePathDetection, BuildType))))
                                        .ConfigureAwait(false);
         }
     }

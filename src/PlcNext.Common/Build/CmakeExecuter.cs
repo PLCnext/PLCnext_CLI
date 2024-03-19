@@ -182,8 +182,8 @@ namespace PlcNext.Common.Build
 
             string GetRealBuildType()
             {
-                string buildType = !string.IsNullOrEmpty(buildInformation.BuildType)
-                                       ? buildInformation.BuildType
+                string buildType = !string.IsNullOrEmpty(buildInformation.BuildEntity.BuildType)
+                                       ? buildInformation.BuildEntity.BuildType
                                        : Constants.ReleaseFolderName;
                 return buildType;
             }
@@ -336,9 +336,9 @@ namespace PlcNext.Common.Build
                         if (bestMatch != null)
                         {
                             VirtualDirectory directory = versions[bestMatch];
-                            if (directory.DirectoryExists(buildInformation.BuildType))
+                            if (directory.DirectoryExists(buildInformation.BuildEntity.BuildType))
                             {
-                                path = directory.Directory(buildInformation.BuildType).FullName;
+                                path = directory.Directory(buildInformation.BuildEntity.BuildType).FullName;
                             }
                             else if (directory.DirectoryExists(Constants.ReleaseFolderName))
                             {

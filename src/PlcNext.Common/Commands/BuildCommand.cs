@@ -46,7 +46,7 @@ namespace PlcNext.Common.Commands
             
             TemplateEntity templateEntity = TemplateEntity.Decorate(rootEntity);
 
-            BuildInformation buildInfo = new BuildInformation(rootEntity, args.BuildType, args.Configure, args.NoConfigure, buildProperties, args.Output);
+            BuildInformation buildInfo = new BuildInformation(rootEntity, args.Configure, args.NoConfigure, buildProperties, args.Output);
             builders[templateEntity.Template.buildEngine].Build(buildInfo, observable, args.Target);
 
             return 0;
