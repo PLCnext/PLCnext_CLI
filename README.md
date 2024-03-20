@@ -3,7 +3,7 @@
 The PLCnext CLI (PLCnext Command Line Interface) provides the entire toolchain for C++ programming on the PLCnext Technology platform as well as a [template system](https://github.com/PLCnext/PLCnext_CLI_Templates) for creating projects. Based on the templates, you can develop your applications.<br/>
 Use the PLCnext CLI to unpack and manage the SDKs. CMake is contained as the build environment and each SDK has its own configuration.<br/>
 A parser integrated in PLCnext CLI creates the metadata required for PLCnext Technology.<br/>
-The LibraryBuilder contained in PLCnext CLI creates a PLCnext Engineer li­brary from the project.
+The LibraryBuilder contained in PLCnext CLI creates a PLCnext Engineer library from the project.
 
 For convenience you can also use one of our IDE plugins. They are part of the release version or can also be found here on GitHub for [Visual Studio](https://github.com/PLCnext/PLCnext_CLI_VS/tree/master) and [Eclipse](https://github.com/PLCnext/PLCnext_CLI_Eclipse/tree/master).
 
@@ -18,7 +18,7 @@ If you want to adapt the PLCnext CLI to your needs or just work with the newest 
 
 ### Prerequisite
 
-- [.NET 7](https://dotnet.microsoft.com/en-us/download/dotnet)
+- [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet)
 
 ### External tools to download
 
@@ -28,9 +28,9 @@ If you want to adapt the PLCnext CLI to your needs or just work with the newest 
 ### Build steps
 
 - `dotnet build src -p:PlcNextToolName=plcncli -p:RestoreConfigFile=src/NuGet/LocalFeed.config`
-- Extract cmake to `src/PlcNext/bin/Debug/net7.0/cmake`
-- Extract the Engineering Library Builder to `src/PlcNext/bin/Debug/net7.0/library-builder`
-- Edit the `src/PlcNext/bin/Debug/net7.0/file-names.xml` file to look like:
+- Extract cmake to `src/PlcNext/bin/Debug/net8.0/cmake`
+- Extract the Engineering Library Builder to `src/PlcNext/bin/Debug/net8.0/library-builder`
+- Edit the `src/PlcNext/bin/Debug/net8.0/file-names.xml` file to look like:
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -41,7 +41,7 @@ If you want to adapt the PLCnext CLI to your needs or just work with the newest 
 </names>
 ```
 
-- Use finally `src/PlcNext/bin/Debug/net7.0/plcncli.exe`.<br/>
+- Use finally `src/PlcNext/bin/Debug/net8.0/plcncli.exe`.<br/>
   Consider to add a search path to the path environment variable.
 
 ## Contribute
