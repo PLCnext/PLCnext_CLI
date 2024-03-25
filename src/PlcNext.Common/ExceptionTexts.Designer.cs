@@ -232,6 +232,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is more than one entity with name {0}..
+        /// </summary>
+        internal static string EntitiesWithSameName {
+            get {
+                return ResourceManager.GetString("EntitiesWithSameName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} not found inside project {1}.{2}Existing items are:{2}{3}.
         /// </summary>
         internal static string EntityNotFound {

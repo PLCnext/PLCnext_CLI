@@ -14,9 +14,6 @@ namespace PlcNext.CommandLine
         public const string PathOption = "path";
         public const char PathChar = 'p';
 
-        public const string TargetOption = "target";
-        public const char TargetChar = 't';
-
         public const string AllOption = "all";
         public const char AllChar = 'a';
 
@@ -26,36 +23,19 @@ namespace PlcNext.CommandLine
         public const char BuildtypeChar = 'b';
         public const string ConfigureOption = "configure";
         public const string NoconfigureOption = "noconfigure";
-
-        //GenerateLibraryVerb
-        public const string LibraryVerb = "library";
-        public const string MetaPathOption = "metapath";
-        public const char MetaPathChar = 'm';
-        public const string CompilationOption = "compilationpath";
-        public const char CompilationChar = 'c';
         public const string OutputOption = "output";
         public const char OutputChar = 'o';
-        public const string IdOption = "id";
-        public const char IdChar = 'i';
-        public const string ExternalLibrariesOption = "externallibraries";
-        public const char ExternalLibrariesChar = 'e';
+        public const string TargetOption = "target";
+        public const char TargetChar = 't';
 
         //GenerateVerb
         public const string GenerateVerb = "generate";
-
-        //GetComponentsVerb
-        public const string ComponentsVerb = "components";
 
         //GetIncludePathsVerb
         public const string IncludepathsVerb = "include-paths";
 
         //GetCompilerSpecifications
         public const string CompilerSpecificationsVerb = "compiler-specifications";
-
-        //GetProgramsVerb
-        public const string ProgramsVerb = "programs";
-        public const string ComponentOption = "component";
-        public const char ComponentChar = 'c';
 
         //GetSdksVerb
         public const string SdksVerb = "sdks";
@@ -110,15 +90,6 @@ namespace PlcNext.CommandLine
 
         //UpdateVerb
         public const string UpdateVerb = "update";
-
-        //StartServerVerb
-        public const string ServerVerb = "start-server";
-        public const string ServerNameOption = "name";
-        public const char ServerNameChar = 'n';
-        public const string TwoChannelOption = "two-channel";
-        public const char TwoChannelChar = 't';
-        public const string HeartbeatOption = "heartbeat";
-        public const char HeartbeatChar = 'h';
 
         //MigrateCliVerb
         public const string MigrateCliVerb = "migrate-old-cli";

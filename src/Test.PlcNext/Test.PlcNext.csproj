@@ -161,6 +161,13 @@
     <None Remove="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramComponent.hpp" />
     <None Remove="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramProgram.cpp" />
     <None Remove="Deployment\ProgramWithHiddenStructPortProgram\src\ProgramWithHiddenStructPortProgramProgram.hpp" />
+    <None Remove="Deployment\ProgramWithSameProgramNames\CMakeLists.txt" />
+    <None Remove="Deployment\ProgramWithSameProgramNames\src3\ProgramWithSameProgramNamesProgram.cpp" />
+    <None Remove="Deployment\ProgramWithSameProgramNames\src3\ProgramWithSameProgramNamesProgram.hpp" />
+    <None Remove="Deployment\ProgramWithSameProgramNames\src\ProgramWithSameProgramNamesComponent.cpp" />
+    <None Remove="Deployment\ProgramWithSameProgramNames\src\ProgramWithSameProgramNamesComponent.hpp" />
+    <None Remove="Deployment\ProgramWithSameProgramNames\src\ProgramWithSameProgramNamesProgram.cpp" />
+    <None Remove="Deployment\ProgramWithSameProgramNames\src\ProgramWithSameProgramNamesProgram.hpp" />
     <None Remove="Deployment\ProjectWithRedundancyAndWrongTarget\CMakeLists.txt" />
     <None Remove="Deployment\ProjectWithRedundancyAndWrongTarget\external\ADD_DEPENDENT_LIBRARIES_HERE.txt" />
     <None Remove="Deployment\ProjectWithRedundancyAndWrongTarget\src\ProjectWithRedundancyAndWrongTargetComponent.cpp" />
@@ -336,6 +343,13 @@
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespaces\src\PortTypesInDifNamespacesComponent.hpp" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespaces\src\PortTypesInDifNamespacesProgram.cpp" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespaces\src\PortTypesInDifNamespacesProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithSameProgramNames\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\ProgramWithSameProgramNames\src3\ProgramWithSameProgramNamesProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithSameProgramNames\src3\ProgramWithSameProgramNamesProgram.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithSameProgramNames\src\ProgramWithSameProgramNamesComponent.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithSameProgramNames\src\ProgramWithSameProgramNamesComponent.hpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithSameProgramNames\src\ProgramWithSameProgramNamesProgram.cpp" />
+    <EmbeddedResource Include="Deployment\ProgramWithSameProgramNames\src\ProgramWithSameProgramNamesProgram.hpp" />
     <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCpp\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCSharp\NativeFunctionBlock.cs" />
     <EmbeddedResource Include="Deployment\SharedNative\SharedNativeCSharp\ProjectItems\LibraryDescription.xml" />
@@ -1053,6 +1067,7 @@
     <EmbeddedResource Include="Deployment\ArrayDatatypes\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ArrayDatatypesWithoutDTArrayFlag\plcnext.proj" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\ProgramWithSameProgramNames\plcnext.proj" />
     <EmbeddedResource Include="Deployment\CppSpecial\plcnext.proj" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespacesWithNS\plcnext.proj" />
     <EmbeddedResource Include="Deployment\HiddenComponentPort\plcnext.proj" />

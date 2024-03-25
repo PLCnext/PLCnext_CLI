@@ -8,10 +8,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using PlcNext.Common.Templates;
 using PlcNext.Common.Tools;
@@ -41,7 +39,8 @@ namespace PlcNext.Common.DataModel
             EntityKeys.ContainsLtGt,
             EntityKeys.IsEmpty,
             EntityKeys.ToUpper,
-            EntityKeys.ToLower
+            EntityKeys.ToLower,
+            EntityKeys.DuplicateNameCheckKey
         };
 
         public ConstantContentProvider(IFileSystem fileSystem)
@@ -151,6 +150,16 @@ namespace PlcNext.Common.DataModel
 #pragma warning disable CA1308 // Normalize strings to uppercase
                     return owner.Create(key, owner.Value<string>().ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
+                case EntityKeys.DuplicateNameCheckKey:
+                    if (owner.Root.Hierarchy().GroupBy(e => e.Name).Any(group => group.Count() > 1))
+                    {
+                        throw new EntitiesWithSameNameException(
+                            owner.Root.Hierarchy().GroupBy(e => e.Name)
+                                                  .First(group => group.Count() > 1)
+                                                  .First().Name);
+                    }
+                    return owner.Create(key, string.Empty);
+                    
                 default:
                     throw new ContentProviderException(key, owner);
 

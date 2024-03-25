@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSettings xmlns="http://www.phoenixcontact.com/schema/cliproject">
+  <Type>project</Type>
+  <Version>4.0</Version>
+  <Name>ProgramWithSameProgramNames</Name>
+  <GenerateDTArrayNameByType>true</GenerateDTArrayNameByType>
+  <GenerateNamespaces>true</GenerateNamespaces>
+</ProjectSettings>

@@ -26,7 +26,7 @@ namespace Test.PlcNext.SystemTests.Features
     
     {
         [Scenario]
-        public async Task Load_Project_with_same_component_name_in_different_namspaces()
+        public async Task Load_Project_with_programs_with_different_relationship_comments()
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramsWithCorrectComments"),
@@ -36,12 +36,22 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
-        public async Task Load_Project_with_ambiguous_component_comment_in_program()
+        public async Task Load_Project_with_same_component_name_in_different_namspaces()
         {
             await Runner.AddSteps(
                 _ => Given_is_the_project("ProgramWithAmbiguousComment"),
                 _ => When_I_generate_all_metafiles(),
-                _ => Then_the_user_was_informed_that_the_comment_is_ambiguous()
+                _ => Then_the_user_was_informed_that_the_entities_have_the_same_name()
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Load_Project_with_same_program_name_in_same_component_in_different_namspaces()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("ProgramWithSameProgramNames"),
+                _ => When_I_generate_all_metafiles_with_the_source_directories("src", "src3"),
+                _ => Then_the_user_was_informed_that_the_entities_have_the_same_name()
                 ).RunAsyncWithTimeout();
         }
 

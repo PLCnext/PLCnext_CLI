@@ -25,6 +25,7 @@ using System.Linq;
 using PlcNext.Common.Tools.DynamicCommands;
 using PlcNext.Common.Deploy;
 using PlcNext.Common.Generate;
+using PlcNext.Common.DataModel;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
@@ -420,6 +421,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         protected void Then_the_user_was_informed_that_the_component_name_is_ambiguous()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(AmbiguousRelationshipTypeException));
+        }
+
+        protected void Then_the_user_was_informed_that_the_entities_have_the_same_name()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(EntitiesWithSameNameException));
         }
 
         protected void Then_the_user_was_informed_that_the_library_id_is_malformatted()

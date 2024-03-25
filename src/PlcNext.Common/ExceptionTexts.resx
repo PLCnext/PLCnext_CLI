@@ -409,4 +409,7 @@
   <data name="DuplicateFileDeployed" xml:space="preserve">
     <value>A file with name {0} was added more than once to the library. This is not allowed.</value>
   </data>
+  <data name="EntitiesWithSameName" xml:space="preserve">
+    <value>There is more than one entity with name {0}.</value>
+  </data>
 </root>

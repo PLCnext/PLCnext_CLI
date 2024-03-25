@@ -20,12 +20,14 @@ namespace PlcNext.Common.Templates
 {
     internal class AmbiguousRelationshipTypeException : FormattableException
     {
-        public AmbiguousRelationshipTypeException(string relationshipType, string relationshipName, IType[] availableTypes) :base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.AmbiguousRelationshipType, relationshipType, relationshipName, $"{Environment.NewLine}{string.Join(Environment.NewLine, availableTypes.Select(t => $"{Constants.Tab}- {t.FullName}"))}"))
+        public AmbiguousRelationshipTypeException(string relationshipType, string relationshipName, IType[] availableTypes) 
+            :base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.AmbiguousRelationshipType, relationshipType, relationshipName, $"{Environment.NewLine}{string.Join(Environment.NewLine, availableTypes.Select(t => $"{Constants.Tab}- {t.FullName}"))}"))
         {
             
         }
 
-        public AmbiguousRelationshipTypeException(string relationshipType, string relationshipName, Entity[] entities) : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.AmbiguousRelationshipType, relationshipType, relationshipName, $"{Environment.NewLine}{string.Join(Environment.NewLine, entities.Select(t => $"{Constants.Tab}- {t}"))}"))
+        public AmbiguousRelationshipTypeException(string relationshipType, string relationshipName, Entity[] entities) 
+            : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.AmbiguousRelationshipType, relationshipType, relationshipName, $"{Environment.NewLine}{string.Join(Environment.NewLine, entities.Select(t => $"{Constants.Tab}- {t}"))}"))
         {
             
         }

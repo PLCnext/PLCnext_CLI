@@ -134,6 +134,7 @@ namespace PlcNext.Common.Tools
         public const string NamespaceKey = "namespace";
         public const string FormatKey = "format";
         public const string ValueKey = "value";
+        public const string DuplicateNameCheckKey = "checkforduplicatename";
 
         //MetaDataKeys
         public const string IsTemplateOnly = "IsTemplateOnly";
