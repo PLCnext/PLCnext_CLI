@@ -27,7 +27,6 @@ namespace PlcNext.Common.Tools
         public const string ReleaseFolderName = "Release";
         public const string DebugFolderName = "Debug";
         public const string LibraryFolderName = "bin";
-        public const string CSharpBinFolderName = "CLI";
         public const string CSharpProjectItemsFolderName = "ProjectItems";
         public const string CSharpHelpFolderName = "Help";
         public const string ConfigIndependentFiles = "Common";

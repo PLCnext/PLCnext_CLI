@@ -60,6 +60,7 @@ namespace Test.PlcNext.SystemTests.Tools
         private readonly IGuidFactoryAbstraction guidFactoryAbstraction;
         private readonly ICMakeConversationAbstraction cmakeConversationAbstraction;
         private readonly ISdkExplorerAbstraction sdkExplorerAbstraction;
+        private readonly IMSBuildFinderAbstraction msBuildFinderAbstraction;
         private readonly bool autoActivatedComponents;
         private IContainer host;
 
@@ -88,7 +89,8 @@ namespace Test.PlcNext.SystemTests.Tools
             IProcessManagerAbstraction processManagerAbstraction, IUserInterfaceAbstraction userInterfaceAbstraction,
             IEnvironmentServiceAbstraction environmentServiceAbstraction, IExceptionHandlerAbstraction exceptionHandlerAbstraction,
             IGuidFactoryAbstraction guidFactoryAbstraction, ICMakeConversationAbstraction cmakeConversationAbstraction,
-            ISdkExplorerAbstraction sdkExplorerAbstraction, bool autoActivatedComponents = true)
+            ISdkExplorerAbstraction sdkExplorerAbstraction, IMSBuildFinderAbstraction msBuildFinderAbstraction,
+            bool autoActivatedComponents = true)
         {
             this.fileSystemAbstraction = fileSystemAbstraction;
             this.downloadServiceAbstraction = downloadServiceAbstraction;
@@ -99,6 +101,7 @@ namespace Test.PlcNext.SystemTests.Tools
             this.guidFactoryAbstraction = guidFactoryAbstraction;
             this.cmakeConversationAbstraction = cmakeConversationAbstraction;
             this.sdkExplorerAbstraction = sdkExplorerAbstraction;
+            this.msBuildFinderAbstraction = msBuildFinderAbstraction;
             this.autoActivatedComponents = autoActivatedComponents;
         }
 
@@ -132,6 +135,7 @@ namespace Test.PlcNext.SystemTests.Tools
             guidFactoryAbstraction.Initialize(exportProvider, printMessage);
             cmakeConversationAbstraction.Initialize(exportProvider, printMessage);
             sdkExplorerAbstraction.Initialize(exportProvider, printMessage);
+            msBuildFinderAbstraction.Initialize(exportProvider, printMessage);
             ILog log = new LogTracer(printMessage);
             exportProvider.AddInstance(Substitute.For<IProgressVisualizer>());
             exportProvider.AddInstance(log);

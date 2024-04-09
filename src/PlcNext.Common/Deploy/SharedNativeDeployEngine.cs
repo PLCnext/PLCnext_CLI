@@ -18,6 +18,9 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using PlcNext.Common.Tools.IO;
+using PlcNext.Common.Tools.Process;
+using PlcNext.Common.Tools.UI;
+using PlcNext.Common.Tools.MSBuild;
 
 namespace PlcNext.Common.Deploy
 {
@@ -27,28 +30,45 @@ namespace PlcNext.Common.Deploy
         private readonly IFileSystem fileSystem;
         private readonly ExecutionContext executionContext;
         private readonly IDirectoryPackService directoryPackService;
+        private readonly IProcessManager processManager;
+        private readonly ILog log;
+        private readonly IMSBuildFinder msBuildFinder;
 
         public SharedNativeDeployEngine([KeyFilter("DefaultDeployEngine")] IDeployService defaultDeployService, IFileSystem fileSystem,
-                                        ExecutionContext executionContext, IDirectoryPackService directoryPackService)
+                                        ExecutionContext executionContext, IDirectoryPackService directoryPackService,
+                                        IProcessManager processManager, ILog log, IMSBuildFinder msBuildFinder)
         {
             this.defaultDeployService = defaultDeployService;
             this.fileSystem = fileSystem;
             this.executionContext = executionContext;
             this.directoryPackService = directoryPackService;
+            this.processManager = processManager;
+            this.log = log;
+            this.msBuildFinder = msBuildFinder;
         }
 
         public void DeployFiles(Entity dataModel)
         {
             defaultDeployService.DeployFiles(dataModel);
-            ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
-            if (string.IsNullOrEmpty(project.CSharpProjectPath))
-            {
-                return;
-            }
-            
-            string csharpProjectPath = Path.Combine(project.Path, project.CSharpProjectPath);
 
-            if (fileSystem.DirectoryExists(Constants.CSharpBinFolderName, csharpProjectPath))
+            ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
+            string csharpProjectPath = project.CSharpProjectPath;
+            if (!Path.IsPathRooted(csharpProjectPath))
+            {
+                if(csharpProjectPath == null)
+                {
+                    csharpProjectPath = project.Path;
+                    log.LogWarning("CSharp project path not found. Using project path instead.");
+                }
+                else
+                {
+                    csharpProjectPath = Path.Combine(project.Path, csharpProjectPath);
+                }
+            }
+
+            string csharpProjectOutputFolder = FindCSharpProjectOutputFolder();
+
+            if (fileSystem.DirectoryExists(csharpProjectOutputFolder, csharpProjectPath))
             {
                 CommandEntity command = CommandEntity.Decorate(dataModel);
                 string basePath = project.Path;
@@ -72,7 +92,7 @@ namespace PlcNext.Common.Deploy
 
                 void CopyDlls()
                 {
-                    VirtualDirectory sourceDirectory = fileSystem.GetDirectory(Constants.CSharpBinFolderName,
+                    VirtualDirectory sourceDirectory = fileSystem.GetDirectory(csharpProjectOutputFolder,
                                                                                csharpProjectPath,
                                                                                false);
                     foreach (VirtualFile deployableFile in sourceDirectory.Files("*.dll"))
@@ -146,19 +166,19 @@ namespace PlcNext.Common.Deploy
                             return;
                         }
                         IEnumerable<string> cultures = sourceDirectory.Directory(htmlDirectory).Directories.Select(d => d.Name)
-                                                           .Where(d => !d.Equals("images", StringComparison.OrdinalIgnoreCase));
+                                                           .Where(d => !string.IsNullOrEmpty(d) && !d.Equals("images", StringComparison.OrdinalIgnoreCase));
 
-                        //CheckCultures(cultures);
+                        //no culture check is performed when deploying
 
-                        VirtualDirectory destinationDir = fileSystem.GetDirectory(Constants.DeployHelpDirectoryName, destinationDirectory.FullName);
-                        destinationDir.Clear();
+                        VirtualDirectory deployHelpDirectory = fileSystem.GetDirectory(Constants.DeployHelpDirectoryName, destinationDirectory.FullName);
+                        deployHelpDirectory.Clear();
 
                         foreach (string culture in cultures)
                         {
-                            if (!string.IsNullOrEmpty(culture)
-                                && !culture.Equals("default", StringComparison.OrdinalIgnoreCase))
+                            VirtualDirectory destinationDir = deployHelpDirectory;
+                            if (!culture.Equals("default", StringComparison.OrdinalIgnoreCase))
                             {
-                                destinationDir = fileSystem.GetDirectory(culture, destinationDir.FullName);
+                                destinationDir = deployHelpDirectory.Directory(culture);
                             }
 
                             string destination = Path.Combine(destinationDir.FullName, project.Name + "_FBfun.Help.zip");
@@ -166,27 +186,6 @@ namespace PlcNext.Common.Deploy
                             directoryPackService.Pack((sourceDirectory.Directory(htmlDirectory).Directory(culture)), destination);
                             executionContext.WriteVerbose($"Deployed help culture {culture} to {destination}.");
                         }
-                        
-                        //void CheckCultures(IEnumerable<string> cultures)
-                        //{
-                        //    foreach (string culture in cultures)
-                        //    {
-                        //        if (culture == "default")
-                        //        {
-                        //            continue;
-                        //        }
-                        //        try
-                        //        {
-                        //            // create culture info to check valid culture
-                        //            _ = new CultureInfo(culture);
-                        //        }
-                        //        catch (CultureNotFoundException)
-                        //        {
-                        //            executionContext.WriteWarning($"The culture {culture} is not a valid culture.");
-                        //        }
-                        //    }
-
-                        //}
                     }
 
                     void HandleChmHelp(VirtualFile deployableFile, string relativePath)
@@ -226,16 +225,6 @@ namespace PlcNext.Common.Deploy
                             if (checkLibName(fileTokens) && fileTokens[fileTokens.Length - 1].Equals(helpFileSuffix, StringComparison.OrdinalIgnoreCase))
                             {
                                 culture = fileTokens[fileTokens.Length - 2];
-                                //try
-                                //{
-                                //    // create culture info to check valid culture
-                                //    CultureInfo cultureInfo = new CultureInfo(culture);
-                                //}
-                                //catch (CultureNotFoundException)
-                                //{
-                                //    executionContext.WriteError($"The culture {culture} in {fileName} is illegal");
-                                //    return;
-                                //}
 
                                 if (usedCultures.Contains(culture))
                                 {
@@ -255,8 +244,6 @@ namespace PlcNext.Common.Deploy
                             return;
                         }
 
-                        //
-
                         string basePath = string.IsNullOrEmpty(culture) ? 
                                             Path.Combine(destinationDirectory.FullName, Constants.DeployHelpDirectoryName) :
                                             Path.Combine(destinationDirectory.FullName, Constants.DeployHelpDirectoryName, culture);
@@ -273,6 +260,13 @@ namespace PlcNext.Common.Deploy
                         executionContext.WriteVerbose($"Deployed file {relativePath} to {destination.FullName}.");
                     }
                 }
+            }
+
+            string FindCSharpProjectOutputFolder()
+            {
+                MSBuildData msbuild = msBuildFinder.FindMSBuild(dataModel.Root);
+
+                return MSBuildProjectInformationProvider.GetCSharpProjectOutputPath(processManager, log, csharpProjectPath, msbuild);
             }
         }
     }

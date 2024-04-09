@@ -17,15 +17,14 @@ using PlcNext.Common.Templates.Description;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Events;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.MSBuild;
 using PlcNext.Common.Tools.Process;
-using PlcNext.Common.Tools.Settings;
 using PlcNext.Common.Tools.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PlcNext.Common.Generate
@@ -33,33 +32,26 @@ namespace PlcNext.Common.Generate
     internal class SharedNativeGenerateEngine : ITemplateFileGenerator
     {
         private readonly ITemplateResolver resolver;
-        private readonly ITemplateRepository repository;
         private readonly ITemplateFileGenerator templateFileGenerator;
-        private readonly IBinariesLocator binariesLocator;
         private readonly IFileSystem fileSystem;
-        private readonly IEnvironmentService environmentService;
-        private readonly ISettingsProvider settingsProvider;
         private readonly IProcessManager processManager;
         private readonly ExecutionContext executionContext;
         private readonly ILog log;
         private readonly FileGenerationHelper generationHelper;
+        private readonly IMSBuildFinder msBuildFinder;
 
         public SharedNativeGenerateEngine([KeyFilter("DefaultGenerateEngine")] ITemplateFileGenerator templateFileGenerator, 
-                                          IBinariesLocator binariesLocator, IFileSystem fileSystem,
-                                          IEnvironmentService environmentService, ISettingsProvider settingsProvider,
+                                          IFileSystem fileSystem,
                                           IProcessManager processManager, ExecutionContext executionContext, ILog log,
-                                          ITemplateResolver resolver, ITemplateRepository repository)
+                                          ITemplateResolver resolver, ITemplateRepository repository, IMSBuildFinder msBuildFinder)
         {
             this.templateFileGenerator = templateFileGenerator;
-            this.binariesLocator = binariesLocator;
             this.fileSystem = fileSystem;
-            this.environmentService = environmentService;
-            this.settingsProvider = settingsProvider;
             this.processManager = processManager;
             this.executionContext = executionContext;
             this.log = log;
-            this.repository = repository;
             this.resolver = resolver;
+            this.msBuildFinder = msBuildFinder;
 
             generationHelper = new FileGenerationHelper(resolver, repository, fileSystem);
         }
@@ -81,26 +73,19 @@ namespace PlcNext.Common.Generate
             string csharpProjectPath = project.CSharpProjectPath;
             if (!Path.IsPathRooted(csharpProjectPath))
             {
-                csharpProjectPath = Path.Combine(project.Path, csharpProjectPath);
-            }
-
-            MSBuild msbuild = MSBuildFinder.FindMsBuild(environmentService, fileSystem, settingsProvider, binariesLocator, rootEntity);
-
-            StringBuilderUserInterface userInterface = new StringBuilderUserInterface(log, writeInformation: true, writeError: true);
-            string arguments = $"{(string.IsNullOrEmpty(msbuild.Parameters) ? string.Empty : msbuild.Parameters+" ")}-target:GetProjectVariables \"{csharpProjectPath}\"";
-            using (IProcess process = processManager.StartProcess(msbuild.FullName, arguments, userInterface))
-            {
-                await process.WaitForExitAsync().ConfigureAwait(false);
-                if (process.ExitCode != 0)
+                if (csharpProjectPath == null)
                 {
-                    throw new FormattableException("Project information could not be fetched from csharp project. Generate failed.");
+                    csharpProjectPath = project.Path;
+                    log.LogWarning("CSharp project path not found. Using project path instead.");
+                }
+                else
+                {
+                    csharpProjectPath = Path.Combine(project.Path, csharpProjectPath);
                 }
             }
-            if (!EclrVersionIsSupported(userInterface.Information))
-            {
-                throw new FormattableException("This version of the PLCnCLI supports only eCLR versions 3.3.0 and 3.4.0");
-            }
-            string niBuilderOutputPath = GetProjectOutputPath(userInterface.Information);
+
+            MSBuildData msbuild = msBuildFinder.FindMSBuild(rootEntity);
+            string niBuilderOutputPath = MSBuildProjectInformationProvider.GetCSharpProjectOutputPath(processManager, log, csharpProjectPath, msbuild);
 
             IEnumerable<VirtualFile> outputFolderFiles = Enumerable.Empty<VirtualFile>();
             if (fileSystem.DirectoryExists(niBuilderOutputPath, csharpProjectPath))
@@ -367,7 +352,7 @@ namespace PlcNext.Common.Generate
             }
         }
 
-        private async Task BuildCSharpProject(Entity entity, string csharpProjectPath, string cppProjectPath, MSBuild msbuild)
+        private async Task BuildCSharpProject(Entity entity, string csharpProjectPath, string cppProjectPath, MSBuildData msbuild)
         {
             CommandEntity command = CommandEntity.Decorate(entity.Origin);
             string configuration = command.GetSingleValueArgument(EntityKeys.BuildTypeKey);
@@ -381,27 +366,6 @@ namespace PlcNext.Common.Generate
                     throw new FormattableException("Generate step failed! See log for details.");
                 }
             }
-        }
-
-        private static bool EclrVersionIsSupported(string information)
-        {
-            Match match = Regex.Match(information, @"@begineclrversion(?<eclrversion>.*)@endeclrversion");
-            if (match.Success)
-            {
-                return match.Groups["eclrversion"].Value.Equals("eCLR3.3", StringComparison.OrdinalIgnoreCase) ||
-                    match.Groups["eclrversion"].Value.Equals("eCLR3.4", StringComparison.OrdinalIgnoreCase);
-            }
-            return false;
-        }
-
-        private static string GetProjectOutputPath(string information)
-        {
-            Match match = Regex.Match(information, @"@beginoutputpath(?<outputpath>.*)@endoutputpath");
-            if (match.Success)
-            {
-                return match.Groups["outputpath"].Value;
-            }
-            throw new FormattableException("Project output path could not be fetched from csharp project. Generate failed.");
         }
     }
 }

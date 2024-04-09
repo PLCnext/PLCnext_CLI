@@ -27,7 +27,8 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
                                                                                                                                    new MockedExceptionHandlerAbstraction(),
                                                                                                                                    new MockedGuidAbstraction(),
                                                                                                                                    new MockedCMakeConversationAbstraction(),
-                                                                                                                                   new MockedSdkExplorerAbstraction()),
+                                                                                                                                   new MockedSdkExplorerAbstraction(),
+                                                                                                                                   new MockedMSBuildFinder()),
                                                                          5000), helper)
         {
         }

@@ -13,6 +13,7 @@ using System.Text;
 using Autofac;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
+using PlcNext.Common.Tools.MSBuild;
 using PlcNext.Common.Tools.Process;
 using PlcNext.Common.Tools.SDK;
 using PlcNext.Common.Tools.UI;
@@ -42,6 +43,7 @@ namespace PlcNext.Common
             builder.RegisterType<GuidFactory>().As<IGuidFactory>().InstancePerLifetimeScope();
             builder.RegisterType<CMakeConversation>().As<ICMakeConversation>().InstancePerLifetimeScope();
             builder.RegisterType<CMakeSdkExplorer>().As<ISdkExplorer>().InstancePerLifetimeScope();
+            builder.RegisterType<MSBuildFinder>().As<IMSBuildFinder>().InstancePerLifetimeScope();
         }
     }
 }

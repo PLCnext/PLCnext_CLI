@@ -108,6 +108,11 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                 {
                     userInterface.WriteInformation(@"{""AttributePrefix"": ""#"",  ""FancySetting"": [""a"", ""b""]}");
                 }
+                if (command.Contains("-target:GetProjectVariables"))
+                {
+                    userInterface.WriteInformation("@begineclrversioneCLR3.4@endeclrversion");
+                    userInterface.WriteInformation("@beginoutputpathCli@endoutputpath");
+                }
             }
         }
 
