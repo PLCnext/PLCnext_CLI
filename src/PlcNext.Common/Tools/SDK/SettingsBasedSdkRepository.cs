@@ -83,12 +83,12 @@ namespace PlcNext.Common.Tools.SDK
 
         public SdkInformation GetSdk(Target target)
         {
-            if (!Sdks.ContainsKey(target))
+            if (!Sdks.TryGetValue(target, out SdkInformation sdkInformation))
             {
                 throw new NoSdkForTargetException(target);
             }
 
-            return Sdks[target];
+            return sdkInformation;
         }
 
         public IEnumerable<Target> GetAllTargets()

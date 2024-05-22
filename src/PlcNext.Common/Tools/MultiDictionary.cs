@@ -22,10 +22,10 @@ namespace PlcNext.Common.Tools
 
         public void Add(TKey key, TValue value)
         {
-            if (data.ContainsKey(key))
+            if (data.TryGetValue(key, out List<TValue> list))
             {
-                if (!data[key].Contains(value)) // do not allow duplicate values
-                    data[key].Add(value);
+                if (!list.Contains(value)) // do not allow duplicate values
+                    list.Add(value);
             }
             else
                 data.Add(key, new List<TValue>() { value });

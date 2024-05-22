@@ -391,14 +391,17 @@ namespace PlcNext.Common.Templates
 
                 foreach (string generator in generators)
                 {
-                    if (generatorsDictionary.ContainsKey(generator))
+                    if (generatorsDictionary.TryGetValue(generator, out List<templateGenerateStep> list))
                     {
                         if (template.GenerateStep != null && template.GenerateStep.Where(step => step.generator == generator).Any())
                         {
-                            if (generatorsDictionary[generator] == null)
-                                generatorsDictionary[generator] = new List<templateGenerateStep>(template.GenerateStep.Where(step => step.generator == generator));
+                            if (list == null)
+                            {
+                                list = new List<templateGenerateStep>(template.GenerateStep.Where(step => step.generator == generator));
+                                generatorsDictionary[generator] = list;
+                            }
                             else
-                                generatorsDictionary[generator].AddRange(template.GenerateStep.Where(step => step.generator == generator));
+                                list.AddRange(template.GenerateStep.Where(step => step.generator == generator));
                         }
                     }
                     else

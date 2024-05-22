@@ -96,7 +96,7 @@ namespace PlcNext.Common.DataModel
                 }
 
                 key = key.ToLowerInvariant();
-                if (!cache.ContainsKey(key))
+                if (!cache.TryGetValue(key, out Entity result))
                 {
                     if (context != null && !contentProvider.CanResolve(this, key))
                     {
@@ -108,10 +108,10 @@ namespace PlcNext.Common.DataModel
                         return contentProvider.Resolve(this, key);
                     }
 
-                    Entity result = contentProvider.Resolve(this, key);
+                    result = contentProvider.Resolve(this, key);
                     cache[key] = result;
                 }
-                return cache[key];
+                return result;
             }
         }
 

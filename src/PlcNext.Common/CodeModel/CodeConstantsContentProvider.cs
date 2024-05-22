@@ -56,7 +56,7 @@ namespace PlcNext.Common.CodeModel
         {
             IEnumerable<Entity> parsed = owner.Owner.Select(c => c.Value<string>())
                                               .Select(multiplicity => new { origin = multiplicity, parsed = ParseString(owner, multiplicity) })
-                                              .Select(a => a.parsed.HasValue ? a.parsed.ToString() : a.origin)
+                                              .Select(a => a.parsed.HasValue ? a.parsed.Value.ToString(CultureInfo.InvariantCulture) : a.origin)
                                               .Select(parsed => owner.Create(key, parsed));
             return owner.Create(key, parsed);
         }
