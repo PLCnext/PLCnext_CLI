@@ -63,7 +63,7 @@ namespace PlcNext.CommandLine
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
             
-            if (argsArray.Length == 0 || argsArray[0].StartsWith("-", StringComparison.Ordinal))
+            if (argsArray.Length == 0 || argsArray[0].StartsWith('-'))
             {
                 return parser.ParseArguments(argsArray, types);
             }

@@ -59,7 +59,7 @@ namespace PlcNext.Common.Installation
         private static string PrepareAbsolutUriString(string baseUriString)
         {
             //See https://stackoverflow.com/questions/22543723/create-new-uri-from-base-uri-and-relative-path-slash-makes-a-difference for reason
-            if (!baseUriString.EndsWith("/", StringComparison.Ordinal))
+            if (!baseUriString.EndsWith('/'))
             {
                 baseUriString += "/";
             }
@@ -70,7 +70,7 @@ namespace PlcNext.Common.Installation
         private static string PrepareRelativeUriString(string relativeUriString)
         {
             //See https://stackoverflow.com/questions/22543723/create-new-uri-from-base-uri-and-relative-path-slash-makes-a-difference for reason
-            if (relativeUriString.StartsWith("/", StringComparison.Ordinal))
+            if (relativeUriString.StartsWith('/'))
             {
                 relativeUriString = relativeUriString.Substring(1);
             }

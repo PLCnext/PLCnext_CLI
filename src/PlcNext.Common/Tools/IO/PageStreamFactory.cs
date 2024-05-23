@@ -16,7 +16,7 @@ namespace PlcNext.Common.Tools.IO
     /// </summary>
     public class PageStreamFactory : StreamFactory, IDisposable
     {
-        private readonly IPageBuffer pageBuffer;
+        private readonly ConcurrentPageBuffer pageBuffer;
         private readonly object lockToken = new object();
         private bool isDisposed;
 

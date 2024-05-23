@@ -20,10 +20,6 @@ namespace PlcNext.Common.Tools
         {
         }
 
-        protected FormattableException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-
         public FormattableException(string message) : base(message)
         {
         }

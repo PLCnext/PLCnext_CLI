@@ -480,7 +480,7 @@ namespace PlcNext.Common.CodeModel
 
             Entity ConvertToIECDatatype()
             {
-                IEntityBase dataSource = ownerTemplateEntity.Owner;
+                Entity dataSource = ownerTemplateEntity.Owner;
                 string result = dataSource.Value<string>();
                 string[] parts = result.Split('_');
                 var x = parts.Select(p => UnknownDataTypeRegex.IsMatch(owner.Create("temporaryFormatContainer", p)

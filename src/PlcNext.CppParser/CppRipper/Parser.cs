@@ -14,7 +14,7 @@ namespace PlcNext.CppParser.CppRipper
         {
             Rule parseRule = Grammar.file;
             string text;
-            using (TextReader reader = new StreamReader(stream))
+            using (StreamReader reader = new StreamReader(stream))
             {
                 text = reader.ReadToEnd();
             }

@@ -93,8 +93,7 @@ namespace PlcNext.Common.Tools.FileSystem
 
         internal void RemoveEntry(VirtualEntry entry)
         {
-            if(entries.Contains(entry))
-                entries.Remove(entry);
+            entries.Remove(entry);
         }
 
         public bool FileExists(string filename)

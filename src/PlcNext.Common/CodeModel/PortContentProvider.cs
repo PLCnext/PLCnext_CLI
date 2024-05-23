@@ -235,7 +235,7 @@ namespace PlcNext.Common.CodeModel
             }
         }
 
-        private IEnumerable<CodeEntity> GetPortAndTypeInformationStructures(Entity owner)
+        private HashSet<CodeEntity> GetPortAndTypeInformationStructures(Entity owner)
         {
             IEnumerable<CodeEntity> GetAllStructs()
             {
@@ -279,7 +279,7 @@ namespace PlcNext.Common.CodeModel
             return structures;
         }
 
-        private IEnumerable<CodeEntity> GetPortStructures(Entity owner)
+        private HashSet<CodeEntity> GetPortStructures(Entity owner)
         {
             HashSet<CodeEntity> structures = new(GetAllPorts(owner)
                                                 .Select(f => f.ResolvedType)

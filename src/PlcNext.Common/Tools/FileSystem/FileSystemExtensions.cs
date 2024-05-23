@@ -63,7 +63,7 @@ namespace PlcNext.Common.Tools.FileSystem
         private class ComparingStream : Stream
         {
             private readonly VirtualFile file;
-            private readonly Stream internalStream;
+            private readonly MemoryStream internalStream;
 
             public ComparingStream(VirtualFile file)
             {

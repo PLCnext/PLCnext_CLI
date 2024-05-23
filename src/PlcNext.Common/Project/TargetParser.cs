@@ -267,7 +267,7 @@ namespace PlcNext.Common.Project
             return null;
         }
 
-        private IEnumerable<Target> GetProjectTargets(ProjectEntity project)
+        private List<Target> GetProjectTargets(ProjectEntity project)
         {
             List<Target> projectTargets = new List<Target>();
             List<string> removableTargets = new List<string>();

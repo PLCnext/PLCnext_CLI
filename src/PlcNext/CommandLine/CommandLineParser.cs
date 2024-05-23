@@ -424,7 +424,7 @@ namespace PlcNext.CommandLine
 
                 void PrintExample(HelpText helpTextFooter, UsageExample usageExample, string commandName)
                 {
-                    helpTextFooter.AddPostOptionsLine(usageExample.HelpText.EndsWith(":", StringComparison.Ordinal)
+                    helpTextFooter.AddPostOptionsLine(usageExample.HelpText.EndsWith(':') 
                                                           ? usageExample.HelpText
                                                           : $"{usageExample.HelpText}:");
                     helpTextFooter.AddPostOptionsLine($@"{commandName} {usageExample.Command}");

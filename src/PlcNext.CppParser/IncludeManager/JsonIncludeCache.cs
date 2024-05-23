@@ -70,7 +70,7 @@ namespace PlcNext.CppParser.IncludeManager
             {
                 Stopwatch loadWatch = new Stopwatch();
                 loadWatch.Start();
-                using (TextReader reader = new StreamReader(fileStream))
+                using (StreamReader reader = new StreamReader(fileStream))
                 using (JsonReader jsonReader = new JsonTextReader(reader))
                 {
                     JsonSerializer serializer = CreateSerializer();

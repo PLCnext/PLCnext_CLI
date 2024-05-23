@@ -49,7 +49,7 @@ namespace PlcNext.Common
 
         public static string Singular(this string value)
         {
-            if (value.EndsWith("s", StringComparison.Ordinal))
+            if (value.EndsWith('s'))
             {
                 return value.EndsWith("ies", StringComparison.Ordinal)
                            ? $"{value.Substring(0, value.Length - 3)}y"
@@ -61,7 +61,7 @@ namespace PlcNext.Common
 
         public static string Plural(this string value)
         {
-            return value.EndsWith("y", StringComparison.Ordinal)
+            return value.EndsWith('y') 
                        ? $"{value.Substring(0, value.Length - 1)}ies"
                        : $"{value}s";
         }

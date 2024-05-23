@@ -183,12 +183,12 @@ namespace PlcNext.Common.Templates
 
                     Match CreateMatch(string pattern, bool ignorecase, out Regex regex)
                     {
-                        if (!pattern.StartsWith("^", StringComparison.Ordinal))
+                        if (!pattern.StartsWith('^'))
                         {
                             pattern = $"^{pattern}";
                         }
 
-                        if (!pattern.EndsWith("$", StringComparison.Ordinal))
+                        if (!pattern.EndsWith('$'))
                         {
                             pattern += "$";
                         }

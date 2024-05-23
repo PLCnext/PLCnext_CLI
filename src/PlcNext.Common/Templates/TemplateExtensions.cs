@@ -217,12 +217,12 @@ namespace PlcNext.Common.Templates
 
             bool IsMatch(string pattern)
             {
-                if (!pattern.StartsWith("^", StringComparison.Ordinal))
+                if (!pattern.StartsWith('^'))
                 {
                     pattern = $"^{pattern}";
                 }
 
-                if (!pattern.EndsWith("$", StringComparison.Ordinal))
+                if (!pattern.EndsWith('$'))
                 {
                     pattern += "$";
                 }

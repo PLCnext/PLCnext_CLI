@@ -45,7 +45,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             CppStreamParser parser = new();
 
             string text;
-            using (TextReader reader = new StreamReader(file.OpenRead()))
+            using (StreamReader reader = new StreamReader(file.OpenRead()))
             {
                 text = reader.ReadToEnd();
             }
@@ -78,7 +78,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             return new ParserResult(codeSpecificExceptions, types, includes, defineStatements, constants);
         }
 
-        private IEnumerable<IConstant> GetConstants(ParseNode root, string[] usings)
+        private List<IConstant> GetConstants(ParseNode root, string[] usings)
         {
             List<IConstant> constants = new List<IConstant>();
             IEnumerable<ParseNode> declarations = root.GetHierarchy()
@@ -180,9 +180,9 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
             return result.ToArray();
         }
 
-        private IDictionary<IType, CodePosition> GetTypes(ParseNode root, string[] usings, List<ParserMessage> messages)
+        private Dictionary<IType, CodePosition> GetTypes(ParseNode root, string[] usings, List<ParserMessage> messages)
         {
-            IDictionary<IType, CodePosition> types = new Dictionary<IType, CodePosition>();
+            Dictionary<IType, CodePosition> types = new Dictionary<IType, CodePosition>();
             foreach (ParseNode typeDeclaration in GetTypeDeclarations(root))
             {
                 ParseNode content = GetDeclarationContentParent(typeDeclaration);

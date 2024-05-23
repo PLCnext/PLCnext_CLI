@@ -185,7 +185,7 @@ namespace PlcNext.Common.Build
             return Enumerable.Empty<string>();
         }
 
-        private IEnumerable<string> FindExternalLibrariesInCodeModel(JObject codeModel, string projectName,
+        private List<string> FindExternalLibrariesInCodeModel(JObject codeModel, string projectName,
                                                                      VirtualDirectory binaryDirectory)
         {
             List<string> result = new List<string>();

@@ -138,9 +138,9 @@ namespace PlcNext.Common.Templates
                     {
                         throw new IfSequenceParameterMismatchException();
                     }
-                    if ((content.StartsWith("\n", StringComparison.Ordinal) ||
+                    if ((content.StartsWith('\n') ||
                          content.StartsWith("\r\n", StringComparison.Ordinal)) &&
-                        (content.EndsWith("\n", StringComparison.Ordinal) ||
+                        (content.EndsWith('\n') ||
                          content.EndsWith("\r\n", StringComparison.Ordinal)))
                     {
                         //This would lead to unwanted empty lines
@@ -204,9 +204,9 @@ namespace PlcNext.Common.Templates
                 string ForeachSequence()
                 {
                     StringBuilder foreachResult = new StringBuilder();
-                    if ((content.StartsWith("\n", StringComparison.Ordinal) || 
+                    if ((content.StartsWith('\n') || 
                          content.StartsWith("\r\n", StringComparison.Ordinal)) &&
-                        (content.EndsWith("\n", StringComparison.Ordinal) || 
+                        (content.EndsWith('\n') || 
                          content.EndsWith("\r\n", StringComparison.Ordinal)))
                     {
                         //This would lead to unwanted empty lines
@@ -306,8 +306,8 @@ namespace PlcNext.Common.Templates
                 while (controlSequenceMatch.Success)
                 {
                     string content = controlSequenceMatch.Groups["content"].Value;
-                    if (content.StartsWith("[", StringComparison.Ordinal) &&
-                        content.EndsWith("]", StringComparison.Ordinal))
+                    if (content.StartsWith('[') &&
+                        content.EndsWith(']'))
                     {
                         throw new WildControlSequenceException(content);
                     }

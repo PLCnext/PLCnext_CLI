@@ -105,7 +105,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                        : findTypeInIncludes?.Invoke(structureName) as IStructure;
         }
 
-        private IStructure GetStructure(string structureName)
+        private CppStructure GetStructure(string structureName)
         {
             CppStructure result = FindTemplatedStruct(structureName);
             if (result != null)
@@ -181,7 +181,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                        : findTypeInIncludes?.Invoke(className) as IClass;
         }
 
-        private IClass GetClass(string className)
+        private CppClass GetClass(string className)
         {
             return classes.TryGetValue(className, out (CppClass cppClass, VirtualFile _, VirtualDirectory d) tuple)
                        ? tuple.cppClass
@@ -195,7 +195,7 @@ namespace PlcNext.CppParser.CppRipper.CodeModel
                        : findTypeInIncludes?.Invoke(enumName) as IEnum;
         }
 
-        private IEnum GetEnum(string enumName)
+        private CppEnum GetEnum(string enumName)
         {
             return enums.TryGetValue(enumName, out (CppEnum e, VirtualFile _, VirtualDirectory baseDirectory) tuple)
                        ? tuple.e

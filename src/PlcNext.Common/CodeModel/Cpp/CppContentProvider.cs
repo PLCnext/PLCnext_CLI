@@ -108,7 +108,7 @@ namespace PlcNext.Common.CodeModel.Cpp
                 string result = resolver.Resolve(formatOrigin.Name, templateOrigin);
                 if (!string.IsNullOrEmpty(basePath))
                 {
-                    if (!basePath.EndsWith("/", StringComparison.Ordinal))
+                    if (!basePath.EndsWith('/'))
                     {
                         basePath += "/";
                     }
