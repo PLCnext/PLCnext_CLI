@@ -43,6 +43,28 @@ namespace PlcNext.Common.Project {
         
         private string[] excludedFilesField;
         
+        private bool signField;
+        
+        private string pkcs12Field;
+        
+        private string privateKeyField;
+        
+        private string publicKeyField;
+        
+        private string[] certificatesField;
+        
+        private string timestampConfigurationField;
+        
+        private bool timestampField;
+        
+        private bool noTimestampField;
+        
+        public ProjectConfiguration() {
+            this.signField = false;
+            this.timestampField = false;
+            this.noTimestampField = false;
+        }
+        
         /// <remarks/>
         public string EngineerVersion {
             get {
@@ -91,6 +113,90 @@ namespace PlcNext.Common.Project {
             }
             set {
                 this.excludedFilesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool Sign {
+            get {
+                return this.signField;
+            }
+            set {
+                this.signField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string Pkcs12 {
+            get {
+                return this.pkcs12Field;
+            }
+            set {
+                this.pkcs12Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string PrivateKey {
+            get {
+                return this.privateKeyField;
+            }
+            set {
+                this.privateKeyField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string PublicKey {
+            get {
+                return this.publicKeyField;
+            }
+            set {
+                this.publicKeyField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("File", IsNullable=false)]
+        public string[] Certificates {
+            get {
+                return this.certificatesField;
+            }
+            set {
+                this.certificatesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string TimestampConfiguration {
+            get {
+                return this.timestampConfigurationField;
+            }
+            set {
+                this.timestampConfigurationField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool Timestamp {
+            get {
+                return this.timestampField;
+            }
+            set {
+                this.timestampField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool NoTimestamp {
+            get {
+                return this.noTimestampField;
+            }
+            set {
+                this.noTimestampField = value;
             }
         }
     }

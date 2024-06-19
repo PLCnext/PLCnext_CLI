@@ -700,6 +700,51 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Signing was not requested but at least one of the following arguments is specified: pkcs12, privatekey, publickey, certificates, timestamp, notimestamp, password, timestampconfiguration.
+        /// </summary>
+        internal static string SignOptionMissing {
+            get {
+                return ResourceManager.GetString("SignOptionMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provide either a PKCS#12 file or PEM files for privatekey, publickey and certificates..
+        /// </summary>
+        internal static string SignOptionMissingKeyFiles {
+            get {
+                return ResourceManager.GetString("SignOptionMissingKeyFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Signing requires a password to access keyfile..
+        /// </summary>
+        internal static string SignOptionMissingPassword {
+            get {
+                return ResourceManager.GetString("SignOptionMissingPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One of the two options timestamp or notimestamp must be set..
+        /// </summary>
+        internal static string SignOptionMissingTimestampDecision {
+            get {
+                return ResourceManager.GetString("SignOptionMissingTimestampDecision", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option {0} and {1} cannot be combined..
+        /// </summary>
+        internal static string SignOptionWrongCombination {
+            get {
+                return ResourceManager.GetString("SignOptionWrongCombination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find the SolutionMappingsFile in the installation directory..
         /// </summary>
         internal static string SolutionMappingsMissing {

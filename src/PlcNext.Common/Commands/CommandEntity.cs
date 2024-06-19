@@ -83,5 +83,14 @@ namespace PlcNext.Common.Commands
                         ? this[argument].Select(t => t.Value<string>())
                         : Enumerable.Empty<string>());
         }
+
+        public bool GetBoolValueArgument(string argument)
+        {
+            return Value<CommandDefinition>()?.Argument<BoolArgument>(argument)?.Value ??
+                   Value<CommandArgs>()?.PropertyValue<bool>(argument) ??
+                   (HasContent(argument)
+                       ? this[argument].Value<bool>()
+                       : false);
+        }
     }
 }

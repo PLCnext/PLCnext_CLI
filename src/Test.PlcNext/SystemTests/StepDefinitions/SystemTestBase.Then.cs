@@ -610,5 +610,20 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
         {
             ScenarioContext.CheckUserInformedOfError(typeof(DuplicatePortNameException));
         }
+
+        protected void Then_the_user_was_informed_that_sign_option_is_missing()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(SignOptionMissingException));
+        }
+
+        protected void Then_the_user_was_informed_that_sign_options_are_incorrectly_combined()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(SignOptionWrongCombinationException));
+        }
+
+        protected void Then_the_user_was_informed_that_a_timestamp_decision_is_mandatory()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(SignOptionMissingTimestampDecisionException));
+        }
     }
 }

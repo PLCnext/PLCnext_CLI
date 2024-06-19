@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MetaConfigurationDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaVersion="2.0" xmlns="http://www.phoenixcontact.com/schema/metaconfig">
+  <Library name="ProjectWithConfigFile" applicationDomain="CPLUSPLUS">
+    <File path="libProjectWithConfigFile.so" />
+    <TypeIncludes>
+      <Include path="ProjectWithConfigFile.typemeta" />
+    </TypeIncludes>
+    <ComponentIncludes>
+      <Include path="ProjectWithConfigFileComponent/ProjectWithConfigFileComponent.compmeta" />
+    </ComponentIncludes>
+  </Library>
+</MetaConfigurationDocument>

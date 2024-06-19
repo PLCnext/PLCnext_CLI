@@ -95,5 +95,79 @@ namespace PlcNext.Common.Project
                 Value.ExcludedFiles = value.ToArray();
             }
         }
+
+        #region SigningProperties
+        public bool SignRequested
+        {
+            get => Value.Sign;
+            set
+            {
+                Value.Sign = value;
+            }
+        }
+
+        public string PKCS12
+        {
+            get => Value.Pkcs12;
+            set
+            {
+                Value.Pkcs12 = value;
+            }
+        }
+
+        public string PrivateKey
+        {
+            get => Value.PrivateKey;
+            set
+            {
+                Value.PrivateKey = value;
+            }
+        }
+
+        public string PublicKey
+        {
+            get => Value.PublicKey;
+            set
+            {
+                Value.PublicKey = value;
+            }
+        }
+
+        public IEnumerable<string> Certificates
+        {
+            get => Value.Certificates ?? Enumerable.Empty<string>();
+            set
+            {
+                Value.Certificates = value.ToArray();
+            }
+        }
+
+        public string TimestampConfiguration
+        {
+            get => Value.TimestampConfiguration;
+            set
+            {
+                Value.TimestampConfiguration = value;
+            }
+        }
+
+        public bool Timestamp
+        {
+            get => Value.Timestamp;
+            set
+            {
+                Value.Timestamp = value;
+            }
+        }
+
+        public bool NoTimestamp
+        {
+            get => Value.NoTimestamp;
+            set
+            {
+                Value.NoTimestamp = value;
+            }
+        }
+        #endregion
     }
 }

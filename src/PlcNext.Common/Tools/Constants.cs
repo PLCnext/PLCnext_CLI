@@ -65,6 +65,15 @@ namespace PlcNext.Common.Tools
         public const string VersionArgumentKey = "libraryversion";
         public const string EngineerVersionArgumentKey = "engineerversion";
         public const string SolutionVersionArgumentKey = "solutionversion";
+        public const string SignArgumentKey = "sign";
+        public const string pkcs12ArgumentKey = "pkcs12";
+        public const string privateKeyArgumentKey = "privatekey";
+        public const string publicKeyArgumentKey = "publickey";
+        public const string certificatesArgumentKey = "certificates";
+        public const string timestampArgumentKey = "timestamp";
+        public const string noTimestampArgumentKey = "notimestamp";
+        public const string passwordArgumentKey = "password";
+        public const string timestampConfiguration = "timestampconfiguration";
 
         //file names
         public const string PublicKeyFileName = "public_cli_repository_key.xml";
@@ -127,6 +136,17 @@ namespace PlcNext.Common.Tools
         public const string LibraryDescriptionKey = "LibraryDescription";
         public const string EngineerVersionOptionPattern = "/pnever {0}";
         public const string SolutionVersionPattern = "/ver {0}";
+
+        //signing arguments library builder
+        public const string CertificateContainerPattern = "/seccertificatecontainer {0}";
+        public const string TimestampServerPattern = "/sectimestamp {0}";
+        public const string TimestampConfigurationPattern = "/sectimestampconfiguration {0}";
+        public const string PublicKeyPattern = "/secpublickey {0}";
+        public const string PrivateKeyPattern = "/secprivatekey {0}";
+        public const string PasswordPattern = "/secpw {0}";
+        //0: list of filepaths, separated by ','
+        public const string CertificatesPattern = "/seccertificates {0}";
+
 
         //Output formatter
         public const string CommandKey = "command";

@@ -61,6 +61,7 @@ namespace Test.PlcNext.SystemTests.Tools
         private readonly ICMakeConversationAbstraction cmakeConversationAbstraction;
         private readonly ISdkExplorerAbstraction sdkExplorerAbstraction;
         private readonly IMSBuildFinderAbstraction msBuildFinderAbstraction;
+        private readonly IPasswordProviderAbstraction passwordProviderAbstraction;
         private readonly bool autoActivatedComponents;
         private IContainer host;
 
@@ -90,7 +91,7 @@ namespace Test.PlcNext.SystemTests.Tools
             IEnvironmentServiceAbstraction environmentServiceAbstraction, IExceptionHandlerAbstraction exceptionHandlerAbstraction,
             IGuidFactoryAbstraction guidFactoryAbstraction, ICMakeConversationAbstraction cmakeConversationAbstraction,
             ISdkExplorerAbstraction sdkExplorerAbstraction, IMSBuildFinderAbstraction msBuildFinderAbstraction,
-            bool autoActivatedComponents = true)
+            IPasswordProviderAbstraction passwordProviderAbstraction, bool autoActivatedComponents = true)
         {
             this.fileSystemAbstraction = fileSystemAbstraction;
             this.downloadServiceAbstraction = downloadServiceAbstraction;
@@ -102,6 +103,7 @@ namespace Test.PlcNext.SystemTests.Tools
             this.cmakeConversationAbstraction = cmakeConversationAbstraction;
             this.sdkExplorerAbstraction = sdkExplorerAbstraction;
             this.msBuildFinderAbstraction = msBuildFinderAbstraction;
+            this.passwordProviderAbstraction = passwordProviderAbstraction;
             this.autoActivatedComponents = autoActivatedComponents;
         }
 
@@ -136,6 +138,7 @@ namespace Test.PlcNext.SystemTests.Tools
             cmakeConversationAbstraction.Initialize(exportProvider, printMessage);
             sdkExplorerAbstraction.Initialize(exportProvider, printMessage);
             msBuildFinderAbstraction.Initialize(exportProvider, printMessage);
+            passwordProviderAbstraction.Initialize(exportProvider, printMessage);
             ILog log = new LogTracer(printMessage);
             exportProvider.AddInstance(Substitute.For<IProgressVisualizer>());
             exportProvider.AddInstance(log);
@@ -1218,7 +1221,7 @@ namespace Test.PlcNext.SystemTests.Tools
 
             if (!string.IsNullOrEmpty(commandArgsResourceKey))
             {
-                string commandArgsFile = args.Replace("/cmd", " ").Trim().Trim('"');
+                string commandArgsFile = args.Split('"', StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries).Where(s => s.Contains(".txt")).FirstOrDefault();
 
                 List<string> commandArgs = new List<string>();
                 using (Stream fileStream = fileSystemAbstraction.GetDeletedFileStream(commandArgsFile))
@@ -1226,7 +1229,7 @@ namespace Test.PlcNext.SystemTests.Tools
                 {
                     while (!fileReader.EndOfStream)
                     {
-                        commandArgs.Add(fileReader.ReadLine());
+                        commandArgs.Add(fileReader.ReadLine().Trim());
                     }
                 }
                 commandArgs.RemoveAll(string.IsNullOrEmpty);
@@ -1238,7 +1241,7 @@ namespace Test.PlcNext.SystemTests.Tools
                     while (!expectedReader.EndOfStream)
                     {
                         string arg = expectedReader.ReadLine() ?? string.Empty;
-                        arg = arg.Replace('\\', Path.DirectorySeparatorChar);
+                        arg = arg.Replace('\\', Path.DirectorySeparatorChar).Trim();
                         string escaped = Regex.Escape(arg ?? string.Empty).Replace("\\.\\*", ".*");
                         Regex regex = new Regex(escaped, RegexOptions.IgnoreCase);
                         int found = commandArgs.RemoveAll(regex.IsMatch);
@@ -1482,6 +1485,57 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 args.Add("--buildtype");
                 args.Add(deployArgs.BuildType);
+            }
+
+            if (deployArgs.Sign == true)
+            {
+                args.Add("--sign");
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.PKCS12))
+            {
+                args.Add("--pkcs12");
+                args.Add(deployArgs.PKCS12);
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.PrivateKey))
+            {
+                args.Add("--privatekey");
+                args.Add(deployArgs.PrivateKey);
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.PublicKey))
+            {
+                args.Add("--publickey");
+                args.Add(deployArgs.PublicKey);
+            }
+
+            if (deployArgs.Certificates != null && deployArgs.Certificates.Any())
+            {
+                args.Add("--certificates");
+                args.Add(string.Join(",", deployArgs.Certificates));
+            }
+
+            if (deployArgs.Password != null)
+            {
+                args.Add("--password");
+                args.Add(deployArgs.Password);
+            }
+
+            if (deployArgs.Timestamp)
+            {
+                args.Add("--timestamp");
+            }
+
+            if (deployArgs.NoTimestamp)
+            {
+                args.Add("--notimestamp");
+            }
+
+            if (!string.IsNullOrEmpty(deployArgs.TimestampConfiguration))
+            {
+                args.Add("--timestampconfiguration");
+                args.Add(deployArgs.TimestampConfiguration);
             }
 
             if (deployArgs.Targets != null && deployArgs.Targets.Any())

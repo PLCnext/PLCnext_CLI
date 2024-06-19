@@ -106,6 +106,14 @@ namespace PlcNext.Common.Tools
         //DeployCommandContentProvider
         public const string InternalDeployPathKey = "__internaldeploypath__";
         public const string InternalConfigPathKey = "__internalconfigpath__";
+        public const string InternalSigningKey = "__internalsigningrequested__";
+        public const string InternalPKCS12Key = "__internalpkcs12path__";
+        public const string InternalPrivateKeyKey = "__internalprivatekeypath__";
+        public const string InternalPublicKeyKey = "__internalpublickeypath__";
+        public const string InternalCertificatesKey = "__internalcertificatespath__";
+        public const string InternalTimestampKey = "__internaltimestamprequested__";
+        public const string InternalPasswordKey = "__internalsigningpassword__";
+        public const string InternalTimestampConfigKey = "__internaltimestampconfigpath__";
         public const string ExcludeFilesKey = "excludefiles";
 
         //CMakeBuildContentProvider

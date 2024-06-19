@@ -57,9 +57,11 @@ namespace PlcNext.Common.Build
 
                 ExcludeFiles(target, project, projectLibraries);
             }
+            
+            DeployEntity deployEntity = DeployEntity.Decorate(project);
 
-            string commandOptionsFile = GenerateCommandOptionsForSharedNative(project, projectLibraries, projectName);
-            int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project);
+            string commandOptionsFile = GenerateCommandOptionsForSharedNative(project, deployEntity, projectLibraries, projectName);
+            int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project, deployEntity);
 
             foreach (VirtualFile deletable in deletableFiles)
             {
@@ -87,7 +89,7 @@ namespace PlcNext.Common.Build
             }
 
         }
-        private string GenerateCommandOptionsForSharedNative(ProjectEntity project,
+        private string GenerateCommandOptionsForSharedNative(ProjectEntity project, DeployEntity deployEntity,
             Dictionary<Entity, VirtualFile> projectLibraries, string projectName)
         {
             FileEntity projectFileEntity = FileEntity.Decorate(project);
@@ -109,6 +111,7 @@ namespace PlcNext.Common.Build
                 AddAdditionalFiles(writer);
                 WriteHelpFiles(writer);
                 AddProperties(writer, project);
+                WriteSigningArguments(writer, deployEntity);
             }
 
             return commandOptions.FullName;

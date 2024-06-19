@@ -77,7 +77,7 @@
       <xs:attribute name="basedOn" type="templateName" use="optional">
         <xs:annotation>
           <xs:documentation>
-            Defines the template this template is based on. All elements of the base template are used in this temaplte.
+            Defines the template this template is based on. All elements of the base template are used in this template.
             Base element can be overriden by using their name.<!--TODO make base templateElement with required name attribute.-->
           </xs:documentation>
         </xs:annotation>

@@ -752,5 +752,23 @@ namespace Test.PlcNext.SystemTests.Features
         public string SolutionVersion { get; internal set; }
 
         public IEnumerable<string> ExcludedFiles { get; internal set; }
+
+        public bool Sign { get; internal set; }
+
+        public string PKCS12 { get; internal set; }
+
+        public string PrivateKey { get; internal set; }
+
+        public string PublicKey { get; internal set; }
+
+        public IEnumerable<string> Certificates { get; internal set; }
+
+        public string Password { get; internal set; }
+
+        public bool Timestamp { get; internal set; }
+
+        public bool NoTimestamp { get; internal set; }
+
+        public string TimestampConfiguration { get; internal set; }
     }
 }

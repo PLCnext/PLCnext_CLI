@@ -244,7 +244,7 @@ namespace PlcNext.CommandLine
                             case OptionValueType.MultipleValue:
                                 return typeof(IEnumerable<string>);
                             default:
-                                throw new ArgumentException("Unkown option value type", nameof(optionValueType));
+                                throw new ArgumentException("Unknown option value type", nameof(optionValueType));
                         }
                     }
 

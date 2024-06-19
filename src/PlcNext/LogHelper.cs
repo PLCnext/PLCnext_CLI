@@ -8,10 +8,9 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
@@ -42,6 +41,10 @@ namespace PlcNext
             {
                 throw new ArgumentNullException(nameof(log));
             }
+            if (args == null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
 
             try
             {
@@ -66,7 +69,31 @@ namespace PlcNext
             {
                 log.LogError($"Could not create application infos:{Environment.NewLine}{e}");
             }
-            log.LogInformation($"Arguments: {string.Join(" ", args)}");
+
+            //replace password with * in logged arguments
+            int index = -1;
+            string[] argsWithoutPw = new string[args.Length];
+            Array.Copy(args, argsWithoutPw, args.Length);
+            
+            if (args.Contains("--password"))
+            {
+                for (int i = 0; i < args.Length; i++)
+                {
+                    if (args[i] == "--password" 
+                        && args.Length > i +1 
+                        && !args[i+1].StartsWith('-'))
+                    {
+                        index = i+1; 
+                        break;
+                    }
+                }
+                if (index > -1)
+                {
+                    argsWithoutPw[index] = "*";
+                }
+            }
+
+            log.LogInformation($"Arguments: {string.Join(" ", argsWithoutPw)}");
             log.LogInformation($"Execution context: {Directory.GetCurrentDirectory()}");
             log.LogInformation($"Process id: {Environment.ProcessId}");
         }

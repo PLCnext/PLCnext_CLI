@@ -1,0 +1,13 @@
+﻿/out "bin\Demo.pcwlx"
+/id 89b2c2bc-b296-4ab4-a057-b6add1e37138
+/folder "Logical Elements/MyComponent,FolderType=MetaComponentFolder,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/folder "Logical Elements/MyComponent/MyProgram,FolderType=MetaProgramFolder,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/plcnextnativelibfolder ".*\AXCF2152_19.0.0.12345,FolderName=AXCF2152_19.0.0,DeviceProfileType=AXCF2152,DeviceProfileVersion=19.0.0,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/file "MetaLibrary:bin\config\Demo.libmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/file "MetaTypes:bin\config\Demo.typemeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/file "MetaComponent:bin\config\MyComponent\MyComponent.compmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:MyComponent"
+/file "MetaProgram:bin\config\MyComponent\MyProgram\MyProgram.progmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:MyComponent/MyProgram"
+/secprivatekey "path/to/file.pem"
+/secpublickey "path/to/file.pem"
+/seccertificates "path/to/certificate.pem,path/with space to/other/certificate.pem"
+/sectimestamp true

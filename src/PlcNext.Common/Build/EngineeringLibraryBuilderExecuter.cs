@@ -52,6 +52,7 @@ namespace PlcNext.Common.Build
         public int Execute(Entity dataModel)
         {
             ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
+            DeployEntity deployEntity = DeployEntity.Decorate(project);
             CodeEntity projectCodeEntity = CodeEntity.Decorate(project);
             string projectName = projectCodeEntity.Namespace;
             IEnumerable<Entity> targets = project.Targets.ToArray();
@@ -74,8 +75,8 @@ namespace PlcNext.Common.Build
             }
             CheckMetaFiles(targets.First());
 
-            string commandOptionsFile = GenerateCommandOptions(project, projectLibraries, projectName);
-            int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project);
+            string commandOptionsFile = GenerateCommandOptions(project, deployEntity, projectLibraries, projectName);
+            int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project, deployEntity);
 
             foreach (VirtualFile deletable in deletableFiles)
             {
@@ -106,7 +107,6 @@ namespace PlcNext.Common.Build
             {
                 TemplateEntity projectTemplateEntity = TemplateEntity.Decorate(project);
                 VirtualDirectory deployDirectory = DeployEntity.Decorate(target).DeployDirectory;
-                //VirtualDirectory configDirectory = deployDirectory.Parent.Parent.Directory("config");
                 VirtualDirectory configDirectory = DeployEntity.Decorate(target).ConfigDirectory;
 
                 if (!fileSystem.FileExists(Path.Combine(configDirectory.FullName, $"{projectName}.libmeta")))
@@ -246,7 +246,7 @@ namespace PlcNext.Common.Build
             copiedLibraries = newLibraryFiles;
         }
 
-        private string GenerateCommandOptions(ProjectEntity project, Dictionary<Entity, VirtualFile> projectLibraries, string projectName)
+        private string GenerateCommandOptions(ProjectEntity project, DeployEntity deployEntity, Dictionary<Entity, VirtualFile> projectLibraries, string projectName)
         {
             FileEntity projectFileEntity = FileEntity.Decorate(project);
             VirtualFile commandOptions = projectFileEntity.TempDirectory.File("CommandOptions.txt");
@@ -265,11 +265,11 @@ namespace PlcNext.Common.Build
                 WriteMetadata(writer);
                 AddAdditionalFiles(writer);
                 AddProperties(writer, project);
+                WriteSigningArguments(writer, deployEntity);
             }
 
             return commandOptions.FullName;
 
-            
 
             void WriteLibraryFile(StreamWriter writer)
             {
@@ -401,6 +401,62 @@ namespace PlcNext.Common.Build
             }
         }
 
+        private void WriteSigningArguments(StreamWriter writer, DeployEntity deployEntity)
+        {
+            if (deployEntity.SignRequested)
+            {
+                executionContext.WriteInformation("Signing with the following options:");
+                if (!string.IsNullOrEmpty(deployEntity.PKCS12Container))
+                {
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.CertificateContainerPattern,
+                                                   $"\"{deployEntity.PKCS12Container}\""));
+                    executionContext.WriteInformation("\tpkcs12: " + deployEntity.PKCS12Container);
+                }
+                else
+                {
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.PrivateKeyPattern,
+                                                   $"\"{deployEntity.PrivateKeyPath}\""));
+                    executionContext.WriteInformation("\tprivatekey: " + deployEntity.PrivateKeyPath);
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.PublicKeyPattern,
+                                                   $"\"{deployEntity.PublicKeyPath}\""));
+                    executionContext.WriteInformation("\tpublickey: " + deployEntity.PublicKeyPath);
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.CertificatesPattern,
+                                                   $"\"{string.Join(",", deployEntity.CertificatePaths)}\""));
+                    executionContext.WriteInformation("\tcertificates: " + $"\"{string.Join(",", deployEntity.CertificatePaths)}\"");
+                }
+                if (deployEntity.TimestampFlag == false)
+                {
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                       Constants.TimestampServerPattern,
+                                                       "false"));
+                    executionContext.WriteInformation("\tnotimestamp");
+                }
+                else
+                {
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.TimestampServerPattern,
+                                                   "true"));
+                    executionContext.WriteInformation("\ttimestamp");
+
+                }
+                if (!string.IsNullOrEmpty(deployEntity.TimestampConfigPath))
+                {
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.TimestampConfigurationPattern,
+                                                   $"\"{deployEntity.TimestampConfigPath}\""));
+                    executionContext.WriteInformation("\ttimestampconfiguration: " + deployEntity.TimestampConfigPath);
+                }
+            }
+            else
+            {
+                executionContext.WriteInformation("Library will not be signed.");
+            }
+        }
+
         private static void AddProperties(StreamWriter writer, ProjectEntity project)
         {
             if (!string.IsNullOrEmpty(project.LibraryVersion))
@@ -443,13 +499,28 @@ namespace PlcNext.Common.Build
             }
         }
 
-        private int ExecuteLibraryBuilderWithCommandOptions(string commandOptionsFile, ProjectEntity project)
+        private int ExecuteLibraryBuilderWithCommandOptions(string commandOptionsFile, ProjectEntity project, DeployEntity deployEntity)
         {
             FileEntity projectFileEntity = FileEntity.Decorate(project);
             string libraryBuilderName = FindLibraryBuilder();
-            using (IProcess process = processManager.StartProcess(libraryBuilderName,
-                                                                  $"{Constants.CommandFileOption} \"{commandOptionsFile}\"", executionContext,
-                                                                  projectFileEntity.Directory.FullName))
+            string arguments = $"{Constants.CommandFileOption} \"{commandOptionsFile}\"";
+
+            string escapedArguments = arguments;
+            // password needs to be passed as command argument, will never be written to command file 
+            if (deployEntity.SignRequested && !string.IsNullOrEmpty(deployEntity.SigningPassword))
+            {
+                arguments += " ";
+                arguments += string.Format(CultureInfo.InvariantCulture,
+                                               Constants.PasswordPattern,
+                                               $"\"{deployEntity.SigningPassword}\"");
+                escapedArguments += " ";
+                escapedArguments += string.Format(CultureInfo.InvariantCulture,
+                                               Constants.PasswordPattern,
+                                               $"*");
+
+            }
+            using (IProcess process = processManager.StartProcess(libraryBuilderName, arguments, executionContext,
+                                                                  projectFileEntity.Directory.FullName, escapedArguments: escapedArguments))
             {
                 process.WaitForExit();
                 if (process.ExitCode == 0)
@@ -475,6 +546,7 @@ namespace PlcNext.Common.Build
         public int ExecuteAcf(Entity dataModel)
         {
             ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
+            DeployEntity deployEntity = DeployEntity.Decorate(project);
             CodeEntity projectCodeEntity = CodeEntity.Decorate(project);
             string projectName = projectCodeEntity.Namespace;
             List<VirtualFile> processedMetaFiles = new List<VirtualFile>();
@@ -487,8 +559,8 @@ namespace PlcNext.Common.Build
             
             CheckMetaFiles();
 
-            string commandOptionsFile = GenerateCommandOptionsForAcf();
-            int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project);
+            string commandOptionsFile = GenerateCommandOptionsForAcf(deployEntity);
+            int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project, deployEntity);
 
             RemoveMetaFilesFromDeployDirectory();
 
@@ -517,7 +589,7 @@ namespace PlcNext.Common.Build
                 }
             }
             
-            string GenerateCommandOptionsForAcf()
+            string GenerateCommandOptionsForAcf(DeployEntity deployEntity)
             {
                 FileEntity projectFileEntity = FileEntity.Decorate(project);
                 VirtualFile commandOptions = projectFileEntity.TempDirectory.File("CommandOptions.txt");
@@ -534,6 +606,7 @@ namespace PlcNext.Common.Build
                     WriteMetadata(writer);
 
                     AddProperties(writer, project);
+                    WriteSigningArguments(writer, deployEntity);
                 }
 
                 return commandOptions.FullName;
@@ -625,5 +698,6 @@ namespace PlcNext.Common.Build
                 }
             }
         }
+
     }
 }

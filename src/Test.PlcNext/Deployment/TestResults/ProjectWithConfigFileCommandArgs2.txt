@@ -1,0 +1,15 @@
+﻿/out "bin\ProjectWithConfigFile.pcwlx"
+/id 89b2c2bc-b296-4ab4-a057-b6add1e37138
+/folder "Logical Elements/ProjectWithConfigFileComponent,FolderType=MetaComponentFolder,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/folder "Logical Elements/ProjectWithConfigFileComponent/ProjectWithConfigFileProgram,FolderType=MetaProgramFolder,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/plcnextnativelibfolder ".*\AXCF2152_20.6.0.12345,FolderName=AXCF2152_20.6.0,DeviceProfileType=AXCF2152,DeviceProfileVersion=20.6.0,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/file "MetaLibrary:bin\config\ProjectWithConfigFile.libmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/file "MetaTypes:bin\config\ProjectWithConfigFile.typemeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/file "MetaComponent:bin\config\ProjectWithConfigFileComponent\ProjectWithConfigFileComponent.compmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:ProjectWithConfigFileComponent"
+/file "MetaProgram:bin\config\ProjectWithConfigFileComponent\ProjectWithConfigFileProgram\ProjectWithConfigFileProgram.progmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:ProjectWithConfigFileComponent/ProjectWithConfigFileProgram"
+/file "DataTypeWorksheet:bin\config\ProjectWithConfigFileDataTypes.dt,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/sectimestamp true
+/secprivatekey "path/to/file.pem"
+/secpublickey "path/to my/file.pem"
+/seccertificates "path/to my/file.pem,path/to other/file.pem"
+/sectimestampconfiguration "path/to config/file.json"

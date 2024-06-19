@@ -28,7 +28,8 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
                                                                                                                                    new MockedGuidAbstraction(),
                                                                                                                                    new MockedCMakeConversationAbstraction(),
                                                                                                                                    new MockedSdkExplorerAbstraction(),
-                                                                                                                                   new MockedMSBuildFinder()),
+                                                                                                                                   new MockedMSBuildFinder(),
+                                                                                                                                   new MockedPasswordProviderAbstraction()),
                                                                          5000), helper)
         {
         }

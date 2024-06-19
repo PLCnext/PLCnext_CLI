@@ -46,6 +46,64 @@
           <xs:annotation>
             <xs:documentation>
               A list of files which will not be added to the pcwlx during deploy.
+              Wildcards can be used, too.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element minOccurs="0" maxOccurs="1" name="Sign" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>
+              A boolean value indicating whether signing shall be done or not.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="Pkcs12" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              A path to a PKCS#12 container.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="PrivateKey" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              A path to a PEM file containing the private key.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="PublicKey" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              A path to a PEM file containing the public key.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="Certificates" type="FilesList">
+          <xs:annotation>
+            <xs:documentation>
+              A list of paths to PEM files containing certificates for signing.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="TimestampConfiguration" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              A path to a timestamp configuration file. Will be parsed by EngineeringLibraryBuilder.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="Timestamp" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>
+              A boolean value indicating that a timestamp shall be added to the signature. Additional options are given through timestamp configuration file.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="NoTimestamp" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>
+              A boolean value indicating that no timestamp shall be added to the signature.
             </xs:documentation>
           </xs:annotation>
         </xs:element>
@@ -57,7 +115,6 @@
     <xs:annotation>
       <xs:documentation>
         A list of file names.
-        Wildcards can be used, too.
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -65,7 +122,6 @@
         <xs:annotation>
           <xs:documentation>
             A file name with extension.
-            Wildcards can be used.
           </xs:documentation>
         </xs:annotation>
       </xs:element>

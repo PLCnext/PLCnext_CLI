@@ -76,7 +76,7 @@ namespace PlcNext.Common.Project
                                                         : HasContent(EntityKeys.ProjectConfigurationsKey)
                                                             ? this[EntityKeys.ProjectConfigurationsKey]
                                                              .Value<ProjectConfigurations>()
-                                                          : new ProjectConfigurations();
+                                                            : new ProjectConfigurations();
         public IEnumerable<string> ExcludedFiles => this[EntityKeys.ExcludeFilesKey].Select(e => e.Value<string>());
 
         public string CSharpProjectPath => this[EntityKeys.CSharpProjectPath].Value<string>();

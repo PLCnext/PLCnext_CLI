@@ -412,4 +412,19 @@
   <data name="EntitiesWithSameName" xml:space="preserve">
     <value>There is more than one entity with name {0}.</value>
   </data>
+  <data name="SignOptionMissing" xml:space="preserve">
+    <value>Signing was not requested but at least one of the following arguments is specified: pkcs12, privatekey, publickey, certificates, timestamp, notimestamp, password, timestampconfiguration</value>
+  </data>
+  <data name="SignOptionWrongCombination" xml:space="preserve">
+    <value>Option {0} and {1} cannot be combined.</value>
+  </data>
+  <data name="SignOptionMissingKeyFiles" xml:space="preserve">
+    <value>Provide either a PKCS#12 file or PEM files for privatekey, publickey and certificates.</value>
+  </data>
+  <data name="SignOptionMissingTimestampDecision" xml:space="preserve">
+    <value>One of the two options timestamp or notimestamp must be set.</value>
+  </data>
+  <data name="SignOptionMissingPassword" xml:space="preserve">
+    <value>Signing requires a password to access keyfile.</value>
+  </data>
 </root>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ProjectConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+					  xmlns="http://www.phoenixcontact.com/schema/projectconfiguration">
+  <ExcludedFiles>
+    <File>Library.so</File>
+    <File>rary.so</File>
+    <File>Some.so</File>
+  </ExcludedFiles>
+  <Timestamp>true</Timestamp>
+  <PrivateKey>path/to my/file.pem</PrivateKey>
+  <PublicKey>path/to my/file.pem</PublicKey>
+  <Certificates>
+    <File>path/to my/file.pem</File>
+    <File>path/to other/file.pem</File>
+  </Certificates>
+  <Sign>true</Sign>
+  <TimestampConfiguration>path/to config/file.json</TimestampConfiguration>
+</ProjectConfiguration>

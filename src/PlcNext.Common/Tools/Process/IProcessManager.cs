@@ -22,12 +22,12 @@ namespace PlcNext.Common.Tools.Process
                               IUserInterface userInterface,
                               string workingDirectory = null,
                               bool showOutput = true, bool showError = true,
-                              bool killOnDispose = true);
+                              bool killOnDispose = true, string escapedArguments = null);
 
         IProcess StartProcessWithSetup(string fileName, string arguments,
                               IUserInterface userInterface, string setup,
                               string workingDirectory = null,
                               bool showOutput = true, bool showError = true,
-                              bool killOnDispose = true);
+                              bool killOnDispose = true, string escapedArguments = null);
     }
 }

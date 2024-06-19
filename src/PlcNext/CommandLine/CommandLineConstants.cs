@@ -100,9 +100,6 @@ namespace PlcNext.CommandLine
         //UpdateTargets
         public const string DowngradeOption = "downgrade";
         public const char DowngradeChar = 'd';
-
-        //DeployVerb
-        public const string DeployVerb = "deploy";
         
         //Settings description
         public const char DescriptionChar = 'd';

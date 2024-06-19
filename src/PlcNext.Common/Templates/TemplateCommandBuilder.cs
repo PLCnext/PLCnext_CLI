@@ -217,6 +217,7 @@ namespace PlcNext.Common.Templates
                     Constants.OutputArgumentName.ToUpperInvariant(),
                     Constants.FilesArgumentName.ToUpperInvariant(),
                     Constants.TargetArgumentName.ToUpperInvariant(),
+                    Constants.BuildTypeArgumentName.ToUpperInvariant()
                 };
                 Dictionary<templateArgumentDefinition, string> argumentToStringDictionary = new Dictionary<templateArgumentDefinition, string>();
                 List<templateArgumentDefinition> setlessArguments = new List<templateArgumentDefinition>();

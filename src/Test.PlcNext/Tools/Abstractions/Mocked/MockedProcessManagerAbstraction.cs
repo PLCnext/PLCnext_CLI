@@ -71,11 +71,12 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
             ThrowError = false;
             ExitWithErrorForCommand = string.Empty;
             // mock the failure of a process
-            processManager.StartProcess(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IUserInterface>(), Arg.Any<string>(), showOutput: Arg.Any<bool>(), showError: Arg.Any<bool>(), killOnDispose: Arg.Any<bool>())
+            processManager.StartProcess(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IUserInterface>(), Arg.Any<string>(), showOutput: Arg.Any<bool>(),
+                                        showError: Arg.Any<bool>(), killOnDispose: Arg.Any<bool>(), escapedArguments: Arg.Any<string>())
                           .Returns(callinfo => MockProcess(callinfo));
             processManager.StartProcessWithSetup(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IUserInterface>(), Arg.Any<string>(),
                                                  Arg.Any<string>(), showOutput: Arg.Any<bool>(), showError: Arg.Any<bool>(),
-                                                 killOnDispose: Arg.Any<bool>())
+                                                 killOnDispose: Arg.Any<bool>(), escapedArguments: Arg.Any<string>())
                            .Returns(callinfo => MockProcess(callinfo));
 
             IProcess MockProcess(CallInfo callinfo)

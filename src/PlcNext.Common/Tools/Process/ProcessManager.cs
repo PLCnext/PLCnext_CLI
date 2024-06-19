@@ -44,7 +44,7 @@ namespace PlcNext.Common.Tools.Process
                                      IUserInterface userInterface,
                                      string workingDirectory = null,
                                      bool showOutput = true, bool showError = true,
-                                     bool killOnDispose = true)
+                                     bool killOnDispose = true, string escapedArguments = null)
         {
             FormatterParameters parameters = new FormatterParameters();
             parameters.Add(fileName, Constants.CommandKey);
@@ -52,7 +52,12 @@ namespace PlcNext.Common.Tools.Process
             IUserInterface formatterUserInterface = formatterPool.GetFormatter(parameters, userInterface);
             ExecutionContext redirectedContext = executionContext.WithRedirectedOutput(formatterUserInterface);
 
-            return new ProcessFacade(fileName, arguments, workingDirectory, redirectedContext, null, showOutput, showError, killOnDispose,
+            if (escapedArguments == null)
+            {
+                escapedArguments = arguments;
+            }
+
+            return new ProcessFacade(fileName, arguments, escapedArguments, workingDirectory, redirectedContext, null, showOutput, showError, killOnDispose,
                 environmentService.Platform, cancellationToken);
         }
 
@@ -60,7 +65,7 @@ namespace PlcNext.Common.Tools.Process
                               IUserInterface userInterface, string setup,
                               string workingDirectory = null,
                               bool showOutput = true, bool showError = true,
-                              bool killOnDispose = true)
+                              bool killOnDispose = true, string escapedArguments = null)
         {
             string commandName = fileName;
             if (setup != null)
@@ -72,6 +77,15 @@ namespace PlcNext.Common.Tools.Process
                     commandName = "/bin/sh";
                     arguments2 = $"-c \"'{setup}' && '{fileName}' {arguments}\"";
                 }
+                if (escapedArguments != null)
+                {
+                    escapedArguments = arguments2.Replace(arguments, escapedArguments, StringComparison.Ordinal);
+                }
+                else
+                {
+                    escapedArguments = arguments2;
+                }
+                
                 arguments = arguments2;
                 
             }
@@ -88,7 +102,8 @@ namespace PlcNext.Common.Tools.Process
                 SetExecutableFlag(setup);
             }
             
-            ProcessFacade facade = new ProcessFacade(commandName, arguments, workingDirectory, redirectedContext, displayName, showOutput, showError, killOnDispose,
+            ProcessFacade facade = new ProcessFacade(commandName, arguments, escapedArguments, workingDirectory, redirectedContext,
+                                                     displayName, showOutput, showError, killOnDispose,
             environmentService.Platform, cancellationToken);
 
             return facade;
@@ -131,7 +146,7 @@ namespace PlcNext.Common.Tools.Process
         private readonly string displayName;
         #endregion
 
-        public ProcessFacade(string fileName, string arguments, string workingDirectory,
+        public ProcessFacade(string fileName, string arguments, string escapedArguments, string workingDirectory,
                              ExecutionContext executionContext, string displayName,
                              bool showOutput, bool showError, bool killOnDispose, OSPlatform platform,
                              CancellationToken cancellationToken)
@@ -156,7 +171,7 @@ namespace PlcNext.Common.Tools.Process
                 processInfo.WorkingDirectory = workingDirectory;
             }
 
-            executionContext.WriteVerbose($"Starting process {processInfo.FileName} {processInfo.Arguments} in {processInfo.WorkingDirectory}.");
+            executionContext.WriteVerbose($"Starting process {processInfo.FileName} {escapedArguments} in {processInfo.WorkingDirectory}.");
             internalProcess = System.Diagnostics.Process.Start(processInfo);
             if (internalProcess != null && !internalProcess.HasExited)
             {
