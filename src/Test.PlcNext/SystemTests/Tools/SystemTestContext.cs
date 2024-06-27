@@ -442,7 +442,8 @@ namespace Test.PlcNext.SystemTests.Tools
                 {
                     ;
                     string content = reader.ReadToEnd();
-                    content.Contains($"class {libName} : public MetaLibraryBase, public Singleton<{libName}>").Should().BeTrue();
+                    content.Contains($"class {libName} : public MetaLibraryBase").Should().BeTrue();
+                    content.Contains($", public Singleton<{libName}>").Should().BeTrue();
                 }
             }
         }

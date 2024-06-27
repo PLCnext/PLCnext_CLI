@@ -108,6 +108,8 @@
     <None Update="Templates\AppTemplate\app_info.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Remove="TemplatesNew\**" />
+    <None Remove="TemplatesOrig\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -366,6 +368,13 @@
     <Compile Remove="Templates\SharedNativeFunctionBlockTemplate\NativeFunctionBlock.cs" />
     <Compile Remove="Templates\SharedNativeFunctionTemplate\NativeFunction.cs" />
     <Compile Remove="Templates\SharedNativeProjectTemplate\CSharp\Properties\AssemblyInfo.cs" />
+    <Compile Remove="TemplatesNew\**" />
+    <Compile Remove="TemplatesOrig\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="TemplatesNew\**" />
+    <EmbeddedResource Remove="TemplatesOrig\**" />
   </ItemGroup>
 
   <Import Project="..\_Build_\CodeAnalysis.targets" Condition="Exists('..\_Build_\CodeAnalysis.targets')" />
