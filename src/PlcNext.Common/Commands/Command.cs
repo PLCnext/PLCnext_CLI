@@ -70,6 +70,7 @@ namespace PlcNext.Common.Commands
                         result = commandResult.ExternalResult;
                     }
                     catch (Exception e)
+                    
                     {
                         //Include exceptions in error output to include them in the json output later when detailed results are available
                         if (!exceptionHandler.HandleException(e))
