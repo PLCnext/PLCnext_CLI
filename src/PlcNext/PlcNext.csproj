@@ -110,6 +110,9 @@
     </None>
     <None Remove="TemplatesNew\**" />
     <None Remove="TemplatesOrig\**" />
+    <None Update="Templates\ProjectTemplate\LibraryInfo.hpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
