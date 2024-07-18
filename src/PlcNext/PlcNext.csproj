@@ -113,6 +113,9 @@
     <None Update="Templates\ProjectTemplate\LibraryInfo.hpp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Templates\AcfProjectTemplate\LibraryInfo.hpp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
