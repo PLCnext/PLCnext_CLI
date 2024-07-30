@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using PlcNext.Common.Tools;
 
@@ -17,7 +18,10 @@ namespace PlcNext.Common.Templates
 {
     public class MultipleRootNamespacesForTargetException : FormattableException
     {
-        public MultipleRootNamespacesForTargetException(IEnumerable<string> rootNamespaces) : base(string.Format(CultureInfo.InvariantCulture, ExceptionTexts.MultipleRootNamespacesForTarget, Environment.NewLine+string.Join(", ",rootNamespaces))) 
+        public MultipleRootNamespacesForTargetException(IEnumerable<string> rootNamespaces) 
+            : base(string.Format(CultureInfo.InvariantCulture, 
+                                 ExceptionTexts.MultipleRootNamespacesForTarget, 
+                                 Environment.NewLine+string.Join(", ",rootNamespaces.Distinct().Select(x => string.IsNullOrEmpty(x) ? "<empty>" : x)))) 
         {
             
         }
