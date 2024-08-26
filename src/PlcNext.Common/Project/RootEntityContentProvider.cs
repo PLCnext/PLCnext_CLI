@@ -55,7 +55,8 @@ namespace PlcNext.Common.Project
         public override bool CanResolve(Entity owner, string key, bool fallback = false)
         {
             return key == EntityKeys.RootKey ||
-                   key == EntityKeys.EscapeProjectNameFormatKey && owner.Type == EntityKeys.FormatKey;
+                   key == EntityKeys.EscapeProjectNameFormatKey && owner.Type == EntityKeys.FormatKey ||
+                   key == EntityKeys.EscapeDotProjectNameFormatKey && owner.Type == EntityKeys.FormatKey;
         }
 
         public override Entity Resolve(Entity owner, string key, bool fallback = false)
@@ -63,13 +64,18 @@ namespace PlcNext.Common.Project
             if (key == EntityKeys.EscapeProjectNameFormatKey && 
                 owner.Type == EntityKeys.FormatKey)
             {
-                return EscapeProjectName();
+                return EscapeProjectName(false);
+            }
+            if (key == EntityKeys.EscapeDotProjectNameFormatKey && 
+                owner.Type == EntityKeys.FormatKey)
+            {
+                return EscapeProjectName(true);
             }
             Entity rootEntity = CreateRootEntity();
             rootEntity.SetMetaData(true, EntityKeys.IsRoot);
             return rootEntity;
 
-            Entity EscapeProjectName()
+            Entity EscapeProjectName(bool escapeDots)
             {
                 string value = owner.Owner?.Value<string>();
                 if (string.IsNullOrEmpty(value))
@@ -77,7 +83,10 @@ namespace PlcNext.Common.Project
                     return owner.Create(key, string.Empty);
                 }
 
-                value = Regex.Replace(value, @"[^a-zA-Z0-9_\.]", "_"); //Replace not allowed values with _
+                
+                value = escapeDots?
+                    Regex.Replace(value, @"[^a-zA-Z0-9_]", "_"):
+                    Regex.Replace(value, @"[^a-zA-Z0-9_\.]", "_"); //Replace not allowed values with _
                 int length, newLength;
                 do //Remove double _ and .
                 {

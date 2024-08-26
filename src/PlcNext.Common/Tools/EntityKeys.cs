@@ -24,6 +24,7 @@ namespace PlcNext.Common.Tools
         //RootContentProvider
         public const string RootKey = "root";
         public const string EscapeProjectNameFormatKey = "escapeprojectname";
+        public const string EscapeDotProjectNameFormatKey = "escapedotprojectname";
 
         //ConstantContentProvider
         public const string NewlineKey = "newline";
