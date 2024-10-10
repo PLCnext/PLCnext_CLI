@@ -20,7 +20,7 @@ namespace PlcNext.Common.Tools.SDK;
 internal class CMakeConversation : ICMakeConversation
 {
     static readonly string CmakeApiSubDirectory = Path.Combine(".cmake","api","v1");
-    static readonly string CmakeApiQuerySubDirectory =Path.Combine( CmakeApiSubDirectory, "query");
+    static readonly string CmakeApiQuerySubDirectory =Path.Combine( CmakeApiSubDirectory,"query/client-plcncli");
     static readonly string CmakeApiReplySubDirectory = Path.Combine(CmakeApiSubDirectory,"reply");
     const string CmakeFileApiCodemodelQuery = "codemodel-v2";
     const string CmakeFileApiCacheQuery =  "cache-v2";
