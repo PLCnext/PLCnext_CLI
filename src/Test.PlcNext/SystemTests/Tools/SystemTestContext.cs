@@ -171,7 +171,8 @@ namespace Test.PlcNext.SystemTests.Tools
             PlmProject,
             AcfProject,
             ConsumableLibrary,
-            SharedNativeProject
+            SharedNativeProject,
+            TestProject
         }
 
         public async Task CreateProject(string projectName = null, string componentName = null, string programName = null,
@@ -192,6 +193,9 @@ namespace Test.PlcNext.SystemTests.Tools
                     break;
                 case ProjectType.SharedNativeProject:
                     args = new string[] { "new", "snproject" };
+                    break;
+                case ProjectType.TestProject:
+                    args = new string[] { "new", "testproject" };
                     break;
                 default:
                     true.Should().BeFalse($"Project type {type} is unknown.");

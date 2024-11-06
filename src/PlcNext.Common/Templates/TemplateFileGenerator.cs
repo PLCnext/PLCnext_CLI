@@ -52,6 +52,7 @@ namespace PlcNext.Common.Templates
             CheckCompatibility(template, dataModel);
 
             List<VirtualFile> generatedFiles = new List<VirtualFile>(await InitializeFiles().ConfigureAwait(false));
+            List<VirtualDirectory> generatedDirectories = new List<VirtualDirectory>(await InitializeDirectories().ConfigureAwait(false));
             generatedFiles.AddRange(await InitializeSubTemplates().ConfigureAwait(false));
             
             Exception e = dataModel.GetCodeExceptions();
@@ -95,6 +96,24 @@ namespace PlcNext.Common.Templates
                 }
 
                 return files;
+            }
+            async Task<IEnumerable<VirtualDirectory>> InitializeDirectories()
+            {
+                string basePath = dataModel.Root.Path;
+                HashSet<VirtualDirectory> directories = new HashSet<VirtualDirectory>();
+                if (template.Folder == null) return directories;
+                
+                foreach (templateDirectory file in template.Folder.Where(f => !f.excluded))
+                {
+                    VirtualDirectory destination =
+                        await GetDirectory(dataModel, file, basePath).ConfigureAwait(false);
+                    observable.OnNext(new Change(() => destination.Restore(),
+                        $"Create directory {Path.GetFileName(destination.Name)} for template " +
+                        $"{template.name} in {destination.Parent.FullName}."));
+                    directories.Add(destination);
+                }
+
+                return directories;
             }
 
             async Task<IEnumerable<VirtualFile>> InitializeSubTemplates()
@@ -348,7 +367,7 @@ namespace PlcNext.Common.Templates
         }
 
         private async Task<VirtualFile> GetFile(Entity dataModel, templateFile file, bool forced, string basePath,
-                                   TemplateDescription template)
+            TemplateDescription template)
         {
             string path = await resolver.ResolveAsync(file.path ?? string.Empty, dataModel).ConfigureAwait(false);
             string name = await resolver.ResolveAsync(file.name, dataModel).ConfigureAwait(false);
@@ -361,6 +380,14 @@ namespace PlcNext.Common.Templates
             return destination;
         }
 
+        private async Task<VirtualDirectory> GetDirectory(Entity dataModel, templateDirectory file, string basePath)
+        {
+            string path = await resolver.ResolveAsync(file.path ?? string.Empty, dataModel).ConfigureAwait(false);
+            string name = await resolver.ResolveAsync(file.name, dataModel).ConfigureAwait(false);
+            VirtualDirectory destination = fileSystem.GetDirectory(Path.Combine(path, name), basePath, true);
+            return destination;
+        }
+        
         public async Task GenerateFiles(Entity rootEntity, string generator, string output, bool outputDefined,
                                         ChangeObservable observable)
         {

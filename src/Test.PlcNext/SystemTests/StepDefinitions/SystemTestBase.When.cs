@@ -44,6 +44,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             await ScenarioContext.CreateProject(name, type: SystemTestContext.ProjectType.SharedNativeProject);
         }
 
+        protected async Task When_I_create_a_new_test_project_with_name(string name)
+        {
+            await ScenarioContext.CreateProject(name, type: SystemTestContext.ProjectType.TestProject);
+        }
+
 
         protected async Task When_I_create_a_new_acfproject_with_name(string name)
         {

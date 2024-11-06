@@ -75,6 +75,8 @@ namespace PlcNext.Common.Templates.Description {
         
         private string deployEngineField;
         
+        private templateDirectory[] folderField;
+
         public TemplateDescription() {
             this.isRootField = false;
             this.isHiddenField = false;
@@ -126,6 +128,17 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.fileField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Folder")]
+        public templateDirectory[] Folder {
+            get {
+                return this.folderField;
+            }
+            set {
+                this.folderField = value;
             }
         }
         
@@ -1051,6 +1064,57 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.equalsversionField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.7.3081.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.phoenixcontact.com/schema/clitemplates")]
+    public partial class templateDirectory {
+        
+        private string nameField;
+        private string pathField;
+        private bool excludedField;
+
+        public templateDirectory() {
+            this.excludedField = false;
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string path {
+            get {
+                return this.pathField;
+            }
+            set {
+                this.pathField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool excluded {
+            get {
+                return this.excludedField;
+            }
+            set {
+                this.excludedField = value;
             }
         }
     }

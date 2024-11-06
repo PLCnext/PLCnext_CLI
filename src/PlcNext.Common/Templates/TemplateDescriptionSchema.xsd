@@ -12,7 +12,7 @@
       <xs:annotation>
         <xs:documentation>
           Root element for the template description file.
-          It contains all necessary informations for the template.
+          It contains all necessary information for the template.
         </xs:documentation>
       </xs:annotation>
       <xs:sequence>
@@ -20,6 +20,7 @@
         <xs:element minOccurs="0" maxOccurs="unbounded" name="Relationship" type="templateRelationship"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="AddTemplate" type="templateReference"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="File" type="templateFile"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Folder" type="templateDirectory"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="GeneratedFile" type="templateGeneratedFile"/>
         <xs:element minOccurs="0" name="Description" type="xs:string">
           <xs:annotation>
@@ -35,7 +36,7 @@
       <xs:attribute name="name" type="templateName" use="required">
         <xs:annotation>
           <xs:documentation>
-            Name of the template. Use to intantiate the template as well as referencing it.
+            Name of the template. Use to instantiate the template as well as referencing it.
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -90,7 +91,7 @@
             The default identifier is the CodeAttributeIdentifier.
             The CodeAttributeIdentifier load all code files recursively and checks for attributes to
             identify the template. E.g. if the identifier name is 'component' and the language is C++
-            the identifier looks for a comment in the form '//#component' above the type defintion.
+            the identifier looks for a comment in the form '//#component' above the type definition.
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -98,7 +99,7 @@
         <xs:annotation>
           <xs:documentation>
             Marks the template to be considered when computing the namespace of the project.
-            When the template is marked as such, all instances of the template must shared a common
+            When the template is marked as such, all instances of the template must share a common
             namespace with each other and with other templated marked as such.
           </xs:documentation>
         </xs:annotation>
@@ -490,6 +491,39 @@
 	  </xs:annotation>
 	</xs:attribute>
   </xs:complexType>
+
+  <xs:complexType name="templateDirectory">
+    <xs:annotation>
+      <xs:documentation>
+        Directory which will be created when the template is initiated.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          <!--TODO: restriction for filenames with generator expressions-->
+          The name when the file is created. Generator expressions can be used here.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="path" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>
+          <!--TODO: restriction for filenames with generator expressions-->
+          The name when the file is created. Generator expressions can be used here.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="excluded" type="xs:boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>
+          If set to true, the Directory will not be generated. This is meant for higher level template to exclude specific
+          Directory from the base template.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
 
   <xs:complexType name="templateReference">
     <xs:annotation>

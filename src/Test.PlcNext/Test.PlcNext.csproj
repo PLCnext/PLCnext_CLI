@@ -697,6 +697,27 @@
     <EmbeddedResource Include="Deployment\OtherNamespaceConstant\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ConstArraySize\plcnext.proj" />
     <EmbeddedResource Include="Deployment\Defect_4334\plcnext.proj" />
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\.proj">
+      <Link>Deployment\Templates\TestTemplate\.proj</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\DataTypes.dt">
+      <Link>Deployment\Templates\TestTemplate\DataTypes.dt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\DataTypes_v2.dt">
+      <Link>Deployment\Templates\TestTemplate\DataTypes_v2.dt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\FormatTemplates.xml">
+      <Link>Deployment\Templates\TestTemplate\FormatTemplates.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\Library.libmeta">
+      <Link>Deployment\Templates\TestTemplate\Library.libmeta</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\Library.typemeta">
+      <Link>Deployment\Templates\TestTemplate\Library.typemeta</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\TemplateDescription.xml">
+      <Link>Deployment\Templates\TestTemplate\TemplateDescription.xml</Link>
+    </EmbeddedResource>
     <Content Include="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1048,6 +1069,7 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FormatTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FormatTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\AcfProjectTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\Templates.xml" Link="Deployment\Templates\Templates.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplates.xml" Link="Deployment\Templates\TestTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\CMakeLists.txt" Link="Deployment\Templates\ConsumableLibraryTemplate\CMakeLists.txt" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\How_to_use.txt" Link="Deployment\Templates\ConsumableLibraryTemplate\How_to_use.txt" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\TemplateDescription.xml" Link="Deployment\Templates\ConsumableLibraryTemplate\TemplateDescription.xml" />
@@ -1187,6 +1209,27 @@
   <ItemGroup>
     <EmbeddedResource Include="Deployment\Defect_4334\src\Defect_4334Component.cpp" />
     <EmbeddedResource Include="Deployment\Defect_4334\src\Defect_4334Program.cpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\Library.cpp">
+      <Link>Deployment\Templates\TestTemplate\Library.cpp</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\Library.meta.cpp">
+      <Link>Deployment\Templates\TestTemplate\Library.meta.cpp</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\Optimized_Library.meta.cpp">
+      <Link>Deployment\Templates\TestTemplate\Optimized_Library.meta.cpp</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\Library.hpp">
+      <Link>Deployment\Templates\TestTemplate\Library.hpp</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplate\LibraryInfo.hpp">
+      <Link>Deployment\Templates\TestTemplate\LibraryInfo.hpp</Link>
+    </EmbeddedResource>
   </ItemGroup>
 
   <Import Project="..\_Build_\CodeAnalysis.targets" Condition="Exists('..\_Build_\CodeAnalysis.targets')" />
