@@ -85,6 +85,12 @@
     <None Remove="Deployment\HiddenPlm\src\HiddenPlmComponent.hpp" />
     <None Remove="Deployment\HiddenPlm\src\HiddenPlmProgram.cpp" />
     <None Remove="Deployment\HiddenPlm\src\HiddenPlmProgram.hpp" />
+    <None Remove="Deployment\IdentifierCheckTest\CMakeLists.txt" />
+    <None Remove="Deployment\IdentifierCheckTest\src\IdentifierCheckTestComponent.cpp" />
+    <None Remove="Deployment\IdentifierCheckTest\src\IdentifierCheckTestComponent.hpp" />
+    <None Remove="Deployment\IdentifierCheckTest\src\IdentifierCheckTestLibraryInfo.hpp" />
+    <None Remove="Deployment\IdentifierCheckTest\src\IdentifierCheckTestProgram.cpp" />
+    <None Remove="Deployment\IdentifierCheckTest\src\IdentifierCheckTestProgram.hpp" />
     <None Remove="Deployment\MultipleNamespaces206\CMakeLists.txt" />
     <None Remove="Deployment\MultipleNamespaces206\extern\CircuitControl.cpp" />
     <None Remove="Deployment\MultipleNamespaces206\extern\CircuitControl.hpp" />
@@ -338,6 +344,12 @@
     <EmbeddedResource Include="Deployment\HiddenComponentPort\src\HiddenComponentPortComponent.hpp" />
     <EmbeddedResource Include="Deployment\HiddenComponentPort\src\HiddenComponentPortProgram.cpp" />
     <EmbeddedResource Include="Deployment\HiddenComponentPort\src\HiddenComponentPortProgram.hpp" />
+    <EmbeddedResource Include="Deployment\IdentifierCheckTest\CMakeLists.txt" />
+    <EmbeddedResource Include="Deployment\IdentifierCheckTest\src\IdentifierCheckTestComponent.cpp" />
+    <EmbeddedResource Include="Deployment\IdentifierCheckTest\src\IdentifierCheckTestComponent.hpp" />
+    <EmbeddedResource Include="Deployment\IdentifierCheckTest\src\IdentifierCheckTestLibraryInfo.hpp" />
+    <EmbeddedResource Include="Deployment\IdentifierCheckTest\src\IdentifierCheckTestProgram.cpp" />
+    <EmbeddedResource Include="Deployment\IdentifierCheckTest\src\IdentifierCheckTestProgram.hpp" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespacesAcf\CMakeLists.txt" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespacesAcf\src\DtInNestedNs.hpp" />
     <EmbeddedResource Include="Deployment\PortTypesInDifNamespacesAcf\src\DtInOtherNs.hpp" />
@@ -1133,6 +1145,7 @@
     <EmbeddedResource Include="Deployment\ArrayDatatypes\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ArrayDatatypesWithoutDTArrayFlag\plcnext.proj" />
     <None Include="Deployment\CodeFilesWithError\plcnext.proj" />
+    <EmbeddedResource Include="Deployment\IdentifierCheckTest\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ProjectWithConfigFile\plcnext.proj" />
     <EmbeddedResource Include="Deployment\ProgramWithSameProgramNames\plcnext.proj" />
     <EmbeddedResource Include="Deployment\CppSpecial\plcnext.proj" />

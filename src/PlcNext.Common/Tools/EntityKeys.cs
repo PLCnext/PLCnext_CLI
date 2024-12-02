@@ -83,6 +83,7 @@ namespace PlcNext.Common.Tools
         public const string ThrowIfMultidimensionalKey = "throwifmultidimensional";
         public const string IECDataTypeAttributeNameKey = "iecdatatype";
         public const string ConvertToIECDatatypeKey = "converttoiecdatatype";
+        public const string ValidateIdentifierKey = "validateidentifier";
 
         //CppContentProvider
         public const string IncludeKey = "include";

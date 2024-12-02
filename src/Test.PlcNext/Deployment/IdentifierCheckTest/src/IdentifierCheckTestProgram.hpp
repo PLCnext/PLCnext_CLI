@@ -1,11 +1,10 @@
-﻿#pragma once
+#pragma once
 #include "Arp/System/Core/Arp.h"
 #include "Arp/Plc/Commons/Esm/ProgramBase.hpp"
 #include "Arp/System/Commons/Logging.h"
-#include "EnumTestComponent.hpp"
-#include "PortTypes.hpp"
+#include "IdentifierCheckTestComponent.hpp"
 
-namespace EnumTest
+namespace IdentifierCheckTest
 {
 
 using namespace Arp;
@@ -13,11 +12,11 @@ using namespace Arp::System::Commons::Diagnostics::Logging;
 using namespace Arp::Plc::Commons::Esm;
 
 //#program
-//#component(EnumTest::EnumTestComponent)
-class EnumTestProgram : public ProgramBase, private Loggable<EnumTestProgram>
+//#component(IdentifierCheckTest::IdentifierCheckTestComponent)
+class IdentifierCheckTestProgram : public ProgramBase, private Loggable<IdentifierCheckTestProgram>
 {
 public: // typedefs
-    enum OtherEnum : int32{
+    enum OtherEnum : int32 {
         What = 0,
         That = 1,
         Nothing = 12,
@@ -28,19 +27,26 @@ public: // typedefs
         Last = 512                          ///< other comment.
     };
 
-    struct EnumStruct
-    {
-    public:
-        OtherEnum EnumValue;
+    struct TypeA {
+        Arp::int16 program;
+        Arp::int16 value2[10];
     };
 
+    struct Ports {
+        TypeA myA;
+    }
+
 public: // construction/destruction
-    EnumTestProgram(EnumTest::EnumTestComponent& enumTestComponentArg, const String& name);
-    EnumTestProgram(const EnumTestProgram& arg) = delete;
-    virtual ~EnumTestProgram() = default;
+    IdentifierCheckTestProgram(IdentifierCheckTest::IdentifierCheckTestComponent& identifierCheckTestComponentArg, const String& name);
+#if ARP_ABI_VERSION_MAJOR < 2
+    IdentifierCheckTestProgram(const IdentifierCheckTestProgram& arg) = delete;
+    virtual ~IdentifierCheckTestProgram() = default;
+#endif
 
 public: // operators
-    EnumTestProgram&  operator=(const EnumTestProgram& arg) = delete;
+#if ARP_ABI_VERSION_MAJOR < 2
+    IdentifierCheckTestProgram&  operator=(const IdentifierCheckTestProgram& arg) = delete;
+#endif
 
 public: // properties
 
@@ -58,33 +64,26 @@ public: /* Ports
            The attributes comment define the port attributes and is optional.
            The name comment defines the name of the port and is optional. Default is the name of the field.
         */
+
         //#port
-        //#attributes(Output)
-        //#name(OhMyPort)
-        PortTypes::OhMy port;
-        
+        Ports myPorts;
+
         //#port
         //#attributes(Input)
         //#name(OtherPort)
         OtherEnum port2;
 
-
-        //#port
-        //#attributes(Input)
-        //#name(StructPort)
-        EnumStruct port3;
-
 private: // fields
-    EnumTest::EnumTestComponent& enumTestComponent;
+    IdentifierCheckTest::IdentifierCheckTestComponent& identifierCheckTestComponent;
 
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // inline methods of class ProgramBase
-inline EnumTestProgram::EnumTestProgram(EnumTest::EnumTestComponent& enumTestComponentArg, const String& name)
+inline IdentifierCheckTestProgram::IdentifierCheckTestProgram(IdentifierCheckTest::IdentifierCheckTestComponent& identifierCheckTestComponentArg, const String& name)
 : ProgramBase(name)
-, enumTestComponent(enumTestComponentArg)
+, identifierCheckTestComponent(identifierCheckTestComponentArg)
 {
 }
 
-} // end of namespace EnumTest
+} // end of namespace IdentifierCheckTest

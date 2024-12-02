@@ -427,4 +427,7 @@
   <data name="SignOptionMissingPassword" xml:space="preserve">
     <value>Signing requires a password to access keyfile.</value>
   </data>
+  <data name="KeywordUsedAsIdentifier" xml:space="preserve">
+    <value>Keyword '{0}' cannot be used as identifier in datatypeworksheet.</value>
+  </data>
 </root>

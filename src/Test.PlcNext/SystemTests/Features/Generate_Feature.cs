@@ -314,7 +314,7 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                                        {
                                                                                                            new EnumSymbol("What",0),
                                                                                                            new EnumSymbol("That",1),
-                                                                                                           new EnumSymbol("Not",12),
+                                                                                                           new EnumSymbol("Nothing",12),
                                                                                                            new EnumSymbol("Other",12),
                                                                                                            new EnumSymbol("More",12),
                                                                                                            new EnumSymbol("Random",13),
@@ -913,6 +913,16 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Given_is_the_project("PortTypesInDifNamespacesAcf"),
                 _ => When_I_generate_all_metafiles(),
                 _ => Then_the_datatype_worksheet_looks_like_NAME("PortTypesInDifNamespacesAcfDataTypes.dt")
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Generate_datatype_worksheet_with_identifier_check()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("IdentifierCheckTest"),
+               _ => When_I_generate_all_metafiles(),
+                _ => Then_the_user_was_informed_that_an_invalid_keyword_was_used()
                 ).RunAsyncWithTimeout();
         }
 

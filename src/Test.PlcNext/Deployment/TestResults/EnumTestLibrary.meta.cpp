@@ -66,8 +66,8 @@ using namespace Arp::Plc::Commons::Meta;
                 typeDefinition.AddField(std::move(field));
             }
             {
-                FieldDefinition field{"Not", 0, DataType::Enum | DataType::Int32, String::Empty, sizeof(EnumTest::EnumTestProgram::OtherEnum), alignof(EnumTest::EnumTestProgram::OtherEnum), {}, StandardAttribute::None};
-                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<EnumTest::EnumTestProgram::OtherEnum>::type>(EnumTest::EnumTestProgram::OtherEnum::Not));
+                FieldDefinition field{"Nothing", 0, DataType::Enum | DataType::Int32, String::Empty, sizeof(EnumTest::EnumTestProgram::OtherEnum), alignof(EnumTest::EnumTestProgram::OtherEnum), {}, StandardAttribute::None};
+                field.GetChildTypeInfo().AddCustomAttribute("Value", static_cast<std::underlying_type<EnumTest::EnumTestProgram::OtherEnum>::type>(EnumTest::EnumTestProgram::OtherEnum::Nothing));
                 typeDefinition.AddField(std::move(field));
             }
             {

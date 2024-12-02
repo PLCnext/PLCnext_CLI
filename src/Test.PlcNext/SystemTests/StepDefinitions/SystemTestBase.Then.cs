@@ -566,6 +566,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckUserInformedOfError("Deploying library failed!", "message of failing deploy expected");
 		}
 
+        protected void Then_the_user_was_informed_that_an_invalid_keyword_was_used()
+        {
+            ScenarioContext.CheckUserInformedOfError(typeof(KeywordUsedAsIdentifierException));
+        }
+
         protected void Then_the_datatype_worksheet_looks_like_NAME(string name)
         {
             ScenarioContext.CheckDatatypeWorksheet(name);

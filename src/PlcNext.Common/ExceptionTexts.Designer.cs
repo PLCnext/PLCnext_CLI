@@ -349,6 +349,15 @@ namespace PlcNext.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keyword &apos;{0}&apos; cannot be used as identifier in datatypeworksheet..
+        /// </summary>
+        internal static string KeywordUsedAsIdentifier {
+            get {
+                return ResourceManager.GetString("KeywordUsedAsIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The library builder could not be found..
         /// </summary>
         internal static string LibraryBuilderNotFound {

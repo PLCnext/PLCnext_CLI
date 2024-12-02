@@ -11,7 +11,7 @@ END_TYPE
 
 
 TYPE
-    OtherEnum : (What := 0, That := 1, Not := 12, Other := 12, More := 12, Random := 13, Next := 24, Last := 512) OF DINT;
+    OtherEnum : (What := 0, That := 1, Nothing := 12, Other := 12, More := 12, Random := 13, Next := 24, Last := 512) OF DINT;
 END_TYPE
 
 
