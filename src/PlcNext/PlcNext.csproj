@@ -5,7 +5,7 @@
     <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName Condition="'$(PlcNextToolName)' != ''">$(PlcNextToolName)</AssemblyName>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright (c) 2023 PHOENIX CONTACT GmbH &amp; Co. KG</Copyright>
+    <Copyright>Copyright (c) 2025 PHOENIX CONTACT GmbH &amp; Co. KG</Copyright>
     <LangVersion>default</LangVersion>
   </PropertyGroup>
 
