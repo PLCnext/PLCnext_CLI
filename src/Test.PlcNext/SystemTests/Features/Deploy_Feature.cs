@@ -23,10 +23,6 @@ namespace Test.PlcNext.SystemTests.Features
     [FeatureDescription(@"Deploy for the project.")]
     public class Deploy_Feature : MockedSystemTestBase
     {
-        public Deploy_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
-
         [Scenario]
         public async Task Deploy_for_project_generates_library()
         {

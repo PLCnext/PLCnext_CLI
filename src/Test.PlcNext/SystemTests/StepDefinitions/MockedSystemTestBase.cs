@@ -19,18 +19,21 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 {
     public class MockedSystemTestBase : SystemTestBase
     {
-        public MockedSystemTestBase(ITestOutputHelper helper) : base(ScenarioExtensions.RunWithTimeout(() => new SystemTestContext(new MockedFileSystemAbstraction(),
-                                                                                                                                   new MockedDownloadServiceAbstraction(),
-                                                                                                                                   new MockedProcessManagerAbstraction(),
-                                                                                                                                   new MockedUserInterfaceAbstraction(),
-                                                                                                                                   new MockedEnvironmentServiceAbstraction(),
-                                                                                                                                   new MockedExceptionHandlerAbstraction(),
-                                                                                                                                   new MockedGuidAbstraction(),
-                                                                                                                                   new MockedCMakeConversationAbstraction(),
-                                                                                                                                   new MockedSdkExplorerAbstraction(),
-                                                                                                                                   new MockedMSBuildFinder(),
-                                                                                                                                   new MockedPasswordProviderAbstraction()),
-                                                                         5000), helper)
+        public MockedSystemTestBase() 
+            : base(ScenarioExtensions.RunWithTimeout(() => 
+                new SystemTestContext(
+                    new MockedFileSystemAbstraction(),
+                    new MockedDownloadServiceAbstraction(),
+                    new MockedProcessManagerAbstraction(),
+                    new MockedUserInterfaceAbstraction(),
+                    new MockedEnvironmentServiceAbstraction(),
+                    new MockedExceptionHandlerAbstraction(),
+                    new MockedGuidAbstraction(),
+                    new MockedCMakeConversationAbstraction(),
+                    new MockedSdkExplorerAbstraction(),
+                    new MockedMSBuildFinder(),
+                    new MockedPasswordProviderAbstraction()),
+                5000))
         {
         }
     }

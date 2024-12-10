@@ -150,9 +150,5 @@ namespace Test.PlcNext.SystemTests.Features
                                                          , "AXCF2152,2.0 LTS (2.0.0.12345 branches/release/2.0.0/ beta)")
                 ).RunAsyncWithTimeout();
         }
-
-        public Set_Targets_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

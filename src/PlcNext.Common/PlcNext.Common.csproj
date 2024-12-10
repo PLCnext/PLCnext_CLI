@@ -51,6 +51,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" />
     <PackageReference Include="CommandLineParser" />
+    <PackageReference Include="NCalcCore" />
     <PackageReference Include="NCalcSync" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="NuGet.Versioning" />

@@ -53,9 +53,5 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_project_supports_the_targets("AXCF2152,1.0 LTS (1.0.0.12345 branches/release/1.0.0/ beta)")
                 ).RunAsyncWithTimeout();
         }
-
-        public Update_Targets_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

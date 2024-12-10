@@ -153,8 +153,5 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_user_was_informed_that_the_name_is_too_long()
                 ).RunAsyncWithTimeout();
         }
-        public Component_Creation_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

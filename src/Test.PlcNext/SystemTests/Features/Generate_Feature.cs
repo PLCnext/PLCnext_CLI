@@ -1152,11 +1152,6 @@ namespace Test.PlcNext.SystemTests.Features
                                                                                  }))
                 ).RunAsyncWithTimeout();
         }
-
-
-        public Generate_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 
     public class ErrorDataGenerator : IEnumerable<object[]>

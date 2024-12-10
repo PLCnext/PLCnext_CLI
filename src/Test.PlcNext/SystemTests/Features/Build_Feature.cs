@@ -149,9 +149,5 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_cmake_args_are_used(new string[] { "-this", "-is", "a", "-test" })
                 ).RunAsyncWithTimeout();
         }
-
-        public Build_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

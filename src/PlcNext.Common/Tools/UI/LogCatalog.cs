@@ -84,10 +84,8 @@ namespace PlcNext.Common.Tools.UI
 
             JArray CreateLogFilesArray(JObject catalogContent)
             {
-                if (catalogContent.ContainsKey("LogFiles"))
-                {
-                    catalogContent.Remove("LogFiles");
-                }
+                catalogContent.Remove("LogFiles");
+                
                 JArray array = new JArray();
                 catalogContent.Add("LogFiles", array);
                 return array;

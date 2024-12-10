@@ -144,9 +144,5 @@ namespace Test.PlcNext.SystemTests.Features
                                                       "SharedNativeTest/SharedNativeTestCpp/plcnext.proj", "SharedNativeTest/SharedNativeTestCSharp/SharedNativeTestCSharp.csproj")
                 ).RunAsyncWithTimeout();
         }
-
-        public Project_Creation_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
 	}
 }

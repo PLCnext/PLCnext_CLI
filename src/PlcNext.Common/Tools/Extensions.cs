@@ -14,6 +14,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
+#pragma warning disable CA1724
+
 namespace PlcNext.Common.Tools
 {
     public static class Extensions

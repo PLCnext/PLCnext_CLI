@@ -66,9 +66,5 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_user_was_informed_that_the_target_is_already_installed()
                 ).RunAsyncWithTimeout();
         }
-
-        public Install_Sdk_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

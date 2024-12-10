@@ -210,9 +210,5 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_user_was_informed_that_only_bool_values_are_allowed()
             ).RunAsyncWithTimeout();
         }
-
-        public Settings_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

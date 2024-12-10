@@ -76,9 +76,5 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_generate_command_was_executed_without_error()
                     ).RunAsyncWithTimeout();
         }
-
-        public LoadProject_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

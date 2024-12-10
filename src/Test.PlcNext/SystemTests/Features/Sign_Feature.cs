@@ -197,9 +197,5 @@ namespace Test.PlcNext.SystemTests.Features
                 ).RunAsyncWithTimeout();
         }
 
-
-        public Sign_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

@@ -88,9 +88,5 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_only_the_cmake_file_was_added_to_the_workspace()
                 ).RunAsyncWithTimeout();
         }
-
-        public Transaction_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

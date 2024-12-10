@@ -164,9 +164,5 @@ namespace Test.PlcNext.SystemTests.Features
                 _ => Then_the_project_contains_a_program_with_name("NewProgram"),
                 _ => Then_the_programs_namespace_starts_with_namespace("NewProgram", "ComponentsInMultipleNamespaces")).RunAsyncWithTimeout();
         }
-
-        public Program_Creation_Feature(ITestOutputHelper helper) : base(helper)
-        {
-        }
     }
 }

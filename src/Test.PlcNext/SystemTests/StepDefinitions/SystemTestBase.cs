@@ -39,7 +39,7 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             }
         }
 
-        protected SystemTestBase(SystemTestContext testContext, ITestOutputHelper helper) : base(helper)
+        protected SystemTestBase(SystemTestContext testContext)
         {
             this.testContext = testContext;
         }
