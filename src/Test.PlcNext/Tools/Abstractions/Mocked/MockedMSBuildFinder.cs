@@ -9,13 +9,8 @@
 
 using NSubstitute;
 using PlcNext.Common.DataModel;
-using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.MSBuild;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Test.PlcNext.SystemTests.Tools;
 
 namespace Test.PlcNext.Tools.Abstractions.Mocked

@@ -9,7 +9,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using NSubstitute;
 using PlcNext.Common.Tools.UI;
 using Test.PlcNext.SystemTests.Tools;

@@ -8,11 +8,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using NSubstitute;
 using PlcNext.Common.Tools;
 using Test.PlcNext.SystemTests.Tools;

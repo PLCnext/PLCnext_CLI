@@ -9,15 +9,8 @@
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Test.PlcNext.SystemTests.StepDefinitions;
-using Test.PlcNext.Tools;
-using Xunit;
-using Xunit.Abstractions;
 
 #pragma warning disable 4014
 

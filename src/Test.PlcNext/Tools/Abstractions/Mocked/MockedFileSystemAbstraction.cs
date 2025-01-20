@@ -9,17 +9,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using FluentAssertions;
 using NSubstitute;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
+using Shouldly;
 using Test.PlcNext.SystemTests.Tools;
 
 namespace Test.PlcNext.Tools.Abstractions.Mocked
@@ -97,7 +96,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
 
         public Stream GetDeletedFileStream(string filePath)
         {
-            deletedFileContents.ContainsKey(filePath).Should().BeTrue($"File {filePath} was expected as deleted file, but deleted files are:{Environment.NewLine}{string.Join(Environment.NewLine, deletedFileContents.Keys)}");
+            deletedFileContents.ContainsKey(filePath).ShouldBeTrue($"File {filePath} was expected as deleted file, but deleted files are:{Environment.NewLine}{string.Join(Environment.NewLine, deletedFileContents.Keys)}");
             MemoryStream memoryStream = new MemoryStream();
             deletedFileContents[filePath].Seek(0, SeekOrigin.Begin);
             deletedFileContents[filePath].CopyTo(memoryStream);

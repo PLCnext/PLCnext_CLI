@@ -11,9 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using NSubstitute;
 using PlcNext.Common.Tools.UI;
+using Shouldly;
 using Xunit;
 
 namespace Test.PlcNext.UnitTests
@@ -41,7 +41,7 @@ namespace Test.PlcNext.UnitTests
                 .Where(x => x.GetMethodInfo().Name.Equals(nameof(userInterfaceSubstitute.WriteInformation)))
                 .Select(x => x.GetArguments()[0] as string);
 
-            messages.Should().BeEquivalentTo(new List<string>()
+            messages.ToArray().ShouldBeEquivalentTo(new string[]
             {
                 "[0%] StartMessage",
                 "[10%] StartMessage",
@@ -74,7 +74,7 @@ namespace Test.PlcNext.UnitTests
                 .Where(x => x.GetMethodInfo().Name.Equals(nameof(userInterfaceSubstitute.WriteInformation)))
                 .Select(x => x.GetArguments()[0] as string);
 
-            messages.Should().BeEquivalentTo(new List<string>()
+            messages.ToArray().ShouldBeEquivalentTo(new string[]
             {
                 "[0%] StartMessage",
                 "[10%] StartMessage: 10",
@@ -117,8 +117,8 @@ namespace Test.PlcNext.UnitTests
             progressNotifier.Dispose();
             
             string firstDepthPrefix = $"{PrefixWhiteSpace}{PrefixArrow}";
-            
-            calls.Should().BeEquivalentTo(new List<(string, object[])>()
+
+            List<(string, object[])> expectedCalls = new List<(string, object[])>()
             {
                 (SetPrefixMethodName, new object[] {firstDepthPrefix}),
                 
@@ -137,7 +137,9 @@ namespace Test.PlcNext.UnitTests
                 (SetPrefixMethodName, new object[]{firstDepthPrefix}),
                 
                 (SetPrefixMethodName, new object[] {string.Empty}),
-            });
+            };
+
+            CheckCalls(calls, expectedCalls);
         }
 
         [Fact]
@@ -173,7 +175,7 @@ namespace Test.PlcNext.UnitTests
             string firstDepthPrefix = $"{PrefixWhiteSpace}{PrefixArrow}";
             string secondDepthPrefix = $"{PrefixWhiteSpace}{firstDepthPrefix}";
 
-            calls.Should().BeEquivalentTo(new List<(string, object[])>()
+            List<(string, object[])> expectedCalls = new List<(string, object[])>()
             {
                 (SetPrefixMethodName, new object[] {firstDepthPrefix}),
 
@@ -225,7 +227,9 @@ namespace Test.PlcNext.UnitTests
 
                 (SetPrefixMethodName, new object[] {string.Empty}),
                 (WriteInformationMethodName, new object[] {"CompleteMessage", true})
-            });
+            };
+
+            CheckCalls(calls, expectedCalls);
         }
 
         [Fact]
@@ -264,7 +268,7 @@ namespace Test.PlcNext.UnitTests
             string secondDepthPrefix = $"{PrefixWhiteSpace}{firstDepthPrefix}";
             string thirdDepthPrefix = $"{PrefixWhiteSpace}{secondDepthPrefix}";
 
-            calls.Should().BeEquivalentTo(new List<(string, object[])>()
+            List<(string, object[])> expectedCalls = new List<(string, object[])>()
             {
                 (SetPrefixMethodName, new object[]{firstDepthPrefix}),
                 
@@ -303,9 +307,25 @@ namespace Test.PlcNext.UnitTests
                 (SetPrefixMethodName, new object[]{firstDepthPrefix}),
                 
                 (SetPrefixMethodName, new object[]{string.Empty}),
-                (WriteInformationMethodName,new object[]{"CompleteMessage", true}),
                 (SetPrefixMethodName, new object[]{string.Empty}),
-            });
+                (WriteInformationMethodName,new object[]{"CompleteMessage", true}),
+            };
+
+            CheckCalls(calls, expectedCalls);
+        }
+
+        private void CheckCalls(List<(string, object[])> calls, List<(string, object[])> expectedCalls)
+        {
+            calls.Count().ShouldBe(expectedCalls.Count());
+
+            for (int i = 0; i < calls.Count; i++)
+            {
+                (string, object[]) call = calls[i];
+                (string, object[]) expectedCall = expectedCalls[i];
+
+                call.Item1.ShouldBe(expectedCall.Item1);
+                call.Item2.ShouldBe(expectedCall.Item2);
+            }
         }
     }
 }

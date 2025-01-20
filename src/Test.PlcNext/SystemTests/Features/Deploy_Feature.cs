@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Test.PlcNext.SystemTests.StepDefinitions;
-using Xunit.Abstractions;
 
 #pragma warning disable 4014
 

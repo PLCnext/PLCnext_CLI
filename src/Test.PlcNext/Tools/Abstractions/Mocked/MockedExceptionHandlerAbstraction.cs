@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NSubstitute;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.UI;

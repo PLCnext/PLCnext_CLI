@@ -7,7 +7,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
 using System.Collections.Generic;
 
 namespace Test.PlcNext.Tools.Abstractions

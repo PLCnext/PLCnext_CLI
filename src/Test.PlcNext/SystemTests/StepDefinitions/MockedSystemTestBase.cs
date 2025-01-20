@@ -7,13 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Test.PlcNext.SystemTests.Tools;
-using Test.PlcNext.Tools;
 using Test.PlcNext.Tools.Abstractions.Mocked;
-using Xunit.Abstractions;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {

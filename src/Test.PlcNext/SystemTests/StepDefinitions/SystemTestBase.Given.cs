@@ -9,13 +9,11 @@
 
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
-using LightBDD.XUnit2;
-using Xunit;
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
-	public abstract partial class SystemTestBase
+    public abstract partial class SystemTestBase
 	{
 	    protected void Given_is_an_empty_workspace()
 	    {

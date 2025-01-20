@@ -10,12 +10,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using NSubstitute;
 using NSubstitute.Core;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.Process;
 using PlcNext.Common.Tools.UI;
+using Shouldly;
 using Test.PlcNext.SystemTests.Tools;
 
 namespace Test.PlcNext.Tools.Abstractions.Mocked
@@ -53,7 +53,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
         public string GetLastCommandArgs(string executable)
         {
             Command executedCommand = executedCommands.FirstOrDefault(c => c.Executable.Contains(executable));
-            executedCommand.Should().NotBeNull(
+            executedCommand.ShouldNotBeNull(
                 $"command {executable} was expected to be executed. Available commands are:{Environment.NewLine}" +
                 $"{string.Join(Environment.NewLine, executedCommands.Select(c => c.ToString()))}");
             return executedCommand.Arguments;

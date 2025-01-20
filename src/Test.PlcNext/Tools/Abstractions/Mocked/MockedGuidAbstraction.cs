@@ -8,8 +8,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NSubstitute;
 using PlcNext.Common.Tools;
 using Test.PlcNext.SystemTests.Tools;

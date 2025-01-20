@@ -12,13 +12,12 @@ using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.StepDefinitions;
-using Xunit.Abstractions;
 
 #pragma warning disable 4014
 
 namespace Test.PlcNext.SystemTests.Features
 {
-	[FeatureDescription(@"User creates new project via CLI with different parameters.")]
+    [FeatureDescription(@"User creates new project via CLI with different parameters.")]
     [Label("ART-PLCNEXT-Toolchains-1585")]
 	public class Project_Creation_Feature : MockedSystemTestBase
 	{

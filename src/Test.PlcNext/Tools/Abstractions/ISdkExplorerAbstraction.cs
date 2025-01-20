@@ -7,10 +7,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Test.PlcNext.Tools.Abstractions
 {
     internal interface ISdkExplorerAbstraction : IAbstraction

@@ -8,14 +8,11 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml.Linq;
 using System.Xml.Serialization;
-using FluentAssertions;
 using PlcNext.Common.Project;
+using Shouldly;
 
 namespace Test.PlcNext.Tools
 {
@@ -46,15 +43,15 @@ namespace Test.PlcNext.Tools
 
         public ProjectMetaFileChecker SupportsTargetTypes(string[] targets, bool sorted)
         {
-            settings.Should().NotBeNull($"project settings could not be loaded. {message}");
+            settings.ShouldNotBeNull($"project settings could not be loaded. {message}");
             string[] actualTargets = settings.Target ?? new string[0];
-            actualTargets.Length.Should().Be(targets.Count());
-            actualTargets.Except(targets).Any().Should().BeFalse();
-            targets.Except(actualTargets).Any().Should().BeFalse();
+            actualTargets.Length.ShouldBe(targets.Count());
+            actualTargets.Except(targets).Any().ShouldBeFalse();
+            targets.Except(actualTargets).Any().ShouldBeFalse();
 
             if (sorted)
             {
-                actualTargets.SequenceEqual(targets).Should().BeTrue();
+                actualTargets.SequenceEqual(targets).ShouldBeTrue();
             }
 
             return this;

@@ -10,8 +10,6 @@
 using NSubstitute;
 using PlcNext.Common.Tools.SDK;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Test.PlcNext.SystemTests.Tools;
 

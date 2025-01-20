@@ -9,15 +9,12 @@
 
 using System;
 using System.Threading.Tasks;
-using LightBDD.Framework;
-using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.Features;
 using Test.PlcNext.SystemTests.Tools;
-using Test.PlcNext.Tools;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {
-	public abstract partial class SystemTestBase
+    public abstract partial class SystemTestBase
 	{
 	    protected async Task When_I_create_a_new_project_with_name(string name)
 	    {

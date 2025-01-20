@@ -7,9 +7,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Autofac;
 using PlcNext;
 using PlcNext.Common;

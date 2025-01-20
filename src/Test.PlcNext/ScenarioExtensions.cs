@@ -10,9 +10,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
+using Shouldly;
 
 namespace Test.PlcNext
 {
@@ -23,7 +23,7 @@ namespace Test.PlcNext
             CancellationTokenSource taskCancel = new CancellationTokenSource();
             Task runnerTask = runner.RunAsync();
             Task completedTask = await Task.WhenAny(runnerTask, Task.Delay(timeout, taskCancel.Token));
-            completedTask.Should().Be(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
+            completedTask.ShouldBe(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
             taskCancel.Cancel();
             completedTask.Wait(CancellationToken.None);
         } 
@@ -35,7 +35,7 @@ namespace Test.PlcNext
             Task completedTask = Task.WhenAny(runnerTask, Task.Delay(timeout, taskCancel.Token)).GetAwaiter().GetResult();
             if (checkTimeout)
             {
-                completedTask.Should().Be(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
+                completedTask.ShouldBe(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
             }
             taskCancel.Cancel();
             completedTask.Wait(CancellationToken.None);
@@ -46,7 +46,7 @@ namespace Test.PlcNext
             CancellationTokenSource taskCancel = new CancellationTokenSource();
             Task<T> runnerTask = Task.Run(runAction,taskCancel.Token);
             Task completedTask = Task.WhenAny(runnerTask, Task.Delay(timeout, taskCancel.Token)).GetAwaiter().GetResult();
-            completedTask.Should().Be(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
+            completedTask.ShouldBe(runnerTask, $"test should have finished in {(double) timeout / 1000:F}s");
             taskCancel.Cancel();
             completedTask.Wait(CancellationToken.None);
             return ((Task<T>) completedTask).Result;

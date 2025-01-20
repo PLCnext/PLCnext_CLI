@@ -9,11 +9,8 @@
 
 using Newtonsoft.Json.Linq;
 using NSubstitute;
-using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.SDK;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Test.PlcNext.SystemTests.Tools;
 
 namespace Test.PlcNext.Tools.Abstractions.Mocked

@@ -8,14 +8,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.Tools;
-using Test.PlcNext.Tools;
-using Xunit.Abstractions;
 
 namespace Test.PlcNext.SystemTests.StepDefinitions
 {

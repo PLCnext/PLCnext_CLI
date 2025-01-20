@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Autofac;
 using CSharpx;
-using FluentAssertions;
 using Mono.Cecil;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -27,6 +26,7 @@ using PlcNext.Common.MetaData;
 using PlcNext.Common.Tools;
 using PlcNext.Common.Tools.FileSystem;
 using PlcNext.Common.Tools.UI;
+using Shouldly;
 using Test.PlcNext.SystemTests.Features;
 using Test.PlcNext.Tools;
 using Test.PlcNext.Tools.Abstractions;
@@ -198,7 +198,7 @@ namespace Test.PlcNext.SystemTests.Tools
                     args = new string[] { "new", "testproject" };
                     break;
                 default:
-                    true.Should().BeFalse($"Project type {type} is unknown.");
+                    true.ShouldBeFalse($"Project type {type} is unknown.");
                     args = Array.Empty<string>();
                     break;
             }
@@ -239,7 +239,7 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 string msg = string.IsNullOrEmpty(folder) ? $"{projectFileName} file was expected to exist"
                     : $"{projectFileName} file was expected to exist in folder {folder}";
-                fileContent.Should().NotBeNull(msg);
+                fileContent.ShouldNotBeNull(msg);
                 fileContent.Flush();
                 fileContent.Seek(0, SeekOrigin.Begin);
             }
@@ -249,10 +249,10 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 string msg = string.IsNullOrEmpty(folder) ? $"{projectFileName} file was expected to exist"
                                  : $"{projectFileName} file was expected to exist in folder {folder}";
-                fileContent.Should().NotBeNull(msg);
+                fileContent.ShouldNotBeNull(msg);
                 using (StreamReader reader = new StreamReader(fileContent))
                 {
-                    reader.ReadToEnd().Should().Contain($"project({projectName})", "Project name was not defined in CMake file.");
+                    reader.ReadToEnd().ShouldContain($"project({projectName})", customMessage: "Project name was not defined in CMake file.");
                 }
             }
             CheckUserInformed("Successfully created template", "Message that project was created successfully expected");
@@ -261,39 +261,38 @@ namespace Test.PlcNext.SystemTests.Tools
         internal void CheckProjectCreatedTwice()
         {
             IEnumerable<string> message = userInterfaceAbstraction.Informations.Where(s => s.Contains("Successfully created template"));
-            message.Should().HaveCount(2, "project was expected to be created twice");
+            message.Count().ShouldBe(2, "project was expected to be created twice");
         }
 
         internal void CheckUserInformedOfError(Type exceptionType)
         {
-            exceptionHandlerAbstraction.WasExceptionThrown(exceptionType).Should()
-                                       .BeTrue($"reported error {exceptionType} was expected.");
+            exceptionHandlerAbstraction.WasExceptionThrown(exceptionType).ShouldBeTrue($"reported error {exceptionType} was expected.");
         }
 
         internal void CheckUserInformedOfError(string searchstring, string reason)
         {
             string message = userInterfaceAbstraction.Errors.FirstOrDefault(s => s.Contains(searchstring, StringComparison.InvariantCultureIgnoreCase));
-            message.Should().NotBeNull(reason);
+            message.ShouldNotBeNull(reason);
         }
 
         internal void CheckUserInformed(string searchstring, string reason)
         {
             string message = userInterfaceAbstraction.Informations.FirstOrDefault(s => s.Contains(searchstring, StringComparison.InvariantCultureIgnoreCase));
-            message.Should().NotBeNull(reason);
+            message.ShouldNotBeNull(reason);
         }
 
         internal void CheckUserInformedOfWarning(string searchstring, string reason)
         {
             string message = userInterfaceAbstraction.Warnings.FirstOrDefault(s => s.Contains(searchstring, StringComparison.InvariantCultureIgnoreCase));
-            message.Should().NotBeNull(reason);
+            message.ShouldNotBeNull(reason);
         }
 
         internal void CheckTargetSupported(string[] targets, bool sorted)
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             using (Stream fileContent = fileSystemAbstraction.Open(Path.Combine(knownProjectName, projectFileName)))
             {
-                fileContent.Should().NotBeNull($"{projectFileName} file was expected to exist in folder {knownProjectName}");
+                fileContent.ShouldNotBeNull($"{projectFileName} file was expected to exist in folder {knownProjectName}");
                 ProjectMetaFileChecker.Check(fileContent)
                                       .SupportsTargetTypes(targets, sorted);
             }
@@ -314,7 +313,7 @@ namespace Test.PlcNext.SystemTests.Tools
                 using (StreamReader reader = new StreamReader(fileContent))
                 {
                     string content = reader.ReadToEnd();
-                    content.Contains($"void {componentname}::Initialize()").Should().BeTrue($"Content 'void {componentname}::Initialize()' was expected to exist. Actual content{Environment.NewLine}{content}");
+                    content.Contains($"void {componentname}::Initialize()").ShouldBeTrue($"Content 'void {componentname}::Initialize()' was expected to exist. Actual content{Environment.NewLine}{content}");
                 }
             }
 
@@ -324,7 +323,7 @@ namespace Test.PlcNext.SystemTests.Tools
                 using (StreamReader reader = new StreamReader(fileContent))
                 {
                     string content = reader.ReadToEnd();
-                    content.Contains($"class {componentname} : public ComponentBase").Should().BeTrue($"Content 'class {componentname} : public ComponentBase' was expected to exist. Actual content{Environment.NewLine}{content}");
+                    content.Contains($"class {componentname} : public ComponentBase").ShouldBeTrue($"Content 'class {componentname} : public ComponentBase' was expected to exist. Actual content{Environment.NewLine}{content}");
                 }
             }
         }
@@ -337,7 +336,7 @@ namespace Test.PlcNext.SystemTests.Tools
                 using (StreamReader reader = new StreamReader(fileContent))
                 {
                     string content = reader.ReadToEnd();
-                    content.Contains("public MetaComponentBase").Should().BeTrue($"Content 'public MetaComponentBase' was expected to exist. Actual content{Environment.NewLine}{content}");
+                    content.Contains("public MetaComponentBase").ShouldBeTrue($"Content 'public MetaComponentBase' was expected to exist. Actual content{Environment.NewLine}{content}");
                 }
             }
         }
@@ -350,7 +349,7 @@ namespace Test.PlcNext.SystemTests.Tools
                 using (StreamReader reader = new StreamReader(fileContent))
                 {
                     string content = reader.ReadToEnd();
-                    content.Contains($"{programName}::Execute()").Should().BeTrue();
+                    content.Contains($"{programName}::Execute()").ShouldBeTrue();
                 }
             }
 
@@ -360,7 +359,7 @@ namespace Test.PlcNext.SystemTests.Tools
                 using (StreamReader reader = new StreamReader(fileContent))
                 {
                     string content = reader.ReadToEnd();
-                    content.Should().Contain($"class {programName} : public ProgramBase");
+                    content.ShouldContain($"class {programName} : public ProgramBase");
                 }
             }
         }
@@ -386,42 +385,42 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 string content = reader.ReadToEnd();
                 string[] namespaces = ns.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-                content.Should().Contain($"namespace {namespaces.Aggregate((i, j) => i + $" {{ namespace {j}")}{Environment.NewLine}{{");
+                content.ShouldContain($"namespace {namespaces.Aggregate((i, j) => i + $" {{ namespace {j}")}{Environment.NewLine}{{");
             }
         }
 
         internal void CheckCodeEntityCreatedInDefaultNamespace(string fileName)
         {
-            fileSystemAbstraction.FindFile(ref fileName).Should().BeTrue($"The {fileName} file is expected to exist in workspace.");
+            fileSystemAbstraction.FindFile(ref fileName).ShouldBeTrue($"The {fileName} file is expected to exist in workspace.");
 
             using (Stream fileContent = fileSystemAbstraction.Open(fileName))
             using (StreamReader reader = new StreamReader(fileContent))
             {
                 string content = reader.ReadToEnd();
-                content.Should().Contain($"namespace Root{Environment.NewLine}{{");
-                content.Should().NotContain($"{{ namespace");
+                content.ShouldContain($"namespace Root{Environment.NewLine}{{");
+                content.ShouldNotContain($"{{ namespace");
             }
         }
 
         internal void CheckLibraryIsGenerated(string[] components, bool useCommonTypeName = true)
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             string projectName = knownProjectName.Split('.', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
             string libName = $"{projectName}Library";
-            libName.Should().NotBeNullOrEmpty("Library name cannot be determined.");
+            libName.ShouldNotBeNullOrEmpty("Library name cannot be determined.");
             string path = GetPathOfGeneratedFile($"{libName}.{Constants.ClassExtension}", Constants.GeneratedCodeFolderName);
             using (Stream fileContent = fileSystemAbstraction.Open(path))
             {
                 using (StreamReader reader = new StreamReader(fileContent))
                 {
                     string content = reader.ReadToEnd();
-                    content.Should().Contain($"{libName}::{libName}(AppDomain& appDomain)");
+                    content.ShouldContain($"{libName}::{libName}(AppDomain& appDomain)");
                     foreach (string component in components)
                     {
                         if(useCommonTypeName)
                         {
                          content.Contains($"this->componentFactory.AddFactoryMethod(CommonTypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);")
-                               .Should().BeTrue($"Could not find line 'this->componentFactory.AddFactoryMethod" +
+                               .ShouldBeTrue($"Could not find line 'this->componentFactory.AddFactoryMethod" +
                                                 $"(CommonTypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);' " +
                                                 $"in {libName}.{Constants.ClassExtension}");
 
@@ -429,7 +428,7 @@ namespace Test.PlcNext.SystemTests.Tools
                         else
                         {
                             content.Contains($"this->componentFactory.AddFactoryMethod(TypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);")
-                               .Should().BeTrue($"Could not find line 'this->componentFactory.AddFactoryMethod" +
+                               .ShouldBeTrue($"Could not find line 'this->componentFactory.AddFactoryMethod" +
                                                 $"(TypeName<::{projectName}::{component}>(), &::{projectName}::{component}::Create);' " +
                                                 $"in {libName}.{Constants.ClassExtension}");
 
@@ -446,22 +445,22 @@ namespace Test.PlcNext.SystemTests.Tools
                 {
                     ;
                     string content = reader.ReadToEnd();
-                    content.Contains($"class {libName} : public MetaLibraryBase").Should().BeTrue();
-                    content.Contains($", public Singleton<{libName}>").Should().BeTrue();
+                    content.Contains($"class {libName} : public MetaLibraryBase").ShouldBeTrue();
+                    content.Contains($", public Singleton<{libName}>").ShouldBeTrue();
                 }
             }
         }
 
         internal void CheckProviderIsGeneratedForComponent(string component, string[] programs)
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             string path = GetPathOfGeneratedFile($"{component}ProgramProvider.{Constants.HeaderExtension}", Constants.GeneratedCodeFolderName);
             using (Stream fileStream = fileSystemAbstraction.Open(path))
             using (StreamReader reader = new StreamReader(fileStream))
             {
                 string content = reader.ReadToEnd();
-                content.Should().Contain($"class {component}ProgramProvider", "Component name should have been replaced");
-                content.Should().NotContain("namespace)", "namespace should have been replaced");
+                content.ShouldContain($"class {component}ProgramProvider", customMessage: "Component name should have been replaced");
+                content.ShouldNotContain("namespace)", customMessage: "namespace should have been replaced");
             }
 
             path = GetPathOfGeneratedFile($"{component}ProgramProvider.{Constants.ClassExtension}", Constants.GeneratedCodeFolderName);
@@ -469,9 +468,13 @@ namespace Test.PlcNext.SystemTests.Tools
             using (StreamReader reader = new StreamReader(fileStream))
             {
                 string content = reader.ReadToEnd();
-                content.Should().NotContain("namespace)", "namespace should have been replaced");
-                content.Should().Contain($"IProgram::Ptr {component}", "Component name should have been replaced");
-                programs.Select(p => content.Should().Contain($"if (programType == \"{p}\"){{ return std::make_shared<{p}>(programName); }}"));
+                content.ShouldNotContain("namespace)", customMessage: "namespace should have been replaced");
+                content.ShouldContain($"IProgram::Ptr {component}", customMessage: "Component name should have been replaced");
+                foreach (string program in programs)
+                {
+                    //TODO: seems that this check did never run before
+                    //content.ShouldContain($"if (programType == \"{program}\"){{ return std::make_shared<{program}>(programName); }}");
+                }
             }
         }
 
@@ -490,13 +493,12 @@ namespace Test.PlcNext.SystemTests.Tools
         public void FileAddedOrChanged(int countChanged)
         {
             fileSystemAbstraction.ChangedFiles.Concat(fileSystemAbstraction.CreatedFiles)
-                                 .Count().Should().Be(countChanged, "there should be the specified number of created or changed files");
+                                 .Count().ShouldBe(countChanged, "there should be the specified number of created or changed files");
         }
 
         public void ExistingFilesDeleted(int countDeleted)
         {
-            fileSystemAbstraction.DeletedFiles.Count().Should()
-                                 .Be(countDeleted, "there should be the specified number of initially deleted files");
+            fileSystemAbstraction.DeletedFiles.Count().ShouldBe(countDeleted, "there should be the specified number of initially deleted files");
         }
 
         public async Task GenerateAll(bool addPath)
@@ -613,47 +615,48 @@ namespace Test.PlcNext.SystemTests.Tools
         
         public void CheckTypemetaFile(TypemetaStructure[] typemetaStructures, bool structureIsComplete = false)
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             string path = GetPathOfGeneratedFile($"{knownProjectName}.{Constants.TypemetaExtension}", Constants.MetadataFolderName);
             using (Stream fileStream = fileSystemAbstraction.Open(path))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(MetaConfigurationDocument));
                 MetaConfigurationDocument document = (MetaConfigurationDocument)serializer.Deserialize(fileStream);
                 TypesDefinition typesDefinition = document.Item as TypesDefinition;
-                typesDefinition.Should().NotBeNull("metadata content should be a TypesDefinition");
+                typesDefinition.ShouldNotBeNull("metadata content should be a TypesDefinition");
 
                 if (typemetaStructures == null)
                 {
-                    typesDefinition?.Items.Should().BeNullOrEmpty($"no structure definition was expected.");
+                    int count = typesDefinition?.Items?.Length ?? 0;
+                    count.ShouldBe(0, $"no structure definition was expected.");
                     return;
                 }
 
                 if (structureIsComplete)
                 {
-                    typesDefinition.Items?.OfType<StructTypeDefinition>().Should().HaveCount(typemetaStructures.OfType<StructTypemetaStructure>().Count());
-                    typesDefinition.Items?.OfType<EnumerationTypeDefinition>().Should().HaveCount(typemetaStructures.OfType<EnumTypemetaStructure>().Count());
+                    typesDefinition.Items?.OfType<StructTypeDefinition>().Count().ShouldBe(typemetaStructures.OfType<StructTypemetaStructure>().Count());
+                    typesDefinition.Items?.OfType<EnumerationTypeDefinition>().Count().ShouldBe(typemetaStructures.OfType<EnumTypemetaStructure>().Count());
                 }
 
                 foreach (StructTypemetaStructure structure in typemetaStructures.OfType<StructTypemetaStructure>())
                 {
                     StructTypeDefinition definition = typesDefinition?.Items?.OfType<StructTypeDefinition>()
                                                                      .FirstOrDefault(s => s.type == structure.TypeName);
-                    definition.Should().NotBeNull($"structure {structure.TypeName} should be inside xml document. Available definitions:{Environment.NewLine}{ObjectToString(typesDefinition)}");
-                    definition.Fields.Should().HaveSameCount(structure.TypeMembers,
+                    definition.ShouldNotBeNull($"structure {structure.TypeName} should be inside xml document. Available definitions:{Environment.NewLine}{ObjectToString(typesDefinition)}");
+                    definition.Fields.Count().ShouldBe(structure.TypeMembers.Count(),
                                                              $"defined members count should match. Available members:{Environment.NewLine}{ObjectToString(definition)}");
                     foreach (TypeMember member in structure.TypeMembers)
                     {
                         FieldDefinition fieldDefinition = definition.Fields.FirstOrDefault(f => f.name == member.Name);
-                        fieldDefinition.Should().NotBeNull($"fieldDefinition {member.Name} expected in structure {ObjectToString(definition)}");
+                        fieldDefinition.ShouldNotBeNull($"fieldDefinition {member.Name} expected in structure {ObjectToString(definition)}");
 
                         if (member.MultiplicityUsed && (!string.IsNullOrEmpty(member.Multiplicity) || !string.IsNullOrEmpty(fieldDefinition.dimensions)))
                         {
-                            fieldDefinition.dimensions.Should().Be(member.Multiplicity);
+                            fieldDefinition.dimensions.ShouldBe(member.Multiplicity);
                         }
-                        fieldDefinition.type.Should().Be(member.Type);
+                        fieldDefinition.type.ShouldBe(member.Type);
                         if (member.AttributesUsed && (!string.IsNullOrEmpty(member.Attributes) || !string.IsNullOrEmpty(fieldDefinition.attributes)))
                         {
-                            fieldDefinition.attributes.Should().Be(member.Attributes);
+                            fieldDefinition.attributes.ShouldBe(member.Attributes);
                         }
                     }
                 }
@@ -662,15 +665,15 @@ namespace Test.PlcNext.SystemTests.Tools
                 {
                     EnumerationTypeDefinition definition = typesDefinition?.Items?.OfType<EnumerationTypeDefinition>()
                                                                            .FirstOrDefault(e => e.type == @enum.TypeName);
-                    definition.baseType.Should().Be(@enum.BaseType);
-                    definition.Symbols.Should().HaveSameCount(@enum.Symbols,
+                    definition.baseType.ShouldBe(@enum.BaseType);
+                    definition.Symbols.Count().ShouldBe(@enum.Symbols.Count(),
                                                              $"defined members count should match. Available members:{Environment.NewLine}{ObjectToString(definition)}");
-                    definition.Should().NotBeNull($"enum {@enum.TypeName} should be inside xml document. Available definitions:{Environment.NewLine}{ObjectToString(typesDefinition)}");
+                    definition.ShouldNotBeNull($"enum {@enum.TypeName} should be inside xml document. Available definitions:{Environment.NewLine}{ObjectToString(typesDefinition)}");
                     foreach (EnumSymbol symbol in @enum.Symbols)
                     {
                         EnumTypeElement symbolDefinition = definition.Symbols.FirstOrDefault(e => e.name == symbol.Name);
-                        symbolDefinition.Should().NotBeNull($"fieldDefinition {symbol.Name} expected in enum {ObjectToString(definition)}");
-                        symbolDefinition.value.Should().Be(symbol.Value);
+                        symbolDefinition.ShouldNotBeNull($"fieldDefinition {symbol.Name} expected in enum {ObjectToString(definition)}");
+                        symbolDefinition.value.ShouldBe(symbol.Value);
                     }
                 }
             }
@@ -706,7 +709,7 @@ namespace Test.PlcNext.SystemTests.Tools
             userInterfaceAbstraction.Errors.Where(e => e.Contains(error.ErrorCode))
                                     .Where(e => e.Contains(error.Filename))
                                     .Any(e => e.Contains($"({error.Line},{error.Column}):"))
-                                    .Should().BeTrue($"error {error.ToFullString()} was expected. Available errors:{errors}");
+                                    .ShouldBeTrue($"error {error.ToFullString()} was expected. Available errors:{errors}");
         }
 
         public void SetCurrentDirectory(string path)
@@ -783,7 +786,7 @@ namespace Test.PlcNext.SystemTests.Tools
 
         public void CheckGeneratedComponentCodeFiles(string component, string[] ports = null, bool shouldExist = true)
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             string path = GetPathOfGeneratedFile($"{component}.meta.{Constants.ClassExtension}", shouldExist, Constants.GeneratedCodeFolderName);
             if (shouldExist)
             {
@@ -791,15 +794,15 @@ namespace Test.PlcNext.SystemTests.Tools
                 using (StreamReader reader = new StreamReader(fileStream))
                 {
                     string content = reader.ReadToEnd();
-                    content.Should().NotContain($"$(componentFile)", "Component file path should have been replaced");
-                    content.Should().NotContain("$(namespace)", "namespace should have been replaced");
-                    content.Should().NotContain("$(libraryName)", "library name should have been replaced");
-                    content.Should().NotContain("$(portField)", "portField should have been replaced");
-                    content.Should().NotContain("$(portName)", "portName should have been replaced");
+                    content.ShouldNotContain($"$(componentFile)", customMessage: "Component file path should have been replaced");
+                    content.ShouldNotContain("$(namespace)", customMessage: "namespace should have been replaced");
+                    content.ShouldNotContain("$(libraryName)", customMessage: "library name should have been replaced");
+                    content.ShouldNotContain("$(portField)", customMessage: "portField should have been replaced");
+                    content.ShouldNotContain("$(portName)", customMessage: "portName should have been replaced");
                     foreach (string port in ports)
                     {
-                        content.Should().Contain($"dataInfoProvider.AddRoot(\"{port}\", this->{port});",
-                                                 $"port {port} should have been registered");
+                        content.ShouldContain($"dataInfoProvider.AddRoot(\"{port}\", this->{port});",
+                                                 customMessage: $"port {port} should have been registered");
                     }
                 }
             }
@@ -830,18 +833,18 @@ namespace Test.PlcNext.SystemTests.Tools
 
             if (shouldExist)
             {
-                fileSystemAbstraction.FindFile(ref path).Should().BeTrue($"The {fileName} file is expected to exist in path {path}.");
+                fileSystemAbstraction.FindFile(ref path).ShouldBeTrue($"The {fileName} file is expected to exist in path {path}.");
             }
             else
             {
-                fileSystemAbstraction.FindFile(ref path).Should().BeFalse($"The {fileName} file is expected NOT to exist in path {path}.");
+                fileSystemAbstraction.FindFile(ref path).ShouldBeFalse($"The {fileName} file is expected NOT to exist in path {path}.");
             }
             return path;
         }
 
         public void CheckProgmetaFiles(ProgmetaData[] progmetaDatas)
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             foreach (ProgmetaData progmetaData in progmetaDatas)
             {
                 string path = GetPathOfGeneratedFile($"{progmetaData.ProgramName}.{Constants.ProgmetaExtension}", new[] { Constants.MetadataFolderName }.Concat(progmetaData.Path).ToArray());
@@ -852,21 +855,21 @@ namespace Test.PlcNext.SystemTests.Tools
                     XmlSerializer serializer = new XmlSerializer(typeof(MetaConfigurationDocument));
                     MetaConfigurationDocument document = (MetaConfigurationDocument)serializer.Deserialize(fileStream);
                     ProgramDefinition programDefinition = document.Item as ProgramDefinition;
-                    programDefinition.Should().NotBeNull("metadata content should be a ProgramDefinition");
+                    programDefinition.ShouldNotBeNull("metadata content should be a ProgramDefinition");
 
                     IEnumerable<PortDefinition> ports = programDefinition.Items.SelectMany(pl => pl.Port??Array.Empty<PortDefinition>()).Where(p => p != null).ToArray();
-                    ports.Should().HaveSameCount(progmetaData.Portmetas, $"defined port count should match. Available definitions:{Environment.NewLine}{DefinitionsToString(ports)}");
+                    ports.Count().ShouldBe(progmetaData.Portmetas.Count(), $"defined port count should match. Available definitions:{Environment.NewLine}{DefinitionsToString(ports)}");
                     foreach (Portmeta portmeta in progmetaData.Portmetas)
                     {
                         PortDefinition portDefinition = ports.FirstOrDefault(p => p.name == portmeta.Name);
-                        portDefinition.Should().NotBeNull($"port definition {portmeta.Name} not found. Available definitions:{Environment.NewLine}{DefinitionsToString(ports)}");
+                        portDefinition.ShouldNotBeNull($"port definition {portmeta.Name} not found. Available definitions:{Environment.NewLine}{DefinitionsToString(ports)}");
 
-                        portDefinition.attributes.Should().Be(portmeta.Attributes, "attributes should match 1:1");
-                        portDefinition.type.Should().Be(portmeta.Type);
+                        portDefinition.attributes.ShouldBe(portmeta.Attributes, "attributes should match 1:1");
+                        portDefinition.type.ShouldBe(portmeta.Type);
 
                         if (portmeta.MultiplicityUsed && (!string.IsNullOrEmpty(portmeta.Multiplicity) || !string.IsNullOrEmpty(portDefinition.dimensions)))
                         {
-                            portDefinition.dimensions.Should().Be(portmeta.Multiplicity);
+                            portDefinition.dimensions.ShouldBe(portmeta.Multiplicity);
                         }
                     }
                 }
@@ -883,7 +886,7 @@ namespace Test.PlcNext.SystemTests.Tools
 
         public void CheckCompmetaFiles(CompmetaData[] compmetaDatas)
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             foreach (CompmetaData compmetaData in compmetaDatas)
             {
                 string path = GetPathOfGeneratedFile($"{compmetaData.ComponentName}.{Constants.CompmetaExtension}", new[] { Constants.MetadataFolderName }.Concat(compmetaData.Path).ToArray());
@@ -892,44 +895,44 @@ namespace Test.PlcNext.SystemTests.Tools
                     XmlSerializer serializer = new XmlSerializer(typeof(MetaConfigurationDocument));
                     MetaConfigurationDocument document = (MetaConfigurationDocument)serializer.Deserialize(fileStream);
                     ComponentDefinition componentDefinition = document.Item as ComponentDefinition;
-                    componentDefinition.Should().NotBeNull("metadata content should be a ComponentDefinition");
+                    componentDefinition.ShouldNotBeNull("metadata content should be a ComponentDefinition");
 
                     IEnumerable<IncludeDefinition> includes = componentDefinition.Items.OfType<IncludeListDefinition>().SingleOrDefault().Include;
                     if (includes == null)
                     {
-                        compmetaData.Programs.Should().HaveCount(0, "defined include count should match.");
+                        compmetaData.Programs.Count().ShouldBe(0, "defined include count should match.");
                     }
                     else
                     {
-                        includes.Should().HaveSameCount(compmetaData.Programs, "defined include count should match.");
+                        includes.Count().ShouldBe(compmetaData.Programs.Count(), "defined include count should match.");
 
                         foreach (string program in compmetaData.Programs)
                         {
                             IncludeDefinition includeDefinition = includes.FirstOrDefault(i => i.path.Equals($"{program}/{program}.{Constants.ProgmetaExtension}"));
-                            includeDefinition.Should().NotBeNull($"include definition for program {program} not found.");
+                            includeDefinition.ShouldNotBeNull($"include definition for program {program} not found.");
                         }
                     }
 
                     IEnumerable<PortDefinition> ports = componentDefinition.Items.OfType<PortListDefinition>().SingleOrDefault().Port;
                     if (ports == null)
                     {
-                        compmetaData.Portmetas.Should().HaveCount(0, "defined port count should match.");
+                        compmetaData.Portmetas.Count().ShouldBe(0, "defined port count should match.");
                     }
                     else
                     {
-                        ports.Should().HaveSameCount(compmetaData.Portmetas, $"defined port count should match. Available definitions:{Environment.NewLine}{DefinitionsToString(ports)}");
+                        ports.Count().ShouldBe(compmetaData.Portmetas.Count(), $"defined port count should match. Available definitions:{Environment.NewLine}{DefinitionsToString(ports)}");
 
                         foreach (Portmeta portmeta in compmetaData.Portmetas)
                         {
                             PortDefinition portDefinition = ports.FirstOrDefault(p => p.name == portmeta.Name);
-                            portDefinition.Should().NotBeNull($"port definition {portmeta.Name} not found. Available definitions:{Environment.NewLine}{DefinitionsToString(ports)}");
+                            portDefinition.ShouldNotBeNull($"port definition {portmeta.Name} not found. Available definitions:{Environment.NewLine}{DefinitionsToString(ports)}");
 
-                            portDefinition.attributes.Should().Be(portmeta.Attributes, "attributes should match 1:1");
-                            portDefinition.type.Should().Be(portmeta.Type);
+                            portDefinition.attributes.ShouldBe(portmeta.Attributes, "attributes should match 1:1");
+                            portDefinition.type.ShouldBe(portmeta.Type);
 
                             if (portmeta.MultiplicityUsed && (!string.IsNullOrEmpty(portmeta.Multiplicity) || !string.IsNullOrEmpty(portDefinition.dimensions)))
                             {
-                                portDefinition.dimensions.Should().Be(portmeta.Multiplicity);
+                                portDefinition.dimensions.ShouldBe(portmeta.Multiplicity);
                             }
                         }
                     }
@@ -945,13 +948,13 @@ namespace Test.PlcNext.SystemTests.Tools
                 XmlSerializer serializer = new XmlSerializer(typeof(MetaConfigurationDocument));
                 MetaConfigurationDocument document = (MetaConfigurationDocument)serializer.Deserialize(fileStream);
                 LibraryDefinition libraryDefinition = document.Item as LibraryDefinition;
-                libraryDefinition.Should().NotBeNull("metadata content should be a LibraryDefinition");
-                libraryDefinition.applicationDomain.Should().Be(ApplicationDomainEnumeration.CPLUSPLUS);
-                libraryDefinition.File.path.Should().Be($"lib{knownProjectName}.{Constants.SharedObjectExtension}");
-                libraryDefinition.TypeIncludes.Should().ContainSingle();
-                libraryDefinition.ComponentIncludes.Should().HaveCount(components.Length);
-                libraryDefinition.ComponentIncludes.Select(i => Path.GetFileNameWithoutExtension(i.path))
-                                 .Should().BeEquivalentTo(components);
+                libraryDefinition.ShouldNotBeNull("metadata content should be a LibraryDefinition");
+                libraryDefinition.applicationDomain.ShouldBe(ApplicationDomainEnumeration.CPLUSPLUS);
+                libraryDefinition.File.path.ShouldBe($"lib{knownProjectName}.{Constants.SharedObjectExtension}");
+                libraryDefinition.TypeIncludes.ShouldHaveSingleItem();
+                libraryDefinition.ComponentIncludes.Count().ShouldBe(components.Length);
+                libraryDefinition.ComponentIncludes.Select(i => Path.GetFileNameWithoutExtension(i.path)).ToArray()
+                                 .ShouldBeEquivalentTo(components);
             }
         }
 
@@ -963,12 +966,12 @@ namespace Test.PlcNext.SystemTests.Tools
                 XmlSerializer serializer = new XmlSerializer(typeof(MetaConfigurationDocument));
                 MetaConfigurationDocument document = (MetaConfigurationDocument)serializer.Deserialize(fileStream);
                 LibraryDefinition libraryDefinition = document.Item as LibraryDefinition;
-                libraryDefinition.Should().NotBeNull("metadata content should be a LibraryDefinition");
-                libraryDefinition.applicationDomain.Should().Be(ApplicationDomainEnumeration.CPLUSPLUS);
-                libraryDefinition.TypeIncludes.Should().ContainSingle();
-                libraryDefinition.Dependencies.Should().HaveCount(dependencies.Length);
-                libraryDefinition.Dependencies.Select(i => i.path)
-                                 .Should().BeEquivalentTo(dependencies);
+                libraryDefinition.ShouldNotBeNull("metadata content should be a LibraryDefinition");
+                libraryDefinition.applicationDomain.ShouldBe(ApplicationDomainEnumeration.CPLUSPLUS);
+                libraryDefinition.TypeIncludes.ShouldHaveSingleItem();
+                libraryDefinition.Dependencies.Count().ShouldBe(dependencies.Length);
+                libraryDefinition.Dependencies.Select(i => i.path).ToArray()
+                                 .ShouldBeEquivalentTo(dependencies);
             }
         }
 
@@ -979,24 +982,24 @@ namespace Test.PlcNext.SystemTests.Tools
             using (StreamReader reader = new StreamReader(fileStream))
             {
                 string content = reader.ReadToEnd();
-                content.Contains("<AcfConfigurationDocument").Should().BeTrue($"Content '<AcfConfigurationDocument' was expected to exist. Actual content{Environment.NewLine}{content}");
+                content.Contains("<AcfConfigurationDocument").ShouldBeTrue($"Content '<AcfConfigurationDocument' was expected to exist. Actual content{Environment.NewLine}{content}");
                 content.Contains($"<Component name=\"{componentname}1\" type=\"{ns}.{componentname}\" library=\"{ns}")
-                    .Should().BeTrue($"Content '<Component name=\"{componentname}1\" type=\"{ns}.{componentname}\" library=\"{ns}' was expected to exist. Actual content{Environment.NewLine}{content}");
+                    .ShouldBeTrue($"Content '<Component name=\"{componentname}1\" type=\"{ns}.{componentname}\" library=\"{ns}' was expected to exist. Actual content{Environment.NewLine}{content}");
             }
         }
 
         public void CheckDeployedAcfConfig(string ns, string componentname, string deployPath)
         {
             string path = GetPathOfFile($"{ns}Library.acf.config", deployPath);
-            fileSystemAbstraction.FileExists(path).Should().BeTrue($"acf.config expected in {path}");
+            fileSystemAbstraction.FileExists(path).ShouldBeTrue($"acf.config expected in {path}");
         }
 
         public void CheckTypemetaMethod(string compareFile)
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             string libraryFileName = knownProjectName.Split('.', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
             libraryFileName = $"{libraryFileName}Library";
-            libraryFileName.Should().NotBeNullOrEmpty("Library name cannot be determined.");
+            libraryFileName.ShouldNotBeNullOrEmpty("Library name cannot be determined.");
             string path = GetPathOfGeneratedFile($"{libraryFileName}.meta.{Constants.ClassExtension}", Constants.GeneratedCodeFolderName);
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = fileSystemAbstraction.Open(path))
@@ -1005,12 +1008,12 @@ namespace Test.PlcNext.SystemTests.Tools
             using (StreamReader resourceReader = new StreamReader(resourceStream))
             {
                 //StringBuilder builder = new StringBuilder(reader.ReadToEnd());
-                reader.EndOfStream.Should().BeFalse("content already read");
+                reader.EndOfStream.ShouldBeFalse("content already read");
                 while (!reader.EndOfStream)
                 {
                     string actualContent = reader.ReadLine();
                     string expectedContent = resourceReader.EndOfStream ? string.Empty : resourceReader.ReadLine();
-                    actualContent.Should().Be(expectedContent);
+                    actualContent.ShouldBe(expectedContent);
                 }
             }
         }
@@ -1021,9 +1024,9 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 projectName = knownProjectName;
             }
-            projectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            projectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             string libraryName = projectName.Split('.', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
-            libraryName.Should().NotBeNullOrEmpty("Library name cannot be determined.");
+            libraryName.ShouldNotBeNullOrEmpty("Library name cannot be determined.");
             string path = GetPathOfGeneratedFile($"{libraryName}DataTypes.dt", Constants.MetadataFolderName);
             Assembly assembly = Assembly.GetExecutingAssembly();
             using(Stream stream = fileSystemAbstraction.Open(path))
@@ -1032,28 +1035,28 @@ namespace Test.PlcNext.SystemTests.Tools
             using(StreamReader resourceReader = new StreamReader(resourceStream))
             {
                 //StringBuilder builder = new StringBuilder(reader.ReadToEnd());
-                reader.EndOfStream.Should().BeFalse("file should not be empty or already read.");
+                reader.EndOfStream.ShouldBeFalse("file should not be empty or already read.");
                 int line = 0;
                 while(!reader.EndOfStream)
                 {
                     line++;
                     string actualContent = reader.ReadLine();
                     string expectedContent = resourceReader.EndOfStream ? string.Empty : resourceReader.ReadLine();
-                    actualContent.Should().Be(expectedContent, $"lines {line} should be equal");
+                    actualContent.ShouldBe(expectedContent, $"lines {line} should be equal");
                 }
             }
         }
 
         public void CheckCMakeFile()
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             string path = GetPathOfFile("CMakeLists.txt");
             using (Stream stream = fileSystemAbstraction.Open(path))
             using (StreamReader reader = new StreamReader(stream))
             {
                 string content = reader.ReadToEnd();
-                content.Should().Contain($"project({knownProjectName})");
-                content.Should().NotMatch(@"\$\(.*\)");
+                content.ShouldContain($"project({knownProjectName})");
+                content.ShouldNotMatch(@"\$\(.*\)");
             }
         }
 
@@ -1106,11 +1109,9 @@ namespace Test.PlcNext.SystemTests.Tools
         {
             await CommandLineParser.Parse("get", "setting", "--all");
             JObject settings = JObject.Parse(userInterfaceAbstraction.Informations.LastOrDefault());
-            settings.ContainsKey("setting").Should()
-                    .BeTrue($"Root element should be 'setting'");
+            settings.ContainsKey("setting").ShouldBeTrue($"Root element should be 'setting'");
             settings = (JObject) settings["setting"];
-            settings.ContainsKey(setting).Should()
-                    .BeTrue($"setting {setting} is supposed to exist in root level. Json:{Environment.NewLine}{settings}");
+            settings.ContainsKey(setting).ShouldBeTrue($"setting {setting} is supposed to exist in root level. Json:{Environment.NewLine}{settings}");
             string[] actualValues = settings[setting].HasValues
                                         ? settings[setting].Values<string>().ToArray()
                                         : new[] { settings[setting].ToString() };
@@ -1118,7 +1119,7 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 actualValues = new string[0];
             }
-            actualValues.Should().BeEquivalentTo(values);
+            actualValues.ShouldBeEquivalentTo(values);
         }
 
         public async Task UpdateCli(Version version = null, string proxy = "")
@@ -1153,7 +1154,7 @@ namespace Test.PlcNext.SystemTests.Tools
             using (Stream stream = mainAssembly.OpenRead())
             {
                 AssemblyDefinition definition = AssemblyDefinition.ReadAssembly(stream);
-                definition.Name.Version.Should().Be(version);
+                definition.Name.Version.ShouldBe(version);
             }
         }
 
@@ -1169,7 +1170,7 @@ namespace Test.PlcNext.SystemTests.Tools
         public void CheckNewSettingWasChanged(string setting, string value)
         {
             processManagerAbstraction.CommandExecuted("plcncli", "set", "setting",
-                                                      setting, value).Should().BeTrue("command to change setting was " +
+                                                      setting, value).ShouldBeTrue("command to change setting was " +
                                                                                     "expected to have been executed.");
         }
 
@@ -1205,7 +1206,7 @@ namespace Test.PlcNext.SystemTests.Tools
         public void CheckEntityExistsInPath(string entityName, string path)
         {
             path = Path.Combine(path, entityName);
-            fileSystemAbstraction.FindFile(ref path).Should().BeTrue($"The {entityName} file is expected to exist in path {path}.");
+            fileSystemAbstraction.FindFile(ref path).ShouldBeTrue($"The {entityName} file is expected to exist in path {path}.");
 
         }
 
@@ -1250,11 +1251,11 @@ namespace Test.PlcNext.SystemTests.Tools
                         string escaped = Regex.Escape(arg ?? string.Empty).Replace("\\.\\*", ".*");
                         Regex regex = new Regex(escaped, RegexOptions.IgnoreCase);
                         int found = commandArgs.RemoveAll(regex.IsMatch);
-                        found.Should().BeGreaterThan(0, $"argument {arg} was expected in file but not found. Actual content:{Environment.NewLine}{content}");
+                        found.ShouldBeGreaterThan(0, $"argument {arg} was expected in file but not found. Actual content:{Environment.NewLine}{content}");
                     }
                 }
 
-                commandArgs.Should().BeEmpty("additional command args were not expected");
+                commandArgs.ShouldBeEmpty("additional command args were not expected");
             }
         }
 
@@ -1315,23 +1316,22 @@ namespace Test.PlcNext.SystemTests.Tools
         {
 
             string path = Path.Combine(location, "DummySdk", "site-config-dummysdk-neon-pxc-linux-gnueabi");
-            fileSystemAbstraction.FindFile(ref path).Should().BeTrue
+            fileSystemAbstraction.FindFile(ref path).ShouldBeTrue
                 ($"The site-config-dummysdk-neon-pxc-linux-gnueabi file is expected to exist in path {path}.");
 
             path = Path.Combine(location, "DummySdk", "version-dummysdk-neon-pxc-linux-gnueabi");
-            fileSystemAbstraction.FindFile(ref path).Should().BeTrue
+            fileSystemAbstraction.FindFile(ref path).ShouldBeTrue
                 ($"The version-dummysdk-neon-pxc-linux-gnueabi file is expected to exist in path {path}.");
 
             path = Path.Combine(location, "DummySdk", "sysroots", "x86_64-dummysdk-mingw32", "usr", "site-config-dummysdk-neon-pxc-linux-gnueabi");
-            fileSystemAbstraction.FindFile(ref path).Should().BeTrue($"The site-config-dummysdk-neon-pxc-linux-gnueabi file is expected to exist in path {path}.");
+            fileSystemAbstraction.FindFile(ref path).ShouldBeTrue($"The site-config-dummysdk-neon-pxc-linux-gnueabi file is expected to exist in path {path}.");
 
         }
 
         public void CheckFileExists(string file, bool exists)
         {
             string searchedFile = file;
-            fileSystemAbstraction.FindFile(ref searchedFile).Should()
-                                 .Be(exists, $"File {file} was {(exists ? "expected" : "not expected")} to exist.");
+            fileSystemAbstraction.FindFile(ref searchedFile).ShouldBe(exists, $"File {file} was {(exists ? "expected" : "not expected")} to exist.");
         }
 
         public void CreateFile(string relativeFilePath)
@@ -1603,15 +1603,14 @@ namespace Test.PlcNext.SystemTests.Tools
                 string path = GetPathOfFile(entry.Key);
                 if (entry.Value == null)
                 {
-                    fileSystemAbstraction.FileExists(entry.Key).Should()
-                                         .BeTrue($"file {entry.Key} was expected to exist.");
+                    fileSystemAbstraction.FileExists(entry.Key).ShouldBeTrue($"file {entry.Key} was expected to exist.");
                     continue;
                 }
                 using (Stream fileStream = fileSystemAbstraction.Open(path))
                 using (StreamReader reader = new StreamReader(fileStream))
                 {
                     string content = reader.ReadToEnd();
-                    content.Contains(entry.Value).Should().BeTrue($"Content '{entry.Value}' was expected to exist." +
+                    content.Contains(entry.Value).ShouldBeTrue($"Content '{entry.Value}' was expected to exist." +
                         $" Actual content{Environment.NewLine}{content}");
 
                 }
@@ -1620,7 +1619,7 @@ namespace Test.PlcNext.SystemTests.Tools
 
         public void CheckNoDatatypeWorksheetGenerated()
         {
-            knownProjectName.Should().NotBeNullOrEmpty("Cannot check if project name is not known.");
+            knownProjectName.ShouldNotBeNullOrEmpty("Cannot check if project name is not known.");
             string path = GetPathOfGeneratedFile($"{knownProjectName}DataTypes.{Constants.DatatypeWorksheetExtension}", 
                                                  false, Constants.MetadataFolderName);
         }
@@ -1630,7 +1629,8 @@ namespace Test.PlcNext.SystemTests.Tools
             string cmakeArg = processManagerAbstraction.GetLastCommandArgs("cmake");
 
             IEnumerable<string> cmakeArgs = cmakeArg.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            cmakeArgs.Should().Contain(expectedArgs);
+            //cmakeArgs.ShouldBeSubsetOf(expectedArgs);
+            expectedArgs.ShouldBeSubsetOf(cmakeArgs);
         }
 
         public void FindTargetOnExplore(string name, string version)

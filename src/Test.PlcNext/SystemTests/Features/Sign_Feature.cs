@@ -12,7 +12,6 @@ using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using System.Threading.Tasks;
 using Test.PlcNext.SystemTests.StepDefinitions;
-using Xunit.Abstractions;
 
 #pragma warning disable 4014
 

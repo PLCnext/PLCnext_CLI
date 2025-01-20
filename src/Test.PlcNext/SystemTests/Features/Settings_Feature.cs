@@ -7,15 +7,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using LightBDD.Framework;
 using LightBDD.Framework.Scenarios;
 using LightBDD.XUnit2;
 using Test.PlcNext.SystemTests.StepDefinitions;
-using Xunit.Abstractions;
 
 #pragma warning disable 4014
 
