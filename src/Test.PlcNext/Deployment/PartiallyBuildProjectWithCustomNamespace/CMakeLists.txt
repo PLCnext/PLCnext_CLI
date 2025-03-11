@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.13)
+﻿cmake_minimum_required(VERSION 3.27)
 
 project(PrjN_ST_Update_Proj_Targets_2237)
 

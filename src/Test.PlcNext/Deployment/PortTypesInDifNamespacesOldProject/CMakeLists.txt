@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.27)
 
 project(PortTypesInDifNamespaces)
 
@@ -10,13 +10,13 @@ endif()
 
 file(GLOB_RECURSE Headers CONFIGURE_DEPENDS src/*.h src/*.hpp src/*.hxx intermediate/code/*.h intermediate/code/*.hpp intermediate/code/*.hxx)
 file(GLOB_RECURSE Sources CONFIGURE_DEPENDS src/*.cpp intermediate/code/*.cpp)
-add_library(${CMAKE_PROJECT_NAME} SHARED ${Headers} ${Sources})
+add_library(${PROJECT_NAME) SHARED ${Headers} ${Sources})
 
 #######################################################################################
 
 ################# project include-paths ###############################################
 
-target_include_directories(${CMAKE_PROJECT_NAME}
+target_include_directories(${PROJECT_NAME)
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/intermediate/code>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
@@ -34,13 +34,7 @@ list(INSERT CMAKE_MODULE_PATH 0 "${ARP_TOOLCHAIN_CMAKE_MODULE_PATH}")
 # installed in the default install locations on the target.                           #
 #######################################################################################
 
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" AND NOT "$ENV{SHELL}" MATCHES ".*[\/\\]bash($|.exe$)")
-    # With Windows there is a known issue with CMake: https://gitlab.kitware.com/cmake/cmake/-/issues/21291
-    # This is currently the only way to set the RPATH to $ORIGIN in Windows
-    target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE "-Wl,-rpath,\$$ORIGIN")
-else()
-    set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES INSTALL_RPATH $ORIGIN)
-endif()
+set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH $ORIGIN)
 
 #######################################################################################
 
@@ -50,7 +44,7 @@ endif()
 #          the firmware will crash and there will be NO indication why it crashed.    #
 #######################################################################################
 
-target_link_options(${CMAKE_PROJECT_NAME} PRIVATE LINKER:--no-undefined)
+target_link_options(${PROJECT_NAME) PRIVATE LINKER:--no-undefined)
 
 #######################################################################################
 
@@ -59,14 +53,14 @@ target_link_options(${CMAKE_PROJECT_NAME} PRIVATE LINKER:--no-undefined)
 find_package(ArpDevice REQUIRED)
 find_package(ArpProgramming REQUIRED)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ArpDevice ArpProgramming)
+target_link_libraries(${PROJECT_NAME) PRIVATE ArpDevice ArpProgramming)
 
 #######################################################################################
 
 ################# install ############################################################
 
 string(REGEX REPLACE "^.*\\(([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*$" "\\1" _ARP_SHORT_DEVICE_VERSION ${ARP_DEVICE_VERSION})
-install(TARGETS ${CMAKE_PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME)
     LIBRARY DESTINATION ${ARP_DEVICE}_${_ARP_SHORT_DEVICE_VERSION}/$<CONFIG>/lib
     ARCHIVE DESTINATION ${ARP_DEVICE}_${_ARP_SHORT_DEVICE_VERSION}/$<CONFIG>/lib
     RUNTIME DESTINATION ${ARP_DEVICE}_${_ARP_SHORT_DEVICE_VERSION}/$<CONFIG>/bin)
