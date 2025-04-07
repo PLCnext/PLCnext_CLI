@@ -46,8 +46,11 @@ namespace PlcNext.Common.Templates
         public async Task<IEnumerable<VirtualFile>> InitalizeTemplate(Entity dataModel, ChangeObservable observable)
         {
             bool forced = dataModel.Value<CommandDefinition>()
-                                   .Argument<BoolArgument>(TemplateCommandBuilder.ForcedArgumentName)
-                                   .Value;
+                .Argument<BoolArgument>(TemplateCommandBuilder.ForcedArgumentName)
+                .Value;
+            bool empty = dataModel.Value<CommandDefinition>()
+                .Argument<BoolArgument>(TemplateCommandBuilder.EmptyArgumentName)
+                .Value;
             TemplateDescription template = dataModel.Template();
             CheckCompatibility(template, dataModel);
 
@@ -69,7 +72,7 @@ namespace PlcNext.Common.Templates
                 string basePath = dataModel.Root.Path;
                 HashSet<VirtualFile> files = new HashSet<VirtualFile>();
 
-                foreach (templateFile file in template.File.Where(f => !f.excluded))
+                foreach (templateFile file in template.File.Where(f => !f.excluded && (!empty || !f.excludedForEmptyTemplate)))
                 {
                     (string content, Encoding encoding) = await generationHelper.GetResolvedTemplateContent(dataModel, file, template).ConfigureAwait(false);
 
@@ -81,7 +84,7 @@ namespace PlcNext.Common.Templates
                     }
 
                     VirtualFile destination = await GetFile(dataModel, file, forced, basePath, template).ConfigureAwait(false);
-                    observable.OnNext(new Change(() => destination.Restore(),
+                    observable.OnNext(new Change(() => destination.Delete(),
                                                  $"Create file {Path.GetFileName(destination.Name)} for template " +
                                                  $"{template.name} in {destination.Parent.FullName}."));
 
@@ -103,11 +106,11 @@ namespace PlcNext.Common.Templates
                 HashSet<VirtualDirectory> directories = new HashSet<VirtualDirectory>();
                 if (template.Folder == null) return directories;
                 
-                foreach (templateDirectory file in template.Folder.Where(f => !f.excluded))
+                foreach (templateDirectory folder in template.Folder.Where(f => !f.excluded))
                 {
                     VirtualDirectory destination =
-                        await GetDirectory(dataModel, file, basePath).ConfigureAwait(false);
-                    observable.OnNext(new Change(() => destination.Restore(),
+                        await GetDirectory(dataModel, folder, basePath).ConfigureAwait(false);
+                    observable.OnNext(new Change(() => destination.DeleteIfEmpty(),
                         $"Create directory {Path.GetFileName(destination.Name)} for template " +
                         $"{template.name} in {destination.Parent.FullName}."));
                     directories.Add(destination);
@@ -120,7 +123,8 @@ namespace PlcNext.Common.Templates
             {
                 List<VirtualFile> files = new List<VirtualFile>();
 
-                foreach (templateReference reference in SortByRelationship(template.AddTemplate??Enumerable.Empty<templateReference>()))
+                foreach (templateReference reference in SortByRelationship(
+                             template.AddTemplate?.Where(tmpl=> !tmpl.excluded)?? []))
                 {
                     TemplateDescription templateDescription = repository.Template(reference.template);
                     if (templateDescription == null)
@@ -145,6 +149,10 @@ namespace PlcNext.Common.Templates
                                    .SetName(TemplateCommandBuilder.ForcedArgumentName)
                                    .SetValue(forced)
                                    .Build();
+                    pseudoDefinition.CreateArgument()
+                        .SetName(TemplateCommandBuilder.EmptyArgumentName)
+                        .SetValue(empty)
+                        .Build();
                     Entity referencedTemplateEntity = dataModel.Create(reference.template, pseudoDefinition.Build());
                     dataModel.AddEntity(referencedTemplateEntity);
                     files.AddRange(await InitalizeTemplate(referencedTemplateEntity, observable).ConfigureAwait(false));

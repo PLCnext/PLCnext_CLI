@@ -22,6 +22,7 @@ namespace PlcNext.Common.Templates
     internal class TemplateCommandBuilder : ITemplateCommandBuilder
     {
         public const string ForcedArgumentName = "force";
+        public const string EmptyArgumentName = "empty";
         private readonly ITemplateResolver resolver;
 
         public TemplateCommandBuilder(ITemplateResolver resolver)
@@ -84,11 +85,18 @@ namespace PlcNext.Common.Templates
             }
 
             builder.CreateArgument()
-                   .SetName(ForcedArgumentName)
-                   .SetShortName('f')
-                   .SetArgumentType(ArgumentType.Bool)
-                   .SetHelp("Overrides existing files when encountered.")
-                   .Build();
+                .SetName(ForcedArgumentName)
+                .SetShortName('f')
+                .SetArgumentType(ArgumentType.Bool)
+                .SetHelp("Overrides existing files when encountered.")
+                .Build();
+            
+            builder.CreateArgument()
+                .SetName(EmptyArgumentName)
+                .SetShortName('e')
+                .SetArgumentType(ArgumentType.Bool)
+                .SetHelp("Do not provide code skeleton.")
+                .Build();
 
             return builder.Build();
         }

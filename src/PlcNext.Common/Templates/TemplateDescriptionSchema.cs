@@ -952,8 +952,11 @@ namespace PlcNext.Common.Templates.Description {
         
         private string equalsversionField;
         
+        private bool excludedForEmptyTemplateField;
+
         public templateFile() {
             this.excludedField = false;
+            this.excludedForEmptyTemplateField = false;
         }
         
         /// <remarks/>
@@ -976,6 +979,18 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.excludedField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool excludedForEmptyTemplate {
+            get {
+                return this.excludedForEmptyTemplateField;
+            }
+            set {
+                this.excludedForEmptyTemplateField = value;
             }
         }
         
@@ -1168,6 +1183,8 @@ namespace PlcNext.Common.Templates.Description {
         
         private string templateField;
         
+        private bool excludedField;
+
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("Argument", IsNullable=false)]
         public templateArgumentInstance[] Arguments {
@@ -1198,6 +1215,18 @@ namespace PlcNext.Common.Templates.Description {
             }
             set {
                 this.templateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool excluded {
+            get {
+                return this.excludedField;
+            }
+            set {
+                this.excludedField = value;
             }
         }
     }

@@ -176,7 +176,7 @@ namespace Test.PlcNext.SystemTests.Tools
         }
 
         public async Task CreateProject(string projectName = null, string componentName = null, string programName = null,
-            bool forced = false, string folder = null, ProjectType type = ProjectType.PlmProject)
+            bool forced = false, string folder = null, ProjectType type = ProjectType.PlmProject, bool empty = false)
         {
 
             string[] args;
@@ -224,38 +224,53 @@ namespace Test.PlcNext.SystemTests.Tools
             {
                 args = args.Append("--output").Append(Path.Combine(folder)).ToArray();
             }
+            if (empty)
+            {
+                args = args.Append("--empty").ToArray();
+            }
             await CommandLineParser.Parse(args);
         }
 
-        internal void CheckProjectCreated(string projectName)
+        internal void CheckProjectCreated(string projectName, bool empty = false)
         {
-            CheckProjectCreatedInFolder(projectName, projectName);
+            CheckProjectCreatedInFolder(projectName, projectName, empty);
         }
 
-        internal void CheckProjectCreatedInFolder(string projectName, string folder)
+        internal void CheckProjectCreatedInFolder(string projectName, string folder, bool empty = false)
         {
-            string path = string.IsNullOrEmpty(folder) ? projectFileName : Path.Combine(folder, projectFileName);
-            using (Stream fileContent = fileSystemAbstraction.Open(path))
+            folder ??= string.Empty;
+            string path = Path.Combine(folder, projectFileName);
+            CheckFileCreated(folder, path);
+
+            path = Path.Combine(folder, "CMakeLists.txt");
+            CheckFileCreated(folder, path);
+
+            path =  Path.Combine(folder, "src", projectName + "Program.cpp");
+            CheckFileCreated(folder, path, empty);
+            path = Path.Combine(folder, "src", projectName + "Component.cpp");
+            CheckFileCreated(folder, path, empty);
+            
+            CheckUserInformed("Successfully created template", "Message that project was created successfully expected");
+        }
+
+        private void CheckFileCreated(string folder, string file, bool checkNotExistent = false)
+        {
+            using Stream fileContent = fileSystemAbstraction.Open(file);
+            string msg;
+            if (checkNotExistent)
             {
-                string msg = string.IsNullOrEmpty(folder) ? $"{projectFileName} file was expected to exist"
-                    : $"{projectFileName} file was expected to exist in folder {folder}";
+                msg = string.IsNullOrEmpty(folder) ? $"{file} file was expected not to exist"
+                    : $"{file} file was expected not to exist in folder {folder}";
+                fileContent.ShouldBeNull(msg);
+            }
+            else
+            {
+                msg = string.IsNullOrEmpty(folder) ? $"{file} file was expected to exist"
+                    : $"{file} file was expected to exist in folder {folder}";
                 fileContent.ShouldNotBeNull(msg);
                 fileContent.Flush();
                 fileContent.Seek(0, SeekOrigin.Begin);
             }
-
-            path = string.IsNullOrEmpty(folder) ? "CMakeLists.txt" : Path.Combine(folder, "CMakeLists.txt");
-            using (Stream fileContent = fileSystemAbstraction.Open(path))
-            {
-                string msg = string.IsNullOrEmpty(folder) ? $"{projectFileName} file was expected to exist"
-                                 : $"{projectFileName} file was expected to exist in folder {folder}";
-                fileContent.ShouldNotBeNull(msg);
-                using (StreamReader reader = new StreamReader(fileContent))
-                {
-                    reader.ReadToEnd().ShouldContain($"project({projectName})", customMessage: "Project name was not defined in CMake file.");
-                }
-            }
-            CheckUserInformed("Successfully created template", "Message that project was created successfully expected");
         }
 
         internal void CheckProjectCreatedTwice()

@@ -20,6 +20,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
 	    {
 	        await ScenarioContext.CreateProject(name);
 	    }
+        
+        protected async Task When_I_create_a_new_empty_project_with_name(string name)
+        {
+            await ScenarioContext.CreateProject(name,null,null,false,null,SystemTestContext.ProjectType.PlmProject,true);
+        }
 
         protected async Task When_I_create_a_new_project_with_componentname(string componentname)
         {

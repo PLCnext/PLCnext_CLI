@@ -36,6 +36,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckProjectCreated(name);
         }
 
+        protected void Then_the_empty_project_NAME_was_created(string name)
+        {
+            ScenarioContext.CheckProjectCreated(name, true);
+        }
+
         protected void Then_the_project_NAME_was_again_created(string name)
         {
             ScenarioContext.CheckProjectCreated(name);

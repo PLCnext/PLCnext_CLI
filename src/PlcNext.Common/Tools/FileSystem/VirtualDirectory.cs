@@ -203,6 +203,14 @@ namespace PlcNext.Common.Tools.FileSystem
             Clear();
             base.Delete();
         }
+        
+        public void DeleteIfEmpty()
+        {
+            if (!Entries.Any())
+            {
+                base.Delete();
+            }
+        }
 
         public void Clear()
         {

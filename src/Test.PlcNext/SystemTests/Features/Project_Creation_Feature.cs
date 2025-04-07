@@ -29,6 +29,15 @@ namespace Test.PlcNext.SystemTests.Features
 				_ => When_I_create_a_new_project_with_name("NewProject"),
 				_ => Then_the_project_NAME_was_created("NewProject")).RunAsyncWithTimeout();
 	    }
+		
+		[Scenario]
+		public async Task Create_new_empty_project_with_specific_name()
+		{
+			await Runner.AddSteps(
+				_ => Given_is_an_empty_workspace(),
+				_ => When_I_create_a_new_empty_project_with_name("NewProject"),
+				_ => Then_the_empty_project_NAME_was_created("NewProject")).RunAsyncWithTimeout();
+		}
 
 	    [Scenario]
 	    public async Task Create_new_project_with_default_name()
