@@ -75,14 +75,14 @@ namespace PlcNext.Common.Build
             string buildType = GetBuildType(owner);
             string binaryDirectory = Path.Combine(owner.Root.Path, Constants.IntermediateFolderName,
                                                   Constants.CmakeFolderName,
-                                                  targetEntity.FullName,
+                                                  targetEntity.FullName.Replace(",", "_", StringComparison.Ordinal),
                                                   buildType);
 
             if (!fileSystem.DirectoryExists(binaryDirectory))
             {
                 string autoCmakeFolderPath = Path.Combine(owner.Root.Path, Constants.IntermediateFolderName,
                                                           Constants.CmakeAutoBuildFolderName,
-                                                          targetEntity.FullName,
+                                                          targetEntity.FullName.Replace(",", "_", StringComparison.Ordinal),
                                                           buildType);
                 if (CommandEntity.Decorate(owner.Origin).CommandName != "build")
                 {
