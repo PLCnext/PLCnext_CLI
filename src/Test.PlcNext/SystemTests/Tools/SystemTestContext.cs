@@ -1469,6 +1469,12 @@ namespace Test.PlcNext.SystemTests.Tools
                 args.Add(deployArgs.SolutionVersion);
             }
 
+            if(deployArgs.LibraryInfo != null && deployArgs.LibraryInfo.Count() > 0)
+            {
+                args.Add("--libraryinfo");
+                args.Add(string.Join("|", deployArgs.LibraryInfo));
+            }
+
             if (!string.IsNullOrEmpty(deployArgs.LibraryLocation))
             {
                 VirtualDirectory directory = fileSystemAbstraction.FileSystem.GetDirectory(deployArgs.LibraryLocation);

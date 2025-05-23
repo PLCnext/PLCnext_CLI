@@ -43,6 +43,7 @@ namespace PlcNext.Common.Project
                    key == EntityKeys.SolutionVersionKey ||
                    key == EntityKeys.LibraryDescriptionKey ||
                    key == EntityKeys.LibraryVersionKey ||
+                   key == EntityKeys.LibraryInfoKey ||
                    key == EntityKeys.ExcludeFilesKey;
         }
 
@@ -60,6 +61,8 @@ namespace PlcNext.Common.Project
                     return GetLibraryDescription();
                 case EntityKeys.LibraryVersionKey:
                     return GetLibraryVersion();
+                case EntityKeys.LibraryInfoKey:
+                    return GetLibraryInfo();
                 case EntityKeys.ExcludeFilesKey:
                     return GetExcludedFiles();
                 default:
@@ -185,6 +188,25 @@ namespace PlcNext.Common.Project
                 }
 
                 return owner.Create(key, project.Configuration.LibraryVersion);
+            }
+
+            Entity GetLibraryInfo()
+            {
+                CommandEntity command = CommandEntity.Decorate(owner.Origin);
+                ProjectEntity project = ProjectEntity.Decorate(owner);
+                if (command.CommandName.Equals("deploy", StringComparison.OrdinalIgnoreCase)
+                    && command.IsCommandArgumentSpecified(Constants.LibraryInfoArgumentKey))
+                {
+                    IEnumerable<string> values = command.GetMultiValueArgument(Constants.LibraryInfoArgumentKey);
+                    IEnumerable<(string,string)> result = values.Select(x => x.Contains('=', StringComparison.Ordinal) 
+                                                                             ? (x.Split('=')[0], string.Join(string.Empty, x.SkipWhile(c => c!= '=').Skip(1)) ) 
+                                                                             : (string.Empty, string.Empty))
+                                                                .Where(x => !string.IsNullOrEmpty(x.Item1));
+                    project.Configuration.LibraryInfo = result;
+                    return owner.Create(key, result.Select(x => owner.Create(key, x)));
+                }
+
+                return owner.Create(key, project.Configuration.LibraryInfo.Select(x => owner.Create(key, x)));
             }
 
             Entity GetExcludedFiles()

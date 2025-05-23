@@ -71,6 +71,8 @@ namespace PlcNext.Common.Project
 
         public string SolutionVersion => this[EntityKeys.SolutionVersionKey].Value<string>();
 
+        public IEnumerable<(string, string)> LibraryInfos => this[EntityKeys.LibraryInfoKey].Select(e => e.Value<(string, string)>());
+
         public ProjectConfigurations Configuration => HasValue<ProjectConfigurations>()
                                                         ? Value<ProjectConfigurations>()
                                                         : HasContent(EntityKeys.ProjectConfigurationsKey)

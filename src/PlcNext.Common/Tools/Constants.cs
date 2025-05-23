@@ -65,6 +65,7 @@ namespace PlcNext.Common.Tools
         public const string VersionArgumentKey = "libraryversion";
         public const string EngineerVersionArgumentKey = "engineerversion";
         public const string SolutionVersionArgumentKey = "solutionversion";
+        public const string LibraryInfoArgumentKey = "libraryinfo";
         public const string SignArgumentKey = "sign";
         public const string pkcs12ArgumentKey = "pkcs12";
         public const string privateKeyArgumentKey = "privatekey";
@@ -136,6 +137,7 @@ namespace PlcNext.Common.Tools
         public const string LibraryDescriptionKey = "LibraryDescription";
         public const string EngineerVersionOptionPattern = "/pnever {0}";
         public const string SolutionVersionPattern = "/ver {0}";
+        public const string LibraryInfoPattern = " /key \"LibraryInfo:{0}={1}\"";
 
         //signing arguments library builder
         public const string CertificateContainerPattern = "/seccertificatecontainer {0}";

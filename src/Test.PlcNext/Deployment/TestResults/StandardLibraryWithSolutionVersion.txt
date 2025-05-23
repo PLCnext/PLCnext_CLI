@@ -11,3 +11,5 @@
 /key "LibraryVersion=2021.6.0 alpha"
 /key "LibraryDescription=Saved description"
 /ver 1.5.0.0
+/key "LibraryInfo:First Key=This is some content."
+/key "LibraryInfo:Test123=This is a value with spaces and <special> #characters."

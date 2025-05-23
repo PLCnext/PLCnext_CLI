@@ -87,6 +87,20 @@ namespace PlcNext.Common.Project
             }
         }
 
+        public IEnumerable<(string, string)> LibraryInfo
+        {
+            get 
+            { 
+                return Value.LibraryInfo != null 
+                    ? Value.LibraryInfo.Select(x => (x.name,x.Value))
+                    : Enumerable.Empty<(string, string)>();
+            }
+            set 
+            {
+                Value.LibraryInfo = value.Select(x => new ProjectConfigurationLibraryInfo { name = x.Item1, Value = x.Item2 }).ToArray();
+            }
+        }
+
         public IEnumerable<string> ExcludedFiles
         {
             get => Value.ExcludedFiles ?? Enumerable.Empty<string>();

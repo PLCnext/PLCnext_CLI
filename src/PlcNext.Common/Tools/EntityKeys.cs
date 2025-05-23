@@ -96,6 +96,7 @@ namespace PlcNext.Common.Tools
         public const string ProjectIdKey = "__internalprojectid__";
         public const string TargetsKey = "targets";
         public const string ValidatedTargetsKey = "validatedtargets";
+        public const string LibraryInfoKey = "__internallibraryinfo__";
         public const string LibraryDescriptionKey = "__internallibrarydescription__";
         public const string LibraryVersionKey = "__internallibraryversion__";
         public const string EngineerVersionKey = "__internalengineerversion__";

@@ -8,4 +8,6 @@
     <File>rary.so</File>
     <File>Some.so</File>
   </ExcludedFiles>
+  <LibraryInfo name="First Key">This is some content.</LibraryInfo>
+  <LibraryInfo name="Test123">This is a value with spaces and &lt;special&gt; #characters.</LibraryInfo>
 </ProjectConfiguration>

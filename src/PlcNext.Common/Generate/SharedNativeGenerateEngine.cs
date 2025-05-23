@@ -294,7 +294,8 @@ namespace PlcNext.Common.Generate
                             executionContext.WriteVerbose($"The file {newFileName} exists already. Copying will be skipped.");
                             if (CheckForUpdateNecessary(source, sourceDirectory.File(newFileName)))
                             {
-                                executionContext.WriteWarning($"The file {newFileName} differs from {source.FullName.GetRelativePath(Path.Combine(csharpProjectPath, ".."))} and needs to be updated manually.");
+                                executionContext.WriteWarning($"The file {newFileName} differs from " +
+                                    $"{source.FullName.GetRelativePath(Path.Combine(csharpProjectPath, ".."))} and needs to be updated manually.");
                             }
                         }
                     }

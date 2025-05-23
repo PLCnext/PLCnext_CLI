@@ -10,3 +10,5 @@
 /file "DataTypeWorksheet:bin\config\StandardDataTypes.dt,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
 /key "LibraryVersion=2021.6.0 alpha"
 /key "LibraryDescription=Saved description"
+/key "LibraryInfo:First Key=This is some content."
+/key "LibraryInfo:Test123=This is a value with spaces and <special> #characters."

@@ -489,6 +489,16 @@ namespace PlcNext.Common.Build
                                                project.SolutionVersion));
             }
 
+            if (project.LibraryInfos != null)
+            {
+                foreach ((string, string) info in project.LibraryInfos)
+                {
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                                                   Constants.LibraryInfoPattern,
+                                                   info.Item1, info.Item2));
+                }
+            }
+
 
             static string Escape(string value)
             {

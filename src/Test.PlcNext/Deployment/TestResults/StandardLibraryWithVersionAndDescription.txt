@@ -11,3 +11,5 @@
 /key "LibraryVersion=1.2.3.xy"
 /key "LibraryDescription=This is an example description&#44; where something needs to be escaped."
 /pnever 2021.3.1
+/key "LibraryInfo:First Key=Some content from command = argument."
+/key "LibraryInfo:Test123=This is a value with spaces and <special> #characters."

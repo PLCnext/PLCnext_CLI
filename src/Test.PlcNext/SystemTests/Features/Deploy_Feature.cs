@@ -635,7 +635,9 @@ namespace Test.PlcNext.SystemTests.Features
                     {
                         LibraryDescription = "This is an example description, where something needs to be escaped.",
                         LibraryVersion = "1.2.3.xy",
-                        EngineerVersion = "2021.3.1"
+                        EngineerVersion = "2021.3.1",
+                        LibraryInfo = new[]{ "First Key=Some content from command = argument.", 
+                                             "Test123=This is a value with spaces and <special> #characters." }
                     }),
                 _ => Then_the_library_was_generated_with_the_following_command_arguments("StandardLibraryWithVersionAndDescription.txt"),
                 _ => Then_the_deploy_was_executed_without_error()
@@ -739,6 +741,8 @@ namespace Test.PlcNext.SystemTests.Features
         public IEnumerable<string> Files { get; internal set; }
 
         public string LibraryDescription { get; internal set; }
+
+        public IEnumerable<string> LibraryInfo { get; internal set; }
 
         public string LibraryVersion { get; internal set; }
 

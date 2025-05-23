@@ -43,6 +43,8 @@ namespace PlcNext.Common.Project {
         
         private string[] excludedFilesField;
         
+        private ProjectConfigurationLibraryInfo[] libraryInfoField;
+        
         private bool signField;
         
         private string pkcs12Field;
@@ -113,6 +115,17 @@ namespace PlcNext.Common.Project {
             }
             set {
                 this.excludedFilesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("LibraryInfo")]
+        public ProjectConfigurationLibraryInfo[] LibraryInfo {
+            get {
+                return this.libraryInfoField;
+            }
+            set {
+                this.libraryInfoField = value;
             }
         }
         
@@ -197,6 +210,41 @@ namespace PlcNext.Common.Project {
             }
             set {
                 this.noTimestampField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.7.3081.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.phoenixcontact.com/schema/projectconfiguration")]
+    public partial class ProjectConfigurationLibraryInfo {
+        
+        private string nameField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
             }
         }
     }
