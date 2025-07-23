@@ -87,7 +87,7 @@ internal class CMakeConversation : ICMakeConversation
     
     async Task RunCmake(VirtualDirectory binaryDirectory)
     {
-        await processManager.StartProcess(binariesLocator.GetExecutableCommand("cmake"), binaryDirectory.FullName,
+        await processManager.StartProcess(binariesLocator.GetExecutableCommand("cmake"), $"\"{binaryDirectory.FullName}\"",
             executionContext).WaitForExitAsync().ConfigureAwait(true);
     }
     
