@@ -55,7 +55,7 @@ namespace PlcNext.Common.Deploy
             string csharpProjectPath = project.CSharpProjectPath;
             if (!Path.IsPathRooted(csharpProjectPath))
             {
-                if(csharpProjectPath == null)
+                if (csharpProjectPath == null)
                 {
                     csharpProjectPath = project.Path;
                     log.LogWarning("CSharp project path not found. Using project path instead.");
@@ -68,197 +68,199 @@ namespace PlcNext.Common.Deploy
 
             string csharpProjectOutputFolder = FindCSharpProjectOutputFolder();
 
-            if (fileSystem.DirectoryExists(csharpProjectOutputFolder, csharpProjectPath))
+            if (!fileSystem.DirectoryExists(csharpProjectOutputFolder, csharpProjectPath))
             {
-                CommandEntity command = CommandEntity.Decorate(dataModel);
-                string basePath = project.Path;
-                VirtualDirectory destinationDirectory;
-                if (!command.IsCommandArgumentSpecified(Constants.OutputArgumentName))
-                {
-                    destinationDirectory = fileSystem.GetDirectory(Path.Combine(basePath, 
-                                                                                Constants.LibraryFolderName, 
-                                                                                Constants.ConfigIndependentFiles));
-                }
-                else
-                {
-                    destinationDirectory = fileSystem.GetDirectory(Path.Combine(basePath, 
-                                                                                command.GetSingleValueArgument(Constants.OutputArgumentName), 
-                                                                                Constants.ConfigIndependentFiles));
-                }
+                executionContext.WriteWarning($"CSharp project output folder '{csharpProjectOutputFolder}' not found in path '{csharpProjectPath}'. No files can be deployed.");
+                return;
+            }
+            CommandEntity command = CommandEntity.Decorate(dataModel);
+            string basePath = project.Path;
+            VirtualDirectory destinationDirectory;
+            if (!command.IsCommandArgumentSpecified(Constants.OutputArgumentName))
+            {
+                destinationDirectory = fileSystem.GetDirectory(Path.Combine(basePath,
+                                                                            Constants.LibraryFolderName,
+                                                                            Constants.ConfigIndependentFiles));
+            }
+            else
+            {
+                destinationDirectory = fileSystem.GetDirectory(Path.Combine(basePath,
+                                                                            command.GetSingleValueArgument(Constants.OutputArgumentName),
+                                                                            Constants.ConfigIndependentFiles));
+            }
 
-                CopyDlls();
-                CopyProjectItems();
-                CopyHelpFiles();
+            CopyDlls();
+            CopyProjectItems();
+            CopyHelpFiles();
 
-                void CopyDlls()
+            void CopyDlls()
+            {
+                VirtualDirectory sourceDirectory = fileSystem.GetDirectory(csharpProjectOutputFolder,
+                                                                           csharpProjectPath,
+                                                                           false);
+                foreach (VirtualFile deployableFile in sourceDirectory.Files("*.dll"))
                 {
-                    VirtualDirectory sourceDirectory = fileSystem.GetDirectory(csharpProjectOutputFolder,
-                                                                               csharpProjectPath,
-                                                                               false);
-                    foreach (VirtualFile deployableFile in sourceDirectory.Files("*.dll"))
+                    VirtualFile destination = fileSystem.GetFile(deployableFile.Name, destinationDirectory.FullName);
+
+                    using (Stream source = deployableFile.OpenRead(true))
+                    using (Stream dest = destination.OpenWrite())
                     {
-                        VirtualFile destination = fileSystem.GetFile(deployableFile.Name, destinationDirectory.FullName);
-
-                        using (Stream source = deployableFile.OpenRead(true))
-                        using (Stream dest = destination.OpenWrite())
-                        {
-                            dest.SetLength(0);
-                            source.CopyTo(dest);
-                        }
-
-                        executionContext.WriteVerbose($"Deployed file {deployableFile.FullName} to {destination.FullName}.");
+                        dest.SetLength(0);
+                        source.CopyTo(dest);
                     }
+
+                    executionContext.WriteVerbose($"Deployed file {deployableFile.FullName} to {destination.FullName}.");
                 }
+            }
 
-                void CopyProjectItems()
+            void CopyProjectItems()
+            {
+                VirtualDirectory sourceDirectory = fileSystem.GetDirectory(Constants.CSharpProjectItemsFolderName,
+                                                                           csharpProjectPath, false);
+
+                foreach (VirtualFile deployableFile in sourceDirectory.Files(searchRecursive: true))
                 {
-                    VirtualDirectory sourceDirectory = fileSystem.GetDirectory(Constants.CSharpProjectItemsFolderName,
-                                                                               csharpProjectPath, false);
+                    string relativePath = deployableFile.FullName.GetRelativePath(sourceDirectory.FullName);
 
-                    foreach (VirtualFile deployableFile in sourceDirectory.Files(searchRecursive: true))
+                    VirtualFile destination = fileSystem.GetFile(relativePath, destinationDirectory.FullName);
+
+                    using (Stream source = deployableFile.OpenRead(true))
+                    using (Stream dest = destination.OpenWrite())
                     {
-                        string relativePath = deployableFile.FullName.GetRelativePath(sourceDirectory.FullName);
-
-                        VirtualFile destination = fileSystem.GetFile(relativePath, destinationDirectory.FullName);
-
-                        using (Stream source = deployableFile.OpenRead(true))
-                        using (Stream dest = destination.OpenWrite())
-                        {
-                            dest.SetLength(0);
-                            source.CopyTo(dest);
-                        }
-
-                        executionContext.WriteVerbose($"Deployed file {relativePath} to {destination.FullName}.");
+                        dest.SetLength(0);
+                        source.CopyTo(dest);
                     }
-                }
 
-                void CopyHelpFiles()
+                    executionContext.WriteVerbose($"Deployed file {relativePath} to {destination.FullName}.");
+                }
+            }
+
+            void CopyHelpFiles()
+            {
+                if (!fileSystem.DirectoryExists(Constants.CSharpHelpFolderName, csharpProjectPath))
                 {
-                    if (!fileSystem.DirectoryExists(Constants.CSharpHelpFolderName, csharpProjectPath))
+                    return;
+                }
+                VirtualDirectory sourceDirectory = fileSystem.GetDirectory(Constants.CSharpHelpFolderName,
+                                                                           csharpProjectPath, false);
+
+                const string helpFileSuffix = "FBFun.chm";
+                List<string> usedCultures = new List<string>();
+                string standardHelpFileName = project.Name + "_" + helpFileSuffix;
+                string[] libraryNameTokens = project.Name.Split('_');
+
+                foreach (VirtualFile deployableFile in sourceDirectory.Files(searchRecursive: true))
+                {
+                    string relativePath = deployableFile.FullName.GetRelativePath(sourceDirectory.FullName);
+
+                    if (!relativePath.StartsWith("HTML5", StringComparison.InvariantCulture))
+                    {
+                        HandleChmHelp(deployableFile, relativePath);
+                    }
+
+                }
+                HandleHtmlHelp();
+
+                void HandleHtmlHelp()
+                {
+                    string htmlDirectory = "HTML5";
+                    if (!sourceDirectory.DirectoryExists(htmlDirectory))
                     {
                         return;
                     }
-                    VirtualDirectory sourceDirectory = fileSystem.GetDirectory(Constants.CSharpHelpFolderName,
-                                                                               csharpProjectPath, false);
-                    
-                    const string helpFileSuffix = "FBFun.chm";
-                    List<string> usedCultures = new List<string>();
-                    string standardHelpFileName = project.Name + "_" + helpFileSuffix;
-                    string[] libraryNameTokens = project.Name.Split('_');
+                    IEnumerable<string> cultures = sourceDirectory.Directory(htmlDirectory).Directories.Select(d => d.Name)
+                                                       .Where(d => !string.IsNullOrEmpty(d) && !d.Equals("images", StringComparison.OrdinalIgnoreCase));
 
-                    foreach (VirtualFile deployableFile in sourceDirectory.Files(searchRecursive: true))
+                    //no culture check is performed when deploying
+
+                    VirtualDirectory deployHelpDirectory = fileSystem.GetDirectory(Constants.DeployHelpDirectoryName, destinationDirectory.FullName);
+                    deployHelpDirectory.Clear();
+
+                    foreach (string culture in cultures)
                     {
-                        string relativePath = deployableFile.FullName.GetRelativePath(sourceDirectory.FullName);
-
-                        if (!relativePath.StartsWith("HTML5", StringComparison.InvariantCulture))
+                        VirtualDirectory destinationDir = deployHelpDirectory;
+                        if (!culture.Equals("default", StringComparison.OrdinalIgnoreCase))
                         {
-                            HandleChmHelp(deployableFile, relativePath);
+                            destinationDir = deployHelpDirectory.Directory(culture);
                         }
 
+                        string destination = Path.Combine(destinationDir.FullName, project.Name + "_FBfun.Help.zip");
+
+                        directoryPackService.Pack((sourceDirectory.Directory(htmlDirectory).Directory(culture)), destination);
+                        executionContext.WriteVerbose($"Deployed help culture {culture} to {destination}.");
                     }
-                    HandleHtmlHelp();
+                }
 
-                    void HandleHtmlHelp()
+                void HandleChmHelp(VirtualFile deployableFile, string relativePath)
+                {
+                    bool checkLibName(string[] fileTokens)
                     {
-                        string htmlDirectory = "HTML5";
-                        if (!sourceDirectory.DirectoryExists(htmlDirectory))
+                        bool result = false;
+                        if (libraryNameTokens.Length <= fileTokens.Length)
                         {
-                            return;
-                        }
-                        IEnumerable<string> cultures = sourceDirectory.Directory(htmlDirectory).Directories.Select(d => d.Name)
-                                                           .Where(d => !string.IsNullOrEmpty(d) && !d.Equals("images", StringComparison.OrdinalIgnoreCase));
-
-                        //no culture check is performed when deploying
-
-                        VirtualDirectory deployHelpDirectory = fileSystem.GetDirectory(Constants.DeployHelpDirectoryName, destinationDirectory.FullName);
-                        deployHelpDirectory.Clear();
-
-                        foreach (string culture in cultures)
-                        {
-                            VirtualDirectory destinationDir = deployHelpDirectory;
-                            if (!culture.Equals("default", StringComparison.OrdinalIgnoreCase))
+                            result = true;
+                            for (int i = 0; i < libraryNameTokens.Length; i++)
                             {
-                                destinationDir = deployHelpDirectory.Directory(culture);
-                            }
-
-                            string destination = Path.Combine(destinationDir.FullName, project.Name + "_FBfun.Help.zip");
-                            
-                            directoryPackService.Pack((sourceDirectory.Directory(htmlDirectory).Directory(culture)), destination);
-                            executionContext.WriteVerbose($"Deployed help culture {culture} to {destination}.");
-                        }
-                    }
-
-                    void HandleChmHelp(VirtualFile deployableFile, string relativePath)
-                    {
-                        bool checkLibName(string[] fileTokens)
-                        {
-                            bool result = false;
-                            if (libraryNameTokens.Length <= fileTokens.Length)
-                            {
-                                result = true;
-                                for (int i = 0; i < libraryNameTokens.Length; i++)
+                                if (!string.Equals(libraryNameTokens[i], fileTokens[i], StringComparison.OrdinalIgnoreCase))
                                 {
-                                    if (!string.Equals(libraryNameTokens[i], fileTokens[i], StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        result = false;
-                                    }
+                                    result = false;
                                 }
                             }
-                            return result;
                         }
-
-                        bool isFileNameOK = false;
-                        string fileName = deployableFile.Name;
-                        string culture = "";
-                        string[] fileTokens = fileName.Split('_');
-                        if (fileTokens.Length == libraryNameTokens.Length + 1)
-                        {
-                            // format is Libname_FBFun
-                            if (checkLibName(fileTokens) && fileTokens[fileTokens.Length - 1].Equals(helpFileSuffix, StringComparison.OrdinalIgnoreCase))
-                            {
-                                isFileNameOK = true;
-                            }
-                        }
-                        else if (fileTokens.Length == libraryNameTokens.Length + 2)
-                        {
-                            // format is LibName_culture_FBFun where the culture can be of one part (like "en", "de") or of more than one part (like "en-US", "de-DE")
-                            if (checkLibName(fileTokens) && fileTokens[fileTokens.Length - 1].Equals(helpFileSuffix, StringComparison.OrdinalIgnoreCase))
-                            {
-                                culture = fileTokens[fileTokens.Length - 2];
-
-                                if (usedCultures.Contains(culture))
-                                {
-                                    executionContext.WriteError($"The culture {culture} is used more than once");
-                                    return;
-                                }
-
-                                usedCultures.Add(culture);
-
-                                isFileNameOK = true;
-                            }
-                        }
-
-                        if (!isFileNameOK)
-                        {
-                            executionContext.WriteError($"{fileName} has illegal help file format. Help files must have the format <library name>[_culture]_{helpFileSuffix}");
-                            return;
-                        }
-
-                        string basePath = string.IsNullOrEmpty(culture) ? 
-                                            Path.Combine(destinationDirectory.FullName, Constants.DeployHelpDirectoryName) :
-                                            Path.Combine(destinationDirectory.FullName, Constants.DeployHelpDirectoryName, culture);
-
-                        VirtualFile destination = fileSystem.GetFile(standardHelpFileName, basePath);
-
-                        using (Stream source = deployableFile.OpenRead(true))
-                        using (Stream dest = destination.OpenWrite())
-                        {
-                            dest.SetLength(0);
-                            source.CopyTo(dest);
-                        }
-
-                        executionContext.WriteVerbose($"Deployed file {relativePath} to {destination.FullName}.");
+                        return result;
                     }
+
+                    bool isFileNameOK = false;
+                    string fileName = deployableFile.Name;
+                    string culture = "";
+                    string[] fileTokens = fileName.Split('_');
+                    if (fileTokens.Length == libraryNameTokens.Length + 1)
+                    {
+                        // format is Libname_FBFun
+                        if (checkLibName(fileTokens) && fileTokens[fileTokens.Length - 1].Equals(helpFileSuffix, StringComparison.OrdinalIgnoreCase))
+                        {
+                            isFileNameOK = true;
+                        }
+                    }
+                    else if (fileTokens.Length == libraryNameTokens.Length + 2)
+                    {
+                        // format is LibName_culture_FBFun where the culture can be of one part (like "en", "de") or of more than one part (like "en-US", "de-DE")
+                        if (checkLibName(fileTokens) && fileTokens[fileTokens.Length - 1].Equals(helpFileSuffix, StringComparison.OrdinalIgnoreCase))
+                        {
+                            culture = fileTokens[fileTokens.Length - 2];
+
+                            if (usedCultures.Contains(culture))
+                            {
+                                executionContext.WriteError($"The culture {culture} is used more than once");
+                                return;
+                            }
+
+                            usedCultures.Add(culture);
+
+                            isFileNameOK = true;
+                        }
+                    }
+
+                    if (!isFileNameOK)
+                    {
+                        executionContext.WriteError($"{fileName} has illegal help file format. Help files must have the format <library name>[_culture]_{helpFileSuffix}");
+                        return;
+                    }
+
+                    string basePath = string.IsNullOrEmpty(culture) ?
+                                        Path.Combine(destinationDirectory.FullName, Constants.DeployHelpDirectoryName) :
+                                        Path.Combine(destinationDirectory.FullName, Constants.DeployHelpDirectoryName, culture);
+
+                    VirtualFile destination = fileSystem.GetFile(standardHelpFileName, basePath);
+
+                    using (Stream source = deployableFile.OpenRead(true))
+                    using (Stream dest = destination.OpenWrite())
+                    {
+                        dest.SetLength(0);
+                        source.CopyTo(dest);
+                    }
+
+                    executionContext.WriteVerbose($"Deployed file {relativePath} to {destination.FullName}.");
                 }
             }
 
