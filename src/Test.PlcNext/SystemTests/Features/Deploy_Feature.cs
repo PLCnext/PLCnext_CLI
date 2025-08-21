@@ -692,6 +692,19 @@ namespace Test.PlcNext.SystemTests.Features
         }
 
         [Scenario]
+        public async Task Deploy_with_multiline_library_infos_saved_in_project_file()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_the_project("LibraryInfoTest"),
+                _ => Given_is_the_working_directory_PATH("LibraryInfoTest"),
+                _ => Given_is_that_the_file_exists("bin\\AXCF2152_25.0.0.78\\Release\\lib\\libLibraryInfoTest.so"), 
+                _ => When_I_deploy(new DeployCommandArgs()),
+                _ => Then_the_library_was_generated_with_the_following_command_arguments("LibraryInfoTestCommandArgs.txt"),
+                _ => Then_the_deploy_was_executed_without_error()
+                ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
         public async Task Deploy_SharedNative_deploys_so()
         {
             await Runner.AddSteps(

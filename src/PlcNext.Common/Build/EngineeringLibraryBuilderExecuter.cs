@@ -495,7 +495,7 @@ namespace PlcNext.Common.Build
                 {
                     writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
                                                    Constants.LibraryInfoPattern,
-                                                   info.Item1, info.Item2));
+                                                   info.Item1, Escape(info.Item2)));
                 }
             }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.phoenixcontact.com/schema/cliproject">
+  <Id>6684b16e-632c-41d6-9e5c-3262505509e5</Id>
+  <Version>4.0</Version>
+  <Name>LibraryInfoTest</Name>
+  <GenerateDTArrayNameByType>true</GenerateDTArrayNameByType>
+  <GenerateNamespaces>true</GenerateNamespaces>
+  <Target>AXCF2152,2025.0.0 (25.0.0.78 rc5)</Target>
+</ProjectSettings>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ProjectConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+					  xmlns="http://www.phoenixcontact.com/schema/projectconfiguration">
+  <LibraryInfo name="Test123">This is a value with spaces and &lt;special&gt; #characters.</LibraryInfo>
+  <LibraryInfo name ="MultilineInfo">Here
+we
+have
+multiline!</LibraryInfo>
+</ProjectConfiguration>

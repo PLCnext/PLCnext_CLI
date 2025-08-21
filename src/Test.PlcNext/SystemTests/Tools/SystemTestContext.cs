@@ -1262,7 +1262,10 @@ namespace Test.PlcNext.SystemTests.Tools
                     while (!expectedReader.EndOfStream)
                     {
                         string arg = expectedReader.ReadLine() ?? string.Empty;
-                        arg = arg.Replace('\\', Path.DirectorySeparatorChar).Trim();
+                        if (!arg.StartsWith("/key \"LibraryInfo:"))
+                        {
+                            arg = arg.Replace('\\', Path.DirectorySeparatorChar).Trim();
+                        }
                         string escaped = Regex.Escape(arg ?? string.Empty).Replace("\\.\\*", ".*");
                         Regex regex = new Regex(escaped, RegexOptions.IgnoreCase);
                         int found = commandArgs.RemoveAll(regex.IsMatch);

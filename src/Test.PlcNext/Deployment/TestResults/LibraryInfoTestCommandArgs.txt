@@ -1,0 +1,12 @@
+﻿/out "bin\LibraryInfoTest.pcwlx"
+/id 6684b16e-632c-41d6-9e5c-3262505509e5
+/folder "Logical Elements/LibraryInfoTestComponent,FolderType=MetaComponentFolder,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/folder "Logical Elements/LibraryInfoTestComponent/LibraryInfoTestProgram,FolderType=MetaProgramFolder,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/plcnextnativelibfolder ".*\AXCF2152_25.0.0.78,FolderName=AXCF2152_25.0.0,DeviceProfileType=AXCF2152,DeviceProfileVersion=2025.0.0,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138"
+/file "MetaLibrary:bin\config\LibraryInfoTest.libmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/file "MetaTypes:bin\config\LibraryInfoTest.typemeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/file "MetaComponent:bin\config\LibraryInfoTestComponent\LibraryInfoTestComponent.compmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:LibraryInfoTestComponent"
+/file "MetaProgram:bin\config\LibraryInfoTestComponent\LibraryInfoTestProgram\LibraryInfoTestProgram.progmeta,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:LibraryInfoTestComponent/LibraryInfoTestProgram"
+/file "DataTypeWorksheet:bin\config\LibraryInfoTestDataTypes.dt,Id=89b2c2bc-b296-4ab4-a057-b6add1e37138:"
+/key "LibraryInfo:Test123=This is a value with spaces and <special> #characters."
+/key "LibraryInfo:MultilineInfo=Here\nwe\nhave\nmultiline!"
