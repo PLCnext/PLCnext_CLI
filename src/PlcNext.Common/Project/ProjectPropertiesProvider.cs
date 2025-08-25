@@ -88,7 +88,22 @@ namespace PlcNext.Common.Project
 
             void SetProjectNamespace()
             {
-                ProjectNamespace = CodeEntity.Decorate(project).Namespace;
+                try
+                {
+                    ProjectNamespace = CodeEntity.Decorate(project).Namespace;
+                }
+                catch (MultipleRootNamespacesException e)
+                {
+                    ProjectNamespace = string.Empty;
+                    if (Exceptions == null)
+                    {
+                        Exceptions = new[] { e };
+                    }
+                    else
+                    {
+                        Exceptions = Exceptions.Append(e);
+                    }
+                }
             }
 
             void SetProjectType()
@@ -103,7 +118,15 @@ namespace PlcNext.Common.Project
                 ProjectTargets = targetsResult.ValidTargets
                     .Select(t => new ProjectTarget(t, availableTargets.Any(at => t.Name == at.Name && at.LongVersion == t.LongVersion)));
 
-                Exceptions = targetsResult.Errors;
+                if (Exceptions == null)
+                {
+                    Exceptions = targetsResult.Errors;
+                }
+                else
+                {
+                    Exceptions = Exceptions.Concat(targetsResult.Errors);
+                }
+                
             }
 
             void SetProjectEntities()
@@ -118,9 +141,11 @@ namespace PlcNext.Common.Project
                 ProjectCodeEntities = entities.Select(e =>
                 {
                     TemplateEntity te = TemplateEntity.Decorate(e);
-                    return (e, te.RelatedEntites.Where(en => !en.Type.Contains("project", StringComparison.Ordinal)));
+                    return (e, te.RelatedEntites.Where(en => !en.Type.Contains("project", StringComparison.Ordinal) 
+                                                            && !en.Type.Contains("consumablelibrary", StringComparison.Ordinal)));
                 })
-                    .Where(e => !e.Item1.Type.Contains("project", StringComparison.Ordinal)).ToDictionary(p => p.Item1, p => p.Item2);
+                    .Where(e => !e.Item1.Type.Contains("project", StringComparison.Ordinal)
+                                && !e.Item1.Type.Contains("consumablelibrary", StringComparison.Ordinal)).ToDictionary(p => p.Item1, p => p.Item2);
 
             }
 
