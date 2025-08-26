@@ -95,14 +95,7 @@ namespace PlcNext.Common.Project
                 catch (MultipleRootNamespacesException e)
                 {
                     ProjectNamespace = string.Empty;
-                    if (Exceptions == null)
-                    {
-                        Exceptions = new[] { e };
-                    }
-                    else
-                    {
-                        Exceptions = Exceptions.Append(e);
-                    }
+                    executionContext.WriteError(e.Message);
                 }
             }
 
@@ -118,14 +111,7 @@ namespace PlcNext.Common.Project
                 ProjectTargets = targetsResult.ValidTargets
                     .Select(t => new ProjectTarget(t, availableTargets.Any(at => t.Name == at.Name && at.LongVersion == t.LongVersion)));
 
-                if (Exceptions == null)
-                {
-                    Exceptions = targetsResult.Errors;
-                }
-                else
-                {
-                    Exceptions = Exceptions.Concat(targetsResult.Errors);
-                }
+                Exceptions = targetsResult.Errors;
                 
             }
 

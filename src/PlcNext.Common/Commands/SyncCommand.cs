@@ -20,7 +20,8 @@ namespace PlcNext.Common.Commands
     internal abstract class SyncCommand<T> : Command<T>
         where T : CommandArgs
     {
-        protected SyncCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, bool hasDetailedResult = false) : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer, false, hasDetailedResult)
+        protected SyncCommand(ITransactionFactory transactionFactory, IExceptionHandler exceptionHandler, ExecutionContext executionContext, ICommandResultVisualizer commandResultVisualizer, bool hasDetailedResult = false) 
+            : base(transactionFactory, exceptionHandler, executionContext, commandResultVisualizer, false, hasDetailedResult)
         {
         }
     }
