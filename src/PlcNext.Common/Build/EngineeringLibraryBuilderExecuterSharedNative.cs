@@ -57,9 +57,9 @@ namespace PlcNext.Common.Build
 
                 ExcludeFiles(target, project, projectLibraries);
             }
-            
-            DeployEntity deployEntity = DeployEntity.Decorate(project);
 
+            DeployEntity deployEntity = DeployEntity.Decorate(project);
+            
             string commandOptionsFile = GenerateCommandOptionsForSharedNative(project, deployEntity, projectLibraries, projectName);
             int result = ExecuteLibraryBuilderWithCommandOptions(commandOptionsFile, project, deployEntity);
 
@@ -148,7 +148,7 @@ namespace PlcNext.Common.Build
                 }
             }
 
-            void WritePrecompiledLibrary(StreamWriter writer) 
+                void WritePrecompiledLibrary(StreamWriter writer) 
             {
                 string fullName = Path.Combine(outputRoot.FullName, Constants.ConfigIndependentFiles, $"{projectName}.dll");
                 VirtualFile precompiledLibrary = fileSystem.FileExists(fullName) 
@@ -177,7 +177,7 @@ namespace PlcNext.Common.Build
                         writer.WriteLine(string.Format(CultureInfo.InvariantCulture,
                                                        "/file \":{0}:{1}\"",
                                                        file.GetRelativeOrAbsolutePath(projectFileEntity.Directory),
-                                                       TargetEntity.Decorate(target).ShortFullName.Replace(",", "_", StringComparison.Ordinal)));
+                                                       Path.Combine("bin",TargetEntity.Decorate(target).ShortFullName.Replace(",", "_", StringComparison.Ordinal))));
                     }
                 }
             }

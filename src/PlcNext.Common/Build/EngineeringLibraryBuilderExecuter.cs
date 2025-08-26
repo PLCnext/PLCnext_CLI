@@ -48,7 +48,6 @@ namespace PlcNext.Common.Build
             this.executionContext = executionContext;
         }
 
-        //TODO Patch libmeta here
         public int Execute(Entity dataModel)
         {
             ProjectEntity project = ProjectEntity.Decorate(dataModel.Root);
