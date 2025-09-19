@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MetaConfigurationDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaVersion="2.0" xmlns="http://www.phoenixcontact.com/schema/metaconfig">
+  <Library name="$(namespace)" applicationDomain="CPLUSPLUS">
+    <File path="lib$(name).so" />
+    <TypeIncludes>
+      <Include path="$(namespace).typemeta" />
+    </TypeIncludes>
+    <ComponentIncludes>
+$([foreach]component[in]related[of-type]component)
+$(component.checkForDuplicateName)      <Include path="$(component.name)/$(component.name).compmeta" />
+$([end-foreach])
+    </ComponentIncludes>
+  </Library>
+</MetaConfigurationDocument>

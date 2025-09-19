@@ -1,0 +1,39 @@
+﻿$([foreach]struct[in]portAndTypeInformationStructs.filterHiddenTypes)
+$([if]$(origin.generate-namespaces))
+NAMESPACE $(struct.namespace.format.datatypeNamespace.validateIdentifier)
+$([end-if])
+TYPE
+    $(struct.name.format.escapeTemplatedStructName.format.convertToIECDatatype.validateIdentifier) : STRUCT
+$([foreach]field[in]struct.fields)
+        $(field.name.validateIdentifier) : $([if]$(origin.generate-namespaces) and $(field.isarray.negate))$(field.iecdatatypenamespace.format.datatypeNamespace)$([end-if])$(field.format.iecDataTypeFormat.format.checkForArray);
+$([end-foreach])
+    END_STRUCT
+END_TYPE
+$([if]$(origin.generate-namespaces))END_NAMESPACE$([end-if])
+
+$([end-foreach])
+$([foreach]enum[in]portAndTypeInformationEnums)
+$([if]$(origin.generate-namespaces))
+NAMESPACE $(enum.namespace.format.datatypeNamespace.validateIdentifier)
+$([end-if])
+TYPE
+    $(enum.name.validateIdentifier) : ($(enum.symbols.format.listNamesAndValues)) OF $([if]$(origin.generate-namespaces))$(enum.iecdatatypenamespace.format.datatypeNamespace)$([end-if])$(enum.format.iecDataTypeFormat);
+END_TYPE
+$([if]$(origin.generate-namespaces))END_NAMESPACE$([end-if])
+
+$([end-foreach])
+$([if]$(portAndTypeInformationArrays.isEmpty.negate) or $(variablePortAndTypeInformationStrings.isEmpty.negate))
+TYPE
+$([end-if])
+$([no-duplicate-lines])
+$([foreach]array[in]portAndTypeInformationArrays)
+    $(array.name)Array : ARRAY [$(array.multiplicity.format.multiplicityConstantReplace.throwIfMultidimensional.format.listMultiplicity)] OF $([if]$(origin.generate-namespaces))$(array.iecdatatypenamespace.format.datatypeNamespace)$([end-if])$(array.format.iecDataTypeFormat);
+$([end-foreach])
+$([end-no-duplicate-lines])
+
+$([foreach]field[in]variablePortAndTypeInformationStrings)
+    $(field.name)$(field.datatype.format.stringConstantReplace.format.convertIecString) : $(field.format.iecDataTypeFormat);
+$([end-foreach])
+$([if]$(portAndTypeInformationArrays.isEmpty.negate) or $(variablePortAndTypeInformationStrings.isEmpty.negate))
+END_TYPE
+$([end-if])

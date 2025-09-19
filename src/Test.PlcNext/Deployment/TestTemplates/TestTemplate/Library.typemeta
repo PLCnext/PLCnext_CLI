@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MetaConfigurationDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" schemaVersion="2.0" xmlns="http://www.phoenixcontact.com/schema/metaconfig">
+  <Types>
+$([foreach]struct[in]portStructs.filterHiddenTypes)
+    <Struct type="$(struct.name.format.escapeXmlNames)">
+      <Fields>
+$([foreach]field[in]struct.fields.expandHiddenTypes)
+        <Field name="$(field.name.format.escapeXmlNames)" type="$(field.format.typeMetaDataFormat.format.stringConstantReplace.format.convertStaticString.format.escapeXmlNames)" attributes="$(field.attributes.format.metaAttributes)" dimensions="$(field.multiplicity.format.multiplicityConstantReplace.format.dimensions)" />
+$([end-foreach])
+      </Fields>
+    </Struct>
+$([end-foreach])
+$([foreach]enum[in]portEnums)
+    <Enumeration type="$(enum.name.format.escapeXmlNames)" baseType="$(enum.baseType.format.typeMetaDataFormat.format.stringConstantReplace.format.convertStaticString)">
+      <Symbols>
+$([foreach]symbol[in]enum.symbols)
+        <Symbol name="$(symbol.name.format.escapeXmlNames)" value="$(symbol.value)"/>
+$([end-foreach])
+      </Symbols>
+    </Enumeration>
+$([end-foreach])
+  </Types>
+</MetaConfigurationDocument>

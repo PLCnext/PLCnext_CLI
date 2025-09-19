@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectSettings xmlns="http://www.phoenixcontact.com/schema/cliproject">
+  <Type>project</Type>
+  <Version>$(toolprojectversion)</Version>
+  <Name>$(name)</Name>
+  <GenerateDTArrayNameByType>true</GenerateDTArrayNameByType>
+  <GenerateNamespaces>true</GenerateNamespaces>
+</ProjectSettings>

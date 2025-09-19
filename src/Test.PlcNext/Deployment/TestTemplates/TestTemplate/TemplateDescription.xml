@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TemplateDescription name="testproject" isRoot="true" basedOn="baseproject" supportedFirmwareVersions="19.0.0.16199" requiredCliVersion="19.0.0.660" version="1.0"
+                     xmlns="http://www.phoenixcontact.com/schema/clitemplates" identifier="ProjectSettingsIdentifier">
+    <Arguments>
+        <Argument name="component" has-value="true" short-name="c" help="The name of the component which will be automatically created." default="$(name.format.lastNamespacePart)Component">
+            <ValueRestriction min-length="2" max-length="128" description="This must be a valid C++ type name. It must start with an upper case letter.">
+                <Pattern>^[A-Z](?!.*__)[a-zA-Z0-9_]*$</Pattern>
+            </ValueRestriction>
+        </Argument>
+        <Argument name="program" has-value="true" short-name="p" help="The name of the program which will be automatically created." default="$(name.format.lastNamespacePart)Program">
+            <ValueRestriction min-length="2" max-length="128" description="This must be a valid C++ type name. It must start with an upper case letter.">
+                <Pattern>^[A-Z](?!.*__)[a-zA-Z0-9_]*$</Pattern>
+            </ValueRestriction>
+        </Argument>
+        <Argument name="namespace" help="The root namespace for the $(template.name). It is used to resolve the initial component and program namespace." />
+    </Arguments>
+    <File name="plcnext.proj" template=".proj"/>
+    <File name="$(name.format.lastNamespacePart.format.escapeProjectName)LibraryInfo.hpp" template="LibraryInfo.hpp" path="src"/>
+    <Folder name="TestDir" />
+    <Folder name="TestDir2" path="src" />
+    <Description>Create a new project. The project is a template for user programs. They are managed by the PLM (Program Library Manager). More help available in the PLCnext Community.</Description>
+
+</TemplateDescription>
