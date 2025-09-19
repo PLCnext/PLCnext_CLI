@@ -1040,6 +1040,9 @@
     <EmbeddedResource Include="Deployment\TestResults\StructWith1000FieldsLibrary.meta.cpp" />
     <EmbeddedResource Include="Deployment\TestResults\TemplatedStructDataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestResults\TemplatedStructLibrary.meta.cpp" />
+    <EmbeddedResource Include="Deployment\TestTemplates\TestTemplates.xml">
+      <Link>Deployment\Templates\TestTemplates.xml</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="Deployment\TestTemplates\TestTemplate\.proj" />
     <EmbeddedResource Include="Deployment\TestTemplates\TestTemplate\DataTypes.dt" />
     <EmbeddedResource Include="Deployment\TestTemplates\TestTemplate\DataTypes_v2.dt" />
@@ -1096,7 +1099,6 @@
     <EmbeddedResource Include="..\PlcNext\Templates\ProjectTemplate\FormatTemplates.xml" Link="Deployment\Templates\ProjectTemplate\FormatTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\AcfProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\AcfProjectTemplate\TemplateDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\Templates.xml" Link="Deployment\Templates\Templates.xml" />
-    <EmbeddedResource Include="..\PlcNext\Templates\TestTemplates.xml" Link="Deployment\Templates\TestTemplates.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\CMakeLists.txt" Link="Deployment\Templates\ConsumableLibraryTemplate\CMakeLists.txt" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\How_to_use.txt" Link="Deployment\Templates\ConsumableLibraryTemplate\How_to_use.txt" />
     <EmbeddedResource Include="..\PlcNext\Templates\ConsumableLibraryTemplate\TemplateDescription.xml" Link="Deployment\Templates\ConsumableLibraryTemplate\TemplateDescription.xml" />
@@ -1232,7 +1234,6 @@
 
   <ItemGroup>
     <Folder Include="Deployment\DemoWithoutLibrary\bin\" />
-    <Folder Include="Deployment\TestTemplates\" />
     <Folder Include="Tools\XUnit\" />
   </ItemGroup>
 
