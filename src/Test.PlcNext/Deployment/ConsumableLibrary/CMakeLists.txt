@@ -20,8 +20,8 @@ add_library(ConsumableLibrary SHARED ${Headers} ${PublicHeaders} ${Sources})
 
 ################# set install directories #############################################
 
-set(INCLUDE_INSTALL_DIR ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/${CMAKE_BUILD_TYPE}/include)
-set(LIB_INSTALL_DIR ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/${CMAKE_BUILD_TYPE}/lib/ConsumableLibrary)
+set(INCLUDE_INSTALL_DIR ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/${CMAKE_BUILD_TYPE}/include)
+set(LIB_INSTALL_DIR ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/${CMAKE_BUILD_TYPE}/lib/ConsumableLibrary)
 
 #######################################################################################
 
@@ -78,7 +78,7 @@ include(CMakePackageConfigHelpers)
 configure_package_config_file( 
   "Config.cmake.in" 
   "ConsumableLibraryConfig.cmake"
-  INSTALL_DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/${CMAKE_BUILD_TYPE}/cmake
+  INSTALL_DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/${CMAKE_BUILD_TYPE}/cmake
   PATH_VARS
     INCLUDE_INSTALL_DIR
 	LIB_INSTALL_DIR
@@ -119,7 +119,7 @@ install(EXPORT ConsumableLibrary-targets DESTINATION ${LIB_INSTALL_DIR})
 install(
   FILES "${CMAKE_CURRENT_BINARY_DIR}/ConsumableLibraryConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/ConsumableLibraryConfigVersion.cmake"
-  DESTINATION "${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/${CMAKE_BUILD_TYPE}/cmake"
+  DESTINATION "${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/${CMAKE_BUILD_TYPE}/cmake"
   )
 
 #######################################################################################

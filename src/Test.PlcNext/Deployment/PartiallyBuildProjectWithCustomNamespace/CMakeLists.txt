@@ -54,8 +54,8 @@ target_link_libraries(PrjN_ST_Update_Proj_Targets_2237 PRIVATE ArpDevice ArpProg
 ################# install ############################################################
 
 install(TARGETS PrjN_ST_Update_Proj_Targets_2237
-    LIBRARY DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/$<CONFIG>/lib
-    ARCHIVE DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/$<CONFIG>/lib
-    RUNTIME DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/$<CONFIG>/bin)
+    LIBRARY DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/$<CONFIG>/lib
+    ARCHIVE DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/$<CONFIG>/lib
+    RUNTIME DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/$<CONFIG>/bin)
 
 #######################################################################################

@@ -66,8 +66,8 @@ target_link_libraries(AcfProjectv216withoutproj PRIVATE ArpDevice ArpProgramming
 ################# install ############################################################
 
 install(TARGETS AcfProjectv216withoutproj
-    LIBRARY DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/$<CONFIG>/lib
-    ARCHIVE DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/$<CONFIG>/lib
-    RUNTIME DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION}/$<CONFIG>/bin)
+    LIBRARY DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/$<CONFIG>/lib
+    ARCHIVE DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/$<CONFIG>/lib
+    RUNTIME DESTINATION ${ARP_DEVICE}_${ARP_DEVICE_SHORT_VERSION_BUILD}/$<CONFIG>/bin)
 
 #######################################################################################
