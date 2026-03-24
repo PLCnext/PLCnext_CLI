@@ -156,6 +156,8 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                                        .ReturnsForAnyArgs(info => GetFileContent(file, info.ArgAt<bool>(0)));
                     fileContentResolver.When(r => r.Delete()).Do((info) =>
                     {
+                        if (file.IsReadOnly) 
+                            throw new FormattableException($"Cannot delete the readonly file {fileFullName}");
                         if (fileContents.ContainsKey(file))
                         {
                             deletedFileContents[file.FullName] = fileContents[file];

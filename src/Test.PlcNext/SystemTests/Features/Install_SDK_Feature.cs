@@ -41,11 +41,24 @@ namespace Test.PlcNext.SystemTests.Features
         }
         
         [Scenario]
-        public async Task Delete_All_Files_When_Force_option_is_Used()
+        public async Task Delete_all_files_when_force_option_is_used()
         {
             await Runner.AddSteps(
                 _ => Given_is_an_empty_workspace(),
                 _ => Given_is_that_the_file_exists("C:/foo/ba/notEmpty.txt"),
+                _ => When_I_force_install_SDK_to_DESTINATION("Dummy_AXCF2152_Sdk.tar.xz", "C:/foo/ba"),
+                _ => Then_the_sdk_is_available_in_DESTINATION("C:/foo/ba"),
+                _ => Then_the_file_does_not_exist("C:/foo/ba/notEmpty.txt")
+            ).RunAsyncWithTimeout();
+        }
+
+        [Scenario]
+        public async Task Delete_readonly_file_when_force_option_is_used()
+        {
+            await Runner.AddSteps(
+                _ => Given_is_an_empty_workspace(),
+                _ => Given_is_that_the_file_exists("C:/foo/ba/notEmpty.txt"),
+                _ => Given_is_that_the_file_is_readonly("C:/foo/ba/notEmpty.txt"),
                 _ => When_I_force_install_SDK_to_DESTINATION("Dummy_AXCF2152_Sdk.tar.xz", "C:/foo/ba"),
                 _ => Then_the_sdk_is_available_in_DESTINATION("C:/foo/ba"),
                 _ => Then_the_file_does_not_exist("C:/foo/ba/notEmpty.txt")

@@ -211,12 +211,18 @@ namespace PlcNext.Common.Tools.FileSystem
                 base.Delete();
             }
         }
-
-        public void Clear()
+        
+        public void Clear(bool force = false)
         {
             entriesWhenCleared = Entries.ToList();
             foreach (VirtualEntry entry in entriesWhenCleared)
             {
+                if (force &&
+                    entry is VirtualFile file &&
+                    file.IsReadOnly)
+                {
+                    file.IsReadOnly = false;
+                }
                 entry.Delete();
             }
             Cleared = true;

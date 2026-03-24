@@ -47,7 +47,7 @@ namespace PlcNext.Common.Tools.FileSystem
             }
 
             Exception exception = null;
-            for (int i = 0; i < (retry? Constants.MaxIORetries : 1); i++)
+            for (int i = 0; i < (retry ? Constants.MaxIORetries : 1); i++)
             {
                 try
                 {
@@ -135,7 +135,7 @@ namespace PlcNext.Common.Tools.FileSystem
             else
             {
                 //Check if random file can be created
-                string file = Path.Combine(fileInfo.DirectoryName??string.Empty, $"{Guid.NewGuid()}.{Guid.NewGuid()}");
+                string file = Path.Combine(fileInfo.DirectoryName ?? string.Empty, $"{Guid.NewGuid()}.{Guid.NewGuid()}");
                 bool canCreate;
                 try
                 {
@@ -150,6 +150,12 @@ namespace PlcNext.Common.Tools.FileSystem
 
                 return canCreate;
             }
+        }
+
+        public bool IsReadOnly
+        {
+            get => fileInfo.IsReadOnly;
+            set => fileInfo.IsReadOnly = value;
         }
 
         public override void UnDelete()

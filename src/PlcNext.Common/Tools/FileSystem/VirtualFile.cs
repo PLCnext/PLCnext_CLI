@@ -45,6 +45,13 @@ namespace PlcNext.Common.Tools.FileSystem
             return contentResolver.CheckAccess();
         }
 
+        public bool IsReadOnly 
+        { 
+            get => contentResolver.IsReadOnly; 
+            set => contentResolver.IsReadOnly = value; 
+        }
+
+
         public string GetRelativePath(VirtualDirectory directory)
         {
             List<VirtualDirectory> reverseDirectoryPath = new List<VirtualDirectory>();

@@ -502,6 +502,11 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CheckFileExists(file, false);
         }
 
+        protected void Then_the_readonly_file_was_not_deleted(string file)
+        {
+            ScenarioContext.CheckUserInformed($"Cannot delete the readonly file {file}", "message of failed deletion of readonly file expected");
+        }
+
         protected void Then_the_user_was_informed_that_the_target_is_ambiguous()
         {
             ScenarioContext.CheckUserInformedOfError(typeof(TargetNameAmbiguousException));

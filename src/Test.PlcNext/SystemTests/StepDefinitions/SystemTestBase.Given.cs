@@ -136,7 +136,13 @@ namespace Test.PlcNext.SystemTests.StepDefinitions
             ScenarioContext.CreateFile(relativeFilePath);
         }
 
-		protected void Given_is_that_the_content_of_FILE_overwrites_FILE(string fileContent, string destination)
+		protected void Given_is_that_the_file_is_readonly(string relativeFilePath)
+		{
+            ScenarioContext.SetReadOnly(relativeFilePath);
+
+        }
+
+        protected void Given_is_that_the_content_of_FILE_overwrites_FILE(string fileContent, string destination)
 		{
 			ScenarioContext.LoadFileContentInto(fileContent, destination);
         }

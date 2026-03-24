@@ -18,5 +18,6 @@ namespace PlcNext.Common.Tools.FileSystem
         void Touch();
         DateTime LastWriteTime { get; }
         bool CheckAccess();
+        bool IsReadOnly { get; set; }
     }
 }

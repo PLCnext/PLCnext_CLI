@@ -1383,6 +1383,13 @@ namespace Test.PlcNext.SystemTests.Tools
             fileSystemAbstraction.FindFile(ref searchedFile).ShouldBe(exists, $"File {file} was {(exists ? "expected" : "not expected")} to exist.");
         }
 
+        public void SetReadOnly(string relativeFilePath)
+        {
+            string path = Path.Combine(fileSystemAbstraction.CurrentDirectory.FullName, relativeFilePath);
+            VirtualFile file = fileSystemAbstraction.FileSystem.GetFile(path);
+            file.IsReadOnly = true;
+        }
+
         public void CreateFile(string relativeFilePath)
         {
             string path = Path.Combine(fileSystemAbstraction.CurrentDirectory.FullName, relativeFilePath);
