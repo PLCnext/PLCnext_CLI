@@ -52,6 +52,10 @@ target_link_options(${PROJECT_NAME} PRIVATE LINKER:--as-needed)
 ################# add link targets ####################################################
 
 find_package(ArpDevice REQUIRED)
+message(STATUS "ARP_DEVICE_VERSION=${ARP_DEVICE_VERSION}")
+message(STATUS "ARP_DEVICE_SHORT_VERSION=${ARP_DEVICE_SHORT_VERSION}")
+message(STATUS "ARP_DEVICE_SHORT_VERSION_BUILD=${ARP_DEVICE_SHORT_VERSION_BUILD}")
+
 
 if(${ARP_VERSION_MAJOR} GREATER_EQUAL "25")
     find_package(Arp REQUIRED)

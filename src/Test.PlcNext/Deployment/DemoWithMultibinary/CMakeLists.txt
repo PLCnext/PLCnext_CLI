@@ -29,6 +29,10 @@ list(INSERT CMAKE_MODULE_PATH 0 "${ARP_CMAKE_MODULE_PATH}")
 ################# add link targets ####################################################
 
 find_package(ArpDevice REQUIRED)
+message(STATUS "ARP_DEVICE_VERSION=${ARP_DEVICE_VERSION}")
+message(STATUS "ARP_DEVICE_SHORT_VERSION=${ARP_DEVICE_SHORT_VERSION}")
+message(STATUS "ARP_DEVICE_SHORT_VERSION_BUILD=${ARP_DEVICE_SHORT_VERSION_BUILD}")
+
 find_package(ArpProgramming REQUIRED)
 
 target_link_libraries(Demo PRIVATE ArpDevice ArpProgramming)

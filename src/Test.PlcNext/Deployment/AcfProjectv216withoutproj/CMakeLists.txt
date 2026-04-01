@@ -57,6 +57,10 @@ target_link_options(AcfProjectv216withoutproj PRIVATE LINKER:--no-undefined)
 ################# add link targets ####################################################
 
 find_package(ArpDevice REQUIRED)
+message(STATUS "ARP_DEVICE_VERSION=${ARP_DEVICE_VERSION}")
+message(STATUS "ARP_DEVICE_SHORT_VERSION=${ARP_DEVICE_SHORT_VERSION}")
+message(STATUS "ARP_DEVICE_SHORT_VERSION_BUILD=${ARP_DEVICE_SHORT_VERSION_BUILD}")
+
 find_package(ArpProgramming REQUIRED)
 
 target_link_libraries(AcfProjectv216withoutproj PRIVATE ArpDevice ArpProgramming)
