@@ -36,9 +36,9 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public bool Deleted { get; private set; }
 
-        public virtual void Delete()
+        public virtual void Delete(bool force = false)
         {
-            entryContentResolver.Delete();
+            entryContentResolver.Delete(force);
             Parent?.RemoveEntry(this);
             Deleted = true;
         }

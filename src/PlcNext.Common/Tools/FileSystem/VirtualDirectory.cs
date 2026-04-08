@@ -198,10 +198,10 @@ namespace PlcNext.Common.Tools.FileSystem
             UnClear();
         }
 
-        public override void Delete()
+        public override void Delete(bool force = false)
         {
-            Clear();
-            base.Delete();
+            Clear(force);
+            base.Delete(force);
         }
         
         public void DeleteIfEmpty()
@@ -217,13 +217,7 @@ namespace PlcNext.Common.Tools.FileSystem
             entriesWhenCleared = Entries.ToList();
             foreach (VirtualEntry entry in entriesWhenCleared)
             {
-                if (force &&
-                    entry is VirtualFile file &&
-                    file.IsReadOnly)
-                {
-                    file.IsReadOnly = false;
-                }
-                entry.Delete();
+                entry.Delete(force);
             }
             Cleared = true;
         }

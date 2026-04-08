@@ -19,7 +19,7 @@ namespace PlcNext.Common.Tools.FileSystem
         bool Created { get; }
         bool Exists { get; }
 
-        void Delete();
+        void Delete(bool force);
 
         void UnDelete();
 

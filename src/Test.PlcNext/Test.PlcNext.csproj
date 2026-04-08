@@ -1159,6 +1159,26 @@
     <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\Cpp\CMakeLists.txt" Link="Deployment\Templates\SharedNativeProjectTemplate\Cpp\CMakeLists.txt" />
     <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\CSharp\ProjectItems\LibraryDescription.xml" Link="Deployment\Templates\SharedNativeProjectTemplate\CSharp\ProjectItems\LibraryDescription.xml" />
     <EmbeddedResource Include="..\PlcNext\Templates\SharedNativeProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\SharedNativeProjectTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\Component.compmeta" Link="Deployment\Templates\FieldbusComponentTemplate\Component.compmeta" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\Component.cpp" Link="Deployment\Templates\FieldbusComponentTemplate\Component.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\Component.hpp" Link="Deployment\Templates\FieldbusComponentTemplate\Component.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\TemplateDescription.xml" Link="Deployment\Templates\FieldbusComponentTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\DataExchange.hpp" Link="Deployment\Templates\FieldbusComponentTemplate\DataExchange.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\DataExchange.cpp" Link="Deployment\Templates\FieldbusComponentTemplate\DataExchange.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\FieldbusData.hpp" Link="Deployment\Templates\FieldbusComponentTemplate\FieldbusData.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\FieldbusData.cpp" Link="Deployment\Templates\FieldbusComponentTemplate\FieldbusData.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\FieldbusSettings.hpp" Link="Deployment\Templates\FieldbusComponentTemplate\FieldbusSettings.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusComponentTemplate\FieldbusSettings.cpp" Link="Deployment\Templates\FieldbusComponentTemplate\FieldbusSettings.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\fieldbus.config" Link="Deployment\Templates\FieldbusProjectTemplate\fieldbus.config" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\DataTypes.dt" Link="Deployment\Templates\FieldbusProjectTemplate\DataTypes.dt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\How_to_deploy.txt" Link="Deployment\Templates\FieldbusProjectTemplate\How_to_deploy.txt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\Library.cpp" Link="Deployment\Templates\FieldbusProjectTemplate\Library.cpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\Library.hpp" Link="Deployment\Templates\FieldbusProjectTemplate\Library.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\Library.libmeta" Link="Deployment\Templates\FieldbusProjectTemplate\Library.libmeta" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\LibraryInfo.hpp" Link="Deployment\Templates\FieldbusProjectTemplate\LibraryInfo.hpp" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\TemplateDescription.xml" Link="Deployment\Templates\FieldbusProjectTemplate\TemplateDescription.xml" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\CMakeLists.txt" Link="Deployment\Templates\FieldbusProjectTemplate\CMakeLists.txt" />
+    <EmbeddedResource Include="..\PlcNext\Templates\FieldbusProjectTemplate\.proj" Link="Deployment\Templates\FieldbusProjectTemplate\.proj" />
   </ItemGroup>
 
   <ItemGroup>

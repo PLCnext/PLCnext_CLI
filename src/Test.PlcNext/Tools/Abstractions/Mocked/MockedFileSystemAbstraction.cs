@@ -134,7 +134,7 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                                             directoryContents[currentDirectory].Add(result);
                                             return result;
                                         });
-                directoryContentResolver.When(r => r.Delete()).Do((info) =>
+                directoryContentResolver.When(r => r.Delete(Arg.Any<bool>())).Do((info) =>
                 {
                     printMessage?.Invoke($"{DateTime.Now:dd/MM/yyyy hh:mm:ss.fff}: Delete {currentDirectory}");
                     directoryContents.Remove(currentDirectory);
@@ -154,9 +154,9 @@ namespace Test.PlcNext.Tools.Abstractions.Mocked
                     fileContents[file] = new MemoryStream();
                     fileContentResolver.GetContent()
                                        .ReturnsForAnyArgs(info => GetFileContent(file, info.ArgAt<bool>(0)));
-                    fileContentResolver.When(r => r.Delete()).Do((info) =>
+                    fileContentResolver.When(r => r.Delete(Arg.Any<bool>())).Do((info) =>
                     {
-                        if (file.IsReadOnly) 
+                        if (file.IsReadOnly && !info.ArgAt<bool>(0))
                             throw new FormattableException($"Cannot delete the readonly file {fileFullName}");
                         if (fileContents.ContainsKey(file))
                         {

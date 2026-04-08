@@ -7,11 +7,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #endregion
 
+using PlcNext.Common.Tools.IO;
+using PlcNext.Common.Tools.UI;
 using System;
 using System.IO;
 using System.Threading;
-using PlcNext.Common.Tools.IO;
-using PlcNext.Common.Tools.UI;
 
 namespace PlcNext.Common.Tools.FileSystem
 {
@@ -25,10 +25,14 @@ namespace PlcNext.Common.Tools.FileSystem
             this.fileInfo = fileInfo;
         }
 
-        public override void Delete()
+        public override void Delete(bool force)
         {
             EnsureMemento();
-            base.Delete();
+            if (force && IsReadOnly)
+            {
+                IsReadOnly = false;
+            }
+            base.Delete(force);
         }
 
         public Stream GetContent(bool write = false, bool retry = false)

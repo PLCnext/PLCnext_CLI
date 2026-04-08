@@ -39,12 +39,18 @@ namespace PlcNext.Common.Tools.FileSystem
 
         public string FullName => entryInfo.FullName;
 
-        public virtual void Delete()
+        public virtual void Delete(bool force)
         {
             try
             {
                 if (Exists)
                 {
+                    if (force &&
+                        entryInfo is DirectoryInfo directoryInfo &&
+                        directoryInfo.Attributes.HasFlag(FileAttributes.ReadOnly))
+                    {
+                        directoryInfo.Attributes = directoryInfo.Attributes & ~FileAttributes.ReadOnly;
+                    }
                     entryInfo.Delete();
                 }
             }
